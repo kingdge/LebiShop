@@ -1,0 +1,213 @@
+﻿{layout:default} {class:Shop.Admin.Info}
+<lbhead>
+    <title><%=Tag("关于")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <style>
+        .bottom{height: 0;overflow: hidden;display: none;}
+    </style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <li class="rotate"><a href="javascript:void(0);" onclick="history.go(-1);"><b></b><span>
+                <%=Tag("返回")%></span></a></li>
+            <li class="name"><span id="navIgation">
+                <%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a>
+                >
+                <%=Tag("关于")%></span></li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table class="table">
+        <%
+        if (!Shop.LebiAPI.Service.Instanse.Check("managelicenese")){
+        %>
+        <tr>
+            <th colspan="2" class="head">
+                <%=Tag("软件信息")%>
+            </th>
+        </tr>
+        <tr class="list">
+            <th>
+                <%=Tag("软件版本")%>：
+            </th>
+            <td>
+                <a href="http://www.lebi.cn/down/" target="_blank">LebiShop V<%=SYS.Version %>.<%=SYS.Version_Son %></a>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                <%=Tag("软件开发")%>：
+            </th>
+            <td>
+                五六七七零网络科技有限公司
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                <%=Tag("官方网站")%>：
+            </th>
+            <td>
+                <a href="http://www.lebi.cn/" target="_blank">http://www.lebi.cn/</a>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                <%=Tag("联系方式")%>：
+            </th>
+            <td>
+                <a href="http://www.lebi.cn/about/contact.html" target="_blank">http://www.lebi.cn/about/contact.html</a>
+            </td>
+        </tr>
+        <%}%>
+        <tr>
+            <th colspan="2" class="head">
+                <%=Tag("系统参数")%>
+            </th>
+        </tr>
+        <tr class="list">
+            <th>
+                <%=Tag("服务器名")%>：
+            </th>
+            <td>
+                <%=Request.ServerVariables["SERVER_NAME"]%>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                <%=Tag("浏览器版本")%>：
+            </th>
+            <td>
+                <%=Request.Browser.Version.ToString() %>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                <%=Tag("HTTP端口")%>：
+            </th>
+            <td>
+                <%=Request.ServerVariables["SERVER_PORT"] %>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                <%=Tag("服务器IP")%>：
+            </th>
+            <td>
+                <%= HttpContext.Current.Request.ServerVariables.Get("Local_Addr").ToString()%>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                <%=Tag("系统时间")%>：
+            </th>
+            <td>
+                <%=DateTime.Now.ToString() %>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                <%=Tag("执行超时")%>：
+            </th>
+            <td>
+                <%=Server.ScriptTimeout.ToString()%>
+                <%=Tag("秒")%>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                <%=Tag("物理路径")%>：
+            </th>
+            <td>
+                <%=Request.PhysicalApplicationPath.ToString() %>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                <%=Tag("Session总数")%>：
+            </th>
+            <td>
+                <%=Session.Contents.Count.ToString()%>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                <%=Tag("Application总数")%>：
+            </th>
+            <td>
+                <%=Application.Contents.Count.ToString()%>
+            </td>
+        </tr>
+        <tr>
+            <th colspan="2" class="head">
+                <%=Tag("组件信息")%>
+            </th>
+        </tr>
+        <tr class="list">
+            <th>
+                MS Access：
+            </th>
+            <td>
+                <%if (chkobj("ADODB.RecordSet")) { Response.Write("<font color=green><b>√</b></font>"); } else { Response.Write("<font color=red><b>×</b></font>"); }%>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                FSO：
+            </th>
+            <td>
+                <%if (chkobj("Scripting.FileSystemObject")) { Response.Write("<font color=green><b>√</b></font>"); } else { Response.Write("<font color=red><b>×</b></font>"); }%>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                AspJpeg：
+            </th>
+            <td>
+                <%if (chkobj("Persits.Jpeg")) { Response.Write("<font color=green><b>√</b></font>"); } else { Response.Write("<font color=red><b>×</b></font>"); }%>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                CDONTS：
+            </th>
+            <td>
+                <%if (chkobj("CDONTS.NewMail")) { Response.Write("<font color=green><b>√</b></font>"); } else { Response.Write("<font color=red><b>×</b></font>"); }%>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                JMail：
+            </th>
+            <td>
+                <%if (chkobj("JMail.SmtpMail")) { Response.Write("<font color=green><b>√</b></font>"); } else { Response.Write("<font color=red><b>×</b></font>"); }%>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                ASPemail：
+            </th>
+            <td>
+                <%if (chkobj("Persits.MailSender")) { Response.Write("<font color=green><b>√</b></font>"); } else { Response.Write("<font color=red><b>×</b></font>"); }%>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                Geocel：
+            </th>
+            <td>
+                <%if (chkobj("Geocel.Mailer")) { Response.Write("<font color=green><b>√</b></font>"); } else { Response.Write("<font color=red><b>×</b></font>"); }%>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                SmtpMail：
+            </th>
+            <td>
+                <%if (chkobj("SmtpMail.SmtpMail.1")) { Response.Write("<font color=green><b>√</b></font>"); } else { Response.Write("<font color=red><b>×</b></font>"); }%>
+            </td>
+        </tr>
+    </table>
+</lbbody>

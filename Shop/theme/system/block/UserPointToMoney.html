@@ -1,0 +1,44 @@
+﻿<!--
+Name:用户中心-积分转换
+Page:P_UserPointToMoney
+-->
+<div class="nbbox clearfix">
+<div class="userbox">
+    <div class="mt classfix">
+        <h2>{tag:积分转换}</h2>
+    </div>
+    <div class="mc clearfix">
+    <div class="dl-table clearfix">
+    <dl>
+        <dt>{tag:当前积分}：</dt>
+        <dd><%=CurrentUser.Point %></dd>
+    </dl>
+    <% 
+    string[] arr = CurrentUserLevel.PointToMoney.Split(',');
+    foreach (string v in arr)
+    {
+        string[] val = v.Split(':');
+        if(val.Length==0)
+            break;
+    %>
+    <dl>
+        <dt><input type="radio" name="ptom" value="<%=v %>" checked /><%=val[0] %>{tag:积分}：</dt>
+        <dd><%=FormatMoney(val[1]) %></dd>
+    </dl>
+    <%} %>
+    <dl class="dl-btn">
+        <dt></dt>
+        <dd><a href="javascript:void(0)" onclick="Submit();" class="btn btn-11"><s></s>{tag:提交}</a></dd>
+    </dl>
+    </div>
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+    function Submit() {
+        var t = $("input[name='ptom']:checked").val();
+        var postData = { "t": t };
+        var url = path+"/ajax/Ajax_userin.aspx?__Action=PointToMoney";
+        RequestAjax(url, postData, function () { MsgBox(1, "{tag:操作成功}", "?") });
+    }
+</script>

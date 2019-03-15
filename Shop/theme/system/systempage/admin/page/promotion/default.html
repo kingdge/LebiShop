@@ -1,0 +1,99 @@
+﻿{layout:default} {class:Shop.Admin.promotion.Default}
+<lbhead>
+    <title><%=Tag("优惠促销")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <%if (PageReturnMsg == ""){%>
+            <li class="add"><a href="javascript:void(0);" onclick="Editobj();"><b></b><span><%=Tag("添加")%></span></a></li>
+            <li class="del"><a href="javascript:void(0);" onclick="Delobj();"><b></b><span><%=Tag("删除")%></span></a></li>
+            <%}%>
+            <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("优惠促销")%></span>  
+            </li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <% LicenseWord(); %>
+    <table class="datalist">
+        <tr class="title">
+           <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th >
+                <%=Tag("描述")%>
+            </th>
+            <th width="150px">
+                <%=Tag("时间")%>
+            </th>
+            <th width="100px">
+                <%=Tag("状态")%>
+            </th>
+            <th width="80px">
+                <%=Tag("规则数量")%>
+            </th>
+            <th width="80px">
+                <%=Tag("排序")%>
+            </th>
+            <th width="130px">
+                <%=Tag("添加时间")%>
+            </th>
+            <th width="120px">
+                <%=Tag("管理员")%>
+            </th>
+            <th width="120px">
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_Promotion_Type model in models)
+          {%>
+        <tr class="list" ondblclick="Editobj(<%=model.id %>);">
+            <td style="text-align:center">
+                <input type="checkbox" name="id" value="<%=model.id %>" del="true" />
+            </td>
+            <td>
+                <%=Lang(model.Name) %>
+            </td>
+            <td>
+                <%=FormatDate(model.Time_Start)+" / "+FormatDate(model.Time_End)%>
+            </td>
+            <td>
+                <%=Shop.Bussiness.EX_Type.TypeName(model.Type_id_PromotionStatus) %>
+            </td>
+            <td>
+                <%=Count(model.id)%>
+            </td>
+            <td>
+                <%=model.Sort %>
+            </td>
+            <td>
+                <%=FormatTime(model.Time_Add) %>
+            </td>
+            <td>
+                <%=model.Admin_UserName%>
+            </td>
+            <td>
+                <a href="javascript:Editobj(<%=model.id %>);"><%=Tag("编辑")%></a> | <a href="Promotion.aspx?tid=<%=model.id %>"><%=Tag("编辑规则")%></a>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function Editobj(id) {
+            window.location = "promotiontype_edit.aspx?id=" + id;
+        }
+        function Delobj() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_sale.aspx?__Action=PromotionType_Del";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", '?')});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

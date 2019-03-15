@@ -1,0 +1,1 @@
+<%@ Page Language="C#" AutoEventWireup="True" CodeBehind="default.aspx.cs" Inherits="weixinpayh5._Default" %>

@@ -1,0 +1,119 @@
+﻿{layout:default} {class:Shop.Admin.order.Express_Shipper}
+<lbhead>
+    <title><%=Tag("发货人管理")%>-<%=Tag("快递单模板")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="add"><a href="javascript:void(0);" onclick="Edit(0);"><b></b><span><%=Tag("添加")%></span></a></li>
+    <li class="submit"><a href="javascript:void(0);" onclick="Update();"><b></b><span><%=Tag("保存")%></span></a></li>
+    <li class="del"><a href="javascript:void(0);" onclick="DEL();"><b></b><span><%=Tag("删除")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="<%=site.AdminPath %>/order/Express.aspx"><%=Tag("快递单模板")%></a> > <%=Tag("发货人管理")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox clear">
+        <div class="searchbox-l">
+        <ul class="tabmenus">
+            <li><a href="Express.aspx"><span><%=Tag("快递单模板")%></span></a></li>
+            <li class="current"><a href="Express_Shipper.aspx"><span><%=Tag("发货人管理")%></span></a></li>
+        </ul>
+        </div>
+        <div class="searchbox-r">
+        <input type="text" id="key" name="key" class="input-query" value="<%=key %>" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" value="" />
+        </div>
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'sid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th style="width: 200px">
+                <%=Tag("网店名称")%>
+            </th>
+            <th style="width: 120px">
+                <%=Tag("所在城市")%>
+            </th>
+            <th style="width: 120px">
+                <%=Tag("发货人姓名")%>
+            </th>
+            <th style="width: 120px">
+                <%=Tag("电话号码")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("是否启用")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("排序")%>
+            </th>
+            <th>
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_Express_Shipper model in models)
+          {%>
+        <tr class="list" ondblclick="Edit(<%=model.id %>)">
+            <td style="text-align:center">
+                <input type="checkbox" value="<%=model.id %>" name="sid" />
+                <input type="hidden" name="Uid" shop="true" value="<%=model.id %>" />
+            </td>
+            <td>
+                <%=model.SiteName %>
+            </td>
+            <td>
+                <%=model.City%>
+            </td>
+            <td>
+                <%=model.UserName%>
+            </td>
+            <td>
+                <%=model.Tel%>
+            </td>
+            <td>
+                <%=model.Status==1?Tag("启用"):Tag("未启用")%>
+            </td>
+            <td>
+                <input type="text" id="Sort<%=model.id %>" name="Sort<%=model.id %>" shop="true" class="input" style="width: 60px" value="<%=model.Sort %>" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" />
+            </td>
+            <td>
+                <a href="javascript:void(0)" onclick="Edit(<%=model.id %>)"><%=Tag("编辑")%></a>
+            </td>
+        </tr>
+        <%} %>
+    </table> 
+    <script type="text/javascript">
+        function search_() {
+            var key = $("#key").val();
+            window.location = "?key=" + escape(key);
+        }
+        function Edit(id) {
+            if (id == 0) { var title_ = "<%=Tag("添加发货人")%>"; } else { var title_ = "<%=Tag("编辑发货人")%>"; }
+            var url_ = "express_shipper_edit_window.aspx?id=" + id;
+            var width_ = 600;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function Update() {
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=Express_Shipper_Update";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function DEL() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var ids = GetChkCheckedValues("sid");
+            var postData = { "ids": ids };
+            var url = "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=Express_Shipper_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

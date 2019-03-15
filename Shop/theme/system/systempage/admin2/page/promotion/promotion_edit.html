@@ -1,0 +1,328 @@
+﻿{layout:default} {class:Shop.Admin.promotion.Promotion_Edit}
+<lbhead>
+    <title>
+        <%if (model.id != 0)
+          { %>
+        <%=Tag("编辑促销")%>
+        <%}
+          else
+          { %><%=Tag("添加促销")%>
+        <%}%>-<%=Tag("优惠促销")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <link href="<%=site.AdminAssetsPath %>/plugins/multiselect/css/jquery.multiselect2side.css" rel="stylesheet">
+</lbfile>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=model.id ==0?Tag("添加规则"):Tag("编辑规则")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><a href="Default.aspx"><%=Tag("优惠促销")%></a></li>
+        <li class="breadcrumb-item"><a href="PromotionType_Edit.aspx?id=<%=pt.id %>"><%=Lang(pt.Name)%></a> </li>
+        <li class="breadcrumb-item active"><%=model.id ==0?Tag("添加规则"):Tag("编辑规则")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <form action="javascript:SaveObj(0);" novalidate>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-actions">
+                        <a class="" data-action="collapse"><i class="ti-minus"></i></a>
+                    </div>
+                    <h5 class="card-title m-b-0"><%=Tag("基本信息")%></h5>
+                </div>
+                <div class="card-body b-t collapse show">
+                    <div class="form-group">
+                        <label for="Remark"><%=Tag("内部备注")%>：</label>
+                        <textarea id="Remark" name="Remark" class="form-control" style="height: 60px;" shop="true"><%=model.Remark%></textarea>
+                        <div class="button-group m-t-5">
+                            <button type="button" class="btn btn-default btn-xs btn-sm" onclick="javascript:resizeEditor('Remark',100);"><%=Tag("展开")%></button>
+                            <button type="button" class="btn btn-default btn-xs btn-sm" onclick="javascript:resizeEditor('Remark',-100);"><%=Tag("收缩")%></button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Sort"><%=Tag("优先级")%>：</label>
+                        <input type="text" id="Name" name="Sort" value="<%=model.Sort %>" class="form-control" shop="true" onkeyup="value=value.replace(/[^\d]/g,'')">
+                    </div>
+                    <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                </div>
+            </div>
+            <%if (model.id > 0){ %>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-actions">
+                        <a class="" data-action="collapse"><i class="ti-minus"></i></a>
+                    </div>
+                    <h5 class="card-title m-b-0"><%=Tag("触发条件")%></h5>
+                </div>
+                <div class="card-body b-t collapse show">
+                    <div class="form-group">
+                        <label for="IsCase801" class="custom-control custom-checkbox">
+                            <input type="checkbox" id="IsCase801" name="IsCase801" value="1" class="custom-control-input" <%=setChecked(model.IsCase801) %>>
+                            <span class="custom-control-label"><%=Tag("订单金额大于")%>：</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="text" id="Case801" name="Case801" value="<%=FormatMoney(model.Case801," Number") %>" shop="true" class="form-control form-control-sm" onkeyup="value=value.replace(/[^\d]/g,'')" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="IsCase802" class="custom-control custom-checkbox">
+                            <input type="checkbox" id="IsCase802" name="IsCase802" value="1" class="custom-control-input" <%=setChecked(model.IsCase802) %>>
+                            <span class="custom-control-label"><%=Tag("订单商品数量大于")%>：</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="text" id="Case802" name="Case802" value="<%=model.Case802 %>" class="form-control form-control-sm" shop="true" onkeyup="value=value.replace(/[^\d]/g,'')" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="IsCase804" class="custom-control custom-checkbox">
+                            <input type="checkbox" id="IsCase804" name="IsCase804" value="1" class="custom-control-input" <%=setChecked(model.IsCase804) %> onclick="SetStatus();">
+                            <span class="custom-control-label"><%=Tag("限制分类")%>(<%=Tag("指定商品")%>)：</span>
+                        </label>
+                        <div class="input-group">
+                            <select name="Case804" id="Case804" multiple="multiple" size="8" shop="true">
+                                <option value="0" <%=model.Case804=="0"?"selected":"" %>><%=Tag("全部") %></option>
+                                <%=Shop.Bussiness.EX_Product.TypeOption(0, model.Case804, 0, CurrentLanguage.Code)%>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="IsCase805" class="custom-control custom-checkbox">
+                            <input type="checkbox" id="IsCase805" name="IsCase805" value="1" class="custom-control-input" <%=setChecked(model.IsCase805) %> onclick="SetStatus();">
+                            <span class="custom-control-label"><%=Tag("限制商品")%>(<%=Tag("指定商品")%>)：</span>
+                        </label>
+                        <textarea id="Case805" name="Case805" class="form-control" style="height: 60px;" shop="true"><%=model.Case805%></textarea>
+                        <div class="button-group m-t-5">
+                            <button type="button" class="btn btn-default btn-xs btn-sm" onclick="javascript:resizeEditor('Case805',100);"><%=Tag("展开")%></button>
+                            <button type="button" class="btn btn-default btn-xs btn-sm" onclick="javascript:resizeEditor('Case805',-100);"><%=Tag("收缩")%></button>
+                        </div>
+                        <small class="form-text text-muted"><%=Tag("使用,分隔商品编号")%>%</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="IsCase803" class="custom-control custom-checkbox">
+                            <input type="checkbox" id="IsCase803" name="IsCase803" value="1" class="custom-control-input" <%=setChecked(model.IsCase803) %>>
+                            <span class="custom-control-label"><%=Tag("指定商品单品重复购买大于")%>N：</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="text" id="Case803" name="Case803" value="<%=model.Case803 %>" class="form-control form-control-sm" shop="true" onkeyup="value=value.replace(/[^\d]/g,'')" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="IsCase806" class="custom-control custom-checkbox">
+                            <input type="checkbox" id="IsCase806" name="IsCase806" value="1" class="custom-control-input" <%=setChecked(model.IsCase806) %>>
+                            <span class="custom-control-label"><%=Tag("指定商品购买数量大于")%>N：</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="text" id="Case806" name="Case806" value="<%=model.Case806 %>" class="form-control form-control-sm" shop="true" onkeyup="value=value.replace(/[^\d]/g,'')" />
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                </div>
+            </div>
+            <%
+            }
+            if (model.IsSetCase == 1){ %>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-actions">
+                        <a class="" data-action="collapse"><i class="ti-minus"></i></a>
+                    </div>
+                    <h5 class="card-title m-b-0"><%=Tag("促销方式")%></h5>
+                </div>
+                <div class="card-body b-t collapse show">
+                    <div class="form-group">
+                        <label for="IsRule901" class="custom-control custom-checkbox">
+                            <input type="checkbox" id="IsRule901" name="IsRule901" value="1" class="custom-control-input" IsRule="true" shop="true" <%=setChecked(model.IsRule901) %>>
+                            <span class="custom-control-label"><%=Tag("定额运费")%>(<%=Tag("自营") %>)：</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="text" id="Rule901" name="Rule901" value="<%=FormatMoney(model.Rule901," Number") %>" class="form-control form-control-sm" shop="true" onkeyup="value=value.replace(/[^\d]/g,'')" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="IsRule902" class="custom-control custom-checkbox">
+                            <input type="checkbox" id="IsRule902" name="IsRule902" value="1" class="custom-control-input" IsRule="true" shop="true" <%=setChecked(model.IsRule902) %>>
+                            <span class="custom-control-label"><%=Tag("打折") %>)：</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="text" id="Rule902" name="Rule902" value="<%=model.Rule902 %>" class="form-control form-control-sm" shop="true">
+                            <div class="input-group-append">
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="IsRule903" class="custom-control custom-checkbox">
+                            <input type="checkbox" id="IsRule903" name="IsRule903" value="1" class="custom-control-input" IsRule="true" shop="true" <%=setChecked(model.IsRule903) %>>
+                            <span class="custom-control-label"><%=Tag("打折")%>(<%=Tag("指定商品")%>)：</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="text" id="Rule903" name="Rule903" value="<%=model.Rule903 %>" class="form-control form-control-sm" shop="true">
+                            <div class="input-group-append">
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="IsRule912" class="custom-control custom-checkbox">
+                            <input type="checkbox" id="IsRule912" name="IsRule912" value="1" class="custom-control-input" IsRule="true" shop="true" <%=setChecked(model.IsRule912) %>>
+                            <span class="custom-control-label"><%=Tag("打折")%>(<%=Tag("第N个指定商品")%>)：</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="text" id="Rule912" name="Rule912" value="<%=model.Rule912 %>" class="form-control form-control-sm" shop="true">
+                            <div class="input-group-append">
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="IsRule904" class="custom-control custom-checkbox">
+                            <input type="checkbox" id="IsRule904" name="IsRule904" value="1" class="custom-control-input" IsRule="true" shop="true" <%=setChecked(model.IsRule904) %>>
+                            <span class="custom-control-label"><%=Tag("减免现金")%>：</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="text" id="Rule904" name="Rule904" value="<%=FormatMoney(model.Rule904," Number") %>" class="form-control form-control-sm" shop="true">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><%=DefaultCurrency.Msige%></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="IsRule905" class="custom-control custom-checkbox">
+                            <input type="checkbox" id="IsRule905" name="IsRule905" value="1" class="custom-control-input" IsRule="true" shop="true" <%=setChecked(model.IsRule905) %>>
+                            <span class="custom-control-label"><%=Tag("返还现金")%>：</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="text" id="Rule905" name="Rule905" value="<%=FormatMoney(model.Rule905," Number") %>" class="form-control form-control-sm" shop="true">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><%=DefaultCurrency.Msige%></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="IsRule906" class="custom-control custom-checkbox">
+                            <input type="checkbox" id="IsRule906" name="IsRule906" value="1" class="custom-control-input" IsRule="true" shop="true" <%=setChecked(model.IsRule906) %>>
+                            <span class="custom-control-label"><%=Tag("送积分")%>：</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="text" id="Rule906" name="Rule906" value="<%=model.Rule906 %>" class="form-control form-control-sm" shop="true" onkeyup="value=value.replace(/[^\d]/g,'')" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="IsRule907" class="custom-control custom-checkbox">
+                            <input type="checkbox" id="IsRule907" name="IsRule907" value="1" class="custom-control-input" IsRule="true" shop="true" <%=setChecked(model.IsRule907) %>>
+                            <span class="custom-control-label"><%=Tag("翻倍积分")%>：</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="text" id="Rule907" name="Rule907" value="<%=model.Rule907 %>" class="form-control form-control-sm" shop="true" onkeyup="value=value.replace(/[^\d]/g,'')" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="IsRule908" class="custom-control custom-checkbox">
+                            <input type="checkbox" id="IsRule908" name="IsRule908" value="1" class="custom-control-input" IsRule="true" shop="true" <%=setChecked(model.IsRule908) %>>
+                            <span class="custom-control-label"><%=Tag("翻倍积分")%>(<%=Tag("指定商品")%>)：</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="text" id="Rule908" name="Rule908" value="<%=model.Rule908 %>" class="form-control form-control-sm" shop="true" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="IsRule910" class="custom-control custom-checkbox">
+                            <input type="checkbox" id="IsRule910" name="IsRule910" value="1" class="custom-control-input" IsRule="true" shop="true" <%=setChecked(model.IsRule910) %>>
+                            <span class="custom-control-label"><%=Tag("赠送商品")%>(<%=Tag("指定商品")%>)：</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="text" id="Rule910" name="Rule910" value="<%=model.Rule910 %>" class="form-control form-control-sm" shop="true" onkeyup="value=value.replace(/[^\d]/g,'')" />
+                            <div class="input-group-append">
+                                <span class="input-group-text"><%=Tag("数量")%></span>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                </div>
+            </div>
+            <%} %>
+        </form>
+    </div>
+</lbbody>
+<lbscripts>
+    <script src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+    <script src="<%=site.AdminAssetsPath %>/plugins/multiselect/js/jquery.multiselect2side.js"></script>
+    <script>
+        function SaveObj() {
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_sale.aspx?__Action=Promotion_Edit&tid=<%=pt.id %>&id=<%=model.id %>";
+            <%if(model.IsSetCase==0){ %>
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", '?id='+res.id)});
+                <%}else{ %>
+                RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", '')});
+            <%} %>
+            }
+        function SetStatus()
+        {
+            var IsCase804 = $("input[name='IsCase804']:checked").val();
+            var IsCase805 = $("input[name='IsCase805']:checked").val();
+            if (($("#IsCase804").attr("checked") == true || $("#IsCase804").attr("checked") == 'checked' || IsCase804 == 1) || ($("#IsCase805").attr("checked") == true || $("#IsCase805").attr("checked") == 'checked' || IsCase805 == 1))
+            {
+                $("#IsCase803").attr("disabled",false);
+                $("#Case803").attr("disabled",false);
+                $("#IsCase806").attr("disabled",false);
+                $("#Case806").attr("disabled",false);
+                $("#IsRule903").attr("disabled",false);
+                $("#Rule903").attr("disabled",false);
+                $("#IsRule908").attr("disabled",false);
+                $("#Rule908").attr("disabled",false);
+                $("#IsRule910").attr("disabled",false);
+                $("#Rule910").attr("disabled",false);
+                $("#IsRule912").attr("disabled",false);
+                $("#Rule912").attr("disabled",false);
+            }
+            else{
+                $("#IsCase803").attr("checked",false);
+                $("#IsCase803").attr("disabled","disabled");
+                $("#Case803").attr("disabled","disabled");
+                $("#IsCase806").attr("checked",false);
+                $("#IsCase806").attr("disabled","disabled");
+                $("#Case806").attr("disabled","disabled");
+                $("#IsRule903").attr("checked",false);
+                $("#IsRule903").attr("disabled","disabled");
+                $("#Rule903").attr("disabled","disabled");
+                $("#IsRule908").attr("checked",false);
+                $("#IsRule908").attr("disabled","disabled");
+                $("#Rule908").attr("disabled","disabled");
+                $("#IsRule910").attr("checked",false);
+                $("#IsRule910").attr("disabled","disabled");
+                $("#Rule910").attr("disabled","disabled");
+                $("#IsRule912").attr("checked",false);
+                $("#IsRule912").attr("disabled","disabled");
+                $("#Rule912").attr("disabled","disabled");
+            }
+        }
+        $().ready(function () {
+            $('#Case804').multiselect2side({
+                selectedPosition: 'right',
+                moveOptions: false,
+                //search: "<img src='img/search.gif' align=\"absmiddle\" /> ",
+                labelsx: '',
+                labeldx: '',
+                autoSort: false,
+                autoSortAvailable: false
+            });
+            SetStatus();
+        });
+
+        $('[IsRule]').each(function (i) {
+            $(this).click(function () {
+                if($(this).attr("checked")==true || $(this).attr("checked")=='checked')
+                {
+                    var cname=$(this).attr("name");
+                    $('[IsRule]').each(function (j) {
+                        if($(this).attr("name")!=cname){
+                            $(this).attr("checked",false);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</lbscripts>

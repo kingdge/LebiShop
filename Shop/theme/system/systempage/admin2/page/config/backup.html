@@ -1,0 +1,89 @@
+﻿{layout:default} {class:Shop.Admin.Config.BackUP}
+<lbhead>
+    <title><%=Tag("数据备份")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("数据备份")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("数据备份")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 m-b-10">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-info" onclick="backup(0);"><i class="ti-plus"></i> <%=Tag("添加")%></button>
+                        <button class="btn btn-danger" onclick="DeleteConfirm()"><i class="ti-trash"></i> <%=Tag("删除")%></button>
+                        <button class="btn btn-default" onclick="Config();"><i class="ti-settings"></i> <%=Tag("配置")%></button>
+                        <%}%>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px" class="selectAll">
+                                    <a href="javascript:void(0);" onclick="$('input[name=\'files\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+                                </th>
+                                <th>
+                                    <%=Tag("名称")%>
+                                </th>
+                                <th>
+                                    <%=Tag("大小")%>(MB)
+                                </th>
+                                <th>
+                                    <%=Tag("时间")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%=GetList()%>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation ">
+                            <%=PageString%>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        function Config() {
+            $.ajax({
+                url: "backupconfig_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+                $("#EditModal").modal("show");
+            });
+        }
+        function backup() {
+            var postData ='';
+            var url = "<%=site.AdminPath %>/ajax/ajax_db.aspx?__Action=BackUP_add";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function DeleteConfirm() {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要删除吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "DeleteObj();");
+        }
+        function DeleteObj() {
+            $("#Modal-Confirm").modal("hide");
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_db.aspx?__Action=BackUP_del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbscripts>

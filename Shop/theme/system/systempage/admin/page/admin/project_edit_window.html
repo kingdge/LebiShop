@@ -1,0 +1,64 @@
+﻿{layout:simple} 
+{class:Shop.Admin.admin.Project_Edit_window}
+<lbbody>
+<table class="table">
+    <tr>
+        <th style="width: 20%;">
+            <%=Tag("名称")%>：
+        </th>
+        <td style="text-align: left;">
+            <input type="text" class="input" shop="true" name="Name" id="Name" value="<%=model.Name %>" min="notnull"/>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("管理分类")%>：
+        </th>
+        <td>
+            <%=Pro_TypeCheckbox("Pro_Type_ids", model.Pro_Type_ids, CurrentLanguage.Code)%>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("管理站点")%>：
+        </th>
+        <td>
+            <%=site.SiteCheckbox("Site_ids",model.Site_ids,CurrentLanguage.Code)%>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("供应商")%>：
+        </th>
+        <td>
+            <%=Shop.Bussiness.EX_Supplier.SupplierCheckbox("Supplier_ids",model.Supplier_ids,CurrentLanguage.Code)%>
+        </td>
+    </tr>
+    <tr>
+        <th style="width: 20%;">
+            <%=Tag("排序序号")%>：
+        </th>
+        <td style="text-align: left;">
+            <input type="text" class="input" shop="true" name="Sort" id="Sort" value="<%=model.Sort %>" style="width: 70px;" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+            <div class="tools tools-m">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    function SaveObj() {
+        var postData = GetFormJsonData("shop");
+        if (!CheckForm("shop", "span"))
+            return false;
+        var url = "<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=Project_Edit&id=<%=model.id %>";
+         RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", '?')});
+     }
+</script>
+</lbbody>

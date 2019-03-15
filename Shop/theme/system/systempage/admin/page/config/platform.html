@@ -1,0 +1,434 @@
+﻿{layout:default} {class:Shop.Admin.Config.platform}
+<lbhead>
+    <title>
+        <%=Tag("第三方配置")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+    <style>
+        .bottom{height: 0;overflow: hidden;display: none;}
+    </style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <%if (PageReturnMsg == ""){%>
+            <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span>
+                <%=Tag("保存")%></span></a></li>
+            <%}%>
+            <li class="name"><span id="navIgation">
+                <%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a>
+                >
+                <%=Tag("第三方配置") %></span></li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="proBox clear">
+        <ul class="btns clear">
+            <li class="menu">
+                <%=Tag("QQ登录") %>
+            </li>
+            <li>
+                <%=Tag("启用") %>：<input type="checkbox" name="platform_login" value="qq" <%=isselect("qq") %>
+                    shop="true" />
+            </li>
+            <li>
+                <%=Tag("申请地址") %>：<a href="http://connect.qq.com" target="_blank">http://connect.qq.com</a>
+            </li>
+        </ul>
+        <div class="iTabHead">
+            <table class="datalist">
+                <tr class="list">
+                    <td style="width: 150px;">
+                        Appid
+                    </td>
+                    <td align="left">
+                        <input type="text" class="input" id="platform_qq_id" name="platform_qq_id" shop="true"
+                            style="width: 200px;" value="<%=model.platform_qq_id %>" />
+                        <em></em>
+                    </td>
+                </tr>
+                <tr class="list">
+                    <td style="width: 150px;">
+                        Appkey
+                    </td>
+                    <td align="left">
+                        <input type="text" class="input" id="platform_qq_key" name="platform_qq_key" shop="true"
+                            style="width: 200px;" value="<%=model.platform_qq_key %>" />
+                        <em></em>
+                    </td>
+                </tr>
+                <tr class="list">
+                    <td style="width: 150px;">
+                        <%=Tag("图标") %>
+                    </td>
+                    <td align="left">
+                        <div id="image_platform_qq_image">
+                            <%if (model.platform_qq_image != "")
+                              {%>
+                            <img height="16" src="<%=site.WebPath + model.platform_qq_image%>" />
+                            <%} %>
+                        </div>
+                        <input type="text" shop="true" id="platform_qq_image" name="platform_qq_image" class="input"
+                            style="width: 200px;" value="<%=model.platform_qq_image%>" />
+                        <input id="file_platform_qq_image" name="file_platform_qq_image" class="input" type="file"
+                            onchange="uploadImage('platform_qq_image')" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="proBox clear">
+        <ul class="btns clear">
+            <li class="menu">
+                <%=Tag("新浪微博登录") %>
+            </li>
+            <li>
+                <%=Tag("启用") %>：<input type="checkbox" name="platform_login" value="weibo" <%=isselect("weibo") %>
+                    shop="true" />
+            </li>
+            <li>
+                <%=Tag("申请地址") %>：<a href="http://open.weibo.com/" target="_blank">http://open.weibo.com/</a>
+            </li>
+        </ul>
+        <div class="iTabHead">
+            <table class="datalist">
+                <tr class="list">
+                    <td style="width: 150px;">
+                        Appkey
+                    </td>
+                    <td align="left">
+                        <input type="text" class="input" id="platform_weibo_id" name="platform_weibo_id"
+                            shop="true" style="width: 200px;" value="<%=model.platform_weibo_id %>" />
+                        <em></em>
+                    </td>
+                </tr>
+                <tr class="list">
+                    <td style="width: 150px;">
+                        AppSecret
+                    </td>
+                    <td align="left">
+                        <input type="text" class="input" id="platform_weibo_key" name="platform_weibo_key"
+                            shop="true" style="width: 200px;" value="<%=model.platform_weibo_key %>" />
+                        <em></em>
+                    </td>
+                </tr>
+                <tr class="list">
+                    <td style="width: 150px;">
+                        <%=Tag("图标") %>
+                    </td>
+                    <td align="left">
+                        <div id="image_platform_weibo_image">
+                            <%if (model.platform_weibo_image != "")
+                              {%>
+                            <img height="16" src="<%=site.WebPath + model.platform_weibo_image%>" />
+                            <%} %>
+                        </div>
+                        <input type="text" shop="true" id="platform_weibo_image" name="platform_weibo_image"
+                            class="input" style="width: 200px;" value="<%=model.platform_weibo_image%>" />
+                        <input id="file_platform_weibo_image" name="file_platform_weibo_image" class="input"
+                            type="file" onchange="uploadImage('platform_weibo_image')" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="proBox clear">
+        <ul class="btns clear">
+            <li class="menu">
+                <%=Tag("淘宝登录") %>
+            </li>
+            <li>
+                <%=Tag("启用") %>：<input type="checkbox" name="platform_login" value="taobao" <%=isselect("taobao") %>
+                    shop="true" />
+            </li>
+             <li>
+                <%=Tag("申请地址") %>：<a href="http://open.taobao.com/" target="_blank">http://open.taobao.com/</a>
+            </li>
+        </ul>
+        <div class="iTabHead">
+            <table class="datalist">
+                <tr class="list">
+                    <td style="width: 150px;">
+                        Appkey
+                    </td>
+                    <td align="left">
+                        <input type="text" class="input" id="platform_taobao_key" name="platform_taobao_key"
+                            shop="true" style="width: 200px;" value="<%=model.platform_taobao_key %>" />
+                        <em></em>
+                    </td>
+                </tr>
+                <tr class="list">
+                    <td style="width: 150px;">
+                        AppSecret
+                    </td>
+                    <td align="left">
+                        <input type="text" class="input" id="platform_taobao_secret" name="platform_taobao_secret"
+                            shop="true" style="width: 200px;" value="<%=model.platform_taobao_secret %>" />
+                        <em></em>
+                    </td>
+                </tr>
+                <tr class="list">
+                    <td style="width: 150px;">
+                        <%=Tag("图标") %>
+                    </td>
+                    <td align="left">
+                        <div id="image_platform_taobao_image">
+                            <%if (model.platform_taobao_image != "")
+                              {%>
+                            <img height="16" src="<%=site.WebPath + model.platform_taobao_image%>" />
+                            <%} %>
+                        </div>
+                        <input type="text" shop="true" id="platform_taobao_image" name="platform_taobao_image"
+                            class="input" style="width: 200px;" value="<%=model.platform_taobao_image%>" />
+                        <input id="file_platform_taobao_image" name="file_platform_taobao_image" class="input" type="file" onchange="uploadImage('platform_taobao_image')" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="proBox clear">
+        <ul class="btns clear">
+            <li class="menu">
+                <%=Tag("Facebook登录") %>
+            </li>
+            <li>
+                <%=Tag("启用") %>：<input type="checkbox" name="platform_login" value="facebook" <%=isselect("facebook") %>
+                    shop="true" />
+            </li>
+             <li>
+                <%=Tag("申请地址") %>：<a href="https://developers.facebook.com/" target="_blank">https://developers.facebook.com/</a>
+            </li>
+        </ul>
+        <div class="iTabHead">
+            <table class="datalist">
+                <tr class="list">
+                    <td style="width: 150px;">
+                        Appid
+                    </td>
+                    <td align="left">
+                        <input type="text" class="input" id="platform_facebook_id" name="platform_facebook_id"
+                            shop="true" style="width: 200px;" value="<%=model.platform_facebook_id %>" />
+                        <em></em>
+                    </td>
+                </tr>
+                <tr class="list">
+                    <td style="width: 150px;">
+                        AppSecret
+                    </td>
+                    <td align="left">
+                        <input type="text" class="input" id="platform_facebook_secret" name="platform_facebook_secret"
+                            shop="true" style="width: 200px;" value="<%=model.platform_facebook_secret %>" />
+                        <em></em>
+                    </td>
+                </tr>
+                <tr class="list">
+                    <td style="width: 150px;">
+                        <%=Tag("图标") %>
+                    </td>
+                    <td align="left">
+                        <div id="image_platform_facebook_image">
+                            <%if (model.platform_facebook_image != "")
+                              {%>
+                            <img height="16" src="<%=site.WebPath + model.platform_facebook_image%>" />
+                            <%} %>
+                        </div>
+                        <input type="text" shop="true" id="platform_facebook_image" name="platform_facebook_image"
+                            class="input" style="width: 200px;" value="<%=model.platform_facebook_image%>" />
+                        <input id="file_platform_facebook_image" name="platform_facebook_image" class="input"
+                            type="file" onchange="uploadImage('platform_facebook_image')" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="proBox clear">
+        <ul class="btns clear">
+            <li class="menu">
+                <%=Tag("微信登录")%>
+            </li>
+            <li>
+                <%=Tag("启用") %>：<input type="checkbox" name="platform_login" value="weixin" <%=isselect("weixin") %>
+                    shop="true" />
+            </li>
+             <li>
+                <%=Tag("申请地址") %>：<a href="https://mp.weixin.qq.com/" target="_blank">https://mp.weixin.qq.com/</a>
+            </li>
+        </ul>
+        <div class="iTabHead">
+            <table class="datalist">
+                <tr class="list">
+                    <td style="width: 150px;">
+                        微信号
+                    </td>
+                    <td align="left">
+                        <input type="text" class="input" id="platform_weixin_number" name="platform_weixin_number"
+                            shop="true" style="width: 200px;" value="<%=model.platform_weixin_number %>" />
+                        <em></em>
+                    </td>
+                </tr>
+                <tr class="list">
+                    <td style="width: 150px;">
+                        Appid
+                    </td>
+                    <td align="left">
+                        <input type="text" class="input" id="platform_weixin_id" name="platform_weixin_id"
+                            shop="true" style="width: 200px;" value="<%=model.platform_weixin_id %>" />
+                        <em></em>
+                    </td>
+                </tr>
+                <tr class="list">
+                    <td style="width: 150px;">
+                        AppSecret
+                    </td>
+                    <td align="left">
+                        <input type="text" class="input" id="platform_weixin_secret" name="platform_weixin_secret"
+                            shop="true" style="width: 200px;" value="<%=model.platform_weixin_secret %>" />
+                        <em></em>
+                    </td>
+                </tr>
+                <tr class="list">
+                    <td style="width: 150px;">
+                        <%=Tag("图标") %>
+                    </td>
+                    <td align="left">
+                        <div id="image_platform_weixin_image">
+                            <%if (model.platform_weixin_image != "")
+                              {%>
+                            <img height="16" src="<%=site.WebPath + model.platform_weixin_image%>" />
+                            <%} %>
+                        </div>
+                        <input type="text" shop="true" id="platform_weixin_image" name="platform_weixin_image"
+                            class="input" style="width: 200px;" value="<%=model.platform_weixin_image%>" />
+                        <input id="file_platform_weixin_image" name="file_platform_weixin_image" class="input"
+                            type="file" onchange="uploadImage('platform_weixin_image')" />
+                    </td>
+                </tr>
+                <tr class="list">
+                    <td style="width: 150px;">
+                        <%=Tag("二维码") %>
+                    </td>
+                    <td align="left">
+                        <div id="image_platform_weixin_image_qrcode">
+                            <%if (model.platform_weixin_image_qrcode != "")
+                              {%>
+                            <img height="16" src="<%=site.WebPath + model.platform_weixin_image_qrcode%>" />
+                            <%} %>
+                        </div>
+                        <input type="text" shop="true" id="platform_weixin_image_qrcode" name="platform_weixin_image_qrcode"
+                            class="input" style="width: 200px;" value="<%=model.platform_weixin_image_qrcode%>" />
+                        <input id="file_platform_weixin_image_qrcode" name="file_platform_weixin_image_qrcode" class="input"
+                            type="file" onchange="uploadImage('platform_weixin_image_qrcode')" />
+                    </td>
+                </tr>
+                <tr class="list">
+                    <td style="width: 150px;">
+                        Token
+                    </td>
+                    <td align="left">
+                        <input type="text" class="input" id="platform_weixin_custemtoken" name="platform_weixin_custemtoken"
+                            shop="true" style="width: 200px;" value="<%=model.platform_weixin_custemtoken %>" />
+                        <em></em>
+                    </td>
+                </tr>
+                <tr class="list">
+                    <td style="width: 150px;">
+                        关注自动回复消息
+                    </td>
+                    <td align="left">
+                        <input type="text" class="input" id="platform_weixin_subscribe_automsg" name="platform_weixin_subscribe_automsg"
+                            shop="true" style="width: 200px;" value="<%=model.platform_weixin_subscribe_automsg %>" />
+                        <em></em>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <%--<div class="proBox clear">
+        <ul class="btns clear">
+            <li class="menu">
+                <%=Tag("Twitter登录") %>
+            </li>
+            <li>
+                <%=Tag("启用") %>：<input type="checkbox" name="platform_login" value="twitter" <%=isselect("twitter") %>
+                    shop="true" />
+            </li>
+        </ul>
+        <div class="iTabHead">
+            <table class="datalist">
+                <tr class="list">
+                    <td style="width: 150px;">
+                        Consumer key
+                    </td>
+                    <td align="left">
+                        <input type="text" class="input" id="platform_twitter_key" name="platform_twitter_key"
+                            shop="true" style="width: 200px;" value="<%=model.platform_twitter_key %>" />
+                        <em></em>
+                    </td>
+                </tr>
+                <tr class="list">
+                    <td style="width: 150px;">
+                        Consumer secret
+                    </td>
+                    <td align="left">
+                        <input type="text" class="input" id="platform_twitter_secret" name="platform_twitter_secret"
+                            shop="true" style="width: 200px;" value="<%=model.platform_twitter_secret %>" />
+                        <em></em>
+                    </td>
+                </tr>
+                <tr class="list">
+                    <td style="width: 150px;">
+                        <%=Tag("图标") %>
+                    </td>
+                    <td align="left">
+                        <div id="image_platform_twitter_image">
+                            <%if (model.platform_twitter_image != "")
+                              {%>
+                            <img height="16" src="<%=site.WebPath + model.platform_twitter_image%>" />
+                            <%} %>
+                        </div>
+                        <input type="text" shop="true" id="platform_twitter_image" name="platform_twitter_image"
+                            class="input" style="width: 200px;" value="<%=model.platform_twitter_image%>" />
+                        <input id="file_platform_twitter_image" name="file_platform_twitter_image" class="input"
+                            type="file" onchange="uploadImage('platform_twitter_image')" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>--%>
+    <script type="text/javascript">
+        function SaveObj() {
+            var postData = GetFormJsonData("shop");
+            var url="<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=PlatformConfig_Edit";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function uploadImage(id) {
+        $.ajaxFileUpload
+        (
+	        {
+	            url: WebPath + '/ajax/imageuploadone.aspx?path=config',
+	            secureuri: false,
+	            fileElementId: 'file_' + id,
+	            dataType: 'json',
+	            success: function (data, status) {
+	                if (data.msg != 'OK') {
+	                    MsgBox(2, data.msg, "");
+	                }
+	                else {
+	                    var imageUrl = data.ImageUrl;
+	                    if (imageUrl.length > 0) {
+	                        $("#image_" + id + "").html('<img height="16" src=' + WebPath + imageUrl + '>');
+	                        $("#" + id + "").val(imageUrl);
+	                    }
+	                }
+	            }
+	        }
+        )
+    }
+    </script>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+    </div>
+</lbbottom>

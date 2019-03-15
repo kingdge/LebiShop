@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="login_weibo.aspx.cs" Inherits="Shop.platform.login_weibo" %>

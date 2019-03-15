@@ -1,0 +1,18 @@
+﻿<!--
+Name:搜索关键词
+Page:All
+-->
+<div class="mbox clearfix">
+<div class="searchkeyword">
+<div class="mt">
+    <h2>{tag:搜索关键词}</h2>
+</div>
+<div class="mc">
+    <ul class="text">
+        ${#table:Lebi_Searchkey;#order:Sort desc,id desc;#top:5;
+        <li><%if ({Type}==1){ %><a href="<%=URL("P_Search",""+Lang({Name})+"") %>"><%}else{ %><a href="{%URL%}" target="_blank"><%} %><span><%=Lang({Name})%></span></a></li>
+        }$
+    </ul>
+</div>
+</div>
+</div>

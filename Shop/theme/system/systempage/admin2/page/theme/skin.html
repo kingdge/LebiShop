@@ -1,0 +1,154 @@
+﻿{layout:default} {class:Shop.Admin.theme.Skin}
+<lbhead>
+    <title><%=theme.Name %>-<%=Tag("模板管理")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("编辑模板")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/theme/default.aspx"><%=Tag("模板管理")%></a></li>
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/theme/skin.aspx?id=<%=theme.id %>"><%=theme.Name %></a></li>
+        <li class="breadcrumb-item active"><%=Tag("编辑模板")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="col-md-12">
+                <ul class="nav nav-tabs customtab m-t-15" role="tablist">
+                    <li class="nav-item"><a class="nav-link active" href="?id=<%=id %>&ispage=1" role="tab"><%=Tag("页面")%></a></li>
+                    <li class="nav-item"><a class="nav-link" href="filelist.aspx?id=<%=theme.id %>&t=block" role="tab"><%=Tag("块")%></a></li>
+                    <li class="nav-item"><a class="nav-link" href="filelist.aspx?id=<%=theme.id %>&t=layout" role="tab"><%=Tag("布局")%></a></li>
+                    <%if (theme.Path_JS != ""){ %>
+                    <li class="nav-item"><a class="nav-link" href="filelist.aspx?id=<%=theme.id %>&t=js" role="tab">JS</a></li>
+                    <%} %>
+                    <%if (theme.Path_CSS != ""){ %>
+                    <li class="nav-item"><a class="nav-link" href="filelist.aspx?id=<%=theme.id %>&t=css" role="tab">CSS</a></li>
+                    <%} %>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-9 m-b-10">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-info" onclick="EditSkin(<%=theme.id %>,0);"><i class="ti-plus"></i> <%=Tag("添加")%></button>
+                        <button class="btn btn-success" onclick="CreateTheme();"><i class="ti-files"></i> <%=Tag("生成主题")%></button>
+                        <%}%>
+                    </div>
+                    <div class="col-md-3 m-b-10">
+                        <div class="input-group">
+                            <input type="text" id="key" name="key" value="<%=key %>" class="form-control" onkeydown="if(event.keyCode==13){search_();}">
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-primary" onclick="search_();"><i class="ti-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <%=Tag("代码")%>
+                                </th>
+                                <th>
+                                    <%=Tag("名称")%>
+                                </th>
+                                <th>
+                                    <%=Tag("页面")%>
+                                </th>
+                                <th>
+                                    <%=Tag("类型")%>
+                                </th>
+                                <th>
+                                    <%=Tag("排序")%>
+                                </th>
+                                <th>
+                                    <%=Tag("添加时间")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_Theme_Skin model in models){%>
+                            <tr ondblclick="EditSkin(<%=theme.id %>,<%=model.id %>);">
+                                <td>
+                                    <%=model.Code %>
+                                </td>
+                                <td>
+                                    <%=model.Name %>
+                                </td>
+                                <td>
+                                    <%=model.PageName%>
+                                </td>
+                                <td>
+                                    <%=model.IsPage == 0 ? "<span class=\"label label-success\">" + Tag("块") + "</span>" : "<span class=\"label label-danger\">" + Tag("页面") + "</span>"%>
+                                </td>
+                                <td>
+                                    <%=model.Sort %>
+                                </td>
+                                <td>
+                                    <%=model.Time_Add %>
+                                </td>
+                                <td>
+                                    <a href="javascript:void(0)" onclick="EditSkin(<%=theme.id %>,<%=model.id %>);">
+                                        <%=Tag("编辑")%>
+                                    </a> | <%--<a href="javascript:void(0)" onclick="CreateSkin(<%=model.id %>);">
+                                        <%=Tag("生成")%>
+                                    </a> | --%><a href="javascript:void(0)" onclick="DeleteConfirm(<%=model.id %>);">
+                                        <%=Tag("删除")%>
+                                    </a>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation ">
+                            <%=PageString%>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        function search_() {
+            var key = $("#key").val();
+            window.location = "?id=<%=id%>&key=" + escape(key);
+        }
+        function Theme(id) {
+            window.location = "skin.aspx?id="+id;
+        }
+        function EditSkin(tid, id) {
+            window.location = "skin_edit.aspx?tid=" + tid + "&id=" + id;
+        }
+        function DeleteConfirm(id) {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要删除吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick","Del("+ id +");");
+        }
+        function Del(id) {
+            $("#Modal-Confirm").modal("hide");
+            var postData = { "id": id };
+            var url="<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=Skin_Del";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function CreateSkin(id) {
+            var postData = {"id":id};
+            var url="<%=site.AdminPath %>/ajax/ajax_aspx.aspx?__Action=CreateSkin";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+        function CreateTheme() {
+            var postData = { "Theme_id": <%=theme.id %> };
+            var url="<%=site.AdminPath %>/ajax/ajax_aspx.aspx?__Action=CreateTheme";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+    </script>
+</lbscripts>

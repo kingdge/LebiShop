@@ -1,0 +1,109 @@
+﻿{layout:default} {class:Shop.Admin.storeConfig.pluginconfig}
+<lbhead>
+    <title>
+        <%=Tag("插件管理")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("插件管理")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("插件管理")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 m-b-10">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-success" onclick="updatepage();"><i class="ti-loop"></i> <%=Tag("刷新插件")%></button>
+                        <%}%>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <%=Tag("程序集")%>
+                                </th>
+                                <th>
+                                    <%=Tag("名称")%>
+                                </th>
+                                <th>
+                                    <%=Tag("版本")%>
+                                </th>
+                                <th>
+                                    <%=Tag("开发商")%>
+                                </th>
+                                <th>
+                                    <%=Tag("状态")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (Shop.Model.PluginConfig model in models){ %>
+                            <tr class="list">
+                                <td>
+                                    <%=model.Assembly%>
+                                </td>
+                                <td>
+                                    <%=model.Name%>
+                                </td>
+                                <td>
+                                    <%=model.Version%>
+                                </td>
+                                <td>
+                                    <%=model.Company%>
+                                </td>
+                                <td>
+                                    <%=GetStatus(model.Assembly)?"<span class=\"label label-success\">" + Tag("启用") + "</span>" : "<span class=\"label label-danger\">" + Tag("禁用") + "</span>"%>
+                                </td>
+                                <td>
+                                    <a href="javascript:updatestatus('<%=model.Assembly%>');"><%=GetStatus(model.Assembly) ? Tag("禁用") : Tag("启用")%></a>
+                                    <%if (IsNew(model.Assembly))
+                                    { %>
+                                    | <a href="javascript:updatemenu('<%=model.Assembly%>');"><%=Tag("刷新菜单")%></a>
+                                    <%} %>
+                                    <%if (!IsTableOK(model.Assembly))
+                                    { %>
+                                    | <a href="javascript:updatetable('<%=model.Assembly%>');"><%=Tag("更新数据库结构")%></a>
+                                    <%} %>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        function updatemenu(id) {
+            var postData={"id":id};
+            var url="<%=site.AdminPath %>/ajax/Ajax_plugin.aspx?__Action=Plugin_updatemenu";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function updatetable(id) {
+            var postData={"id":id};
+            var url="<%=site.AdminPath %>/ajax/Ajax_plugin.aspx?__Action=Plugin_updatetable";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function updatestatus(id) {
+            var postData={"id":id};
+            var url="<%=site.AdminPath %>/ajax/Ajax_plugin.aspx?__Action=Plugin_updatestatus";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function updatepage(){
+            var postData="";
+            var url="<%=site.AdminPath %>/ajax/Ajax_plugin.aspx?__Action=Plugin_updatepage";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbscripts>

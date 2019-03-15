@@ -1,0 +1,52 @@
+﻿{layout:simple} {class:Shop.Admin.product.property_category_edit_window}
+<lbbody>
+<table cellspacing="0" border="0" style="width: 100%;" class="table">
+    <tr>
+        <th style="vertical-align:top">
+            <%=Tag("商品分类")%>：
+        </th>
+        <td>
+            <select name="Pro_Type_id" id="Pro_Type_id" shop="true" multiple="multiple" size="12">
+                <%=Shop.Bussiness.EX_Product.TypeOption(0, 0, 0, CurrentLanguage.Code, Shop.Bussiness.EX_Admin.Project().Pro_Type_ids)%>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("更新类型")%>：
+        </th>
+        <td>
+            <label><input type="radio" name="UpdateType" value="1" shop="true" checked /><%=Tag("显示")%></label>
+            <label><input type="radio" name="UpdateType" value="0" shop="true" /><%=Tag("移除")%></label>
+            <label><input type="radio" name="UpdateType" value="2" shop="true" /><%=Tag("覆盖")%></label>
+        </td>
+    </tr>
+    <tr>
+        <td class="action" colspan="2">
+            <div class="tools tools-m clear">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    function SaveObj() {
+        var postData = GetFormJsonData("shop");
+        var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Property_Category_Edit&tid=<%=tid %>&ids=<%=ids %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?");});
+    }
+    $().ready(function () {
+        $('#Pro_Type_id').multiselect2side({
+            selectedPosition: 'right',
+            moveOptions: false,
+            //search: "<img src='img/search.gif' align=\"absmiddle\" /> ",
+            labelsx: '',
+            labeldx: '',
+            autoSort: false,
+            autoSortAvailable: false
+        });
+    }); 
+</script>
+</lbbody>

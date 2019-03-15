@@ -1,0 +1,77 @@
+﻿{class:qianhai._Default} {Layout:3r}
+<lbbody>
+
+<form action="submit.aspx?order_id=<%=order.id %>" method="post" >
+<div class="nbbox clearfix">
+    <div class="user">
+        <div class="reg clearfix">
+            <div class="mt clearfix">
+                <h2>{tag:订单号码}：<%=order.Code %></h2>
+            </div>
+            <div class="mc clearfix">
+            <div class="dl-table clearfix">
+            <dl>
+                <dt><font color="red">*</font>{tag:金额}：</dt>
+                <dd>
+                    <%=currency %><%=Money %>
+                </dd>
+            </dl>
+            <dl>
+                <dt><font color="red">*</font>{tag:持卡人的名}：</dt>
+                <dd><input type="text" name="billing_firstName" shop="true" id="billing_firstName" style="width: 200px;" maxlength="20" class="input"  max="200" />
+                <span id="Formbilling_firstName" class="FormALT"></span>
+                </dd>
+            </dl>
+            <dl>
+                <dt><font color="red">*</font>{tag:持卡人的姓}：</dt>
+                <dd><input type="text" name="billing_lastName" shop="true" id="billing_lastName" style="width: 200px;" maxlength="20" class="input" max="200" />
+                <span id="Span1" class="FormALT"></span>
+                </dd>
+            </dl>
+            <dl>
+                <dt><font color="red">*</font>{tag:持卡人的邮箱}：</dt>
+                <dd><input type="text" name="billing_email" shop="true" id="billing_email" style="width: 200px;" maxlength="20" class="input" max="200" />
+                <span id="Span2" class="FormALT"></span>
+                </dd>
+            </dl>
+            <dl>
+                <dt><font color="red">*</font>{tag:持卡人的电话}：</dt>
+                <dd><input type="text" name="billing_phone" shop="true" id="billing_phone" style="width: 200px;" maxlength="20" class="input" max="200" />
+                <span id="Span3" class="FormALT"></span>
+                </dd>
+            </dl>
+            <dl>
+                <dt><font color="red">*</font>{tag:持卡人账单国家}：</dt>
+                <dd><input type="text" name="billing_country" shop="true" id="billing_country" style="width: 200px;" maxlength="20" class="input" max="200" />
+                <span id="Span5" class="FormALT"></span>
+                </dd>
+            </dl>
+            <dl>
+                <dt><font color="red">*</font>{tag:持卡人的城市}：</dt>
+                <dd><input type="text" name="billing_city" shop="true" id="billing_city" style="width: 200px;" maxlength="20" class="input" max="200" />
+                <span id="Span6" class="FormALT"></span>
+                </dd>
+            </dl>
+             <dl>
+                <dt><font color="red">*</font>{tag:持卡人的详细地址}：</dt>
+                <dd><input type="text" name="billing_address" shop="true" id="billing_address" style="width: 200px;" maxlength="20" class="input" max="200" />
+                <span id="Span4" class="FormALT"></span>
+                </dd>
+            </dl>
+            <dl>
+                <dt><font color="red">*</font>{tag:持卡人的邮编}：</dt>
+                <dd><input type="text" name="billing_zip" shop="true" id="billing_zip" style="width: 200px;" maxlength="20" class="input" max="200" />
+                <span id="Span7" class="FormALT"></span>
+                </dd>
+            </dl>
+            <dl class="dl-btn">
+                <dt></dt>
+                <dd><a href="javascript:void(0)" onclick="document.forms[0].submit();" class="btn btn-6"><s></s>{tag:立即提交}</a></dd>
+            </dl>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+</lbbody>

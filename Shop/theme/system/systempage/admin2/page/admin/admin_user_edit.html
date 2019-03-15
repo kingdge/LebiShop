@@ -1,0 +1,141 @@
+﻿{layout:default}
+{class:Shop.Admin.admin.Administrator_Edit}
+<lbhead>
+    <title><%=Tag("系统用户")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <link rel="stylesheet" type="text/css" href="<%=site.AdminAssetsPath %>/plugins/jquery.imgareaselect-0.9.10/css/imgareaselect-default.css" />
+</lbfile>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("系统用户")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><a href="default.aspx"><%=Tag("系统用户")%></a></li>
+        <li class="breadcrumb-item active"><%if (model.id > 0){ %><%=model.UserName%><%}else{ %><%=Tag("添加")%><%}%></li>
+    </ol>
+</lbpath>
+<lbbody>
+<%if (model.id > 0){ %>
+<div class="col-md-3">
+    <div class="card">
+        <div class="card-body">
+            <center class="m-t-30">
+                <img src="<%=model.Avatar %>" class="img-circle" width="150">
+                <h4 class="card-title m-t-10"><%=model.UserName %></h4>
+                <h6 class="card-subtitle"><%=model.RealName %></h6>
+                <div class="row text-center justify-content-md-center">
+                    <div class="col-12"><i class="ti-timer" title="<%=Tag("添加日期")%>"></i> <%=model.Time_Add %></div>
+                </div>
+            </center>
+            <div>
+                <hr>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <ul class="list-style-none">
+                        <li><a href="javascript:void(0)" onclick="EditPWD(<%=model.id %>);"><i class="ti-key"></i> <%=Tag("编辑密码")%></a></li>
+                        <li><a href="Log.aspx?type=0&id=<%=model.id %>" target="_blank"><i class="ti-hand-open"></i> <%=Tag("操作日志")%></a></li>
+                        <li><a href="Log.aspx?type=1&id=<%=model.id %>" target="_blank"><i class="ti-unlock"></i> <%=Tag("登陆日志")%></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%}%>
+<div class="<%if (model.id > 0){ %>col-md-9<%}else{ %>col-md-12<%}%>">
+    <div class="card">
+        <div class="col-md-12">
+            <ul class="nav nav-tabs customtab m-t-15" role="tablist">
+                <li class="nav-item"> <a class="nav-link active" href="admin_user_edit.aspx?id=<%=model.id %>" role="tab"><%if (model.id > 0)
+        { %><%=model.UserName%><%}else{ %><%=Tag("添加")%><%}%></a> </li>
+                <%if (model.id > 0){%><li class="nav-item"> <a class="nav-link" href="admin_user_avatar.aspx?id=<%=model.id %>" role="tab"><%=Tag("头像")%></a> </li><%}%>
+            </ul>
+        </div>
+        <div class="tab-content">
+            <div class="tab-pane active" id="home" role="tabpanel">
+                <div class="card-body">
+                    <form action="javascript:SaveObj();" novalidate>
+                        <div class="form-group">
+                            <label for="UserName"><%=Tag("登录账号")%>：</label>
+                            <input type="text" class="form-control" shop="true" id="UserName" name="UserName" value="<%=model.UserName %>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="RealName"><%=Tag("姓名")%>：</label>
+                            <input type="text" class="form-control" shop="true" id="RealName" name="RealName" value="<%=model.RealName %>">
+                        </div>
+                        <div class="form-group">
+                            <label for="Admin_Group_id"><%=Tag("权限组")%>：</label>
+                            <select shop="true" id="Admin_Group_id" name="Admin_Group_id" class="form-control">
+                                <%foreach (DB.LebiShop.Lebi_Admin_Group group in groups)
+                                {%>
+                                <option value="<%=group.id %>" <%=group.id==model.Admin_Group_id?"selected":"" %> ><%=Lang(group.Name) %></option>
+                                <%} %>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="Type_id_AdminStatus"><%=Tag("状态")%>：</label>
+                            <div class="input-group">
+                                <%=Shop.Bussiness.EX_Type.TypeRadio("AdminStatus", "Type_id_AdminStatus", model.Type_id_AdminStatus,"shop=\"true\"")%>
+                            </div>
+                        </div>
+                        <%if (model.id == 0){%>
+                        <div class="form-group">
+                            <label for="Password"><%=Tag("密码")%>：</label>
+                            <input type="password" pwd="true" id="Password" name="Password" class="form-control" required>
+                        </div>
+                        <%}%>
+                        <!--<div class="form-group">
+                            <label for="Pro_Type_ids"><%=Tag("管理分类")%>：</label>
+                            <div class="input-group">
+                                <%=Pro_TypeCheckbox("Pro_Type_ids", model.Pro_Type_ids, CurrentLanguage.Code)%>
+                            </div>
+                        </div>
+                        <%if (domain3admin){ %>
+                        <div class="form-group">
+                            <label for="Site_ids"><%=Tag("管理站点")%>：</label>
+                            <div class="input-group">
+                                <%=site.SiteCheckbox("Site_ids",model.Site_ids,CurrentLanguage.Code)%>
+                            </div>
+                        </div>
+                        <%}%>-->
+                        <div class="form-group">
+                            <label for="Project_ids"><%=Tag("管理项目")%>：</label>
+                            <div class="input-group">
+                                <%=ProjectCheckbox("Project_ids", model.Project_ids)%>
+                            </div>
+                        </div>
+                        <%if (PageReturnMsg == ""){%>
+                        <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                        <%}%>
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+</lbbody>
+<lbscripts>
+<script>
+    ! function(window, document, $) {
+        "use strict";
+        $("input,select,textarea").not("[type=submit]").jqBootstrapValidation()
+    }(window, document, jQuery);    function EditPWD(id) {
+        $.ajax({
+            url: "admin_pwd_edit_window.aspx",
+            type: "GET",
+            cache: false,
+            data: {id: id},
+        }).done(function(result){
+            $("#EditModal .modal-content").html(result);
+            $("#EditModal").modal("show");
+        });
+    }
+    function SaveObj() {
+        var postData = GetFormJsonData("shop");
+        var url = "<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=Admin_Edit&id=<%=model.id %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "default.aspx")});
+    }
+</script>
+</lbscripts>

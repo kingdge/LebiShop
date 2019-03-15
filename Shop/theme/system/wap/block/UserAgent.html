@@ -1,0 +1,115 @@
+﻿<!--
+Name:用户中心-推广佣金
+Page:P_UserAgent
+-->
+<%
+Shop.Bussiness.Agent.Model AgentInfo = Shop.Bussiness.Agent.Info(CurrentUser);
+int CommissionLevel = 3;
+string platform_weixin_number = SYS.platform_weixin_number;
+if (DT_id > 0){
+    platform_weixin_number = ShopCache.GetBaseConfig_DT(DT_id).platform_weixin_number;
+    DB.LebiShop.Lebi_DT currendt = DB.LebiShop.B_Lebi_DT.GetModel(DT_id);
+    if (currendt != null){
+        CommissionLevel = currendt.CommissionLevel;
+    }
+}
+%>
+<div class="nbbox clearfix">
+<div class="userbox">
+    <div class="mt">
+        <h2><%=Tag("基本信息")%></h2>
+    </div>
+    <div class="mc clearfix">
+    <div class="dl-table clearfix">
+    <dl>
+        <dt><%=Tag("邀请码")%>：</dt>
+        <dd><%=CurrentUser.id %></dd>
+    </dl>
+    <dl>
+        <dt><%=Tag("一级佣金")%>：</dt>
+        <dd><%=AgentInfo.Commission1%> %</dd>
+    </dl>
+    <%if (CommissionLevel >=2){%>
+    <dl>
+        <dt><%=Tag("二级佣金")%>：</dt>
+        <dd><%=AgentInfo.Commission2%> %</dd>
+    </dl>
+    <%}%>
+    <%if (CommissionLevel >=3){%>
+    <dl>
+        <dt><%=Tag("三级佣金")%>：</dt>
+        <dd><%=AgentInfo.Commission3%> %</dd>
+    </dl>
+    <%}%>
+    <dl>
+        <dt><%=Tag("我的推广链接")%>：</dt>
+        <dd><span  id="myurl">http://<%=SYS.Domain==""?ShopCache.GetMainSite().Domain:SYS.Domain%>{/lang}/?v=<%=CurrentUser.id %></span><!-- <input type="button" value="<%=Tag("复制")%>" onclick="copy_clip('http://<%=SYS.Domain==""?ShopCache.GetMainSite().Domain:SYS.Domain%>{/lang}/?v=<%=CurrentUser.id %>');" />--></dd>
+    </dl>
+    <%if (platform_weixin_number != ""){%>
+    <dl>
+        <dt><%=Tag("微信推广二维码")%>：</dt>
+        <dd>
+            <%Shop.Platform.weixin wx=new Shop.Platform.weixin(DT_id,CurrentSite);%>
+            <img src="<%=wx.QrCode(0, CurrentUser)%>" style="width:100px;"/>
+        </dd>
+    </dl>
+    <%}%>
+    <dl>
+        <dt><%=Tag("今日推广人数")%>：</dt>
+        <dd><a href="<%=URL("P_UserAgentList",""+System.DateTime.Now.Date.ToShortDateString()+","+System.DateTime.Now.Date.ToShortDateString()+"")%>"><%=AgentInfo.UserCountday%></a></dd>
+    </dl>
+    <dl>
+        <dt><%=Tag("月推广人数")%>：</dt>
+        <dd><a href="<%=URL("P_UserAgentList",""+System.DateTime.Now.Date.AddDays(0 - System.DateTime.Now.Day + 1).ToString("yyyy-MM-dd")+","+System.DateTime.Now.Date.ToShortDateString()+"")%>"><%=AgentInfo.UserCountmonth%></a></dd>
+    </dl>
+    <dl>
+        <dt><%=Tag("总推广人数")%>：</dt>
+        <dd><a href="<%=URL("P_UserAgentList","")%>"><%=AgentInfo.UserCount%></a></dd>
+    </dl>
+    <dl>
+        <dt><%=Tag("可提现金额") %>：</dt>
+        <dd><%=AgentInfo.Money%></dd>
+    </dl>
+    </div>
+    <script type="text/javascript">
+        function copy_() {
+            var myurl = $("#myurl").val();
+            copy_clip(myurl);
+        }
+        function copy_clip(txt) {
+            if (window.clipboardData) {
+                window.clipboardData.clearData();
+                window.clipboardData.setData("Text", txt);
+            } else if (navigator.userAgent.indexOf("Opera") != -1) {
+                window.location = txt;
+            } else if (window.netscape) {
+                try {
+                    netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
+                } catch (e) {
+                    alert("您的firefox安全限制限制您进行剪贴板操作，请在新窗口的地址栏里输入'about:config'然后找到'signed.applets.codebase_principal_support'设置为true'");
+                    return false;
+                }
+                var clip = Components.classes["@mozilla.org/widget/clipboard;1"].createInstance(Components.interfaces.nsIClipboard);
+                if (!clip)
+                    return;
+                var trans = Components.classes["@mozilla.org/widget/transferable;1"].createInstance(Components.interfaces.nsITransferable);
+                if (!trans)
+                    return;
+                trans.addDataFlavor('text/unicode');
+                var str = new Object();
+                var len = new Object();
+                var str = Components.classes["@mozilla.org/supports-string;1"].createInstance(Components.interfaces.nsISupportsString);
+                var copytext = txt;
+                str.data = copytext;
+                trans.setTransferData("text/unicode", str, copytext.length * 2);
+                var clipid = Components.interfaces.nsIClipboard;
+                if (!clip)
+                    return false;
+                clip.setData(trans, null, clipid.kGlobalClipboard);
+            }
+            alert("<%=Tag("已复制内容到剪贴板！")%>");
+        }
+    </script>
+    </div>
+</div>
+</div>

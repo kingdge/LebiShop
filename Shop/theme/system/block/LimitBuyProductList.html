@@ -1,0 +1,136 @@
+﻿<!--
+Name:限时抢购商品列表
+Page:P_LimitBuy
+-->
+<%if (CurrentLanguage.IsLazyLoad==1){ %>
+<script type="text/javascript">
+    $(document).ready(
+    function ($) {
+        $("img.listlazy").lazyload({
+            threshold: 300,
+            effect: "fadeIn"
+        });
+    });
+</script>
+<%} %>
+<div class="nbbox clearfix">
+<div id="filter">
+	<div class="fore1">
+		<dl class="order">
+			<dt>{Tag:排序}：</dt>
+			<dd <%if(sort == "" || sort == "1" || sort == "1a"){ %>class="curr <%if(sort == "" || sort == "1"){ %>up<%}else if(sort == "1a"){ %>down<%} %>"<%} %>><a href="<%=URL("P_LimitBuy",""+list+",1"+ordertmp+"") %>">{Tag:销量}</a><b></b></dd>
+			<dd <%if(sort == "2" || sort == "2a"){ %>class="curr <%if(sort == "2"){ %>up<%}else if(sort == "2a"){ %>down<%} %>"<%} %>><a href="<%=URL("P_LimitBuy",""+list+",2"+ordertmp+"") %>">{Tag:价格}</a><b></b></dd>
+			<dd <%if(sort == "3" || sort == "3a"){ %>class="curr <%if(sort == "3"){ %>up<%}else if(sort == "3a"){ %>down<%} %>"<%} %>><a href="<%=URL("P_LimitBuy",""+list+",3"+ordertmp+"") %>">{Tag:评价数}</a><b></b></dd>
+			<dd <%if(sort == "4" || sort == "4a"){ %>class="curr <%if(sort == "4"){ %>up<%}else if(sort == "4a"){ %>down<%} %>"<%} %>><a href="<%=URL("P_LimitBuy",""+list+",4"+ordertmp+"") %>">{Tag:上架时间}</a><b></b></dd>
+		</dl>
+        <div class="list-cutover">
+			<a id="list-unselected"  href="<%=URL("P_LimitBuy","2,"+ sort) %>" class="modfiy-url list-unselected <%=list=="2"?"list-curr":"" %>"><b></b>{Tag:列表}</a>
+			<a id="grid-unselected"  href="<%=URL("P_LimitBuy","1,"+ sort) %>" class="modfiy-url grid-unselected <%=(list=="1" || list=="")?"grid-curr":"" %>"><b></b>{Tag:网格}</a>
+		</div>
+		<div class="pagin pagin-m" id="top_pagi">
+			<%=HeadPage%>
+		</div>
+		<div class="total">
+			<span>{Tag:共} <strong><%=B_Lebi_Product.Counts(where) %></strong> {Tag:个商品}</span>
+		</div>
+		<span class="clr"></span>
+	</div>
+</div>
+<div class="mc clearfix">
+    <div class="productlist limitbuylist loadlist"><ul>
+        <%foreach (DB.LebiShop.Lebi_Product pro in products)
+        {
+        if (list == "" || list == "1"){ %>
+        <li class="grid loadli">
+            <div class="proimg">
+                <p><a href="<%=URL("P_Product",pro.id) %>"><img <%if (CurrentLanguage.IsLazyLoad==1){ %>class="listlazy" src="{/image}lazy.gif" data-original<%}else{ %>src<%} %>="<%=Image(pro,"medium")%>" alt="<%=Lang(pro.Name) %>" title="<%=Lang(pro.Name) %>" /></a></p></div>
+            <div class="proname">
+                <a href="<%=URL("P_Product",pro.id) %>" title="<%=Lang(pro.Name) %>"><%=Lang(pro.Name) %></a>
+            </div>
+            <div class="proinfo">
+            <div class="buyprice"><i>{Tag:抢购价}：</i><strong><%=FormatMoney(pro.Price_Sale) %></strong><em><%=Discount(pro.Price_Market,pro.Price_Sale) %>% {Tag:折}</em></div>
+            <%if (pro.Price > 0){ %><div class="marketprice"><i>{Tag:销售价}：</i><strong><%=FormatMoney(pro.Price) %></strong></div><%} %>
+            <div class="time_expired" endDate="<%if (System.DateTime.Now < pro.Time_Start){ %><%=DateFormat(pro.Time_Start)%><%}else{ %><%=DateFormat(pro.Time_Expired)%><%} %>" Product="<%=pro.id %>" id="time_expired_<%=pro.id %>">
+                <%if (System.DateTime.Now < pro.Time_Start){ %>{Tag:倒计时}<%}else{ %>{Tag:剩余}<%} %>：<span><span id="dayEnd_<%=pro.id %>">0</span><em>{Tag:天}</em><span id="hourEnd_<%=pro.id %>">0</span><em>{Tag:小时}</em><span id="minEnd_<%=pro.id %>">0</span><em>{Tag:分钟}</em><span id="secEnd_<%=pro.id %>">0</span><em>{Tag:秒}</em></span>
+            </div>
+            <div class="probtn">
+            <%if (System.DateTime.Now < pro.Time_Start){ %>
+            <strong>{Tag:开始}：<%= FormatTime(pro.Time_Start) %></strong>
+            <%}else if (System.DateTime.Now > pro.Time_Expired){ %>
+            <strong>{Tag:已结束}</strong>
+            <%}else{ %>
+                <%if(ProductStock(pro)<1){ %>
+                <strong>{Tag:已售罄}</strong>
+                <%}else{ %>
+                <a href="javascript:void(0)" onclick="UserProduct_Edit(<%=pro.id%>,142,$('#pro_num<%=pro.id%>').val());" class="buy btn btn-12"><s></s>{Tag:加入购物车}</a>
+                <%} %>
+            <%} %>
+            </div>
+            </div>
+        </li>
+        <%}else{ %>
+        <li class="list loadli">
+            <div class="proimg">
+                <p><a href="<%=URL("P_Product",pro.id) %>"><img <%if (CurrentLanguage.IsLazyLoad==1){ %>class="listlazy" src="{/image}lazy.gif" data-original<%}else{ %>src<%} %>="<%=Image(pro,"medium")%>" alt="<%=Lang(pro.Name) %>" title="<%=Lang(pro.Name) %>" /></a></p></div>
+            <div class="proname">
+                <a href="<%=URL("P_Product",pro.id) %>" title="<%=Lang(pro.Name) %>"><%=Lang(pro.Name) %></a>
+            </div>
+            <div class="proinfo">
+            <%if (pro.Price > 0){ %><div class="marketprice"><i>{Tag:销售价}：</i><strong><%=FormatMoney(pro.Price) %></strong></div><%} %>
+            <div class="buyprice"><i>{Tag:抢购价}：</i><strong><%=FormatMoney(pro.Price_Sale) %></strong><em><%=Discount(pro.Price_Market,pro.Price_Sale) %>% {Tag:折}</em></div>
+            <div class="time_expired" endDate="<%if (System.DateTime.Now < pro.Time_Start){ %><%=DateFormat(pro.Time_Start)%><%}else{ %><%=DateFormat(pro.Time_Expired)%><%} %>" Product="<%=pro.id %>" id="time_expired_<%=pro.id %>">
+                <%if (System.DateTime.Now < pro.Time_Start){ %>{Tag:倒计时}<%}else{ %>{Tag:剩余}<%} %>：<span><span id="dayEnd_<%=pro.id %>">0</span><em>{Tag:天}</em><span id="hourEnd_<%=pro.id %>">0</span><em>{Tag:小时}</em><span id="minEnd_<%=pro.id %>">0</span><em>{Tag:分钟}</em><span id="secEnd_<%=pro.id %>">0</span><em>{Tag:秒}</em></span>
+            </div>
+            <div class="introduction"><%=Lang(pro.Introduction)%></div>
+            <div class="probtn">
+            <%if (System.DateTime.Now < pro.Time_Start){ %>
+            <strong>{Tag:开始}：<%= FormatTime(pro.Time_Start) %></strong>
+            <%}else if (System.DateTime.Now > pro.Time_Expired){ %>
+            <strong>{Tag:已结束}</strong>
+            <%}else{ %>
+                <%if(ProductStock(pro)<1){ %>
+                <strong>{Tag:已售罄}</strong>
+                <%}else{ %>
+                <a href="javascript:void(0)" onclick="UserProduct_Edit(<%=pro.id%>,142,$('#pro_num<%=pro.id%>').val());" class="buy btn btn-12"><s></s>{Tag:加入购物车}</a>
+                <a href="javascript:void(0)" onclick="UserProduct_Edit(<%=pro.id%>,141);" class="fav btn btn-12"><s></s>{Tag:收藏}</a>
+                <%} %>
+            <%} %>
+            </div>
+            </div>
+        </li>
+        <%} %>
+        <%} %>
+    </ul></div>
+    <div class="clear"></div>
+</div>
+<%if (CurrentSite.IsMobile==0){ %>
+<div class="footpage">
+    <%=FootPage%>
+</div>
+<%}else{%>
+<div class="loadpage">
+    <a data-next="<%=NextPage%>"></a>
+</div>
+<script>
+    $(document).ready(function () {
+        var container = document.querySelector('.loadlist');
+        var ias = $.ias({
+            container: ".loadlist",
+            item: ".loadli",
+            pagination: ".loadpage",
+            next: ".loadpage a"
+        });
+        ias.on('render', function (items) {
+            //$(items).css({ opacity: 0 });
+        });
+        ias.on("rendered", function (items) {
+        });
+        ias.extension(new IASSpinnerExtension({ html: "<li class=\"loadinginfo\"><img src=\"{src}\" />&nbsp;{Tag:加载中}</li>" }));
+        ias.extension(new IASTriggerExtension({ text: '{Tag:加载更多}', offset: 100, html: "<li class=\"loadinginfo more\"><p>{text}</p></li>" }));
+        ias.extension(new IASNoneLeftExtension({
+            text: '', html: ""
+        }));
+    });
+</script>
+<%}%>
+</div>

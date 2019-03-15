@@ -1,0 +1,18 @@
+﻿<!--
+Name:币种切换横版
+Page:All
+-->
+<%if(SYS.IsMutiCurrencyShow=="0"){ %>
+<div class="currency">
+    <ul class="dropcurrency">
+        <li class="currency_li"><a class="noclick"><span>{Tag:币种}：</span><s><%=CurrentCurrency.Code %></s></a><dl
+            class="currency_li_content">
+            ${#table:Lebi_Currency;#order:Sort desc;
+            <dd <%if ({i}==RecordCount){%>class="last" <%} %>>
+                <a href="javascript:SetCurrency({%id%},'{%Code%}',{%ExchangeRate%},'{%Msige%}','{%DecimalLength%}');">{%Code%}</a></dd>
+            }$
+        </dl>
+        </li>
+    </ul>
+</div>
+<%} %>

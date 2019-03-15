@@ -1,0 +1,84 @@
+﻿<!--
+Name:用户中心-安全问题
+Page:P_UserQuestion
+-->
+<div class="nbbox clearfix">
+<div class="userbox">
+    <div class="mt">
+        <h2>{tag:安全问题}</h2>
+    </div>
+    <div class="mc clearfix">
+    <div class="dl-table clearfix">
+    <%if (recordCount == 0){ %>
+    <dl>
+        <dt>{tag:问题}：</dt>
+        <dd><select name="Question_id1" id="Question_id1" shop="true">
+            <%foreach (DB.LebiShop.Lebi_User_Question model in user_questions)
+            {%>
+            <option value="<%=model.id %>"><%=Lang(model.Name)%></option>
+            <%} %>
+			</select></dd>
+    </dl>
+    <dl>
+        <dt>{tag:答案}：</dt>
+        <dd><input type="text" id="Answer1" name="Answer1" size="30" class="input" value="" min="notnull" shop="true" /></dd>
+    </dl>
+    <dl>
+        <dt>{tag:问题}：</dt>
+        <dd><select name="Question_id2" id="Question_id2" shop="true">
+            <%foreach (DB.LebiShop.Lebi_User_Question model in user_questions)
+            {%>
+            <option value="<%=model.id %>"><%=Lang(model.Name)%></option>
+            <%} %>
+			</select></dd>
+    </dl>
+    <dl>
+        <dt>{tag:答案}：</dt>
+        <dd><input type="text" id="Answer2" name="Answer2" size="30" class="input" value="" min="notnull" shop="true" /></dd>
+    </dl>
+    <dl class="dl-btn">
+        <dt></dt>
+        <dd><a href="javascript:void(0)" onclick="submit();" class="btn btn-11"><s></s>{tag:提交}</a></dd>
+    </dl>
+    <%}else{ %>
+    <%int i=1;foreach (DB.LebiShop.Lebi_User_Answer model in user_answers){%>
+    <dl>
+        <dt>{tag:问题}：</dt>
+        <dd><input type="hidden" name="Question_id<%=i %>" id="Question_id<%=i %>" value="<%=model.User_Question_id%>" shop="true" />
+		<%=QuestionName(model.User_Question_id) %></dd>
+    </dl>
+    <dl>
+        <dt>{tag:答案}：</dt>
+        <dd><input type="text" id="Answer<%=i %>" name="Answer<%=i %>" size="30" class="input" value="" min="notnull" shop="true" /></dd>
+    </dl>
+    <%i++;} %>
+    <dl class="dl-btn">
+        <dt></dt>
+        <dd><a href="javascript:void(0)" onclick="submit();" class="btn btn-11"><s></s><%if (type == 0){ %>{tag:重置}<%}else{ %>{tag:提交}<%} %></a></dd>
+    </dl>
+    <%} %>
+    </div>
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+    function submit() {
+        var postData = GetFormJsonData("shop");
+        if (!CheckForm("shop"))
+            return false;
+        <%if (recordCount == 0){ %>
+        if ($("#Question_id1").val() == $("#Question_id2").val()){
+            MsgBox(2, "{tag:请选择两个不同的问题}", "");
+            return false;
+        }
+        <%} %>
+        var url = path+"/Ajax/Ajax_userin.aspx?__Action=Question_Edit&type=<%=type %>";
+        RequestAjax(url, postData, function (res) { 
+        if (res.type == 0){
+            MsgBox(1, "{tag:提交成功}", "<%=URL("P_UserChangePassword","")%>"); 
+        }else{
+            MsgBox(1, "{tag:原始支付密码已清空，请重新设置支付密码}", res.url); 
+        }
+        });
+    }
+</script>

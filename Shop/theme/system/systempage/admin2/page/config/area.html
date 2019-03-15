@@ -1,0 +1,143 @@
+﻿{layout:default} {class:Shop.Admin.storeConfig.Area}
+<lbhead>
+    <title><%=Tag("地名管理")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("地名管理")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("地名管理")%> <%=Getpath(pid)%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-9 m-b-10">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-info" onclick="EditArea(0);"><i class="ti-plus"></i> <%=Tag("添加")%></button>
+                        <button class="btn btn-success" onclick="Update()"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                        <button class="btn btn-danger" onclick="DeleteConfirm()"><i class="ti-trash"></i> <%=Tag("删除")%></button>
+                        <%}%>
+                    </div>
+                    <div class="col-md-3 m-b-10">
+                        <div class="input-group">
+                            <input type="text" id="key" name="key" value="<%=key %>" class="form-control" onkeydown="if(event.keyCode==13){search_();}">
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-primary" onclick="search_();"><i class="ti-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th class="selectAll" style="width:40px">
+                                    <a href="javascript:void(0);" onclick="$('input[name=\'Fid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+                                </th>
+                                <th>
+                                    <%=Tag("ID")%>
+                                </th>
+                                <th>
+                                    <%=Tag("代码")%>
+                                </th>
+                                <th>
+                                    <%=Tag("名称")%>
+                                </th>
+                                <th>
+                                    <%=Tag("子地名数")%>
+                                </th>
+                                <th style="width:7%">
+                                    <%=Tag("排序")%>
+                                </th>
+                                <th>
+                                    <%=Tag("编辑")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_Area model in models){%>
+                            <tr ondblclick="EditArea(<%=model.id %>);">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox<%=model.id %>" name="Fid" value="<%=model.id %>" class="custom-control-input" del="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                    <input type="hidden" name="IDS" shop="true" value="<%=model.id %>" />
+                                </td>
+                                <td>
+                                    <%=model.id %>
+                                </td>
+                                <td>
+                                    <%=model.Code %>
+                                </td>
+                                <td>
+                                    <%=model.Name %>
+                                </td>
+                                <td>
+                                    <%if (Count(model.id) == 0)
+                                    { %><%=Count(model.id)%><%}
+                                    else
+                                    { %><a href="?pid=<%=model.id %>"><%=Count(model.id)%></a><%} %>
+                                </td>
+                                <td>
+                                    <input type="text" id="Sort<%=model.id %>" name="Sort<%=model.id %>" value="<%=model.Sort %>" class="form-control form-control-sm" shop="true" onkeyup="value=value.replace(/[^\d]/g,'')">
+                                </td>
+                                <td>
+                                    <a href="javascript:void(0)" onclick="EditArea(<%=model.id %>);"><%=Tag("编辑")%></a> | <a href="?pid=<%=model.id %>"><%=Tag("查看")%></a>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation ">
+                            <%=PageString%>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        function search_() {
+            var key = $("#key").val();
+            window.location = "?pid=<%=pid %>&key=" + escape(key);
+        }
+        function EditArea(id) {
+            var title_ = "<%=Tag("编辑地名")%>";
+            if (id == 0) title_ = "<%=Tag("添加地名")%>"
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "area_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {id: id,pid: '<%=pid %>',title: title_},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function DeleteConfirm() {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要删除吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "Area_Del();");
+        }
+        function Area_Del() {
+            $("#Modal-Confirm").modal("hide");
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=Area_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function Update() {
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=Area_Update";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbscripts>

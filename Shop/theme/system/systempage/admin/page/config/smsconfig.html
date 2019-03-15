@@ -1,0 +1,250 @@
+﻿{layout:default} {class:Shop.Admin.storeConfig.SMSConfig}
+<lbhead>
+    <title>
+        <%=Tag("短信设置")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <style>
+        .bottom{height: 0;overflow: hidden;display: none;}
+    </style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <%if (PageReturnMsg == ""){%>
+            <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span>
+                <%=Tag("保存")%></span></a></li>
+            <%}%>
+            <li class="mes"><span id="Span1"><font id="mes"></font></span></li>
+            <li class="name"><span id="navIgation">
+                <%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a>
+                >
+                <%=Tag("短信设置")%></span></li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>
+                    <%=Tag("短信平台")%>：
+                </th>
+                <td>
+                    <select name="SMS_server" id="SMS_server" shop="true" onchange="changeserver();" >
+                        <option value="0" <%=model.SMS_server=="0"?"selected":"" %>>时代互联</option>
+                        <option value="1" <%=model.SMS_server=="1"?"selected":"" %>>yunsms.cn</option>
+                        <option value="999" <%=model.SMS_server=="999"?"selected":"" %>>通用HTTP接口</option>
+                    </select>
+                </td>
+            </tr>
+            <tr id="httpapi">
+                <th>
+                    接口地址：
+                </th>
+                <td>
+                    <input type="text" class="input" id="SMS_httpapi" name="SMS_httpapi" shop="true" style="width: 400px;"
+                        value="<%=model.SMS_httpapi %>" />
+                    <br/><em>{$username}：短信账号名{$password}：帐户密码{$phonenumber}：手机号码{$content}：短信内容<br/>
+                    示例：http://sms.xxx.com/send/?user={$username}&pwd={$password}&phone={$phonenumber}&content={$content}
+                    </em>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <%=Tag("短信帐号")%>：
+                </th>
+                <td>
+                    <input type="text" class="input" id="SMS_user" name="SMS_user" shop="true" style="width: 200px;"
+                        value="<%=model.SMS_user %>" />
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <%=Tag("短信密码")%>：
+                </th>
+                <td>
+                    <input type="password" class="input" id="SMS_password" name="SMS_password" shop="true"
+                        style="width: 200px;" value="<%=SMS_password %>" />
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <%=Tag("短信后缀")%>：
+                </th>
+                <td>
+                    <input type="text" class="input" id="SMS_lastmsg" name="SMS_lastmsg" shop="true" style="width: 200px;"
+                        value="<%=model.SMS_lastmsg %>" />
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <%=Tag("状态")%>：
+                </th>
+                <td>
+                    <input type="radio" name="SMS_state" value="1" shop="true" <%=model.SMS_state=="1"?"checked":"" %> /><%=Tag("开启")%>
+                    <input type="radio" name="SMS_state" value="0" shop="true" <%=model.SMS_state=="0"?"checked":"" %> /><%=Tag("关闭")%>
+                </td>
+            </tr>
+            
+            <tr>
+                <th>
+                    <%=Tag("发给会员")%>：
+                </th>
+                <td>
+                    <%string ms = model.SMS_sendmode;
+                      if (ms == null)
+                          ms = "";
+                    %>
+                    <label>
+                        <input type="checkbox" name="SMS_sendmode" value="SMSTPL_newuser" shop="true" <%=ms.Contains("SMSTPL_newuser")?"checked":"" %> /><%=Tag("新用户注册")%></label>
+                    <label>
+                        <input type="checkbox" name="SMS_sendmode" value="SMSTPL_ordersubmit" shop="true"
+                            <%=ms.Contains("SMSTPL_ordersubmit")?"checked":"" %> /><%=Tag("订单提交")%></label>
+                    <label>
+                        <input type="checkbox" name="SMS_sendmode" value="SMSTPL_ordershipping" shop="true"
+                            <%=ms.Contains("SMSTPL_ordershipping")?"checked":"" %> /><%=Tag("订单发货")%></label>
+                     <label>
+                        <input type="checkbox" name="SMS_sendmode" value="SMSTPL_orderpickup" shop="true"
+                            <%=ms.Contains("SMSTPL_orderpickup")?"checked":"" %> /><%=Tag("订单自提确认")%></label>
+                    <label>
+                        <input type="checkbox" name="SMS_sendmode" value="SMSTPL_balance" shop="true" <%=ms.Contains("SMSTPL_balance")?"checked":"" %> /><%=Tag("余额提醒")%></label>
+                    <label>
+                        <input type="checkbox" name="SMS_sendmode" value="SMSTPL_getpwd" shop="true" <%=ms.Contains("SMSTPL_getpwd")?"checked":"" %> /><%=Tag("找回密码")%></label>
+                    <label>
+                        <input type="checkbox" name="SMS_sendmode" value="SMSTPL_getnewpwd" shop="true" <%=ms.Contains("SMSTPL_getnewpwd")?"checked":"" %> /><%=Tag("获取新密码")%></label>
+                    <label>
+                        <input type="checkbox" name="SMS_sendmode" value="SMSTPL_comment" shop="true" <%=ms.Contains("SMSTPL_comment")?"checked":"" %> /><%=Tag("商品评论")%></label>
+                    <label>
+                        <input type="checkbox" name="SMS_sendmode" value="SMSTPL_ask" shop="true" <%=ms.Contains("SMSTPL_ask")?"checked":"" %> /><%=Tag("商品咨询")%></label>
+                    <label>
+                        <input type="checkbox" name="SMS_sendmode" value="SMSTPL_message" shop="true" <%=ms.Contains("SMSTPL_message")?"checked":"" %> /><%=Tag("站内信")%></label>
+                    <label>
+                        <input type="checkbox" name="SMS_sendmode" value="SMSTPL_reserveok" shop="true" <%=ms.Contains("SMSTPL_reserveok")?"checked":"" %> /><%=Tag("预定到货提醒")%></label>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <%=Tag("发给管理员")%>：
+                </th>
+                <td>
+                    <label>
+                        <input type="checkbox" name="SMS_sendmode" value="SMSTPL_Admin_newuser" shop="true"
+                            <%=ms.Contains("SMSTPL_Admin_newuser")?"checked":"" %> /><%=Tag("新用户注册")%></label>
+                    <label>
+                        <input type="checkbox" name="SMS_sendmode" value="SMSTPL_Admin_ordersubmit" shop="true"
+                            <%=ms.Contains("SMSTPL_Admin_ordersubmit")?"checked":"" %> /><%=Tag("订单提交")%></label>
+                    <label>
+                        <input type="checkbox" name="SMS_sendmode" value="SMSTPL_Admin_orderpaid" shop="true"
+                            <%=ms.Contains("SMSTPL_Admin_orderpaid")?"checked":"" %> /><%=Tag("订单付款")%></label>
+                    <label>
+                        <input type="checkbox" name="SMS_sendmode" value="SMSTPL_Admin_orderrecive" shop="true"
+                            <%=ms.Contains("SMSTPL_Admin_orderrecive")?"checked":"" %> /><%=Tag("订单收货")%></label>
+                    <label>
+                        <input type="checkbox" name="SMS_sendmode" value="SMSTPL_Admin_ordercomment" shop="true"
+                            <%=ms.Contains("SMSTPL_Admin_ordercomment")?"checked":"" %> /><%=Tag("订单留言")%></label>
+                    <label>
+                        <input type="checkbox" name="SMS_sendmode" value="SMSTPL_Admin_inquiry" shop="true"
+                            <%=ms.Contains("SMSTPL_Admin_inquiry")?"checked":"" %> /><%=Tag("留言反馈")%></label>
+                    <label>
+                        <input type="checkbox" name="SMS_sendmode" value="SMSTPL_Admin_comment" shop="true"
+                            <%=ms.Contains("SMSTPL_Admin_comment")?"checked":"" %> /><%=Tag("商品评论")%></label>
+                    <label>
+                        <input type="checkbox" name="SMS_sendmode" value="SMSTPL_Admin_ask" shop="true" <%=ms.Contains("SMSTPL_Admin_ask")?"checked":"" %> /><%=Tag("商品咨询")%></label>
+                    <label>
+                        <input type="checkbox" name="SMS_sendmode" value="SMSTPL_Admin_message" shop="true"
+                            <%=ms.Contains("SMSTPL_Admin_message")?"checked":"" %> /><%=Tag("站内信")%></label>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <%=Tag("手机号码")%>：
+                </th>
+                <td>
+                    <input type="text" class="input" id="SMS_reciveno" name="SMS_reciveno" shop="true"
+                        style="width: 200px;" value="<%=model.SMS_reciveno %>" />
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <%=Tag("最大字数")%>：
+                </th>
+                <td>
+                    <input type="text" class="input" id="SMS_maxlen" name="SMS_maxlen" shop="true" style="width: 70px;"
+                        value="<%=model.SMS_maxlen %>" />
+                </td>
+            </tr>
+            <tr class="sdhl">
+                <th>
+                    <%=Tag("端口号")%>：
+                </th>
+                <td>
+                    <input type="text" class="input" id="SMS_serverport" name="SMS_serverport" shop="true"
+                        style="width: 200px;" value="<%=model.SMS_serverport %>" />
+                </td>
+            </tr>
+            
+            
+             <tr class="sdhl">
+                <th>
+                    <%=Tag("发送通道")%>：
+                </th>
+                <td>
+                    <select name="SMS_apitype" shop="true">
+                        <option value="3" <%=model.SMS_apitype=="3"?"selected":"" %>>即时通道(客服类推荐) (发送1条扣去1.3条)</option>
+                        <option value="2" <%=model.SMS_apitype=="2"?"selected":"" %>>普通通道(发送1条扣去1条)</option>
+                    </select>
+                </td>
+            </tr>
+             <tr class="sdhl">
+                <th>
+                    <%=Tag("短信余额")%>：
+                </th>
+                <td>
+                    <%=account%>
+                </td>
+            </tr>
+    <%
+    if (!Shop.LebiAPI.Service.Instanse.Check("managelicenese")){
+    %>
+            <tr>
+                <td colspan="2" class="classfaq">
+                    <div class="faq_main">
+                        <p class="faq_title">
+                            时代互联通道说明：</p>
+                        普通通道：会对短信内容进行严格审核，不允许发送含有任何营销内容的短信；<br />
+                        即时通道：专为需即时发送的客户开辟的绿色通道，发送速度很快，支持回复短信。<br />
+                        注意：在短信发送高峰时期，有时短信网关及通道接口有可能会出现涌堵现象，这时为节省发送时间，建议您更换通道来发送。<br />
+                        短信购买：<a href="http://web.56770.com/mobile/" target="_blank">http://web.56770.com/mobile/</a>
+                    </div>
+                </td>
+            </tr>
+    <%}%>
+        </tbody>
+    </table>
+    <script type="text/javascript">
+        function SaveObj() {
+            var postData = GetFormJsonData("shop");
+            var url="<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=SMSConfig_Edit";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+        function changeserver()
+        {
+            var st=$("#SMS_server").val();
+            if(st=='0')
+                $('.sdhl').show();
+            else
+                $('.sdhl').hide();
+            if(st=='999')
+                $('#httpapi').show();
+            else
+                $('#httpapi').hide();
+        }
+        changeserver();
+    </script>
+</lbbody>
+<lbbottom>
+    <input type="hidden" id="pwd" runat="server" />
+    <div class="bottom" id="body_bottom">
+    </div>
+</lbbottom>

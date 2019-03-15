@@ -1,0 +1,37 @@
+﻿{layout:default} {class:Shop.Admin.storeConfig.Sitemap}
+<lbhead>
+    <title><%=Tag("网站地图")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("提交")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("网站地图")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table class="table">
+        <tr>
+            <th><%=Tag("地图路径")%>：</th>
+            <td>http://<%=LB.Tools.RequestTool.GetRequestDomain()%>/Sitemap.xml</td>
+        </tr>
+        <tr>
+            <td colspan="2" class="classfaq">
+                    <div class="faq_main">
+                        <p class="faq_title"><%=Tag("使用答疑：")%></p>
+                        <%=Tag("将网站地图提交给搜索引擎，即可完成网站信息的自动收录。")%>
+                    </div>
+                </td>
+            </tr>
+    </table>
+    <script type="text/javascript">
+        function SaveObj() {
+            var postData = "";
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=Sitemap_Edit";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+    </script>
+</lbbody>

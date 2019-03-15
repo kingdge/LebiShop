@@ -1,0 +1,55 @@
+﻿{layout:simple} {class:Shop.Admin.order.selectproduct_window}
+<lbbody>
+<table
+    class="table">
+    <tr>
+        <th style="width: 100px">
+            商品编号：
+        </th>
+        <td>
+            <%=product.Number %>
+        </td>
+    </tr>
+    <tr>
+        <th style="width: 100px">
+            商品名称：
+        </th>
+        <td>
+            <%=Lang(product.Name) %>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            选择：
+        </th>
+        <td>
+            <select id="productid" name="productid" sproduct="true">
+            <%foreach (DB.LebiShop.Lebi_Product model in models)
+              {
+            %>
+                <option value="<%=model.id %>" <%=product.id==model.id?"selected":"" %>><%=getproperty(model.ProPerty131) %><%=model.Type_id_ProductStatus==100?"已下架":""%></option>
+            <%} %>
+            </select>
+        </td>
+
+    </tr>
+    
+    <tr>
+        <td colspan="2" class="action" onchange>
+            <div class="tools tools-m">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="shopfahuo();"><b></b><span>
+                        <%=Tag("确定")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    function shopfahuo() {
+        var postData = GetFormJsonData("sproduct");
+        var url = "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=order_product_edit&orderid=<%=order.id %>&id=<%=orderproduct.id %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+</script>
+</lbbody>

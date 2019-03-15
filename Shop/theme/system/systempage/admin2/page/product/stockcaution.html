@@ -1,0 +1,147 @@
+﻿{layout:default} {class:Shop.Admin.product.StockCaution}
+<lbhead>
+    <title><%=Tag("库存预警")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <link href="<%=site.AdminAssetsPath %>/plugins/daterangepicker/daterangepicker.css" rel="stylesheet">
+</lbfile>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("库存预警")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("库存预警")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-9 m-b-10">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-danger" onclick="DeleteConfirm(0)"><i class="ti-trash"></i> <%=Tag("删除")%></button>
+                        <%}%>
+                    </div>
+                    <div class="col-md-3 m-b-10">
+                        <div class="input-group">
+                            <input type="text" name="daterange" id="daterange" class="form-control">
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <span class="ti-calendar"></span>
+                                </span>
+                            </div>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-primary" onclick="search_();"><i class="ti-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th class="selectAll" style="width:40px">
+                                    <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+                                </th>
+                                <th>
+                                    <%=Tag("图片")%>
+                                </th>
+                                <th>
+                                    <%=Tag("商品名称")%>
+                                </th>
+                                <th>
+                                    <%=Tag("内容")%>
+                                </th>
+                                <th>
+                                    <%=Tag("描述")%>
+                                </th>
+                                <th>
+                                    <%=Tag("时间")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_Log model in models){%>
+                            <tr ondblclick="View(<%=model.id %>);">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox<%=model.id %>" name="id" value="<%=model.id %>" class="custom-control-input" del="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <% if (GetProduct(model.Keyid).ImageSmall != ""){ %>
+                                    <a href="<%=Image(GetProduct(model.Keyid).ImageOriginal," big") %>" data-lightbox="image<%=model.id %>"><img style="height: 30px;width: 30px;vertical-align:middle" src="<%=Image(GetProduct(model.Keyid).ImageOriginal,50,50) %>" /></a>
+                                    <%} %>
+                                </td>
+                                <td>
+                                    <%=Lang(GetProduct(model.Keyid).Name)%>&nbsp;<a target="_blank" href="<%=Shop.Bussiness.ThemeUrl.GetURL(" P_Product",model.Keyid.ToString(),"",CurrentLanguage)%>"><i class="ti-new-window"></i></a>
+                                </td>
+                                <td>
+                                    <%=model.Content%>
+                                </td>
+                                <td>
+                                    <%=model.Description%>
+                                </td>
+                                <td>
+                                    <%=FormatTime(model.Time_Add) %>
+                                </td>
+                                <td>
+                                    <a href="javascript:void(0)" onclick="View(<%=model.id %>);"><%=Tag("查看")%></a>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation ">
+                            <%=PageString%>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    {MOD:DateRangePicker}
+    <script>
+        function search_() {
+            var dateFrom = "";
+            var dateTo = "";
+            var daterange = $("#daterange").val();
+            if (daterange.indexOf(" - ") >-1){
+                dateFrom = daterange.split(" - ")[0];
+                dateTo = daterange.split(" - ")[1];
+            }
+            window.location = "?dateFrom=" + dateFrom + "&dateTo=" + dateTo ;
+        }
+        function View(id) {
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "<%=site.AdminPath %>/admin/log_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {id:id},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function DeleteConfirm() {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要删除吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "Delete();");
+        }
+        function Delete() {
+            $("#Modal-Confirm").modal("hide");
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_admin.aspx?__Action=Log_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbscripts>

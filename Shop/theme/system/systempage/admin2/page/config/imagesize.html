@@ -1,0 +1,71 @@
+﻿{layout:default} {class:Shop.Admin.Config.ImageSize}
+<lbhead>
+    <title><%=Tag("图片尺寸")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+</lbfile>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("图片尺寸")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("图片尺寸")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <%=Tag("宽度")%>
+                                </th>
+                                <th>
+                                    <%=Tag("高度")%>
+                                </th>
+                                <th>
+                                    <%=Tag("需生成的数量")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_ImageSize model in models){
+                            int c = Count(model);
+                            %>
+                            <tr>
+                                <td>
+                                    <%=model.Width %>
+                                </td>
+                                <td>
+                                    <%=model.Height %>
+                                </td>
+                                <td>
+                                    <%=c %>
+                                </td>
+                                <td>
+                                    <%if (c > 0){ %>
+                                    <a href="javascript:void(0)" onclick="CreatImageBySize(<%=model.id %>);"><%=Tag("生成")%></a>
+                                    <%} %>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script type="text/javascript">
+        function CreatImageBySize(id) {
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=CreatImageBySize&id="+id;
+            RequestAjax(url,'',function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbscripts>

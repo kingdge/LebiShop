@@ -1,0 +1,18 @@
+﻿<!--
+Name:关于我们导航
+Page:P_About
+-->
+<div class="mbox clearfix">
+<div class="nodemenu">
+<div class="mt">
+    <h2><%=Tag(Node("About").Name)%></h2>
+</div>
+<div class="mc clearfix">
+<ul>
+<%foreach (Lebi_Page n in pages){%>
+<li class="<%=n.id==page.id?"current":""%>"><a href="<%if (n.url == ""){Response.Write(URL("P_About",n.id));}else{Response.Write(n.url);} %>"><span style="color:<%=n.NameColor%>"><%=n.Name%></span></a></li>
+<%} %>
+</ul>
+</div>
+</div>
+</div>

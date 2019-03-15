@@ -1,0 +1,199 @@
+﻿{layout:simple} {class:Shop.Admin.product.Class_Edit_window}
+<lbbody>
+<%=Shop.Bussiness.Language.AdminLanguageTab("") %>
+<table class="table">
+    <%foreach (DB.LebiShop.Lebi_Language_Code lang in Shop.Bussiness.Language.Languages())
+      {%>
+    <tbody id="lang_<%=lang.Code %>" class="lang_table" style="display: none">
+        <tr>
+            <th style="width: 20%">
+                <%=Tag("分类名称")%>：
+            </th>
+            <td>
+                <input type="text" id="Name<%=lang.Code %>" name="Name<%=lang.Code %>" class="input"
+                    shop="true"  style="width: 200px;"
+                    value="<%=Shop.Bussiness.Language.Content(model.Name,lang.Code) %>" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("自定义链接")%>：
+            </th>
+            <td>
+                <input type="text" id="Url" name="Url<%=lang.Code %>" class="input"
+                    shop="true"  style="width: 200px;"
+                    value="<%=Shop.Bussiness.Language.Content(model.Url,lang.Code) %>" />
+                <label><input type="checkbox" name="IsUrlrewrite<%=lang.Code %>" value="1" shop="true" <%=Shop.Bussiness.Language.Content(model.IsUrlrewrite,lang.Code)=="1"?"checked":"" %>> <%=Tag("生成URL重写规则") %></label>
+            </td>
+        </tr>
+        <tr>
+            <th class="head" colspan="2" onclick="ShowChild('1<%=lang.Code%>,2<%=lang.Code%>,3<%=lang.Code%>','seo')">
+                <img src="<%=PageImage("plus.gif")%>" name="imgseo" id="imgseo" style="cursor: pointer; text-align: center" />
+                <%=Tag("SEO优化")%>
+            </th>
+        </tr>
+        <tr style="display: none;" name="trseo" id="tr1<%=lang.Code%>">
+            <th>
+                <%=Tag("网页标题")%>：
+            </th>
+            <td>
+                <input type="text" id="SEO_Title<%=lang.Code %>" name="SEO_Title<%=lang.Code %>"
+                    class="input" shop="true" style="width: 400px;" value="<%=Shop.Bussiness.Language.Content(model.SEO_Title,lang.Code) %>" />
+            </td>
+        </tr>
+        <tr style="display: none;" name="trseo" id="tr2<%=lang.Code%>">
+            <th>
+                <%=Tag("关键词")%>：
+            </th>
+            <td>
+                <input type="text" id="SEO_Keywords<%=lang.Code %>" name="SEO_Keywords<%=lang.Code %>"
+                    class="input" shop="true" style="width: 400px;" value="<%=Shop.Bussiness.Language.Content(model.SEO_Keywords,lang.Code) %>" />
+            </td>
+        </tr>
+        <tr style="display: none;" name="trseo" id="tr3<%=lang.Code%>">
+            <th>
+                <%=Tag("网页描述")%>：
+            </th>
+            <td>
+                <input type="text" id="SEO_Description<%=lang.Code %>" name="SEO_Description<%=lang.Code %>"
+                    class="input" shop="true" style="width: 400px;" value="<%=Shop.Bussiness.Language.Content(model.SEO_Description,lang.Code) %>" />
+            </td>
+        </tr>
+    </tbody>
+    <%} %>
+</table>
+<ul id="tablistmain"><li class="selected"><a><span><%=Tag("通用信息")%></span></a></li></ul>
+<table class="table">
+    <tr>
+        <th style="width: 20%">
+            <%=Tag("上级分类")%>：
+        </th>
+        <td>
+            <select name="Parentid" shop="true">
+                <option value="0">┌<%=Tag("顶级分类")%></option>
+                <%=Shop.Bussiness.EX_Product.TypeOption(0, pmodel.id, 0, CurrentLanguage.Code, Shop.Bussiness.EX_Admin.Project().Pro_Type_ids)%>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("小图标")%>：
+        </th>
+        <td>
+            <div id="image_ImageSmall">
+                <%if (model.ImageSmall != "")
+                  {%>
+                <img height="16" src="<%=site.WebPath + model.ImageSmall%>" />
+                <%} %>
+            </div>
+            <input type="text" shop="true" id="ImageSmall" name="ImageSmall" class="input"
+                style="width: 200px;" value="<%=model.ImageSmall%>" />
+            <input id="file_ImageSmall" name="file_ImageSmall" class="input" type="file"
+                onchange="uploadImage('ImageSmall')" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("图标")%>：
+        </th>
+        <td>
+            <div id="image_ImageUrl">
+                <%if (model.ImageUrl != "")
+                  {%>
+                <img height="16" src="<%=site.WebPath + model.ImageUrl%>" />
+                <%} %>
+            </div>
+            <input type="text" shop="true" id="ImageUrl" name="ImageUrl" class="input"
+                style="width: 200px;" value="<%=model.ImageUrl%>" />
+            <input id="file_ImageUrl" name="file_ImageUrl" class="input" type="file"
+                onchange="uploadImage('ImageUrl')" />
+        </td>
+    </tr>
+    
+    <tr>
+        <th>
+            <%=Tag("是否显示")%>：
+        </th>
+        <td>
+            <label>
+                <input type="radio" name="IsShow" shop="true" value="1" <%=model.IsShow==1?"checked":"" %> /><%=Tag("是")%></label>
+            <label>
+                <input type="radio" name="IsShow" shop="true" value="0" <%=model.IsShow==0?"checked":"" %> /><%=Tag("否")%></label>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("首页显示")%>：
+        </th>
+        <td>
+            <label>
+                <input type="radio" name="IsIndexShow" shop="true" value="1" <%=model.IsIndexShow==1?"checked":"" %> /><%=Tag("是")%></label>
+            <label>
+                <input type="radio" name="IsIndexShow" shop="true" value="0" <%=model.IsIndexShow==0?"checked":"" %> /><%=Tag("否")%></label>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("商品属性")%>：
+        </th>
+        <td>
+            <%=Property(model.ProPerty132,132)%>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("商品规格")%>：
+        </th>
+        <td>
+            <%=Property(model.ProPerty131,131)%>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("文字属性")%>：
+        </th>
+        <td>
+            <%=Property(model.ProPerty133,133)%>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("订购表单")%>：
+        </th>
+        <td>
+            <%=Property(model.ProPerty134,134)%>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("排序序号")%>：
+        </th>
+        <td>
+            <input type="text" id="Sort" name="Sort" style="width: 70px" shop="true" class="input"
+                value="<%=model.Sort %>" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))"
+                maxlength="4" />
+        </td>
+    </tr>
+    <tr>
+        <th >
+            <%=Tag("站点")%>：
+        </th>
+        <td>
+            <%=site.SiteCheckbox("Site_ids",model.Site_ids,CurrentLanguage.Code)%>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+            <div class="tools tools-m clear">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span>
+                        <%=Tag("保存")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    LanguageTab_EditPage('<%=CurrentLanguage.Code %>');function SaveObj(){var postData=GetFormJsonData("shop");if(!CheckForm("shop","span"))return false;var url="<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Class_Edit&id=<%=model.id %>";RequestAjax(url,postData,function(){MsgBox(1,"<%=Tag("操作成功")%>","?")})}function uploadImage(id){$.ajaxFileUpload({url:WebPath+'/ajax/imageuploadone.aspx?path=producttype',secureuri:false,fileElementId:'file_'+id,dataType:'json',success:function(data,status){if(data.msg!='OK'){MsgBox(2,data.msg,"")}else{var imageUrl=data.ImageUrl;if(imageUrl.length>0){$("#image_"+id+"").html('<img height="16" src='+WebPath+imageUrl+'>');$("#"+id+"").val(imageUrl)}}}})}
+</script>
+</lbbody>

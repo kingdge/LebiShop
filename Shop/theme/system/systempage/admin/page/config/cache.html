@@ -1,0 +1,129 @@
+﻿{layout:default} {class:Shop.Admin.Config.cache}
+<lbhead>
+    <title><%=Tag("更新缓存")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <%if (PageReturnMsg == ""){%>
+            <li class="del"><a href="javascript:void(0);" onclick="set();"><b></b><span><%=Tag("更新")%></span></a></li>
+            <%}%>
+            <li class="name"><span id="navIgation">
+                <%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a>
+                >
+                <%=Tag("更新缓存")%></span></li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table
+        class="datalist">
+        <tr class="title">
+            <th style="text-align:center;width:40px;">
+                <%=Tag("选择")%>
+            </th>
+            <th >
+                <%=Tag("类型")%>
+            </th>
+        </tr>
+        <tr class="list">
+            <td style="text-align:center">
+                <input type="checkbox" name="datatype" value="producttype" power="true" />
+            </td>
+            <td>
+                <%=Tag("商品分类")%>
+            </td>
+        </tr>
+        <tr class="list">
+            <td style="text-align:center">
+                <input type="checkbox" name="datatype" value="config" power="true" />
+            </td>
+            <td>
+                <%=Tag("站点设置")%>
+            </td>
+        </tr>
+        <tr class="list">
+            <td style="text-align:center">
+                <input type="checkbox" name="datatype" value="languagetag" power="true" />
+            </td>
+            <td>
+                <%=Tag("语言标签")%>
+            </td>
+        </tr>
+        <tr class="list">
+            <td style="text-align:center">
+                <input type="checkbox" name="datatype" value="themepage" power="true" />
+            </td>
+            <td>
+                <%=Tag("页面设置")%>
+            </td>
+        </tr>
+        <tr class="list">
+            <td style="text-align:center">
+                <input type="checkbox" name="datatype" value="dbbody" power="true" />
+            </td>
+            <td>
+                <%=Tag("更新数据库结构")%>
+            </td>
+        </tr>
+        <tr class="list">
+            <td style="text-align:center">
+                <input type="checkbox" name="datatype" value="lebitype" power="true" />
+            </td>
+            <td>
+                <%=Tag("下载基础类型数据")%>
+            </td>
+        </tr>
+        <tr class="list">
+            <td style="text-align:center">
+                <input type="checkbox" name="datatype" value="lebimenu" power="true" />
+            </td>
+            <td>
+                <%=Tag("下载系统菜单数据")%>
+            </td>
+        </tr>
+        <tr class="list">
+            <td style="text-align:center">
+                <input type="checkbox" name="datatype" value="lebipage" power="true" />
+            </td>
+            <td>
+                <%=Tag("下载系统页面数据")%>
+            </td>
+        </tr>
+        <tr class="list">
+            <td style="text-align:center">
+                <input type="checkbox" name="datatype" value="product_count_freeze" power="true" />
+            </td>
+            <td>
+                <%=Tag("冻结库存")%>
+            </td>
+        </tr>
+        <tr class="list">
+            <td style="text-align:center">
+                <input type="checkbox" name="datatype" value="product_count_sales" power="true" />
+            </td>
+            <td>
+                <%=Tag("销量")%>
+            </td>
+        </tr>
+        <%if (IsEditStock){%>
+        <tr class="list">
+            <td style="text-align:center">
+                <input type="checkbox" name="datatype" value="product_count_stock" power="true" />
+            </td>
+            <td>
+                <%=Tag("库存数量")%>
+            </td>
+        </tr>
+        <%}%>
+    </table>
+    <script type="text/javascript">
+        function set() {
+            if (!confirm("<%=Tag("确认要更新缓存吗？")%>"))
+                return false;
+            var postData = GetFormJsonData("power");
+            var url = "<%=site.AdminPath %>/ajax/ajax_db.aspx?__Action=CacheReset";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>

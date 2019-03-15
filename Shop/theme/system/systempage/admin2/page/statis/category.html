@@ -1,0 +1,110 @@
+﻿{layout:default} {class:Shop.statis.category}
+<lbhead>
+   <title><%=Tag("类别统计")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("类别统计") %></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("类别统计")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-9 m-b-10">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-info" onclick="Export();"><i class="ti-export"></i> <%=Tag("导出")%></button>
+                        <%}%>
+                    </div>
+                </div>
+                <div class="row m-b-20">
+                    <div id="container" style="width:100%;height:400px"></div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th><%=Tag("分类名称")%></th>
+                                <th><%=Tag("商品数量")%></th>
+                                <th><%=Tag("收藏数量")%></th>
+                                <th><%=Tag("销量")%></th>
+                                <th><%=Tag("浏览量")%></th>
+                            </tr>
+                        </thead>
+                        <tbody id="listinfo">
+                            <%=List%>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script src="<%=site.AdminAssetsPath %>/plugins/highcharts/highcharts.js"></script>
+    <script src="<%=site.AdminAssetsPath %>/plugins/highcharts/exporting.js"></script>
+    <script>
+        var chart;
+        $(document).ready(function() {
+            chart = new Highcharts.Chart({
+                chart: {type: 'column',renderTo: 'container',reflow:false,borderWidth:'0'},
+                title: {text: '<%=Tag("类别统计") %>',align: 'left',x: 5,style:{font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'}},
+                subtitle: {text: ''},
+                xAxis: {categories: [<%
+                List<DB.LebiShop.Lebi_Pro_Type> nodes = Shop.Bussiness.EX_Product.Types(0);
+            int i=1;
+            int count=nodes.Count;
+            foreach (DB.LebiShop.Lebi_Pro_Type node in nodes)
+            {
+                Response.Write("'"+Shop.Bussiness.Language.Content(node.Name, CurrentLanguage.Code)+"'");
+            if(i<count){Response.Write(", ");}
+            i++;
+        }
+        %>],lineWidth:1},
+        yAxis: {min: 0,title: {text: ''},lineWidth:1},
+        tooltip: {crosshairs: true,shared: true},
+        plotOptions: {column: {pointPadding: 0.3,borderWidth: 0}},
+        series: [{name: '<%=Tag("商品数量") %>',data: [<%foreach (DB.LebiShop.Lebi_Pro_Type node in nodes){%><%=Shop.Bussiness.EX_Product.TypeProductCount(node.id)%>,<%} %>]},{name: '<%=Tag("收藏数量") %>',data: [<%foreach (DB.LebiShop.Lebi_Pro_Type node in nodes){%><%=Shop.Bussiness.EX_Product.LikeProductCount(node.id)%>,<%} %>]},{name: '<%=Tag("销量") %>',data: [<%foreach (DB.LebiShop.Lebi_Pro_Type node in nodes){%><%=Shop.Bussiness.EX_Product.SalesProductCount(node.id)%>,<%} %>]},{name: '<%=Tag("浏览量") %>',data: [<%foreach (DB.LebiShop.Lebi_Pro_Type node in nodes){%><%=Shop.Bussiness.EX_Product.ViewsProductCount(node.id)%>,<%} %>]}]
+        });});
+        var showTypeids = GetCookie("showTypeids");
+        function ShowChild(ids, id, deep) {
+            if (showTypeids == '' || showTypeids == undefined)
+                showTypeids = ',';
+            if (showTypeids.indexOf(',' + id + ',') < 0) {
+                showTypeids = showTypeids + id + ',';
+                SetCookie("showTypeids", showTypeids, 1);
+            }
+            var src = $("#img" + id + "").attr("src");
+            if (src.indexOf("plus.gif") == -1) {
+                $("#img" + id + "").attr("src", AdminImagePath + "/plus.gif");
+                var arr = ids.split(',');
+                for (var i in arr) {
+                    DoHide(arr[i]);
+                }
+                showTypeids = showTypeids.replace(',' + id + ',', ',');
+                SetCookie("showTypeids", showTypeids, 1);
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: AdminPath + '/ajax/ajax_statis.aspx?__Action=CreateTree',
+                    data: { "pid": id, "deep": deep },
+                    dataType: 'html',
+                    success: function (res) {
+                        $("#tr" + id).after(res);
+                    }
+                });
+                $("#img" + id + "").attr("src", AdminImagePath + "/minus.gif");
+                $("tr[name='tr" + id + "']").each(function () {
+                    $(this).show();
+                })
+            }
+        }
+        function Export(){
+            MsgBox(1, "<%=Tag("正在处理，请等待")%>", "<%=site.AdminPath %>/ajax/export.aspx?__Action=Statis_Category")
+        }
+    </script>
+</lbscripts>

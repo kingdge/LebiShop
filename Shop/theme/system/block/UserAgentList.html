@@ -1,0 +1,77 @@
+﻿<!--
+Name:用户中心-推广佣金-推广列表
+Page:P_UserAgentList
+-->
+<div class="nbbox clearfix">
+<div class="user">
+    <div class="searchbox">
+        <input type="text" name="dateFrom" id="dateFrom" size="12" class="input-calendar" value="<%=dateFrom %>" /> - <input type="text" name="dateTo" id="dateTo" size="12" class="input-calendar" value="<%=dateTo %>" />
+        <input type="text" id="key" name="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" />
+        <a href="javascript:void(0)" onclick="search_();" class="btn btn-12"><s></s>{tag:查询}</a>
+    </div>
+    <table cellpadding="0" cellspacing="0" width="100%" class="tablelist box">
+        <tr>
+            <th style="width: 120px">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "UserNameDesc"){Response.Write("UserNameAsc");}else{Response.Write("UserNameDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("会员帐号")%><%if (OrderBy == "UserNameDesc") { Response.Write("↓"); } else if (OrderBy == "UserNameAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th style="width: 100px">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "RealNameDesc"){Response.Write("RealNameAsc");}else{Response.Write("RealNameDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("姓名")%><%if (OrderBy == "RealNameDesc") { Response.Write("↓"); } else if (OrderBy == "RealNameAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th style="width: 80px">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "UserLevelDesc"){Response.Write("UserLevelAsc");}else{Response.Write("UserLevelDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("等级")%><%if (OrderBy == "UserLevelDesc") { Response.Write("↓"); } else if (OrderBy == "UserLevelAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th style="width: 130px">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "Time_RegDesc"){Response.Write("Time_RegAsc");}else{Response.Write("Time_RegDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("注册日期")%><%if (OrderBy == "Time_RegDesc") { Response.Write("↓"); } else if (OrderBy == "Time_RegAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th style="width: 130px">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "Time_LastDesc"){Response.Write("Time_LastAsc");}else{Response.Write("Time_LastDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("最后登陆")%><%if (OrderBy == "Time_LastDesc") { Response.Write("↓"); } else if (OrderBy == "Time_LastAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th style="width: 80px">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "CountSonDesc"){Response.Write("CountSonAsc");}else{Response.Write("CountSonDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("推广人数")%><%if (OrderBy == "CountSonDesc") { Response.Write("↓"); } else if (OrderBy == "CountSonAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th style="width: 100px">
+               <%=Tag("上级用户")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_User model in models){%>
+            <tr class="list">
+            <td>
+                <%=model.UserName.Substring(0,3)+"***" %>
+            </td>
+            <td>
+                <%=model.RealName %>&nbsp;
+            </td>
+            <td><%=Shop.Bussiness.EX_User.TypeName(model.UserLevel_id, CurrentLanguage.Code)%>
+            </td>
+            <td>
+                <%=FormatTime(model.Time_Reg) %>
+            </td>
+            <td>
+                <%=FormatTime(model.Time_Last) %>
+            </td>
+            <td>
+                <a href="?id=<%=model.id %>"><%=DB.LebiShop.B_Lebi_User.Counts("user_id_parent="+model.id+"") %></a>
+            </td>
+            <td>
+                <a href="?id=<%=model.User_id_parent %>"><%=Shop.Bussiness.EX_User.GetUser(model.User_id_parent).UserName%></a>
+            </td>
+            </tr>
+        <%} %>
+    </table>
+    <div class="bottom clearfix"><div class="left"></div><div class="right"><%=PageString%></div></div>
+</div>
+</div>
+<script type="text/javascript">
+    function search_(scurl) {
+        var key = $("#key").val();
+        var dateFrom = $("#dateFrom").val();
+        var dateTo = $("#dateTo").val();
+        window.location = "?id=<%=id%>&OrderBy=<%=OrderBy%>&key=" + escape(key) + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo;
+    }
+    function OrderBy(url) {
+        var key = $("#key").val();
+        var dateFrom = $("#dateFrom").val();
+        var dateTo = $("#dateTo").val();
+        MsgBox(4, "<%=Tag("正在排序，请稍后")%> ……", url+ "&id=<%=id%>&key=" + escape(key) + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo + "");
+    }
+</script>

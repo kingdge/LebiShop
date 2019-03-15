@@ -1,0 +1,85 @@
+﻿{layout:default} {class:Shop.Admin.theme.adminskin_edit}
+<lbhead>
+    <title><%=model.Name %>-<%=Tag("自定义页面")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <style>
+        .bottom{height: 0;overflow: hidden;display: none;}
+        textarea{font-size:12px;}
+    </style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+    <li class="submit"><a href="javascript:void(0);" onclick="CreateSkin();"><b></b><span><%=Tag("生成页面")%></span></a></li>
+    <%}%>
+    <li class="rotate"><a href="javascript:void(0);" onclick="history.go(-1);"><b></b><span><%=Tag("返回")%></span></a></li>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="<%=site.AdminPath %>/theme/adminskin.aspx"><%=Tag("自定义页面")%></a> > <%=model.Name %></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table class="table">
+        <tr>
+            <th >
+                <%=Tag("代码")%>：
+            </th>
+            <td>
+                <input type="text" id="Code" name="Code" class="input" shop="true" min="notnull" style="width: 200px;" value="<%=model.Code %>" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("名称")%>：
+            </th>
+            <td>
+                <input type="text" id="Name" name="Name" class="input" shop="true" min="notnull" style="width: 200px;" value="<%=model.Name %>" />
+            </td>
+        </tr>
+        <tr>
+            <th style="vertical-align:top">
+                <%=Tag("页面内容")%>：
+            </th>
+            <td>
+                <textarea id="SkinContent" name="SkinContent" shop="true" class="textarea" style="height: 500px; width: 100%" rows="4" class="input"><%=Server.HtmlEncode(SkinContent)%></textarea>
+                <div class="tools clear">
+                    <ul>
+                        <li class="plus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('SkinContent',250);"><b></b><span><%=Tag("展开")%></span></a></li>
+                        <li class="minus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('SkinContent',-250)"><b></b><span><%=Tag("收缩")%></span></a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("排序序号")%>：
+            </th>
+            <td>
+                <input type="text" id="Sort" name="Sort" class="input" shop="true" style="width: 70px;" value="<%=model.Sort %>" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" />
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+        function SaveObj() {
+            var postData = GetFormJsonData("shop");
+            if (!CheckForm("shop", "span"))
+                return false;
+            var nodeid = $("#Node_id").val();
+            var url = "<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=AdminSkin_Edit&id=<%=model.id %>";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?id="+res.id)});
+        }
+        function CreateSkin() {
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=AdminSkin_Create&id=<%=model.id %>";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        
+        }
+    </script>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+    </div>
+    <input type="hidden" name="Type_id_AdminSkinType" id="Type_id_AdminSkinType" value="361" shop="true" />
+</lbbottom>

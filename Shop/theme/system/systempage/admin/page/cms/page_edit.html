@@ -1,0 +1,264 @@
+﻿{layout:default} {class:Shop.Admin.cms.Page_Edit}
+<lbhead>
+    <title><%=pnode.Name%>-<%=Tag(node.Name)%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+    <script type="text/javascript" src="<%=site.WebPath %>/Editor/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript" src="<%=site.WebPath %>/Editor/ckfinder/ckfinder.js"></script>
+    <link rel="stylesheet" type="text/css" href="<%=site.AdminJsPath %>/bigcolorpicker/jquery.bigcolorpicker.css" /> 
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/bigcolorpicker/jquery.bigcolorpicker.min.js"></script> 
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/jquery-ui/timepicker-addon.js"></script>
+    <%if (CurrentLanguage.Code=="CN"){%><script type="text/javascript" src="<%=site.AdminJsPath %>/jquery-ui/timepicker-zh-CN.js"></script><%}%>
+    <link rel="stylesheet" type="text/css" href="<%=site.AdminJsPath %>/jquery-ui/timepicker-addon.css" />
+    <script type="text/javascript">
+        $(function () {
+            $("#NameColor").bigColorpicker("NameColor");
+            $("#s_NameColor").bigColorpicker(function (el, color) { $(el).css("background-color", color); $("#NameColor").val(color); $("#Name").css("color", color); });
+            $("#Time_Add").datetimepicker({dateFormat:"yy-mm-dd",showSecond:true,timeFormat:"HH:mm:ss",stepHour:1,stepMinute:1,tepSecond:1});
+        });
+    </script>
+    <style>
+        .bottom{height: 0;overflow: hidden;display: none;}
+    </style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <%if (PageReturnMsg == ""){%>
+            <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span>
+                <%=Tag("保存")%></span></a></li>
+            <%}%>
+            <li class="rotate"><a href="javascript:void(0);" onclick="history.go(-1);"><b></b><span>
+                <%=Tag("返回")%></span></a></li>
+            <li class="name"><span id="navIgation">
+                <%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a>
+                > <a href="UserNodeList.aspx?code=<%=pnode.Code %>">
+                    <%=pnode.Name%></a> > <a href="<%=Shop.Bussiness.NodePage.AdminIndexPage(node) %>">
+                        <%=Tag(node.Name)%></a><%if (page.Name != "")
+                                                 {%>
+                >
+                <%=page.Name%><%} %></span></li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table class="table">
+        <%if (node.haveson == 1)
+          { %>
+        <tr>
+            <th>
+                <%=Tag("分类")%>：
+            </th>
+            <td>
+                <select name="Node_id" id="Node_id" shop="true">
+                    <%=GetOptionTreeString(0, pnode.id, node.id)%>
+                </select>
+            </td>
+        </tr>
+        <%}%>
+        <tr>
+            <th>
+                <%=Tag("标题")%>：
+            </th>
+            <td>
+                <input type="text" id="Name" name="Name" class="input" shop="true" min="notnull" style="width: 500px; color: <%=page.NameColor %>" value="<%=page.Name %>" />
+                <input id="NameColor" name="NameColor" type="hidden" shop="true" value="<%=page.NameColor %>"><img id="s_NameColor" border="0" src="<%=AdminImage("rect.gif")%>" width="18" align="absmiddle" style="cursor: pointer; background-color: <%=page.NameColor %>">
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("跳转页面")%>：
+            </th>
+            <td>
+                <input type="text" id="url" name="url" class="input" style="width: 500px;" shop="true"
+                    value="<%=page.url %>" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("打开方式")%>：
+            </th>
+            <td>
+                <select name="target" id="target" shop="true">
+                    <option value="_self" <%=page.target=="_self"?"selected":"" %>>
+                        <%=Tag("当前窗口")%></option>
+                    <option value="_blank" <%=page.target=="_blank"?"selected":"" %>>
+                        <%=Tag("新窗口")%></option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th style="vertical-align:top">
+                <%=Tag("摘要")%>：
+            </th>
+            <td>
+                <textarea id="Description" name="Description" shop="true" cols="95" rows="4" class="textarea"
+                    style="width: 500px; height: 60px;"><%=page.Description%></textarea>
+                <div class="tools clear">
+                    <ul>
+                        <li class="plus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Description',100);">
+                            <b></b><span>
+                                <%=Tag("展开")%></span></a></li>
+                        <li class="minus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Description',-100)">
+                            <b></b><span>
+                                <%=Tag("收缩")%></span></a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th style="vertical-align:top">
+                <%=Tag("内容")%>：
+            </th>
+            <td>
+                <textarea name="Content" id="Content" style="width: 800px; height: 200px;" shop="true"
+                    class="textarea"><%=page.Content%></textarea>
+            </td>
+        </tr>
+        <%if (node.Code != "News" && node.Code != "Help" && node.Code != "About")
+          { %>
+        <tr>
+            <th>
+                <%=Tag("来源")%>：
+            </th>
+            <td>
+                <input type="text" id="source" name="source" shop="true" class="input" style="width: 220px"
+                    value="<%=page.source %>" />
+            </td>
+        </tr>
+        <tr>
+            <th style="vertical-align:top">
+                <%=Tag("图文")%>：
+            </th>
+            <td>
+                <div id="image_ImageSmall">
+                    <%if (page.ImageSmall != "")
+                      {%><a href="<%=site.WebPath + page.ImageSmall%>" data-lightbox="image-list"><img height="80" src="<%=site.WebPath + page.ImageSmall%>" /></a><%} %></div>
+                <input type="text" shop="true" id="ImageSmall" name="ImageSmall" class="input" style="width: 200px;"
+                    value="<%=page.ImageSmall%>" />
+                <input id="file_ImageSmall" name="file_ImageSmall" class="input" type="file" onchange="uploadImage('ImageSmall')" />
+                <!--<input type="button" value="上传" class="button" onclick="uploadImage('ImageSmall')" />-->
+            </td>
+        </tr>
+        <%} %>
+        <tr>
+            <th>
+                <%=Tag("浏览次数")%>：
+            </th>
+            <td>
+                <input type="text" id="Count_Views" name="Count_Views" shop="true" style="width: 50px"
+                    class="input" value="<%=page.Count_Views %>" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("提交时间")%>：
+            </th>
+            <td>
+                <input type="text" id="Time_Add" name="Time_Add" shop="true" class="calendar" style="width: 150px" value="<%=page.Time_Add %>" />
+            </td>
+        </tr>
+        <tr>
+            <th style="vertical-align:top">
+                <%=Tag("语言")%>：
+            </th>
+            <td>
+                <%= Shop.Bussiness.Language.SiteLanguageCheckbox("Language_ids", page.Language_ids,CurrentLanguage.Code,CurrentAdmin)%>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("排序序号")%>：
+            </th>
+            <td>
+                <input type="text" id="Sort" name="Sort" shop="true" class="input" style="width: 70px"
+                    maxlength="4" value="<%=page.Sort %>" onkeyup="value=value.replace(/[^\d]/g,'')" />
+            </td>
+        </tr>
+        <tr>
+            <th class="head" colspan="2" onclick="ShowChild('0,1,2','seo')">
+                <img src="<%=PageImage("plus.gif")%>" name="imgseo" id="imgseo" style="cursor: pointer;" />
+                <%=Tag("SEO优化")%>
+            </th>
+        </tr>
+        <tr style="display: none;" name="trseo" id="tr0">
+            <th>
+                <%=Tag("网页标题")%>：
+            </th>
+            <td>
+                <input type="text" id="SEO_Title" name="SEO_Title" class="input" style="width: 500px;"
+                    shop="true" value="<%=page.SEO_Title %>" />
+            </td>
+        </tr>
+        <tr style="display: none;" name="trseo" id="tr1">
+            <th>
+                <%=Tag("关键词")%>：
+            </th>
+            <td>
+                <input type="text" id="SEO_Keywords" name="SEO_Keywords" class="input" style="width: 500px;"
+                    shop="true" value="<%=page.SEO_Keywords %>" />
+            </td>
+        </tr>
+        <tr style="display: none;" name="trseo" id="tr2">
+            <th>
+                <%=Tag("网页描述")%>：
+            </th>
+            <td>
+                <input type="text" id="SEO_Description" name="SEO_Description" class="input" style="width: 500px;"
+                    shop="true" value="<%=page.SEO_Description %>" />
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+        CKEDITOR.replace('Content', {
+            height: '200',
+            width: '98%',
+            language: '<%=Tag("CKEditor语言")%>'
+		});  
+        function uploadImage(id) {
+            $.ajaxFileUpload
+        (
+	        {
+	            url: WebPath + '/ajax/imageuploadone.aspx?path=cms',
+	            secureuri: false,
+	            fileElementId: 'file_' + id,
+	            dataType: 'json',
+	            success: function (data, status) {
+	                if (data.msg != 'OK') {
+	                    MsgBox(2, data.msg, "");
+	                }
+	                else {
+	                    var imageUrl = data.ImageUrl;
+	                    if (imageUrl.length > 0) {
+	                        $("#image_" + id + "").html('<img height="80" src=' + WebPath + imageUrl + '>');
+	                        $("#" + id + "").val(imageUrl);
+	                    }
+	                }
+	            },
+	            error: function (data, status, e) {
+	                MsgBox(2, data.error, "");
+	            }
+	        }
+        )
+        }
+        function SaveObj() {
+            editor = CKEDITOR.instances.Content;
+            $("#Content").val(editor.getData());
+            var postData = GetFormJsonData("shop");
+            var nodeid = $("#Node_id").val();
+            if (!CheckForm("shop", "span"))
+                return false;
+            var url = "<%=site.AdminPath %>/ajax/ajax_node.aspx?__Action=Page_Edit&id=<%=page.id %>";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "pagelist.aspx?Node_id=" + nodeid + "")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%if (node.haveson == 0)
+        { %>
+    <input type="hidden" name="Node_id" id="Node_id" value="<%=node.id %>" shop="true">
+    <%} %>
+</div>
+</lbbottom>

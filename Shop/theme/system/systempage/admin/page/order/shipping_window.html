@@ -1,0 +1,101 @@
+﻿{layout:simple} {class:Shop.Admin.order.shipping_window}
+<lbbody>
+<table class="datalist">
+    <tr class="title">
+        <th>
+            <%=Tag("商品名称")%>
+        </th>
+        <th style="width: 80px">
+            <%=Tag("待发数量")%>
+        </th>
+        <th style="width: 80px">
+            <%=Tag("发货数量")%>
+        </th>
+    </tr>
+    <%foreach (DB.LebiShop.Lebi_Order_Product pro in pros)
+      {
+          int dafa = pro.Count - pro.Count_Shipped;
+          dafa = dafa < 0 ? 0 : dafa;
+          %>
+    <tr class="list">
+        <td >
+            <img src="<%=Image(pro.ImageOriginal,50,50)%>" style="width: 30px" />
+            <%=Shop.Bussiness.Language.Content(pro.Product_Name,CurrentLanguage) %>
+        </td>
+        <td>
+            <%=dafa%>
+        </td>
+        <td>
+            <%if (pro.IsSupplierTransport != 1)
+              { 
+            if(pro.Type_id_OrderProductType!=256 || (pro.Type_id_OrderProductType==256 && pro.IsStockOK==1 && pro.IsPaid==1)){
+            %>
+            <input type="text" class="input" Shipping="true" name="Count<%=pro.id %>" id="Count<%=pro.id %>"
+                value="<%=dafa%>" onkeyup="value=value.replace(/[^\d\.]/g,'')" style="width: 70px;" />
+            <%}
+            else
+            {
+                if(pro.IsStockOK==0)
+                Response.Write(Tag("未备货"));
+                if(pro.IsPaid==0)
+                Response.Write(Tag("未付款"));
+            }
+            }
+              else {
+                  Response.Write(Tag("供应商发货"));
+              } %>
+        </td>
+    </tr>
+    <%} %>
+</table>
+<table class="table">
+    <tr>
+        <th style="width: 15%">
+            <%=Tag("配送方式")%>：
+        </th>
+        <td>
+            <select Shipping="true" name="Transport_id" id="Transport_id">
+                <%=Shop.Bussiness.EX_Area.TransportOption(model.Transport_id) %>
+            </select>
+            <%=model.Transport_Mark %>
+        </td>
+    </tr>
+    
+    <tr>
+        <th>
+            <%=Tag("货运单号")%>：
+        </th>
+        <td>
+            <input type="text" Shipping="true" min="notnull" id="Code" name="Code" class="input"
+                value="<%=transport_order.Code %>" style="width: 300px;" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("实际运费")%><%=DefaultCurrency.Msige %>：
+        </th>
+        <td>
+            <input type="text" Shipping="true" min="notnull" id="Money" name="Money" class="input" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                value="<%=model.Money_Transport %>" style="width: 100px;" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+            <div class="tools tools-m">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="Shipping();"><b></b><span><%=Tag("保存")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    function Shipping() {
+        if (!CheckForm("Shipping", "span"))
+            return false;
+        var postData = GetFormJsonData("Shipping");
+        var url = "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=Order_fahuo&id=<%=model.id %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+</script>
+</lbbody>

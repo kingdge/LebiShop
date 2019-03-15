@@ -1,0 +1,47 @@
+﻿{MOD:Top}
+<% 
+int typeid = Rint("typeid");//商品分类
+int brandid = Rint("brandid");//商品品牌
+string sort = Rstring("order");//排序
+int page = Rint("page");
+string key=Rstring("key");
+Where="Product_id=0 and Type_id_ProductStatus=101";
+if(typeid>0)
+    Where+=" and Pro_Type_id="+typeid;
+if(brandid>0)
+    Where+=" and Brand_id="+brandid;
+if(key!="")
+    Where+=" and Name like '%"+key+"%'";
+
+if (sort == "1") { Order = " Count_Sales desc";}
+else if (sort == "1a") { Order = " Count_Sales_Show asc";}
+else if (sort == "2") { Order = " Price desc";}
+else if (sort == "2a") { Order = " Price asc";}
+else if (sort == "3") { Order = " Count_Comment desc";}
+else if (sort == "3a") { Order = " Count_Comment asc";}
+else if (sort == "4") { Order = " Time_Add desc";}
+else if (sort == "4a") { Order = " Time_Add asc";}
+else { Order = " Count_Sales desc"; }
+
+%>
+<%Table="Lebi_Product";PageSize=20;pageindex=Rint("page");RecordCount=B_Lebi_Product.Counts(Where);int product_index=1;
+List<Lebi_Product> products = B_Lebi_Product.GetList(Where, Order,PageSize ,pageindex);foreach (Lebi_Product product in products){%>
+<li>
+<div class="proimg"><p><a href="<%=URL("P_Product",product.id) %>"><img border="0" src="<%=Image(product.ImageMedium,"medium")%>" alt="<%=Lang(product.Name) %>" width="130" /></a></p></div>
+<dl>
+    <dt><a href="<%=URL("P_Product",product.id) %>"><%=Lang(product.Name) %></a></dt>
+    <dd>
+    <%if (product.Type_id_ProductType == 321 && (System.DateTime.Now < product.Time_Expired)){ %>
+    <%=FormatMoney(product.Price_Sale) %>
+	<%}else{%>
+	<%=FormatMoney(ProductPrice(product)) %>
+    <%} %>
+    </dd>
+    <dd></dd>
+    <dd></dd>
+</dl>
+</li>
+<%product_index++;}%>
+<%if(RecordCount==0){
+Response.Write("0");
+}%>

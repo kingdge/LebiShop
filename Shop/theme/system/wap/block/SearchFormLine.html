@@ -1,0 +1,98 @@
+﻿<!--
+Name:商品搜索框横版
+Page:All
+-->
+<script type="text/javascript">
+    $(function () {
+        blurInput('#keyword', '<%if (Rstring("Keyword")!=""){ %><%=Rstring("Keyword")%><%}else{%>${#table:Lebi_Searchkey;#where:Type=1;#order:Sort desc,id desc;#top:1;<%=Lang({Name})%>}$<%} %>');
+        $(".searchform .button").click(function(){
+            var typename = $('#searchtype').attr('typename');
+            var url = "";
+            if (typename=="product")
+            {
+                var url = "<%=URL("P_Search","[key]") %>";
+            }
+            if (typename=="shop")
+            {
+                url = "<%=URL("P_ShopSearch","[key]") %>";
+            }
+            location.href = url.replace("[key]",escape($("#keyword").val()));
+            return false;
+        });
+        $(".searchform dd a").click(function(){
+            $(".searchform dl span").text($(this).text());
+            $(".searchform dl span").attr("typename",$(this).attr("typename"));
+            $(".searchform dd").hide();
+        });
+        $(".searchform-type dt").click(function () {
+            $(".searchform dd").show();
+        });
+        $(".searchform dd a").click(function () {
+            $(".searchform dl span").text($(this).text());
+            $(".searchform dl span").attr("typename", $(this).attr("typename"));
+            $(".searchform dd").hide();
+            $("#keyword").val("");
+        });
+        <%if(!IsAPP()){%>
+        $(".searchform-ipt input").click(function(){
+            $("#keywords").show();
+        });
+        $("#keywords .mbox").hover(function(){
+            $("#keywords").show();
+        }, function () {
+            $("#keywords").hide();
+        });
+        <%}%>
+    });		
+</script>
+<div id="searchform">
+<div class="searchform">
+<div class="searchform-type">
+<dl>
+    <dt><span id="searchtype" typename="product">{Tag:商品}</span><em class="ico-jtb"></em></dt>
+    <dd>
+        <a typename="product" href="javascript:void(0)">{Tag:商品}</a>
+        <%if (Shop.LebiAPI.Service.Instanse.Check("plugin_gongyingshang")){ %>
+        <a typename="shop" href="javascript:void(0)">{Tag:店铺}</a>
+        <%}%>
+    </dd>
+</dl>
+</div>
+<div class="searchform-ipt">
+<input id="keyword" value="" type="text" name="keyword" onkeydown="if(event.keyCode==13){search();}" />
+</div>
+<div class="searchform-btn">
+<input type="button" value="{Tag:搜索}" class="button" />
+</div>
+</div>
+<%if(!IsAPP()){%>
+<div id="keywords">
+    <div class="mbox clearfix">
+    <div class="searchkeyword">
+    <div class="mt">
+        <h2>{tag:热搜排行}</h2>
+    </div>
+    <div class="mc clearfix">
+    <ul class="text">
+        ${#table:Lebi_Searchkey;#order:Sort desc,id desc;#top:18;
+        <li><%if ({Type}==1){ %><a href="<%=URL("P_Search",""+Lang({Name})+"") %>"><%}else{ %><a href="{%URL%}"><%} %><%=Lang({Name})%></a></li>
+        }$
+    </ul>
+    </div>
+    </div>
+    <div class="searchbrand">
+    <div class="mt">
+        <h2>{tag:品牌推荐}</h2>
+    </div>
+    <div class="mc clearfix">
+    <ul class="text">
+        ${#table:Lebi_Brand;#where:IsRecommend=1;#order:Sort desc,id desc;#top:18;
+        <li><a href="<%=URL("P_Brand",{id})%>" title="<%=Lang({Name}) %>"><%=Lang({Name}) %></a></li>
+        }$
+    </ul>
+    </div>
+    </div>
+    </div>
+</div>
+</div>
+<%}%>

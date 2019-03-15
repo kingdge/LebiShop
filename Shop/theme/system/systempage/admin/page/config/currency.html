@@ -1,0 +1,97 @@
+﻿{layout:default} {class:Shop.Admin.Config.Currency}
+<lbhead>
+    <title><%=Tag("网站语言")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="add"><a href="javascript:void(0);" onclick="Edit(0);"><b></b><span><%=Tag("添加")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("货币管理")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 80px">
+                <%=Tag("代码")%>
+            </th>
+            <th style="width: 120px">
+                <%=Tag("名称")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("货币符号")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("小数")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("汇率")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("默认")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("排序")%>
+            </th>
+            <th>
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_Currency model in models)
+          {%>
+        <tr class="list" ondblclick="Edit(<%=model.id %>);">
+            <td>
+                <%=model.Code %>
+            </td>
+            <td>
+                <%=model.Name %>
+            </td>
+            <td>
+                <%=model.Msige %>
+            </td>
+            <td>
+                <%=model.DecimalLength %>
+            </td>
+            <td>
+                <%=model.ExchangeRate %>
+            </td>
+            <td>
+                <%=model.IsDefault == 0 ? "" + Tag("否") + "" : "" + Tag("是") + ""%>
+            </td>
+            <td>
+                <%=model.Sort%>
+            </td>
+            <td>
+                <a href="javascript:void(0)" onclick="Edit(<%=model.id %>);"><%=Tag("编辑")%></a> 
+                | <a href="javascript:void(0)" onclick="Del(<%=model.id %>);"><%=Tag("删除")%></a> 
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function Edit(id) {
+            var title_ = "<%=Tag("编辑货币")%>";
+            if (id == 0) title_ ="<%=Tag("添加货币")%>"
+            var url_ = "currency_edit_window.aspx?id=" + id;
+            var width_ = 400;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function Del(id) {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = { "id": id };
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=Currency_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

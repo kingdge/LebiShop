@@ -1,0 +1,131 @@
+﻿{layout:default} {class:Shop.Admin.theme.Skin}
+<lbhead>
+    <title><%=theme.Name %>-<%=Tag("模板管理")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <%if (PageReturnMsg == ""){%>
+            <li class="add"><a href="javascript:void(0);" onclick="EditSkin(<%=theme.id %>,0);"><b></b><span><%=Tag("添加")%></span></a></li>
+            <li class="submit"><a href="javascript:void(0);" onclick="CreateTheme();"><b></b><span><%=Tag("生成主题")%></span></a></li>
+            <%}%>
+            <li class="name"><span id="navIgation">
+                <%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a>
+                > <a href="<%=site.AdminPath %>/theme/default.aspx">
+                    <%=Tag("模板管理")%></a> >
+                <%=theme.Name %></span></li>
+        </ul>
+    </div>
+</lbpath>
+<lbtop>
+    <div class="mainbody_top">
+        <ul class="tablist">
+            
+            <li class="selected"><a href="?id=<%=id %>&ispage=1"><span><%=Tag("页面")%></span></a></li>
+            <li><a href="filelist.aspx?id=<%=theme.id %>&t=block"><span><%=Tag("块")%></span></a></li>
+            <li><a href="filelist.aspx?id=<%=theme.id %>&t=layout"><span><%=Tag("布局")%></span></a></li>
+            <%if (theme.Path_JS != "")
+              { %>
+            <li><a href="filelist.aspx?id=<%=theme.id %>&t=js" target="_blank"><span>JS</span></a></li>
+            <%} %>
+            <%if (theme.Path_CSS != "")
+              { %>
+            <li><a href="filelist.aspx?id=<%=theme.id %>&t=css" target="_blank"><span>CSS</span></a></li>
+            <%} %>
+        </ul>
+    </div>
+</lbtop>
+<lbbody>
+    <div class="searchbox">
+        <input name="key" type="text" id="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" /><input
+            type="button" id="btnSou" class="btn-query" onclick="search_();" align="absmiddle" />
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 150px;">
+                <%=Tag("代码")%>
+            </th>
+            <th style="width: 200px;">
+                <%=Tag("名称")%>
+            </th>
+            <th style="width: 200px;">
+                <%=Tag("页面")%>
+            </th>
+            <th style="width: 80px;">
+                <%=Tag("类型")%>
+            </th>
+            <th style="width: 80px;">
+                <%=Tag("排序")%>
+            </th>
+            <th style="width: 130px;">
+                <%=Tag("添加时间")%>
+            </th>
+            <th>
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_Theme_Skin model in models)
+          {%>
+        <tr class="list" ondblclick="EditSkin(<%=theme.id %>,<%=model.id %>);">
+            <td>
+                <%=model.Code %>
+            </td>
+            <td>
+                <%=model.Name %>
+            </td>
+            <td>
+                <%=model.PageName%>
+            </td>
+            <td>
+                <%=model.IsPage==0?Tag("块"):Tag("页面")%>
+            </td>
+            <td>
+                <%=model.Sort %>
+            </td>
+            <td>
+                <%=model.Time_Add %>
+            </td>
+            <td>
+                <a href="javascript:void(0)" onclick="EditSkin(<%=theme.id %>,<%=model.id %>);">
+                    <%=Tag("编辑")%></a> | <%--<a href="javascript:void(0)" onclick="CreateSkin(<%=model.id %>);">
+                        <%=Tag("生成")%></a> | --%><a href="javascript:void(0)" onclick="Del(<%=model.id %>);">
+                            <%=Tag("删除")%></a>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function search_() {
+            var key = $("#key").val();
+            window.location = "?id=<%=id%>&key=" + escape(key);
+        }
+        function Theme(id) {
+            window.location = "skin.aspx?id="+id;
+        }
+        function EditSkin(tid, id) {
+            window.location = "skin_edit.aspx?tid=" + tid + "&id=" + id;
+        }
+        function Del(id) {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = { "id": id };
+            var url="<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=Skin_Del";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function CreateSkin(id) {
+            var postData = {"id":id};
+            var url="<%=site.AdminPath %>/ajax/ajax_aspx.aspx?__Action=CreateSkin";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+        function CreateTheme() {
+            var postData = { "Theme_id": <%=theme.id %> };
+            var url="<%=site.AdminPath %>/ajax/ajax_aspx.aspx?__Action=CreateTheme";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+        <%=PageString%>
+    </div>
+</lbbottom>

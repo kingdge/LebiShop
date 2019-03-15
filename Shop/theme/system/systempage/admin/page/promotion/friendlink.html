@@ -1,0 +1,161 @@
+﻿{layout:default} {class:Shop.Admin.storeConfig.FriendLink}
+<lbhead>
+    <title><%=Tag("友情链接")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+</lbfile>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="add"><a href="javascript:void(0);" onclick="EditFirendLink(0);"><b></b><span><%=Tag("添加")%></span></a></li>
+    <li class="submit"><a href="javascript:void(0);" onclick="FriendLinks_Edit();"><b></b><span><%=Tag("保存")%></span></a></li>
+    <li class="del"><a href="javascript:void(0);" onclick="FriendLink_Del();"><b></b><span><%=Tag("删除")%></span></a></li>
+    <li class="language"><a href="javascript:void(0);" onclick="Update(0,'FriendLink');"><b></b><span><%=Tag("语言")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("友情链接")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox">
+        <select id="lang">
+            <option value="">┌<%=Tag("语言")%></option>
+            <%=Shop.Bussiness.Language.LanguageOption(lang) %>
+        </select>
+        <select id="pic">
+            <option value="2">┌ <%=Tag("链接属性")%></option>
+            <option value="0" <%if (pic ==0){%>selected<%}%>><%=Tag("文字链接")%></option>
+            <option value="1" <%if (pic==1){%>selected<%}%>><%=Tag("图片链接")%></option>
+        </select>
+        <select id="show">
+            <option value="2">┌ <%=Tag("显示")%></option>
+            <option value="1" <%if (show==1){%>selected<%}%>><%=Tag("是")%></option>
+            <option value="0" <%if (show==0){%>selected<%}%>><%=Tag("否")%></option>
+        </select>
+        <input type="text" id="key" name="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" />
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'Fid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th style="width: 200px">
+                <%=Tag("网站名称")%>
+            </th>
+            <th style="width: 200px">
+                <%=Tag("网址")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("LOGO")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("图片")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("显示")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("显示语言")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("排序")%>
+            </th>
+            <th>
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_FriendLink model in models)
+          {%>
+        <tr class="list" ondblclick="EditFirendLink(<%=model.id %>);" >
+            <td style="text-align:center">
+                <input type="checkbox" name="Fid" del="true" value="<%=model.id %>" />
+                <input type="hidden" name="IDS" shop="true" value="<%=model.id %>" />
+            </td>
+            <td>
+                <input type="text" name="Name<%=model.id %>" shop="true" value="<%=model.Name %>" class="input" style="width:180px" />
+            </td>
+            <td>
+                <input type="text" name="Url<%=model.id %>" shop="true" value="<%=model.Url %>" class="input" style="width:180px" />
+            </td>
+            <td>
+                <% if (model.Logo == "")
+                   { %>
+                &nbsp;
+                <%}
+                   else
+                   { %>
+                <img src="<%=site.WebPath + model.Logo %>" style="height: 30px;" name="logoimg" />
+                <%} %>
+            </td>
+            <td>
+                <select id="IsPic<%=model.id %>" shop="true" name="IsPic<%=model.id %>">
+                    <option value="1" style="color: Red;" <%if(model.IsPic==1){%>selected<%} %>><%=Tag("是")%></option>
+                    <option value="0" <%if(model.IsPic==0){%>selected<%} %>><%=Tag("否")%></option>
+                </select>
+            </td>
+            <td>
+                <select id="IsShow<%=model.id %>" shop="true" name="IsShow<%=model.id %>">
+                    <option value="1" style="color: Red;" <%if(model.IsShow==1){%>selected<%} %>><%=Tag("是")%></option>
+                    <option value="0" <%if(model.IsShow==0){%>selected<%} %>><%=Tag("否")%></option>
+                </select>
+            </td>
+            <td>
+                <%=model.Language%>
+            </td>
+            <td>
+                <input type="text" id="Sort<%=model.id %>" name="Sort<%=model.id %>" shop="true" class="input" style="width: 70px" value="<%=model.Sort %>" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" />
+            </td>
+            <td>
+                <a href="javascript:void(0)" onclick="EditFirendLink(<%=model.id %>);"><%=Tag("编辑")%></a>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function search_() {
+            var lang = $("#lang").val();
+            var pic = $("#pic").val();
+            var show = $("#show").val();
+            var key = $("#key").val();
+            window.location.href = "?key=" + escape(key) + "&show=" + show + "&pic=" + pic + "&lang=" + lang;
+        }
+        function EditFirendLink(id) {
+            var title_ = "<%=Tag("编辑友情链接")%>";
+            if (id == 0) title_ = "<%=Tag("添加友情链接")%>"
+            var url_ = "friendlink_edit_window.aspx?id=" + id;
+            var width_ = 600;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function FriendLink_Del() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=FriendLink_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function FriendLinks_Edit() {
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=FriendLinks_Edit";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function Update(ids,table) {
+            var title_ = "<%=Tag("设置语言")%>";
+            if (ids == 0)
+                ids = GetChkCheckedValues("ids");
+            var url_ = "<%=site.AdminPath %>/config/setlanguage_edit_window.aspx?ids=" + ids+"&table="+table;
+            var width_ = 500;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

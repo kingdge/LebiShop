@@ -1,0 +1,18 @@
+﻿<!--
+Name:帮助中心导航
+Page:P_Help
+-->
+<div class="mbox clearfix">
+<div class="nodemenu">
+<div class="mt">
+    <h2><%=Tag(parentnode.Name)%></h2>
+</div>
+<div class="mc clearfix">
+<ul>
+<%foreach (Lebi_Node n in nodes){%>
+<li class="<%=n.id==node.id?"current":"" %>"><a href="<%=URL("P_Help",n.id) %>"><span><%=n.Name %></span></a></li>
+<%} %>
+</ul>
+</div>
+</div>
+</div>

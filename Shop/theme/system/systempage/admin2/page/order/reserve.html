@@ -1,0 +1,195 @@
+﻿{layout:default} {class:Shop.Admin.order.reserve}
+<lbhead>
+    <title><%=Tag("预定商品")%>-<%=Tag("订单管理")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("预定商品")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/order/default.aspx"><%=Tag("订单管理")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("预定商品")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="col-md-12">
+                <ul class="nav nav-tabs customtab" role="tablist">
+                    <li class="nav-item">
+                        <a <%if (type==""){Response.Write("class=\"nav-link active\"");}else{Response.Write("class=\"nav-link\"");} %> href="?type=" role="tab"><%=Tag("全部")%></a>
+                    </li>
+                    <li class="nav-item">
+                        <a <%if (type=="1"){Response.Write("class=\"nav-link active\"");}else{Response.Write("class=\"nav-link\"");} %> href="?type=1" role="tab"><%=Tag("未到货")%></a>
+                    </li>
+                    <li class="nav-item">
+                        <a <%if (type=="2"){Response.Write("class=\"nav-link active\"");}else{Response.Write("class=\"nav-link\"");} %> href="?type=2" role="tab"><%=Tag("已到货")%></a>
+                    </li>
+                    <li class="nav-item">
+                        <a <%if (type=="3"){Response.Write("class=\"nav-link active\"");}else{Response.Write("class=\"nav-link\"");} %> href="?type=3" role="tab"><%=Tag("已支付尾款")%></a>
+                    </li>
+                    <li class="nav-item">
+                        <a <%if (type=="4"){Response.Write("class=\"nav-link active\"");}else{Response.Write("class=\"nav-link\"");} %> href="?type=4" role="tab"><%=Tag("未支付尾款")%></a>
+                    </li>
+                    <li class="nav-item">
+                        <a <%if (type=="5"){Response.Write("class=\"nav-link active\"");}else{Response.Write("class=\"nav-link\"");} %> href="?type=5" role="tab"><%=Tag("未发货")%></a>
+                    </li>
+                    <li class="nav-item">
+                        <a <%if (type=="6"){Response.Write("class=\"nav-link active\"");}else{Response.Write("class=\"nav-link\"");} %> href="?type=6" role="tab"><%=Tag("已发货")%></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-9 m-b-10">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-submit" onclick="StockOKConfirm()"><i class="ti-check"></i> <%=Tag("已到货")%></button>
+                        <%}%>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr class="no-wrap">
+                                <th style="width: 40px" class="selectAll">
+                                    <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));">
+                                        <%=Tag("全选")%>
+                                    </a>
+                                </th>
+                                <th>
+                                    <%=Tag("订单编号")%>
+                                </th>
+                                <th>
+                                    <%=Tag("客户")%>
+                                </th>
+                                <th>
+                                    <%=Tag("商品编号")%>
+                                </th>
+                                <th>
+                                    <%=Tag("名称")%>
+                                </th>
+                                <th>
+                                    <%=Tag("规格")%>
+                                </th>
+                                <th>
+                                    <%=Tag("数量")%>
+                                </th>
+                                <th>
+                                    <%=Tag("价格")%>
+                                </th>
+                                <th>
+                                    <%=Tag("定金")%>
+                                </th>
+                                <th>
+                                    <%=Tag("已到货")%>
+                                </th>
+                                <th>
+                                    <%=Tag("已支付尾款")%>
+                                </th>
+                                <th>
+                                    <%=Tag("已发货")%>
+                                </th>
+                                <th>
+                                    <%=Tag("支付日期")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_Order_Product model in models){
+                            DB.LebiShop.Lebi_Order order=getorder(model.Order_id);
+                            DB.LebiShop.Lebi_Product product=getproduct(model.Product_id);
+                            %>
+                            <tr>
+                                <td>
+                                    <%if(model.IsStockOK==0){%>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox<%=model.id %>" name="id" value="<%=model.id %>" class="custom-control-input" del="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                    <%}%>
+                                </td>
+                                <td>
+                                    <a target="_blank" href="order_view.aspx?id=<%=order.id%>"><%=order.Code%><a>
+                                </td>
+                                <td>
+                                    <%=order.User_UserName %>
+                                </td>
+                                <td>
+                                    <%=model.Product_Number %>
+                                </td>
+                                <td>
+                                    <%=Lang(model.Product_Name) %>
+                                </td>
+                                <td>
+                                    <%=Shop.Bussiness.EX_Product.ProPertyNameStr(product.ProPerty131,CurrentLanguage.Code)%>
+                                </td>
+                                <td>
+                                    <%=model.Count %>
+                                </td>
+                                <td>
+                                    <%=FormatMoney(model.Price)%>
+                                </td>
+                                <td>
+                                    <%=FormatMoney(model.Price_Reserve)%>
+                                </td>
+                                <td>
+                                    <%=model.IsStockOK==1?"Yes":"-" %>
+                                </td>
+                                <td>
+                                    <%=model.IsPaid==1?"Yes":"-" %>
+                                </td>
+                                <td>
+                                    <%=model.Count_Shipped>0?"Yes":"-" %>
+                                </td>
+                                <td>
+                                    <%=FormatTime(model.Time_Paid) %>
+                                </td>
+                                <td>
+                                    <a target="_blank" href="order_view.aspx?id=<%=order.id%>"><%=Tag("查看订单")%></a>
+                                    <%if(model.IsStockOK==1 && model.IsPaid==1 && model.Count_Shipped!=model.Count){%>
+                                    | <a href="javascript:void(0)" onclick="Order_shipping(<%=model.Order_id%>)"><%=Tag("发货")%></a>
+                                    <%}%>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation ">
+                            <%=PageString%>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        function StockOKConfirm() {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认已经备货完毕吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "StockOK();");
+        }
+        function StockOK() {
+            $("#Modal-Confirm").modal("hide");
+            var ids = GetChkCheckedValues("id");
+            var postData = { "ids": ids };
+            var url = "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=ReserveStockOK";
+            RequestAjax(url, postData, function () { MsgBox(1, "<%=Tag("操作成功")%>", "?") });
+        }
+        function Order_shipping(id) {
+            var title_ = "<%=Tag("发货")%>";
+
+            var url_ = "<%=site.AdminPath %>/order/shipping_window.aspx?id=" + id;
+            var width_ = 600;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+    </script>
+</lbscripts>

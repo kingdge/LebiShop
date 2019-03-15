@@ -1,0 +1,33 @@
+﻿<!--
+Name:用户中心-会员卡券
+Page:P_UserCard
+-->
+<div class="nbbox clearfix">
+<div class="user">
+    <ul class="tablist">
+        <%=SearchTab() %>
+    </ul>
+    <table cellpadding="0" cellspacing="0" width="100%" class="tablelist box">
+        <tr>
+            <th style="width:100px;">{tag:名称}</th>
+            <th style="width:80px;">{tag:代码}</th>
+            <th style="width:80px;">{tag:面值}</th>
+            <th style="width:80px;">{tag:有效期}</th>
+            <th style="width:80px;">{tag:状态}</th>
+            <th>{tag:备注}</th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_Card uc in cards)
+        {%>
+        <tr>
+            <td><%=CardName(uc.CardOrder_id) %></td>
+            <td><%=uc.Code%></td>
+            <td><%=uc.Money%></td>
+            <td><%=FormatDate(uc.Time_End)%></td>
+            <td><%=TypeName(uc.Type_id_CardStatus)%></td>
+            <td><%=CardRemark(uc) %></td>
+        </tr>
+        <%} %>
+    </table>
+    <div class="bottom clearfix"><div class="right"><%=PageString%></div></div>
+</div>
+</div>

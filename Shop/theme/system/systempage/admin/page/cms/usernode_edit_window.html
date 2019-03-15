@@ -1,0 +1,114 @@
+﻿{layout:simple} {class:Shop.Admin.cms.UserNode_Edit_window}
+<lbbody>
+<table
+    class="table">
+    <tr>
+        <th style="width: 22%">
+            <%=Tag("分类名称")%>：
+        </th>
+        <td width="78%">
+            <input type="text" id="Name" name="Name" class="input" shop="true" min="notnull"
+                style="width: 200px;" value="<%=model.Name %>" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("上级目录")%>：
+        </th>
+        <td>
+            <%=Tag(PNode.Name)%>
+        </td>
+    </tr>
+    <%if (PNode.Code == "Info")
+      { %>
+    <tr>
+        <th>
+            <%=Tag("展示形式")%>：
+        </th>
+        <td>
+            <input name="ShowMode" type="radio" value="word" shop="true" <%=(model.ShowMode=="word" || model.ShowMode=="")?"checked":"" %> /><%=Tag("文字")%>
+            <input name="ShowMode" type="radio"  value="image" shop="true" <%=model.ShowMode=="image"?"checked":"" %> /><%=Tag("图文")%>
+        </td>
+    </tr>
+    <%} %>
+    <tr>
+        <th>
+            <%=Tag("站点语言")%>：
+        </th>
+        <td>
+            <%= Shop.Bussiness.Language.SiteLanguageCheckbox("Language_ids", model.Language_ids, CurrentLanguage.Code,CurrentAdmin)%>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("排序序号")%>：
+        </th>
+        <td>
+            <input type="text" id="Sort" name="Sort" style="width: 70px" shop="true" class="input"
+                value="<%=model.Sort %>" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))"
+                maxlength="4" />
+        </td>
+    </tr>
+    <tr>
+        <th class="head" colspan="2" onclick="ShowChild('0,1,2','seo')">
+            <img src="<%=PageImage("plus.gif")%>" name="imgseo" id="imgseo" style="cursor: pointer;" />
+            <%=Tag("SEO优化")%>
+        </th>
+    </tr>
+    <tr style="display: none;" name="trseo" id="tr0">
+        <th>
+            <%=Tag("网页标题")%>：
+        </th>
+        <td>
+            <input type="text" id="SEO_Title" name="SEO_Title" class="input" shop="true" style="width: 400px;"
+                value="<%=model.SEO_Title %>" />
+        </td>
+    </tr>
+    <tr style="display: none;" name="trseo" id="tr1">
+        <th>
+            <%=Tag("关键词")%>：
+        </th>
+        <td>
+            <input type="text" id="SEO_Keywords" name="SEO_Keywords" class="input" shop="true"
+                style="width: 400px;" value="<%=model.SEO_Keywords %>" />
+        </td>
+    </tr>
+    <tr style="display: none;" name="trseo" id="tr2">
+        <th>
+            <%=Tag("网页描述")%>：
+        </th>
+        <td>
+            <input type="text" id="SEO_Description" name="SEO_Description" class="input" shop="true"
+                style="width: 400px;" value="<%=model.SEO_Description %>" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+            <div class="tools tools-m clear">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span>
+                        <%=Tag("保存")%></span></a></li>
+                </ul>
+            </div>
+            <input type="hidden" id="AdminPage_Index" name="AdminPage_Index" value="cms/pagelist.aspx"
+                shop="true" />
+            <input type="hidden" id="AdminPage" name="AdminPage" value="<%=PNode.AdminPage %>"
+                shop="true" />
+            <input type="hidden" id="haveson" name="haveson" value="0" shop="true" />
+            <input type="hidden" id="TypeFlag" name="TypeFlag" value="1" shop="true" />
+            <input type="hidden" id="IsThemeNode" name="IsThemeNode" value="0" shop="true" />
+            <input type="hidden" id="parentid" name="parentid" value="<%=PNode.id %>" shop="true" />
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    LanguageTab_EditPage('<%=CurrentLanguage.Code %>'); //加载默认语言
+    function SaveObj() {
+        var postData = GetFormJsonData("shop");
+        if (!CheckForm("shop", "span"))
+            return false;
+        var url = "<%=site.AdminPath %>/ajax/ajax_node.aspx?__Action=UserNode_Edit&id=<%=model.id %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+</script>
+</lbbody>

@@ -1,0 +1,34 @@
+﻿<!--
+Name:店铺客服
+Page:P_ShopIndex
+-->
+<%if (supplierservicepannel.Status == "1"){%>
+<div id="shopservice" class="mbox clearfix">
+<div class="shopinfo">
+<div class="mt">
+    <h2>{tag:店铺客服}</h2>
+</div>
+<div class="mc">
+${#table:Lebi_ServicePanel_Group;#where:Supplier_id = "+ id +" and ','+Language_ids+',' like '%,"+ CurrentLanguage.id + ",%';#order:Sort desc;#model:shop_group;
+<ul class="group clearfix">
+<h2>{%Name%}</h2>
+<ul class="group-user clearfix">
+${#table:Lebi_ServicePanel;#where:Supplier_id = "+ id +" and ServicePanel_Group_id = "+shop_group.id+" and ','+Language_ids+',' like '%,"+ CurrentLanguage.id + ",%';#order:Sort desc,id desc;#model:shop_user;
+<%
+    string url = GetServicePanelType(shop_user.ServicePanel_Type_id).Url;
+    url = url.Replace("{@uid}",shop_user.Account);
+    url = url.Replace("{@uname}",shop_user.Name);
+%>
+<li><a target="blank" href="<%=url%>"><img src="<%if (GetServicePanelType(shop_user.ServicePanel_Type_id).IsOnline == 1){
+    Response.Write(GetServicePanelType(shop_user.ServicePanel_Type_id).Code.Replace("{@uid}",shop_user.Account));
+}else{
+    Response.Write(Image(GetServicePanelType(shop_user.ServicePanel_Type_id).Face));
+}%>" border="0" align="absmiddle" />&nbsp;{%Name%}</a></li>
+}$
+</ul>
+</li></ul>
+}$
+</div>
+</div>
+</div>
+<%}%>

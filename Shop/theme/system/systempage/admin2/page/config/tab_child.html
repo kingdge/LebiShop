@@ -1,0 +1,77 @@
+﻿{layout:default} {class:Shop.Admin.storeConfig.Tab_Child}
+<lbhead>
+    <title><%=Shop.Bussiness.Language.Content(tab.Tname, CurrentLanguage.Code)%>-<%=Tag("导航设置")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="add"><a href="javascript:void(0);" onclick="TabChildWindow();"><b></b><span><%=Tag("添加")%></span></a></li>
+    <li class="submit"><a href="javascript:void(0);" onclick="Tab_Child_Edit();"><b></b><span><%=Tag("保存")%></span></a></li>
+    <li class="del"><a href="javascript:void(0);" onclick="Tab_Child_Del();"><b></b><span><%=Tag("删除")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="Tab.aspx"><%=Tag("导航设置")%></a> > <%=Shop.Bussiness.Language.Content(tab.Tname, CurrentLanguage.Code)%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'typeid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th>
+                <%=Tag("名称")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("排序")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("商品显示")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_TabChild model in models)
+          { %>
+        <tr class="list">
+            <td style="text-align:center">
+                <input type="checkbox" value="<%=model.id %>" name="typeid" shop="true" />
+            </td>
+            <td>
+                <input type="text" id="txt_name_<%=model.id %>" name="txt_name_<%=model.id %>" value="<%=tabname(model.protypeid) %>" class="input" style="width:200px" onfocus="TabChildWindow();" />
+            </td>
+            <td>
+                <input type="text" id="txt_sort_<%=model.id %>" name="txt_sort_<%=model.id %>" shop="true"
+                    style="width: 60px" value="<%=model.sort %>" class="input" onkeyup="value=value.replace(/[^\d]/g,'')"
+                    onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" />
+            </td>
+            <td>
+                <input type="text" id="txt_num_<%=model.id %>" name="txt_num_<%=model.id %>" shop="true"
+                    style="width: 60px" value="<%=model.num %>" class="input" onkeyup="value=value.replace(/[^\d]/g,'')"
+                    onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" />
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function TabChildWindow() {
+            var title_ = "<%=Tag("编辑类别")%>";
+            var url_ = "tab_child_window.aspx?id=<%=tab.id %>";
+            var width_ = 350;
+            var height_ = 450;
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function Tab_Child_Edit() {
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=Tab_Child_Edit&tabid=<%=tab.id %>";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function Tab_Child_Del() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=Tab_Child_Del&tabid=<%=tab.id %>";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>

@@ -1,0 +1,18 @@
+﻿<!--
+Name:热门文章文字模式
+Page:All
+-->
+<div class="mbox clearfix">
+<div class="articletop">
+<div class="mt">
+    <h2>{tag:热门文章}</h2>
+</div>
+<div class="mc clearfix">
+    <ul>
+        ${#table:Lebi_Page;#where:Node_id in (select id from Lebi_Node where parentid = "+ Node("Info").id +") and ','+Language_ids+',' like '%," + CurrentLanguage.id + ",%';#order:Count_Views desc,id desc;#top:10;
+        <li class="text"><a href="<%=URL("P_ArticleDetails",{id},{url})%>" target="{%target%}" title="{%Name%}"><span style="color:{%NameColor%}">{%Name%}</span></a></li>
+        }$
+    </ul>
+</div>
+</div>
+</div>

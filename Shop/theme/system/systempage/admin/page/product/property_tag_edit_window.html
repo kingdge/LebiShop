@@ -1,0 +1,59 @@
+﻿{layout:simple} {class:Shop.Admin.product.ProPerty_Tag_Edit_window}
+<lbbody>
+<table class="table">
+<tbody>
+    <tr>
+        <th style="width: 20%">
+            <%=Tag("标签名称")%>：
+        </th>
+        <td>
+            <input type="text" id="Name" name="Name" class="input" shop="true"  style="width: 200px;" value="<%=model.Name%>" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("类型")%>：
+        </th>
+        <td>
+            <%=Shop.Bussiness.EX_Type.TypeRadio("ProPertyType", "Type_id_ProPertyType", model.Type_id_ProPertyType, "shop=\"true\" onclick=\"SetType();\"")%>
+        </td>
+    </tr>
+    <%if (Shop.LebiAPI.Service.Instanse.Check("plugin_gongyingshang")){ %>
+    <tr>
+        <th>
+            <%=Tag("商家")%>：
+        </th>
+        <td>
+            <select id="Supplier_id" name="Supplier_id" shop="true">
+                <option value="0"><%=Tag("请选择")%></option>
+                <%=Shop.Bussiness.EX_Supplier.SupplierOption(model.Supplier_id, CurrentLanguage.Code)%>
+            </select>
+        </td>
+    </tr>
+    <%} %>
+    <tr>
+        <th style="width: 20%">
+            <%=Tag("排序序号")%>：
+        </th>
+        <td>
+            <input type="text" id="Sort" name="Sort" style="width: 70px" shop="true" class="input" value="<%=model.Sort %>" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" maxlength="4" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+        <div class="tools tools-m clear">
+            <ul>
+                <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+            </ul>
+        </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    function SaveObj() {
+        var postData = GetFormJsonData("shop");
+        var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Property_Tag_Edit&id=<%=model.id %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+</script>
+</lbbody>

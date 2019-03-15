@@ -1,0 +1,164 @@
+﻿{layout:default} {class:Shop.Admin.storeConfig.LanguageTag}
+<lbhead>
+    <title><%=Tag("语言标签")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("语言标签")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("语言标签")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-9 m-b-10">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-success" onclick="Update()"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                        <button class="btn btn-danger" onclick="DeleteConfirm()"><i class="ti-trash"></i> <%=Tag("删除")%></button>
+                        <button class="btn btn-default" onclick="location.href='?mode=NeedTranslation';"><i class="ti-help"></i> <%=Tag("待翻译")%></button>
+                        <button class="btn btn-default" onclick="Export()"><i class="ti-export"></i> <%=Tag("导出")%></button>
+                        <button class="btn btn-default" onclick="Import()"><i class="ti-import"></i> <%=Tag("导入")%></button>
+                        <%}%>
+                    </div>
+                    <div class="col-md-3 m-b-10">
+                        <div class="input-group">
+                            <input type="text" id="key" name="key" class="form-control" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}">
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-primary" onclick="search_();"><i class="ti-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th class="selectAll" style="width:40px">
+                                    <a href="javascript:void(0);" onclick="$('input[name=\'sid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));">
+                                        <%=Tag("全选")%>
+                                    </a>
+                                </th>
+                                <th>
+                                    <%=Tag("标签")%>
+                                </th>
+                                <%foreach (DB.LebiShop.Lebi_Language_Code lang in langs){ %>
+                                <th>
+                                    <%=lang.Name %>
+                                    <input type="hidden" id="<%=lang.Code %>V" style="display: none;" value="0" />
+                                </th>
+                                <%} %>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_Language_Tag model in models)
+                            {%>
+                            <tr ondblclick="Edit(<%=model.id %>)">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox<%=model.id %>" name="sid" value="<%=model.id %>" class="custom-control-input">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                    <input type="hidden" name="id" shop="true" value="<%=model.id %>">
+                                </td>
+                                <td>
+                                    <%=model.tag%>
+                                </td>
+                                <%foreach (DB.LebiShop.Lebi_Language_Code lang in langs){ %>
+                                <td>
+                                    <input type="text" id="<%=lang.Code+model.id %>" name="<%=lang.Code+model.id %>" value="<%=Server.HtmlEncode(TagValue(model,lang.Code)) %>" class="form-control form-control-sm" style="width: 150px" shop="true">
+                                </td>
+                                <%} %>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation ">
+                            <%=PageString%>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+    <script>
+        function search_() {
+            var key = $("#key").val();
+            window.location = "?key=" + escape(key);
+        }
+        function TagVersion(lang) {
+            var postData = { "lang": lang };
+            var url = "<%=site.AdminPath %>/ajax/ajax_service.aspx?__Action=LanguageTagVersion";
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: postData,
+                dataType: "json",
+                success: function (res) {
+                    if (res.version != "0") {
+                        $("#" + lang + "A").show();
+                        $("#" + lang + "C").html(res.content);
+                        $("#" + lang + "V").val(res.version);
+                    }
+                }
+            });
+        }
+        function Update() {
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=LanguageTag_Edits";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+        function DeleteConfirm() {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要删除吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "DeleteObj();");
+        }
+        function DeleteObj() {
+            $("#Modal-Confirm").modal("hide");
+            var id = GetChkCheckedValues("sid");
+            var postData = { "id": id };
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=LanguageTag_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function Export() {
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "languagetag_export_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function Import() {
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "languagetag_import_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function TagUpdateDO(lang) {
+            var postData = {"lang":lang,"version":$("#" + lang + "V").val()};
+            var url = "<%=site.AdminPath %>/ajax/ajax_service.aspx?__Action=LanguageTagUpdate";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        <%
+        if (page == 1){
+            foreach (DB.LebiShop.Lebi_Language_Code lang in langs){ %>
+                TagVersion("<%=lang.Code %>");
+            <%}} %>
+    </script>
+</lbscripts>

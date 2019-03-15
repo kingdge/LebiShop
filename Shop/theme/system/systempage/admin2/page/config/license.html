@@ -1,0 +1,61 @@
+﻿{layout:default} {class:Shop.Admin.Config.License}
+<lbhead>
+    <title><%=Tag("账户设置")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("账户设置")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("账户设置")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form action="javascript:SaveObj();" novalidate>
+                    <div class="form-group">
+                        <label for="LicenseUserName"><%=Tag("帐号")%>：</label>
+                        <input type="text" id="LicenseUserName" name="LicenseUserName" value="<%=model.LicenseUserName %>" class="form-control" shop="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="LicensePWD"><%=Tag("密码")%>：</label>
+                        <input type="password" id="LicensePWD" name="LicensePWD" value="<%=password %>" class="form-control" shop="true">
+                    </div>
+                    <%if (model.LicenseDomain != "")
+                    { %>
+                    <div class="form-group">
+                        <label><%=Tag("网站域名")%>：</label>
+                        <div class="form-control-label"><%=model.LicenseDomain%></div>
+                    </div>
+                    <%} %>
+                    <%if (PageReturnMsg == ""){%>
+                    <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                    <%}%>
+                </form>
+            </div>
+        </div>
+        <%
+        if (!Shop.LebiAPI.Service.Instanse.Check("managelicenese")){
+        %>
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title"><%=Tag("帮助")%></h4>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <%=Tag("输入您的Lebi帐号、Lebi密码和网站域名，可以自动获得您已经购买的授权。")%></br>
+                        <%=Tag("点此查看Lebi商业授权")%><a href="http://www.lebi.cn/license/" target="_blank">http://www.lebi.cn/license/</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <%}%>
+    </div>
+    <script>
+        function SaveObj() {
+            var postData = GetFormJsonData("shop");
+            var url="<%=site.AdminPath %>/ajax/ajax_service.aspx?__Action=Licence_Set";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>

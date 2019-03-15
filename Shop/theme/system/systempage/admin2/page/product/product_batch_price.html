@@ -1,0 +1,195 @@
+﻿{layout:default} {class:Shop.Admin.product.product_batch_price}
+<lbhead>
+    <title><%=Tag("批量调价")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <link href="<%=site.AdminAssetsPath %>/plugins/daterangepicker/daterangepicker.css" rel="stylesheet">
+</lbfile>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("批量调价")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("批量调价")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form action="javascript:SaveObj(1);" novalidate>
+                    <div class="form-group">
+                        <label for="tb_typeid"><%=Tag("上架日期")%>：</label>
+                        <div class="input-daterange input-group">
+                            <input type="text" id="dateFrom1" name="dateFrom" class="form-control" shop1="true">
+                            <div class="input-group-append">
+                                <span class="input-group-text bg-info b-0 text-white">-</span>
+                            </div>
+                            <input type="text" id="dateTo1" name="dateTo" class="form-control" shop1="true">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Pro_Type_id"><%=Tag("商品分类")%>：</label>
+                        <select id="Pro_Type_id" name="Pro_Type_id" class="form-control" shop1="true">
+                            <option value=""><%=Tag("全部")%></option>
+                            <%=Shop.Bussiness.EX_Product.TypeOption(0,0,0,CurrentLanguage.Code,Shop.Bussiness.EX_Admin.Project().Pro_Type_ids)%>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="brand"><%=Tag("商品品牌")%>：</label>
+                        <select id="brand" name="brand" class="form-control" shop1="true">
+                            <option value="0"><%=Tag("全部")%></option>
+                            <%=Shop.Bussiness.EX_Product.BrandOption(0, CurrentLanguage.Code)%>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tag"><%=Tag("商品标签")%>：</label>
+                        <select id="tag" name="tag" class="form-control" shop1="true">
+                            <option value="0"><%=Tag("全部")%></option>
+                            <%=Shop.Bussiness.EX_Product.Pro_TagOption(0, CurrentLanguage.Code)%>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="price_marketvalue"><%=Tag("市场价")%>：</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <select name="price_markettype" class="form-control" shop1="true"><option value="0"><%=Tag("上浮")%></option><option value="1"><%=Tag("下调")%></option></select>
+                            </div>
+                            <input type="text" id="price_marketvalue" name="price_marketvalue" class="form-control" shop1="true" onkeyup="value=value.replace(/[^\d\.]/g,'')" required>
+                            <div class="input-group-append">
+                                <select name="price_marketadd" class="form-control" shop1="true"><option value="0"><%=Tag("百分比")%></option><option value="1"><%=Tag("数值")%></option></select>
+                            </div>
+                        </div>
+                    </div>
+                    <%if (Shop.Bussiness.EX_Admin.CheckPower("product_price_cost")){ %>
+                    <div class="form-group">
+                        <label for="price_marketvalue"><%=Tag("成本价")%>：</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <select name="price_costtype" class="form-control" shop1="true"><option value="0"><%=Tag("上浮")%></option><option value="1"><%=Tag("下调")%></option></select>
+                            </div>
+                            <input type="text" id="price_costvalue" name="price_costvalue" class="form-control" shop1="true" onkeyup="value=value.replace(/[^\d\.]/g,'')" required>
+                            <div class="input-group-append">
+                                <select name="price_costadd" class="form-control" shop1="true"><option value="0"><%=Tag("百分比")%></option><option value="1"><%=Tag("数值")%></option></select>
+                            </div>
+                        </div>
+                    </div>
+                    <%} %>
+                    <div class="form-group">
+                        <label for="price_marketvalue"><%=Tag("销售价")%>：</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <select name="pricetype" class="form-control" shop1="true"><option value="0"><%=Tag("上浮")%></option><option value="1"><%=Tag("下调")%></option></select>
+                            </div>
+                            <input type="text" id="pricevalue" name="pricevalue" class="form-control" shop1="true" onkeyup="value=value.replace(/[^\d\.]/g,'')" required>
+                            <div class="input-group-append">
+                                <select name="priceadd" class="form-control" shop1="true"><option value="0"><%=Tag("百分比")%></option><option value="1"><%=Tag("数值")%></option></select>
+                            </div>
+                        </div>
+                    </div>
+                    <%if (PageReturnMsg == ""){%>
+                    <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("提交")%></button>
+                    <%}%>
+                </form>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <form action="javascript:SaveObj(2);" novalidate>
+                    <div class="form-group">
+                        <label for="tb_typeid"><%=Tag("上架日期")%>：</label>
+                        <div class="input-daterange input-group">
+                            <input type="text" id="dateFrom2" name="dateFrom" class="form-control" shop2="true">
+                            <div class="input-group-append">
+                                <span class="input-group-text bg-info b-0 text-white">-</span>
+                            </div>
+                            <input type="text" id="dateTo2" name="dateTo" class="form-control" shop2="true">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Pro_Type_id"><%=Tag("商品分类")%>：</label>
+                        <select id="Pro_Type_id" name="Pro_Type_id" class="form-control" shop2="true">
+                            <option value=""><%=Tag("全部")%></option>
+                            <%=Shop.Bussiness.EX_Product.TypeOption(0,0,0,CurrentLanguage.Code,Shop.Bussiness.EX_Admin.Project().Pro_Type_ids)%>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="brand"><%=Tag("商品品牌")%>：</label>
+                        <select id="brand" name="brand" class="form-control" shop2="true">
+                            <option value="0"><%=Tag("全部")%></option>
+                            <%=Shop.Bussiness.EX_Product.BrandOption(0, CurrentLanguage.Code)%>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tag"><%=Tag("商品标签")%>：</label>
+                        <select id="tag" name="tag" class="form-control" shop2="true">
+                            <option value="0"><%=Tag("全部")%></option>
+                            <%=Shop.Bussiness.EX_Product.Pro_TagOption(0, CurrentLanguage.Code)%>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="price_marketvalue"><%=Tag("销售价")%>：</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"> = <%=Tag("成本价")%> <%=Tag("上浮")%></span>
+                            </div>
+                            <input type="text" id="addvalue" name="addvalue" class="form-control" shop2="true" onkeyup="value=value.replace(/[^\d\.]/g,'')" required>
+                            <div class="input-group-append">
+                                <select name="addtype" class="form-control" shop2="true"><option value="0"><%=Tag("百分比")%></option><option value="1"><%=Tag("数值")%></option></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="price_marketvalue"><%=Tag("销售价")%>：</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"> = <%=Tag("市场价")%> <%=Tag("下调")%></span>
+                            </div>
+                            <input type="text" id="reducevalue" name="reducevalue" class="form-control" shop2="true" onkeyup="value=value.replace(/[^\d\.]/g,'')" required>
+                            <div class="input-group-append">
+                                <select name="reducetype" class="form-control" shop2="true"><option value="0"><%=Tag("百分比")%></option><option value="1"><%=Tag("数值")%></option></select>
+                            </div>
+                        </div>
+                    </div>
+                    <%if (PageReturnMsg == ""){%>
+                    <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("提交")%></button>
+                    <%}%>
+                </form>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script src="<%=site.AdminAssetsPath %>/plugins/moment/moment.js"></script>
+    <script src="<%=site.AdminAssetsPath %>/plugins/daterangepicker/daterangepicker.js"></script>
+    <script>
+        ! function (window, document, $) {
+            "use strict";
+            $("input,select,textarea").not("[type=submit]").jqBootstrapValidation()
+        }(window, document, jQuery);
+        $('#dateFrom1').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: { format: 'YYYY-MM-DD' }
+        });
+        $('#dateTo1').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: { format: 'YYYY-MM-DD' }
+        });
+        $('#dateFrom2').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: { format: 'YYYY-MM-DD' }
+        });
+        $('#dateTo2').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: { format: 'YYYY-MM-DD' }
+        });
+        function SaveObj(step) {
+            var postData = GetFormJsonData("shop" + step);
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Product_Batch_Price_Update&step=" + step;
+            RequestAjax(url, postData, function () { MsgBox(1, "<%=Tag("操作成功")%>", "?") });
+        }
+    </script>
+</lbscripts>

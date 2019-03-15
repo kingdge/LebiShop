@@ -1,0 +1,159 @@
+﻿{layout:default} {class:Shop.Admin.agent.User}
+<lbhead>
+    <title><%=Tag("会员管理")%>-<%=Tag("代理")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <li class="submit"><a href="javascript:void(0);" onclick="Update();"><b></b><span><%=Tag("批量设置")%></span></a></li>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("会员列表")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox">
+        <%--<select id="lang">
+            <option value="">┌<%=Tag("语言")%></option>
+            <%=Shop.Bussiness.Language.LanguageOption(lang)%>
+        </select>
+        <select name="level" id="level">
+            <option value="0">┌ <%=Tag("会员分组")%></option>
+            <%=Shop.Bussiness.EX_User.TypeOption("grade > 0", level, CurrentLanguage.Code)%>
+        </select>
+        <select name="datetype" id="datetype">
+            <option value="">┌ <%=Tag("日期类型")%></option>
+            <option value="1">┌ <%=Tag("注册日期")%></option>
+            <option value="2">┌ <%=Tag("最后登录日期")%></option>
+            <option value="3">┌ <%=Tag("会员生日")%></option>
+        </select>
+        <input type="text" name="dateFrom" id="dateFrom" size="12" class="input-calendar" value="<%=dateFrom %>" /> - <input type="text" name="dateTo" id="dateTo" size="12" class="input-calendar" value="<%=dateTo %>" />--%>
+        <input name="key" type="text" id="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" align="absmiddle" />
+        <div style="margin-top:5px;">
+        <a href="javascript:void(0);" onclick="SearchWindow();"><%=Tag("高级搜索")%></a>
+        <%=su.Description%>
+        </div>
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'sid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th style="width: 40px">
+                <%=Tag("ID")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("会员编号")%>
+            </th>
+            <th style="width: 160px">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "UserNameDesc"){Response.Write("UserNameAsc");}else{Response.Write("UserNameDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("会员帐号")%><%if (OrderBy == "UserNameDesc") { Response.Write("↓"); } else if (OrderBy == "UserNameAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th style="width: 100px">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "RealNameDesc"){Response.Write("RealNameAsc");}else{Response.Write("RealNameDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("姓名")%><%if (OrderBy == "RealNameDesc") { Response.Write("↓"); } else if (OrderBy == "RealNameAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th style="width: 80px">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "UserLevelDesc"){Response.Write("UserLevelAsc");}else{Response.Write("UserLevelDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("等级")%><%if (OrderBy == "UserLevelDesc") { Response.Write("↓"); } else if (OrderBy == "UserLevelAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("一级佣金")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("二级佣金")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("三级佣金")%>
+            </th>
+            <th style="width: 150px">
+                <%=Tag("分销商") %>
+            </th>
+           
+            <%if (domain3admin)
+              { %>
+            <th style="width: 70px">
+               <%=Tag("站点") %> 
+            </th>
+            <%} %>
+            <th>
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_User model in models)
+          {%>
+        <tr class="list" ondblclick="Edit(<%=model.id %>);">
+            <td style="text-align:center">
+                <input type="checkbox" name="sid" value="<%=model.id %>" />
+            </td>
+            <td>
+                <%=model.id%>
+            </td>
+            <td>
+                <%=model.UserNumber %>&nbsp;
+            </td>
+            <td title="<%=Tag("昵称")%>：<%=model.NickName %>">
+                <%=model.UserName %>
+            </td>
+            <td>
+                <%=model.RealName %>&nbsp;
+            </td>
+            <td><%=Shop.Bussiness.EX_User.TypeName(model.UserLevel_id, CurrentLanguage.Code)%>
+            </td>
+            <td>
+                <%=User_Commission(model.id).Angent1_Commission %> %
+            </td>
+            <td>
+                <%=User_Commission(model.id).Angent2_Commission %> %
+            </td>
+            <td>
+                <%=User_Commission(model.id).Angent3_Commission %> %
+            </td>
+            <td><%=GetDTName(model.DT_id)%></td>
+            <%if (domain3admin){ %>
+            <td><%if (site.SiteCount > 1){ %><%=SiteName(model.Site_id)%><%} %></td>
+            <%} %>
+            <td>
+                <a href="javascript:void(0)" onclick="Edit(<%=model.id %>);"><%=Tag("编辑")%></a>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+<script type="text/javascript">
+    function search_(scurl) {
+        var key = $("#key").val();
+        if(scurl==undefined || scurl=='')
+            scurl='<%=su.URL %>';
+        window.location = "?key=" + escape(key) + "&OrderBy=<%=OrderBy%>&"+scurl;
+    }
+    function OrderBy(url) {
+        MsgBox(4, "<%=Tag("正在排序，请稍后")%> ……", url+"&<%=su.URL %>");
+    }
+    function Edit(id) {
+        var title_ = "<%=Tag("编辑")%>";
+        var url_ = "user_edit_window.aspx?id=" + id;
+        var width_ = 400;
+        var height_ = 200;
+        var modal_ = true;
+        EditWindow(title_, url_, width_, height_, modal_);
+    }
+    function Update() {
+        var ids = GetChkCheckedValues("sid");
+        var title_ = "<%=Tag("批量设置")%>";
+        var url_ = "user_update_window.aspx?id=" + ids;
+        var width_ = 400;
+        var height_ = 200;
+        var modal_ = true;
+        EditWindow(title_, url_, width_, height_, modal_);
+    }
+    function SearchWindow() {
+        var title_ = "<%=Tag("会员查询")%>";
+        var url_ = "../user/user_search_window.aspx?callback=search_&<%=su.URL %>";
+        var width_ = 500;
+        var height_ = 505;
+        var modal_ = true;
+        EditWindow(title_, url_, width_, height_, modal_);
+    }
+</script>
+</lbbottom>

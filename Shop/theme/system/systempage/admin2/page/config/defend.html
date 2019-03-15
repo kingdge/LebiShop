@@ -1,0 +1,54 @@
+﻿{layout:default} {class:Shop.Admin.storeConfig.Defend}
+<lbhead>
+    <title><%=Tag("网站维护")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("网站维护")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("网站维护")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form action="javascript:SaveObj();" novalidate>
+                    <div class="form-group">
+                        <label for="VisitTimeFlag_1"><%=Tag("禁止访问")%>：</label>
+                        <div class="input-group">
+                            <label class="custom-control custom-radio m-r-20">
+                                <input type="radio" id="VisitTimeFlag_1" name="VisitTimeFlag" value="1" class="custom-control-input" shop="true" <%=model.VisitTimeFlag=="1"?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("开启")%></span>
+                            </label>
+                            <label class="custom-control custom-radio">
+                                <input type="radio" id="VisitTimeFlag_0" name="VisitTimeFlag" value="0" class="custom-control-input" shop="true" <%=model.VisitTimeFlag=="0"?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("关闭")%></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Wornings"><%=Tag("禁止提示语")%>：</label>
+                        <textarea id="Wornings" name="Wornings" class="form-control" style="height:100px;" shop="true"><%=model.Wornings%></textarea>
+                        <div class="button-group m-t-5">
+                            <button type="button" class="btn btn-default btn-xs btn-sm" onclick="javascript:resizeEditor('Wornings',100);"><%=Tag("展开")%></button>
+                            <button type="button" class="btn btn-default btn-xs btn-sm" onclick="javascript:resizeEditor('Wornings',-100);"><%=Tag("收缩")%></button>
+                        </div>
+                    </div>
+                    <%if (PageReturnMsg == ""){%>
+                    <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                    <%}%>
+                </form>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        function SaveObj() {
+            var postData = GetFormJsonData("shop");
+            var url="<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=Defend_Edit";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+    </script>
+</lbscripts>

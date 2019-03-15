@@ -1,0 +1,118 @@
+﻿{layout:default} {class:Shop.Admin.agent.agentuser}
+<lbhead>
+    <title><%=Tag("推广列表")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("推广列表")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox">
+        <input name="key" type="text" id="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" align="absmiddle" />
+        <div style="margin-top:5px;">
+        <a href="javascript:void(0);" onclick="SearchWindow();"><%=Tag("高级搜索")%></a>
+        <%=su.Description%>
+        </div>
+        
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            
+            <th style="width: 120px">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "UserNameDesc"){Response.Write("UserNameAsc");}else{Response.Write("UserNameDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("会员帐号")%><%if (OrderBy == "UserNameDesc") { Response.Write("↓"); } else if (OrderBy == "UserNameAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th style="width: 120px">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "RealNameDesc"){Response.Write("RealNameAsc");}else{Response.Write("RealNameDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("姓名")%><%if (OrderBy == "RealNameDesc") { Response.Write("↓"); } else if (OrderBy == "RealNameAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th style="width: 80px">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "UserLevelDesc"){Response.Write("UserLevelAsc");}else{Response.Write("UserLevelDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("等级")%><%if (OrderBy == "UserLevelDesc") { Response.Write("↓"); } else if (OrderBy == "UserLevelAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th style="width: 60px">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "MoneyDesc"){Response.Write("MoneyAsc");}else{Response.Write("MoneyDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("余额")%>(<%=DefaultCurrency.Msige%>)<%if (OrderBy == "MoneyDesc") { Response.Write("↓"); } else if (OrderBy == "MoneyAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th style="width: 60px">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "PointDesc"){Response.Write("PointAsc");}else{Response.Write("PointDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("积分")%><%if (OrderBy == "PointDesc") { Response.Write("↓"); } else if (OrderBy == "PointAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th style="width: 130px">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "Time_RegDesc"){Response.Write("Time_RegAsc");}else{Response.Write("Time_RegDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("注册日期")%><%if (OrderBy == "Time_RegDesc") { Response.Write("↓"); } else if (OrderBy == "Time_RegAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th style="width: 130px">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "Time_LastDesc"){Response.Write("Time_LastAsc");}else{Response.Write("Time_LastDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("最后登陆")%><%if (OrderBy == "Time_LastDesc") { Response.Write("↓"); } else if (OrderBy == "Time_LastAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th style="width: 100px">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "CountSonDesc"){Response.Write("CountSonAsc");}else{Response.Write("CountSonDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("推广人数")%><%if (OrderBy == "CountSonDesc") { Response.Write("↓"); } else if (OrderBy == "CountSonAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th style="width: 100px">
+               <%=Tag("上级用户")%>
+            </th>
+            <th>
+               <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_User model in models)
+          {%>
+        <tr class="list">
+            
+            <td>
+                <%=model.UserName %>
+            </td>
+            <td>
+                <%=model.RealName %>&nbsp;
+            </td>
+           
+            <td><%=Shop.Bussiness.EX_User.TypeName(model.UserLevel_id, CurrentLanguage.Code)%>
+            </td>
+            
+            <td>
+                <%=model.Money %>
+            </td>
+            <td>
+                <%=model.Point %>
+            </td>
+            <td>
+                <%=FormatTime(model.Time_Reg) %>
+            </td>
+            <td>
+                <%=FormatTime(model.Time_Last) %>
+            </td>
+            <td>
+                <a href="?id=<%=model.id %>"><%=DB.LebiShop.B_Lebi_User.Counts("user_id_parent="+model.id+"") %></a>
+            </td>
+            <td>
+                <a href="?parent_id=<%=model.User_id_parent %>"><%=Shop.Bussiness.EX_User.GetUser(model.User_id_parent).UserName%></a>
+            </td>
+            <td>
+                <a href="agentmoney.aspx?key=<%=model.UserName %>"><%=Tag("佣金")%></a></td>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function search_(scurl) {
+            var key = $("#key").val();
+            if(scurl==undefined || scurl=='')
+                scurl='<%=su.URL %>';
+            window.location = "?key=" + escape(key) + "&OrderBy=<%=OrderBy%>&"+scurl;
+        }
+        function OrderBy(url) {
+            MsgBox(4, "<%=Tag("正在排序，请稍后")%> ……", url+"&<%=su.URL %>");
+        }
+     
+        function SearchWindow() {
+            var title_ = "<%=Tag("会员查询")%>";
+            var url_ = "../user/user_search_window.aspx?callback=search_&<%=su.URL %>";
+            var width_ = 500;
+            var height_ = 505;
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

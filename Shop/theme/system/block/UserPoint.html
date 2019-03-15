@@ -1,0 +1,42 @@
+﻿<!--
+Name:用户中心-会员积分
+Page:All
+-->
+<div class="nbbox clearfix">
+<div class="user">
+    <div class="searchbox clearfix">
+        <input type="text" name="dateFrom" id="dateFrom" size="12" class="input-calendar" value="<%=dateFrom %>" /> - <input type="text" name="dateTo" id="dateTo" size="12" class="input-calendar" value="<%=dateTo %>" />
+        <input type="text" id="key" name="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" />
+        <a href="javascript:void(0)" onclick="search_();" class="btn btn-12"><s></s>{tag:查询}</a>
+        <%if(SYS.IsPointToMoney=="1"){ %>
+        <a href="<%=URL("P_UserPointToMoney","") %>" class="btn btn-12"><s></s>{tag:积分转换}</a>
+        <%} %>
+    </div>
+    <table cellpadding="0" cellspacing="0" width="100%" class="tablelist box">
+        <tr>
+            <th style="width:120px;">{tag:时间}</th>
+            <th style="width:80px;">{tag:积分}</th>
+            <th style="width:90px;">{tag:状态}</th>
+            <th>{tag:备注}</th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_User_Point u_p in user_points)
+        {%>
+        <tr>
+            <td><%=FormatTime(u_p.Time_Add)%></td>
+            <td><%=u_p.Point%></td>
+            <td><%=TypeName(u_p.Type_id_PointStatus)%></td>
+            <td><%=u_p.Remark %></td>
+        </tr>
+        <%} %>
+    </table>
+    <div class="bottom clearfix"><div class="right"><%=PageString%></div></div>
+</div>
+</div>
+<script type="text/javascript">
+    function search_() {
+        var key = $("#key").val();
+        var dateFrom = $("#dateFrom").val();
+        var dateTo = $("#dateTo").val();
+        window.location = "?key=" + escape(key) + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo;
+    }
+</script>

@@ -1,0 +1,197 @@
+﻿{layout:default} {class:Shop.Admin.storeConfig.WaterConfig_Edit}
+<lbhead>
+    <title><%=Tag("水印设置")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("水印设置")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("水印设置")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form action="javascript:SaveObj();" novalidate>
+                    <div class="form-group">
+                        <label for="OnAndOff_1"><%=Tag("水印功能")%>：</label>
+                        <div class="input-group">
+                            <label class="custom-control custom-radio m-r-20">
+                                <input type="radio" id="OnAndOff_1" name="OnAndOff" value="1" class="custom-control-input" shop="true" <%=model.OnAndOff=="1"?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("开启")%></span>
+                            </label>
+                            <label class="custom-control custom-radio">
+                                <input type="radio" id="OnAndOff_0" name="OnAndOff" value="0" class="custom-control-input" shop="true" <%=model.OnAndOff=="0"?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("关闭")%></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="PicAndText_1"><%=Tag("水印类型")%>：</label>
+                        <div class="input-group">
+                            <label class="custom-control custom-radio m-r-20">
+                                <input type="radio" id="PicAndText_1" name="PicAndText" value="Logo" class="custom-control-input" shop="true" <%=model.PicAndText=="Logo"?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("图片")%></span>
+                            </label>
+                            <label class="custom-control custom-radio">
+                                <input type="radio" id="PicAndText_0" name="PicAndText" value="text" class="custom-control-input" shop="true" <%=model.PicAndText=="text"?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("文字")%></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="WM_PicPath"><%=Tag("水印图片")%>：</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="image_WM_PicPath"><%if (model.WM_PicPath != ""){%><img src="<%=site.WebPath + model.WM_PicPath%>" height="20" /><%}else{ %><i class="ti-image"></i><%}%></span>
+                            </div>
+                            <input type="text" id="WM_PicPath" name="WM_PicPath" value="<%=model.WM_PicPath %>" class="form-control" shop="true">
+                            <div class="input-group-append fileupload">
+                                <span class="input-group-text"><i class="ti-upload"></i></span>
+                                <input type="file" id="file_WM_PicPath" name="file_WM_PicPath" class="upload" onchange="uploadImage('WM_PicPath')">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="WM_Text"><%=Tag("水印文字")%>：</label>
+                        <input type="text" id="WM_Text" name="WM_Text" value="<%=model.WM_Text %>" class="form-control" shop="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="WM_Location"><%=Tag("水印位置")%>：</label>
+                        <select id="WM_Location" name="WM_Location" class="form-control" shop="true">
+                            <option value="LeftTop" <%=model.WM_Location=="LeftTop"?"selected":"" %>><%=Tag("左上角")%></option>
+                            <option value="LeftBottom" <%=model.WM_Location=="LeftBottom"?"selected":"" %>><%=Tag("左下角")%></option>
+                            <option value="RightTop" <%=model.WM_Location=="RightTop"?"selected":"" %>><%=Tag("右上角")%></option>
+                            <option value="RightBottom" <%=model.WM_Location=="RightBottom"?"selected":"" %>><%=Tag("右下角")%></option>
+                            <option value="Tile" <%=model.WM_Location=="Tile"?"selected":"" %>><%=Tag("平铺")%></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="WM_Transparence"><%=Tag("水印透明度")%>：</label>
+                        <div class="input-group">
+                            <input type="text" id="WM_Transparence" name="WM_Transparence" value="<%=model.WM_Transparence %>" class="form-control" shop="true">
+                            <div class="input-group-append">
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
+                        <small class="form-text text-muted"><%=Tag("最大值为100")%></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="WM_Text"><%=Tag("水印字体")%>：</label>
+                        <select id="WM_Font" name="WM_Font" class="form-control" shop="true">
+                            <%=getfont(model.WM_Font)%>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="WM_FontSize"><%=Tag("文字大小")%>：</label>
+                        <div class="input-group">
+                            <input type="text" id="WM_FontSize" name="WM_FontSize" value="<%=model.WM_FontSize %>" class="form-control" shop="true">
+                            <div class="input-group-append">
+                                <span class="input-group-text">px</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="WM_FontColor"><%=Tag("文字颜色")%>：</label>
+                        <select id="WM_FontColor" name="WM_FontColor" class="form-control" shop="true">
+                            <%=getcolor(model.WM_Font)%>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="WM_FontColor"><%=Tag("文字形状")%>：</label>
+                        <select id="WM_FontForm" name="WM_FontForm" class="form-control" shop="true">
+                            <option value="None" <%=model.WM_FontForm=="None"?"selected":"" %>><%=Tag("禁用样式")%></option>
+                            <option value="Bold" <%=model.WM_FontForm=="Bold"?"selected":"" %>><%=Tag("加粗")%></option>
+                            <option value="Underline" <%=model.WM_FontForm=="Underline"?"selected":"" %>><%=Tag("下划线")%></option>
+                            <option value="Italic" <%=model.WM_FontForm=="Italic"?"selected":"" %>><%=Tag("倾斜")%></option>
+                            <option value="Strikeout" <%=model.WM_FontForm=="Strikeout"?"selected":"" %>><%=Tag("中划线")%></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="WM_PlaceX"><%=Tag("位置偏移")%>：</label>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label for="WM_PlaceX">X：</label>
+                                <div class="input-group">
+                                    <input type="text" id="WM_PlaceX" name="WM_PlaceX" value="<%=model.WM_PlaceX%>" class="form-control" shop="true">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">px</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="WM_PlaceY">Y：</label>
+                                <div class="input-group">
+                                    <input type="text" id="WM_PlaceY" name="WM_PlaceY" value="<%=model.WM_PlaceX%>" class="form-control" shop="true">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">px</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="WM_Width"><%=Tag("水印尺寸")%>：</label>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label for="WM_Width"><%=Tag("宽度")%>：</label>
+                                <div class="input-group">
+                                    <input type="text" id="WM_Width" name="WM_Width" value="<%=model.WM_Width%>" class="form-control" shop="true">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">px</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="WM_Height"><%=Tag("高度")%>：</label>
+                                <div class="input-group">
+                                    <input type="text" id="WM_Height" name="WM_Height" value="<%=model.WM_Height%>" class="form-control" shop="true">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">px</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <%if (PageReturnMsg == ""){%>
+                    <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                    <%}%>
+                </form>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+    <script>
+        function SaveObj() {
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=WaterConfig_Edit";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function uploadImage(id) {
+            $.ajaxFileUpload({
+	            url: WebPath + '/ajax/imageuploadone.aspx',
+	            secureuri: false,
+	            fileElementId: 'file_' + id,
+	            dataType: 'json',
+	            success: function (data, status) {
+	                if (data.msg != 'OK') {
+	                    MsgBox(2, data.msg, "");
+	                }
+	                else {
+	                    var imageUrl = data.ImageUrl;
+	                    if (imageUrl.length > 0) {
+	                        $("#image_" + id + "").html('<img src="' + WebPath + imageUrl + '" height="20">');
+	                        $("#" + id + "").val(imageUrl);
+	                    }
+	                }
+	            },
+	            error: function (data, status, e) {
+	                MsgBox(2, data.msg, "");
+	            }
+	        })
+        }
+    </script>
+</lbscripts>

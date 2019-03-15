@@ -1,0 +1,69 @@
+﻿<!--
+Name:搜索列表
+Page:P_Search
+-->
+<div class="nbbox clearfix">
+    <div id="filter">
+        <div class="fore1">
+            <div class="pagin pagin-m" id="top_pagi">
+                <%=HeadPage%>
+            </div>
+            <div class="total">
+                <span>{Tag:数量}： <strong>
+                    <%=recordCount %></strong></span>
+            </div>
+            <span class="clr"></span>
+        </div>
+    </div>
+    <div class="mc clearfix">
+        <div class="productlist loadlist">
+            <ul>
+                <%foreach (DB.LebiShop.Lebi_Supplier model in shops)
+        {
+                %>
+                <li class="grid loadli">
+                    <div class="proimg">
+                        <p>
+                            <a href="<%=URL("P_ShopIndex",model.id) %>"><img <%if (CurrentLanguage.IsLazyLoad==1){ %>class="lazy" src="{/image}lazy.gif" data-original<%}else{ %>src<%} %>="<%=Image(model.Logo)%>" alt="<%=Lang(model.Name) %>" title="<%=Lang(model.Name) %>" /></a></p>
+                    </div>
+                    <div class="proname">
+                        <a href="<%=URL("P_ShopIndex",model.id) %>" title="<%=Lang(model.Name) %>"><%=Lang(model.Name) %></a>
+                    </div>
+                </li>
+                <%} %>
+            </ul>
+        </div>
+    <div class="clear">
+    </div>
+</div>
+<%if (CurrentSite.IsMobile==0){ %>
+<div class="footpage">
+    <%=FootPage%>
+</div>
+<%}else{%>
+<div class="loadpage">
+    <a data-next="<%=NextPage%>"></a>
+</div>
+<script>
+    $(document).ready(function () {
+        var container = document.querySelector('.loadlist');
+        var ias = $.ias({
+            container: ".loadlist",
+            item: ".loadli",
+            pagination: ".loadpage",
+            next: ".loadpage a"
+        });
+        ias.on('render', function (items) {
+            //$(items).css({ opacity: 0 });
+        });
+        ias.on("rendered", function (items) {
+        });
+        ias.extension(new IASSpinnerExtension({ html: "<li class=\"loadinginfo\"><img src=\"{src}\" />&nbsp;{Tag:加载中}</li>" }));
+        ias.extension(new IASTriggerExtension({ text: '{Tag:加载更多}', offset: 100, html: "<li class=\"loadinginfo more\"><p>{text}</p></li>" }));
+        ias.extension(new IASNoneLeftExtension({
+            text: '', html: ""
+        }));
+    });
+</script>
+<%}%>
+</div>

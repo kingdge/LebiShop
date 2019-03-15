@@ -1,0 +1,94 @@
+﻿{layout:simple} {class:Shop.Admin.order.shipping_shouhuo_window}
+<lbbody>
+    <form action="javascript:Shipping();" novalidate>
+        <div class="modal-header">
+            <h4 class="modal-title"><%=Tag("收货")%></h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        </div>
+        <div class="modal-body" style="max-height:500px;overflow-y:auto;">
+            <div class="form-group">
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <%=Tag("商品名称")%>
+                                </th>
+                                <th style="width: 15%">
+                                    <%=Tag("退货数量")%>
+                                </th>
+                                <th style="width: 15%">
+                                    <%=Tag("收货数量")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_Order_Product tp in pros){ %>
+                            <tr>
+                                <td>
+                                    <img src="<%=Image(tp.ImageOriginal,50,50)%>" style="width: 30px" />
+                                    <%=Shop.Bussiness.Language.Content(tp.Product_Name, CurrentLanguage)%>
+                                </td>
+                                <td>
+                                    <%=tp.Count%>
+                                </td>
+                                <td>
+                                    <%if (order.IsCompleted != 1){ %>
+                                    <input type="text" id="Count<%=tp.Product_id %>" name="Count<%=tp.Product_id %>" value="<%=tp.Count_Received%>" onkeyup="value=value.replace(/[^\d\.]/g,'')" class="form-control form-control-sm" Shipping="true" />
+                                    <%}
+                                    else { Response.Write(tp.Count_Received); }%>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for=""><%=Tag("配送方式")%>：</label>
+                <%=torder.Transport_Name %>
+            </div>
+            <div class="form-group">
+                <label for=""><%=Tag("货运单号")%>：</label>
+                <%=torder.Code %>
+            </div>
+            <div class="form-group">
+                <label for="Type_id_TransportOrderStatus"><%=Tag("状态")%>：</label>
+                <%if (order.IsCompleted != 1){ %>
+                <select name="Type_id_TransportOrderStatus" id="Type_id_TransportOrderStatus" class="form-control" Shipping="true">
+                    <%=Shop.Bussiness.EX_Type.TypeOption("TransportOrderStatus",torder.Type_id_TransportOrderStatus,CurrentLanguage.Code) %>
+                </select>
+                <%}
+                else { Response.Write(Shop.Bussiness.EX_Type.TypeName(torder.Type_id_TransportOrderStatus));} %>
+            </div>
+            <div class="form-group">
+                <label for="Money"><%=Tag("运费")%>(<%=DefaultCurrency.Msige%>)：</label>
+                <%if (order.IsCompleted != 1)
+                { %>
+                <input type="text" id="Money" name="Money" value="<%=torder.Money %>" class="form-control" Shipping="true" onkeyup="value=value.replace(/[^\d\.]/g,'')" required />
+                <%}
+                else { Response.Write(torder.Money); } %>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="ti-close"></i> <%=Tag("关闭")%></button>
+            <%if (order.IsCompleted != 1){ %>
+            <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+            <%} %>
+        </div>
+    </form>
+    <%if (order.IsCompleted != 1){ %>
+    <script>
+        ! function (window, document, $) {
+            "use strict";
+            $("input,select,textarea").not("[type=submit]").jqBootstrapValidation()
+        }(window, document, jQuery);
+        function Shipping() {
+            $("#EditModal").modal("hide");
+            var postData = GetFormJsonData("Shipping");
+            var url = "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=Order_shouhuo&id=<%=torder.id %>";
+            RequestAjax(url, postData, function () { MsgBox(1, "<%=Tag("操作成功")%>", "?") });
+        }
+    </script>
+    <%} %>
+</lbbody>

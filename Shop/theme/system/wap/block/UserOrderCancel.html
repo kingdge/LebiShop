@@ -1,0 +1,87 @@
+﻿<!--
+Name:用户中心-取消订单
+Page:P_UserOrderCancel
+-->
+<div class="nbbox clearfix">
+    <div class="userbox">
+        <div class="mc clearfix">
+            <div class="dl-table clearfix">
+                <dl>
+                    <dt>{tag:取消原因}：</dt>
+                    <dd>
+                        <select id="Content" name="Content" onchange="SelectOption();" shop="true">
+                            <option value="option1">{tag:现在不想购买}</option>
+                            <option value="option2">{tag:商品价格较贵}</option>
+                            <option value="option3">{tag:价格波动}</option>
+                            <option value="option4">{tag:商品缺货}</option>
+                            <option value="option5">{tag:重复下单}</option>
+                            <option value="option6">{tag:添加或删除商品}</option>
+                            <option value="option7">{tag:收货人信息有误}</option>
+                            <option value="option8">{tag:发票信息有误}</option>
+                            <option value="option9">{tag:无法支付订单}</option>
+                            <option value="option10">{tag:其他原因}</option>
+                        </select>
+                    </dd>
+                </dl>
+                <dl id="DIVRemark" style="display:none">
+                    <dt>{tag:补充说明}：</dt>
+                    <dd>
+                        <textarea class="textarea" style="width: 100%; height: 50px;" id="Remark" name="Remark" min="notnull" shop="true">{tag:现在不想购买}</textarea>
+                        <span id="Formsay"></span>
+                    </dd>
+                </dl>
+                <dl class="dl-btn">
+                    <dt></dt>
+                    <dd><a href="javascript:void(0)" onclick="submit();" class="btn btn-12"><s></s>{tag:提交}</a></dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" >
+    function SelectOption() {
+        var Content = $("#Content").val();
+        if (Content == "option10") {
+            $("#DIVRemark").show();
+            $("#Remark").html("");
+        } else {
+            $("#DIVRemark").hide();
+            switch (Content) {
+                case "option1":
+                    $("#Remark").html("{tag:现在不想购买}");
+                    break;
+                case "option2":
+                    $("#Remark").html("{tag:商品价格较贵}");
+                    break;
+                case "option3":
+                    $("#Remark").html("{tag:价格波动}");
+                    break;
+                case "option4":
+                    $("#Remark").html("{tag:商品缺货}");
+                    break;
+                case "option5":
+                    $("#Remark").html("{tag:重复下单}");
+                    break;
+                case "option6":
+                    $("#Remark").html("{tag:添加或删除商品}");
+                    break;
+                case "option7":
+                    $("#Remark").html("{tag:收货人信息有误}");
+                    break;
+                case "option8":
+                    $("#Remark").html("{tag:发票信息有误}");
+                    break;
+                case "option9":
+                    $("#Remark").html("{tag:无法支付订单}");
+                    break;
+            }
+        }
+    }
+    function submit() {
+        if (!CheckForm("shop", "span"))
+            return false;
+        var postData = GetFormJsonData("shop");
+        var url = path + "/ajax/Ajax_order.aspx?__Action=OrderCancal&id=<%=order.id %>";
+        RequestAjax(url, postData, function () { MsgBox(1, "{tag:操作成功}", "<%=URL("P_UserOrderDetails",order.id,"")%>") });
+    }
+</script>

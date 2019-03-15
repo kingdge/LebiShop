@@ -1,0 +1,20 @@
+﻿<!--
+Name:品牌检索
+Page:All
+-->
+<div class="mbox clearfix">
+<div class="brandsearch">
+<div class="mt">
+    <h2>{tag:品牌搜索}</h2>
+</div>
+<div class="mc">
+    <input id="brand_keyword" value="" type="text" name="brand_keyword" onkeydown="if(event.keyCode==13){brandsearch();}" /><input type="button" value="{Tag:搜索}" class="button" onclick="brandsearch();" />
+</div>
+</div>
+</div>
+<script type="text/javascript" >
+    function brandsearch() {
+        var url = "<%=URL("P_BrandList","[key]") %>";
+        location.href = url.replace("[key]",escape($("#brand_keyword").val()));
+    }
+</script>

@@ -1,0 +1,38 @@
+﻿{layout:default} {class:Shop.Admin.storeConfig.Cnzz}
+<lbhead>
+    <title><%=Tag("CNZZ统计")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="config"><a href="javascript:void(0);" onclick="CnzzConfig();"><b></b><span><%=Tag("配置")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("CNZZ统计")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <iframe id="iframe1" frameborder="0" scrolling="yes" style=" width:100%; height:1300px;" src="<%=cnzzurl %>"></iframe>
+    <div id="datalist" <%=cnzzurl=="style=\"display:none;\""?"":"" %> >
+        <table cellspacing="0" width="100%" cellpadding="0" id="list">
+            <tr >
+                <td colspan="2"><a href="javascript:void(0)" onclick="CnzzConfig();"><%=Tag("开通CNZZ统计")%></a></td>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript">
+        function CnzzConfig() {
+            var title_ = "<%=Tag("CNZZ统计配置")%>";
+            var url_ = "cnzzconfig.aspx";
+            var width_ = 500;
+            var height_ = 200;
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_, "divid");
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+</div>
+</lbbottom>

@@ -1,0 +1,129 @@
+﻿{layout:simple} 
+{class:Shop.Admin.admin.menu_Edit_window}
+<lbbody>
+<table class="table">
+    <tr>
+        <th style="width: 20%;">
+            <%=Tag("上级菜单")%>：
+        </th>
+        <td style="text-align: left;">
+           <select name="parentid" id="parentid" shop="true">
+            <option value="0">顶级</option>
+            <%=GetParent(model.parentid) %>
+           </select>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("名称")%>：
+        </th>
+        <td style="text-align: left;">
+            <input type="text" class="input" shop="true" min="notnull" name="Name" id="Name" value="<%=model.Name %>"
+                style="width: 200px;" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("代码")%>：
+        </th>
+        <td style="text-align: left;">
+            <input type="text" class="input" shop="true" min="notnull" name="Code" id="Code" value="<%=model.Code %>"
+                style="width: 200px;" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("链接")%>：
+        </th>
+        <td style="text-align: left;">
+            <input type="text" class="input" shop="true" name="URL" id="URL" value="<%=model.URL %>" style="width: 400px;" />
+        </td>
+    </tr>
+    <%if (model.parentid == 0)
+      { %>
+    <tr>
+        <th valign="top" style="width: 15%;">
+            <%=Tag("图标")%>：
+        </th>
+        <td>
+            <div id="image_Image">
+                <%if (model.Image != "")
+                  {%>
+                <img height="16" src="<%=site.WebPath + model.Image%>" />
+                <%} %>
+            </div>
+            <input type="text" shop="true" id="Image" name="Image" class="input" style="width: 200px;" value="<%=model.Image%>" />
+            <input id="file_Image" name="file_Image" class="input" type="file" onchange="uploadImage('Image')" />
+            <!--<input type="button" value="<%=Tag("上传")%>" class="button" onclick="uploadImage('Image')" />-->
+        </td>
+    </tr>
+    <%} %>
+    <tr>
+        <th>
+            <%=Tag("系统菜单")%>：
+        </th>
+        <td>
+            <input type="radio" name="IsSYS" value="1" shop="true" <%=model.IsSYS==1?"checked":"" %> /><%=Tag("是")%>
+            <input type="radio" name="IsSYS" value="0" shop="true" <%=model.IsSYS==0?"checked":"" %> /><%=Tag("否")%>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("排序序号")%>：
+        </th>
+        <td style="text-align: left;">
+            <input type="text" class="input" shop="true" name="Sort" id="Sort" value="<%=model.Sort %>" onkeyup="value=value.replace(/[^\d]/g,'');" style="width: 70px;" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+            <div class="tools tools-m">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+                   
+                    <li class="del"><a href="javascript:void(0);" onclick="DelObj();"><b></b><span><%=Tag("删除")%></span></a></li>
+                   
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    function SaveObj() {
+        var postData = GetFormJsonData("shop");
+        if (!CheckForm("shop", "span"))
+            return false;
+        var url = "<%=site.AdminPath %>/ajax/ajax_admin.aspx?__Action=Menu_Edit&id=<%=model.id %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+    function DelObj() {
+        if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+        var url = "<%=site.AdminPath %>/ajax/ajax_admin.aspx?__Action=Menu_Del&id=<%=model.id %>";
+        RequestAjax(url,'',function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+    function uploadImage(id) {
+        $.ajaxFileUpload
+        (
+	        {
+	            url: WebPath + '/ajax/imageuploadone.aspx?path=config',
+	            secureuri: false,
+	            fileElementId: 'file_' + id,
+	            dataType: 'json',
+	            success: function (data, status) {
+	                if (data.msg != 'OK') {
+	                    MsgBox(2, data.msg, "");
+	                }
+	                else {
+	                    var imageUrl = data.ImageUrl;
+	                    if (imageUrl.length > 0) {
+	                        $("#image_" + id + "").html('<img height="16" src=' + WebPath + imageUrl + '>');
+	                        $("#" + id + "").val(imageUrl);
+	                    }
+	                }
+	            }
+	        }
+        )
+    }
+</script>
+</lbbody>

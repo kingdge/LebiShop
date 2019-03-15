@@ -1,0 +1,32 @@
+﻿<!--
+Name:友情链接列表
+Page:P_FriendLink
+-->
+<div class="friendlinklist">
+    <div class="mt">
+        <h2>{Tag:图片链接}</h2>
+    </div>
+    <div class="mc clearfix">
+        <ul class="image">
+            ${#table:Lebi_FriendLink;#where:IsShow=1 and IsPic=1 and ','+Language_ids+',' like '%," + CurrentLanguage.id + ",%';#order:Sort desc,id desc;
+            <li>
+                <p><a href="{%Url%}" target="_blank"><img src="{%Logo%}" alt="{%Name%}" /></a></p>     
+            </li>
+            }$
+        </ul>
+        <div class="clear"></div>
+    </div>
+    <div class="mt">
+        <h2>{Tag:文字链接}</h2>
+    </div>
+    <div class="mc clearfix">
+        <ul class="text">
+            ${#table:Lebi_FriendLink;#where:IsShow=1 and IsPic=0 and ','+Language_ids+',' like '%," + CurrentLanguage.id + ",%';#order:Sort desc,id desc;
+            <li>
+                <a href="{%Url%}" target="_blank">{%Name%}</a>     
+            </li>
+            }$
+        </ul>
+        <div class="clear"></div>
+    </div>
+</div>

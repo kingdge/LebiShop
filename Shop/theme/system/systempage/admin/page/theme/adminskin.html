@@ -1,0 +1,92 @@
+﻿{layout:default} {class:Shop.Admin.theme.adminskin}
+<lbhead>
+    <title><%=Tag("自定义页面")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+        <%if (PageReturnMsg == ""){%>
+        <li class="add"><a href="javascript:void(0);" onclick="EditObj(0);"><b></b><span><%=Tag("添加")%></span></a></li>
+        <li class="del"><a href="javascript:void(0);" onclick="DEL();"><b></b><span><%=Tag("删除")%></span></a></li>
+        <%}%>
+        <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("自定义页面")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox">
+        <input name="key" type="text" id="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" align="absmiddle" />
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'sid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th style="width:150px">
+                <%=Tag("代码")%>
+            </th>
+            <th style="width:150px">
+                <%=Tag("名称")%>
+            </th>
+            <th style="width:200px">
+                <%=Tag("页面")%>
+            </th>
+            <th style="width:70px">
+                <%=Tag("排序")%>
+            </th>
+            <th style="width:150px">
+                <%=Tag("类型")%>
+            </th>
+            <th>
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_AdminSkin model in models)
+          {%>
+        <tr class="list" ondblclick="Editobj(<%=model.id %>);">
+            <td style="text-align:center"><input type="checkbox" value="<%=model.id %>" name="sid" /></td>
+            <td>
+                <%=model.Code %>
+            </td>
+            <td>
+                <%=model.Name %>
+            </td>
+            <td>
+                custom/<%=model.Code+".aspx"%>
+            </td>
+            
+            <td>
+                <%=model.Sort %>
+            </td>
+            <td>
+                <%=Shop.Bussiness.EX_Type.TypeName(model.Type_id_AdminSkinType,CurrentLanguage) %>
+            </td>
+            <td>
+                <a href="javascript:void(0)" onclick="EditObj(<%=model.id %>);"><%=Tag("编辑")%></a> 
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function search_() {
+            var key = $("#key").val();
+            window.location = "?key=" + escape(key);
+        }
+        function EditObj(id) {
+            window.location="adminskin_edit.aspx?id="+id;
+        }
+        function DEL() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var ids = GetChkCheckedValues("sid");
+            var postData = { "ids": ids };
+            var url = "<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=AdminSkin_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

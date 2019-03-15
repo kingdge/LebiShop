@@ -1,0 +1,36 @@
+﻿<!--
+Name:限时抢购商品图文
+Page:All
+-->
+<div class="mbox clearfix">
+<div class="producttop">
+<div class="mt">
+    <h2>{tag:限时抢购}</h2>
+</div>
+<div class="mc">
+    <ul class="image">
+        ${#table:Lebi_Product;#where:"+ProductWhere+" and Type_id_ProductType = 321;#top:10;#order:Time_Expired desc,id desc;#model:pro_limit;
+        <li>
+            <div class="proimg"><p><a href="<%=URL("P_Product",{id})%>" target="_blank"><img border="0" <%if (CurrentLanguage.IsLazyLoad==1){ %>class="lazy" src="{/image}lazy.gif" data-original<%}else{ %>src<%} %>="<%=Image({ImageOriginal},"medium") %>" alt="<%=Lang({Name})%>" /></a></p></div>
+            <div class="proname"><a href="<%=URL("P_Product",{id})%>" title="<%=Lang({Name})%>" target="_blank"><%=Lang({Name})%></a></div>
+            <div class="proprice clearfix">
+            <div class="marketprice"><i>{Tag:市场价}：</i><strong><%=FormatMoney({Price_Market}) %></strong></div>
+            <div class="buyprice"><i>{Tag:抢购价}：</i><strong><%=FormatMoney({Price_Sale}) %></strong><em><%=Discount({Price_Market},{Price_Sale}) %>% {Tag:折}</em></div>
+            </div>
+            <div class="time_expired" endDate="<%if (System.DateTime.Now < {Time_Start}){ %>
+                <%=DateFormat({Time_Start})%>
+                <%} else{ %>
+                <%=DateFormat({Time_Expired})%>
+                <%} %>" Product="{%id%}" id="time_expired_{%id%}">
+                <%if (System.DateTime.Now < {Time_Start}){ %>
+                {Tag:倒计时}
+                <%} else{ %>
+                {Tag:剩余}
+                <%} %>：<span><span id="dayEnd_{%id%}">0</span><em>{Tag:天}</em><span id="hourEnd_{%id%}">0</span><em>{Tag:小时}</em><span id="minEnd_{%id%}">0</span><em>{Tag:分钟}</em><span id="secEnd_{%id%}">0</span><em>{Tag:秒}</em></span>
+            </div>
+        </li>
+        }$
+    </ul>
+</div>
+</div>
+</div>

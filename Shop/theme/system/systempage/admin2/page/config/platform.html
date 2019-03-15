@@ -1,0 +1,382 @@
+﻿{layout:default} {class:Shop.Admin.Config.platform}
+<lbhead>
+    <title><%=Tag("第三方配置")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("第三方配置")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("第三方配置")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+<div class="col-12">
+    <form action="javascript:SaveObj();" class="form-horizontal" novalidate>
+        <div class="card">
+            <div class="card-header">
+                <div class="card-actions">
+                    <a class="" data-action="collapse"><i class="ti-minus"></i></a>
+                </div>
+                <h5 class="card-title m-b-0"><%=Tag("QQ登录")%> <a target="_blank" href="http://connect.qq.com/"><i class="ti-new-window"></i></a></h5>
+            </div>
+            <div class="card-body b-t collapse show">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_qq_id">Appid：</label>
+                        <input type="text" id="platform_qq_id" name="platform_qq_id" value="<%=model.platform_qq_id %>" class="form-control" shop="true">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_qq_id">Appkey：</label>
+                        <input type="text" id="platform_qq_key" name="platform_qq_key" value="<%=model.platform_qq_key %>" class="form-control" shop="true">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_qq_image"><%=Tag("图标")%>：</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="image_platform_qq_image"><%if (model.platform_qq_image != ""){%><img src="<%=site.WebPath + model.platform_qq_image%>" height="20" /><%}else{ %><i class="ti-image"></i><%}%></span>
+                            </div>
+                            <input type="text" id="platform_qq_image" name="platform_qq_image" value="<%=model.platform_qq_image %>" class="form-control" shop="true">
+                            <div class="input-group-append fileupload">
+                                <span class="input-group-text"><i class="ti-upload"></i></span>
+                                <input type="file" id="file_platform_qq_image" name="file_platform_qq_image" class="upload" onchange="uploadImage('platform_qq_image')">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6"></div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_login_qq"><%=Tag("状态")%>：</label>
+                        <div class="input-group">
+                            <label class="custom-control custom-checkbox">
+                                <input type="checkbox" id="platform_login_qq" name="platform_login" value="qq" class="custom-control-input" shop="true" <%=isselect("qq") %>>
+                                <span class="custom-control-label"><%=Tag("启用")%></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <%if (PageReturnMsg == ""){%>
+                    <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                    <%}%>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+    <form action="javascript:SaveObj();" class="form-horizontal" novalidate>
+    <div class="card">
+        <div class="card-header">
+            <div class="card-actions">
+                <a class="" data-action="collapse"><i class="ti-minus"></i></a>
+            </div>
+            <h5 class="card-title m-b-0"><%=Tag("新浪微博登录")%> <a target="_blank" href="http://open.weibo.com/"><i class="ti-new-window"></i></a></h5>
+        </div>
+        <div class="card-body b-t collapse show">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_weibo_id">Appkey：</label>
+                        <input type="text" id="platform_weibo_id" name="platform_weibo_id" value="<%=model.platform_weibo_id %>" class="form-control" shop="true">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_weibo_key">AppSecret：</label>
+                        <input type="text" id="platform_weibo_key" name="platform_weibo_key" value="<%=model.platform_weibo_key %>" class="form-control" shop="true">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_weibo_image"><%=Tag("图标")%>：</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="image_platform_weibo_image"><%if (model.platform_weibo_image != ""){%><img src="<%=site.WebPath + model.platform_weibo_image%>" height="20" /><%}else{ %><i class="ti-image"></i><%}%></span>
+                            </div>
+                            <input type="text" id="platform_weibo_image" name="platform_weibo_image" value="<%=model.platform_weibo_image %>" class="form-control" shop="true">
+                            <div class="input-group-append fileupload">
+                                <span class="input-group-text"><i class="ti-upload"></i></span>
+                                <input type="file" id="file_platform_weibo_image" name="file_platform_weibo_image" class="upload" onchange="uploadImage('platform_weibo_image')">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6"></div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_login_weibo"><%=Tag("状态")%>：</label>
+                        <div class="input-group">
+                            <label class="custom-control custom-checkbox">
+                                <input type="checkbox" id="platform_login_weibo" name="platform_login" value="weibo" class="custom-control-input" shop="true" <%=isselect("weibo") %>>
+                                <span class="custom-control-label"><%=Tag("启用")%></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <%if (PageReturnMsg == ""){%>
+                    <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                    <%}%>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+    <form action="javascript:SaveObj();" class="form-horizontal" novalidate>
+    <div class="card">
+        <div class="card-header">
+            <div class="card-actions">
+                <a class="" data-action="collapse"><i class="ti-minus"></i></a>
+            </div>
+            <h5 class="card-title m-b-0"><%=Tag("淘宝登录")%> <a target="_blank" href="http://open.taobao.com/"><i class="ti-new-window"></i></a></h5>
+        </div>
+        <div class="card-body b-t collapse show">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_taobao_key">Appkey：</label>
+                        <input type="text" id="platform_taobao_key" name="platform_taobao_key" value="<%=model.platform_taobao_key %>" class="form-control" shop="true">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_taobao_secret">AppSecret：</label>
+                        <input type="text" id="platform_taobao_secret" name="platform_taobao_secret" value="<%=model.platform_taobao_secret %>" class="form-control" shop="true">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_taobao_image"><%=Tag("图标")%>：</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="image_platform_taobao_image"><%if (model.platform_taobao_image != ""){%><img src="<%=site.WebPath + model.platform_taobao_image%>" height="20" /><%}else{ %><i class="ti-image"></i><%}%></span>
+                            </div>
+                            <input type="text" id="platform_taobao_image" name="platform_taobao_image" value="<%=model.platform_taobao_image %>" class="form-control" shop="true">
+                            <div class="input-group-append fileupload">
+                                <span class="input-group-text"><i class="ti-upload"></i></span>
+                                <input type="file" id="file_platform_taobao_image" name="file_platform_taobao_image" class="upload" onchange="uploadImage('platform_taobao_image')">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6"></div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_login_taobao"><%=Tag("状态")%>：</label>
+                        <div class="input-group">
+                            <label class="custom-control custom-checkbox">
+                                <input type="checkbox" id="platform_login_taobao" name="platform_login" value="taobao" class="custom-control-input" shop="true" <%=isselect("taobao") %>>
+                                <span class="custom-control-label"><%=Tag("启用")%></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <%if (PageReturnMsg == ""){%>
+                    <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                    <%}%>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+    <form action="javascript:SaveObj();" class="form-horizontal" novalidate>
+    <div class="card">
+        <div class="card-header">
+            <div class="card-actions">
+                <a class="" data-action="collapse"><i class="ti-minus"></i></a>
+            </div>
+            <h5 class="card-title m-b-0"><%=Tag("Facebook登录")%> <a target="_blank" href="https://developers.facebook.com/"><i class="ti-new-window"></i></a></h5>
+        </div>
+        <div class="card-body b-t collapse show">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_facebook_id">Appid：</label>
+                        <input type="text" id="platform_facebook_id" name="platform_facebook_id" value="<%=model.platform_facebook_id %>" class="form-control" shop="true">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_facebook_secret">AppSecret：</label>
+                        <input type="text" id="platform_facebook_secret" name="platform_facebook_secret" value="<%=model.platform_facebook_secret %>" class="form-control" shop="true">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_facebook_image"><%=Tag("图标")%>：</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="image_platform_facebook_image"><%if (model.platform_facebook_image != ""){%><img src="<%=site.WebPath + model.platform_facebook_image%>" height="20" /><%}else{ %><i class="ti-image"></i><%}%></span>
+                            </div>
+                            <input type="text" id="platform_facebook_image" name="platform_facebook_image" value="<%=model.platform_facebook_image %>" class="form-control" shop="true">
+                            <div class="input-group-append fileupload">
+                                <span class="input-group-text"><i class="ti-upload"></i></span>
+                                <input type="file" id="file_platform_facebook_image" name="file_platform_facebook_image" class="upload" onchange="uploadImage('platform_facebook_image')">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6"></div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_login_facebook"><%=Tag("状态")%>：</label>
+                        <div class="input-group">
+                            <label class="custom-control custom-checkbox">
+                                <input type="checkbox" id="platform_login_facebook" name="platform_login" value="facebook" class="custom-control-input" shop="true" <%=isselect("facebook") %>>
+                                <span class="custom-control-label"><%=Tag("启用")%></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <%if (PageReturnMsg == ""){%>
+                    <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                    <%}%>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+    <form action="javascript:SaveObj();" class="form-horizontal" novalidate>
+    <div class="card">
+        <div class="card-header">
+            <div class="card-actions">
+                <a class="" data-action="collapse"><i class="ti-minus"></i></a>
+            </div>
+            <h5 class="card-title m-b-0"><%=Tag("微信登录")%> <a target="_blank" href="https://mp.weixin.qq.com/"><i class="ti-new-window"></i></a></h5>
+        </div>
+        <div class="card-body b-t collapse show">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_weixin_number"><%=Tag("微信号")%>：</label>
+                        <input type="text" id="platform_weixin_number" name="platform_weixin_number" value="<%=model.platform_weixin_number %>" class="form-control" shop="true">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_weixin_id">Appid：</label>
+                        <input type="text" id="platform_weixin_id" name="platform_weixin_id" value="<%=model.platform_weixin_id %>" class="form-control" shop="true">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_weixin_secret">AppSecret：</label>
+                        <input type="text" id="platform_weixin_secret" name="platform_weixin_secret" value="<%=model.platform_weixin_secret %>" class="form-control" shop="true">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_weixin_custemtoken">Token：</label>
+                        <input type="text" id="platform_weixin_custemtoken" name="platform_weixin_custemtoken" value="<%=model.platform_weixin_custemtoken %>" class="form-control" shop="true">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_weixin_image"><%=Tag("图标")%>：</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="image_platform_weixin_image"><%if (model.platform_weixin_image != ""){%><img src="<%=site.WebPath + model.platform_weixin_image%>" height="20" /><%}else{ %><i class="ti-image"></i><%}%></span>
+                            </div>
+                            <input type="text" id="platform_weixin_image" name="platform_weixin_image" value="<%=model.platform_weixin_image %>" class="form-control" shop="true">
+                            <div class="input-group-append fileupload">
+                                <span class="input-group-text"><i class="ti-upload"></i></span>
+                                <input type="file" id="file_platform_weixin_image" name="file_platform_weixin_image" class="upload" onchange="uploadImage('platform_weixin_image')">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_weixin_image_qrcode"><%=Tag("二维码") %>：</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="image_platform_weixin_image_qrcode"><%if (model.platform_weixin_image_qrcode != ""){%><img src="<%=site.WebPath + model.platform_weixin_image_qrcode%>" height="20" /><%}else{ %><i class="ti-image"></i><%}%></span>
+                            </div>
+                            <input type="text" id="platform_weixin_image_qrcode" name="platform_weixin_image_qrcode" value="<%=model.platform_weixin_image_qrcode %>" class="form-control" shop="true">
+                            <div class="input-group-append fileupload">
+                                <span class="input-group-text"><i class="ti-upload"></i></span>
+                                <input type="file" id="file_platform_weixin_image_qrcode" name="file_platform_weixin_image_qrcode" class="upload" onchange="uploadImage('platform_weixin_image_qrcode')">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_weixin_subscribe_automsg"><%=Tag("关注自动回复消息")%>：</label>
+                        <textarea id="platform_weixin_subscribe_automsg" name="platform_weixin_subscribe_automsg" class="form-control" style="height: 60px;" shop="true"><%=model.platform_weixin_subscribe_automsg%></textarea>
+                        <div class="button-group m-t-5">
+                            <button type="button" class="btn btn-default btn-xs btn-sm" onclick="javascript:resizeEditor('platform_weixin_subscribe_automsg',100);"><%=Tag("展开")%></button>
+                            <button type="button" class="btn btn-default btn-xs btn-sm" onclick="javascript:resizeEditor('platform_weixin_subscribe_automsg',-100);"><%=Tag("收缩")%></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6"></div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_login_weixin"><%=Tag("状态")%>：</label>
+                        <div class="input-group">
+                            <label class="custom-control custom-checkbox">
+                                <input type="checkbox" id="platform_login_weixin" name="platform_login" value="weixin" class="custom-control-input" shop="true" <%=isselect("weixin") %>>
+                                <span class="custom-control-label"><%=Tag("启用")%></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <%if (PageReturnMsg == ""){%>
+                    <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                    <%}%>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+</div>
+</lbbody>
+<lbscripts>
+    <script src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+    <script>
+        function SaveObj() {
+            var postData = GetFormJsonData("shop");
+            var url="<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=PlatformConfig_Edit";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function uploadImage(id) {
+            $.ajaxFileUpload({
+                url: WebPath + '/ajax/imageuploadone.aspx?path=config',
+                secureuri: false,
+                fileElementId: 'file_' + id,
+                dataType: 'json',
+                success: function (data, status) {
+                    if (data.msg != 'OK') {
+                        MsgBox(2, data.msg, "");
+                    }
+                    else {
+                        var imageUrl = data.ImageUrl;
+                        if (imageUrl.length > 0) {
+                            $("#image_" + id + "").html('<img src="' + WebPath + imageUrl + '" height="20" />');
+                            $("#" + id + "").val(imageUrl);
+                        }
+                    }
+                }
+            })
+        }
+    </script>
+</lbscripts>

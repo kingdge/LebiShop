@@ -1,0 +1,97 @@
+﻿{layout:default} {class:Shop.Admin.cms.ImageList}
+<lbhead>
+    <title><%=node.Name%>-<%=pnode.Name%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="add"><a href="<%=Shop.Bussiness.NodePage.AdminPage(node) %>"><b></b><span><%=Tag("添加")%></span></a></li>
+    <li class="del"><a href="javascript:void(0);" onclick="Page_Del();"><b></b><span><%=Tag("删除")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="UserNodeList.aspx?code=<%=pnode.Code %>"><%=pnode.Name%></a> > <%=node.Name%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'ids\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("图片")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("语言")%>
+            </th>
+            <th>
+                <%=Tag("名称")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("排序")%>
+            </th>
+            <th style="width: 130px">
+                <%=Tag("时间")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <div id="listinfo" style="display: none;">
+            <%foreach (DB.LebiShop.Lebi_Page model in pages)
+              {%>
+            <tr class="list" onclick="Page_Edit('<%=Shop.Bussiness.NodePage.AdminPage(model) %>');">
+                <td style="text-align:center">
+                    <input type="checkbox" name="ids" del="true" value="<%=model.id %>" />
+                </td>
+                <td>
+                   <img src="<%=model.ImageSmall%>" height="30"/> 
+                </td>
+                <td>
+                    <%=model.Language%>
+                </td>
+                <td>
+                    <%=model.Name%>
+                </td>
+                
+                <td>
+                    <%=model.Sort%>
+                </td>
+                <td>
+                    <%=FormatTime(model.Time_Add)%>
+                </td>
+                <td>
+                    <a href="<%=Shop.Bussiness.NodePage.AdminPage(model) %>"><%=Tag("编辑")%></a>
+                </td>
+            </tr>
+            <%} %>
+        </div>
+    </table>
+    <script type="text/javascript">
+        function Node_Edit(pid, id) {
+            var title_ = "<%=Tag("编辑结点")%>";
+            var url_ = "usernode_edit_window.aspx?id=" + id + "&pid=" + pid;
+            var width_ = 800;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function Page_Del(id) {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_node.aspx?__Action=Page_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function Page_Edit1(nodeid, id) {
+            window.location = "page_edit.aspx?Node_id=" + nodeid + "&Page_id=" + id;
+        }
+        function Page_Edit(url) {
+            window.location = url;
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom"><%=PageString%></div>
+</lbbottom>

@@ -1,0 +1,106 @@
+﻿{layout:default} {class:Shop.Admin.agent.productagentlevel}
+<lbhead>
+    <title><%=Tag("代理资格")%>-<%=Tag("区域代理")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <li class="add"><a href="javascript:void(0);" onclick="Edit(0);"><b></b><span><%=Tag("添加")%></span></a></li>
+    <li class="del"><a href="javascript:void(0);" onclick="DEL();"><b></b><span><%=Tag("删除")%></span></a></li>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("区域代理")%> > <%=Tag("代理资格")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'sid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th style="width: 200px">
+                <%=Tag("名称")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("价格")%>(<%=Tag("年") %>)
+            </th>
+            <th style="width: 100px">
+                <%=Tag("佣金比例")%>
+            </th>
+            <th style="width: 120px">
+                <%=Tag("商品数量")%>
+            </th>
+             <th style="width: 130px">
+                <%=Tag("修改次数")%>
+            </th>
+            <th style="width: 130px">
+                <%=Tag("赠送代金券")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("排序")%>
+            </th>
+            <th>
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_Agent_Product_Level model in models)
+          {%>
+        <tr class="list" ondblclick="Edit(<%=model.id %>)">
+            <td style="text-align:center">
+                <input type="checkbox" value="<%=model.id %>" name="sid" />
+            </td>
+            <td>
+                <%=model.Name%>
+            </td>
+            <td>
+                <%=model.Price%>
+            </td>
+             <td>
+                <%=model.Commission%> %
+            </td>
+            <td>
+                <%=model.Count_Product%>
+            </td>
+            <td>
+                <%=model.Count_product_change%>
+            </td>
+            <td>
+                <%=GetCOrder(model.CardOrder_id) %>
+            </td>
+            <td>
+                <%=model.Sort%>
+            </td>
+            <td>
+                <a href="javascript:void(0)" onclick="Edit(<%=model.id %>)"><%=Tag("编辑")%></a>
+            </td>
+        </tr>
+        <%} %>
+    </table> 
+    <script type="text/javascript">
+        function search_() {
+            var key = $("#key").val();
+            window.location.href = "?key=" + escape(key);
+        }
+        function Edit(id) {
+            if (id == 0) { var title_ = "<%=Tag("添加代理级别")%>"; } else { var title_ = "<%=Tag("编辑代理级别")%>"; }
+            var url_ = "productagentlevel_edit_window.aspx?id=" + id;
+            var width_ = 400;
+            var height_ = 450;
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function DEL() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var ids = GetChkCheckedValues("sid");
+            var postData = { "ids": ids };
+            var url = "<%=site.AdminPath %>/ajax/ajax_agent.aspx?__Action=ProductAgentLevel_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

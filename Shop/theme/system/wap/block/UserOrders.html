@@ -1,0 +1,89 @@
+﻿<!--
+Name:用户中心-订单
+Page:P_UserOrder 
+-->
+<div class="nbbox clearfix">
+<div class="user">
+    <ul class="tablist">
+        <li <%if (status == ""){Response.Write("class=\"selected\"");} %>><a href="?status="><span>{tag:全部订单}</span></a></li>
+        <li <%if (status == "1"){Response.Write("class=\"selected\"");} %>><a href="?status=1"><span>{tag:等待付款}</span></a></li>
+        <li <%if (status == "2"){Response.Write("class=\"selected\"");} %>><a href="?status=2"><span>{tag:等待收货}</span></a></li>
+        <li <%if (status == "3"){Response.Write("class=\"selected\"");} %>><a href="?status=3"><span>{tag:已收货}</span></a></li>
+        <li <%if (status == "4"){Response.Write("class=\"selected\"");} %>><a href="?status=4"><span>{tag:已完成}</span></a></li>
+        <li <%if (status == "5"){Response.Write("class=\"selected\"");} %>><a href="?status=5"><span>{tag:已取消}</span></a></li>
+    </ul>
+    <div class="searchbox clearfix">
+        <input type="text" id="key" name="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" />
+        <a href="javascript:void(0)" onclick="search_();" class="btn btn-12"><s></s>{tag:查询}</a>
+    </div>
+    <div class="loadlist">
+    <%foreach (DB.LebiShop.Lebi_Order o in orders){%>
+    <div class="nbbox loadli clearfix">
+    <div class="orderlist clearfix">
+        <div class="mt clearfix">
+            <div class="left"><%=Shop.Bussiness.Order.OrderStatus(o, CurrentLanguage.Code) %></div>
+            <div class="right"><a href="<%=URL("P_UserOrderDetails",o.id,"")%>"><%=o.Code %></a></div>
+        </div>
+        <div class="mc clearfix">
+            <%if (Shop.Bussiness.EX_Supplier.GetSupplier(o.Supplier_id).IsSupplierTransport==1){ %>
+            <div class="shopname"><a href="<%=URL("P_ShopIndex",o.Supplier_id) %>"><%=Lang(Shop.Bussiness.EX_Supplier.GetSupplier(o.Supplier_id).Name)%></a></div>
+            <%} %>
+            <div class="orderproducts">
+                <%
+                List<DB.LebiShop.Lebi_Order_Product> order_products = DB.LebiShop.B_Lebi_Order_Product.GetList("Order_id = "+ o.id +"", "id desc");
+                foreach (DB.LebiShop.Lebi_Order_Product o_p in order_products)
+                {
+                %>
+                <a href="<%=URL("P_Product",o_p.Product_id,"")%>"><img title="<%=Lang(o_p.Product_Name) %>" src="<%=Image(o_p.ImageOriginal,50,50) %>" style="width: 40px; height: 40px;" /></a>
+                <%} %>
+            </div>
+            <div class="ordermes">
+                <div class="left">{tag:订单金额}：<%=FormatMoney(o.Money_Order) %></div>
+                <div class="right">
+                <%if(Shop.Bussiness.Order.CancelOrder(o)){ %>&nbsp;<a href="<%=URL("P_UserOrderCancel",o.id) %>">{tag:取消}</a><%} %>
+                <%if(o.IsReceived==1 && SYS.IsClosetuihuo=="0"){ %>
+                &nbsp;<a href="<%=URL("P_UserReturnApply",o.id)%>">{tag:退货}</a>
+                <%} %>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <%} %>
+    </div>
+    <%if (CurrentSite.IsMobile==0){ %>
+        <div class="bottom clearfix"><div class="right"><%=PageString%></div></div>
+    <%}else{%>
+    <div class="loadpage">
+        <a data-next="<%=NextPage%>"></a>
+    </div>
+    <script>
+        $(document).ready(function () {
+            var container = document.querySelector('.loadlist');
+            var ias = $.ias({
+                container: ".loadlist",
+                item: ".loadli",
+                pagination: ".loadpage",
+                next: ".loadpage a"
+            });
+            ias.on('render', function (items) {
+                //$(items).css({ opacity: 0 });
+            });
+            ias.on("rendered", function (items) {
+            });
+            ias.extension(new IASSpinnerExtension({ html: "<div class=\"loadinginfo\"><img src=\"{src}\" />&nbsp;{Tag:加载中}</div>" }));
+            ias.extension(new IASTriggerExtension({ text: '{Tag:加载更多}', offset: 100, html: "<div class=\"loadinginfo more\"><p>{text}</p></div>" }));
+            ias.extension(new IASNoneLeftExtension({
+                text: '', html: ""
+            }));
+        });
+    </script>
+    <%}%>
+</div>
+</div>
+<script type="text/javascript">
+    function search_() {
+        var key = $("#key").val();
+        window.location = "?key=" + escape(key);
+    }
+</script>

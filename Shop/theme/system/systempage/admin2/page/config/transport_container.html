@@ -1,0 +1,125 @@
+﻿{layout:default} {class:Shop.Admin.storeConfig.Transport_Container}
+<lbhead>
+    <title><%=Tag("货柜管理")%>-<%=Tag("配送方式")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("货柜管理")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><a href="Transport.aspx"><%=Tag("配送方式")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("货柜管理")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-9 m-b-10">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-info" onclick="Edit(0);"><i class="ti-plus"></i> <%=Tag("添加")%></button>
+                        <button class="btn btn-danger" onclick="DeleteConfirm()"><i class="ti-trash"></i> <%=Tag("删除")%></button>
+                        <%}%>
+                    </div>
+                    <div class="col-md-3 m-b-10 input-group">
+                        <input type="text" id="key" name="key" value="<%=key %>" class="form-control" onkeydown="if(event.keyCode==13){search_();}">
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-primary" onclick="search_();"><i class="ti-search"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th class="selectAll" style="width:40px">
+                                    <a href="javascript:void(0);" onclick="$('input[name=\'Fid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+                                </th>
+                                <th>
+                                    <%=Tag("货柜名称")%>
+                                </th>
+                                <th>
+                                    <%=Tag("体积")%>（<%=Tag("立方米")%>）
+                                </th>
+                                <th>
+                                    <%=Tag("重量")%>（<%=Tag("吨")%>）
+                                </th>
+                                <th>
+                                    <%=Tag("货柜描述")%>
+                                </th>
+                                <th>
+                                    <%=Tag("编辑")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_Transport_Container model in models){%>
+                            <tr ondblclick="Edit(<%=model.id %>);">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox<%=model.id %>" name="Fid" value="<%=model.id %>" class="custom-control-input" del="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=model.Name %>
+                                </td>
+                                <td>
+                                    <%=model.Volume %>
+                                </td>
+                                <td>
+                                    <%=model.Weight %>
+                                </td>
+                                <td>
+                                    <%=model.Description %>
+                                </td>
+                                <td>
+                                    <a href="javascript:void(0)" onclick="Edit(<%=model.id %>);"><%=Tag("编辑")%></a>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation ">
+                            <%=PageString%>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        function search_() {
+            var key = $("#key").val();
+            window.location = "?key=" + escape(key);
+        }
+        function Edit(id) {
+            if (id == 0) { var title_ = "<%=Tag("添加货柜")%>"; } else { var title_ = "<%=Tag("编辑货柜")%>"; }
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "transport_container_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {id: id,title: title_},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function DeleteConfirm() {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要删除吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "DeleteObj();");
+        }
+        function DeleteObj() {
+            $("#Modal-Confirm").modal("hide");
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=Transport_Container_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbscripts>

@@ -1,0 +1,55 @@
+﻿<!--
+Name:用户中心-首页
+Page:All
+-->
+<%
+Shop.Bussiness.Agent.Model AgentInfo = Shop.Bussiness.Agent.Info(CurrentUser);
+int OrderUnPaid = Shop.Bussiness.Order.GetCount_Order("","","User_id = "+ CurrentUser.id +" and Type_id_OrderType = 211 and IsPaid = 0 and IsInvalid=0");
+int OrderUnReceived = Shop.Bussiness.Order.GetCount_Order("","","User_id = "+ CurrentUser.id +" and Type_id_OrderType = 211 and IsShipped = 1 and IsReceived = 0");
+int OrderReceived = Shop.Bussiness.Order.GetCount_Order("","","User_id = "+ CurrentUser.id +" and Type_id_OrderType = 211 and IsReceived = 1");
+%>
+<div class="usercenter clearfix">
+<div class="info">
+<div class="hattar"><a href="<%=URL("P_UserMessage","0")%>"><span class="hat"></span></a></div>
+<h2><%=CurrentUser.NickName %></h2>
+<ul>
+<li>{tag:余额}：<%=FormatMoney(CurrentUser.Money) %></li>
+<li>{tag:积分}：<%=CurrentUser.Point %></li>
+<li><%=Lang(CurrentUserLevel.Name) %></li>
+</ul>
+</div>
+<div class="ordermenu">
+<a href="<%=URL("P_UserOrders","")%>?status=1"><span class="d_1">{tag:等待付款}<%if(OrderUnPaid>0){%><em>(<%=OrderUnPaid %>)</em><%} %></span></a>
+<a href="<%=URL("P_UserOrders","")%>?status=2"><span class="d_2">{tag:等待收货}<%if(OrderUnReceived>0){%><em>(<%=OrderUnReceived %>)</em><%} %></span></a>
+<a href="<%=URL("P_UserOrders","")%>?status=3"><span class="d_3">{tag:已收货}<%if(OrderReceived>0){%><em>(<%=OrderReceived %>)</em><%} %></span></a>
+<a href="<%=URL("P_UserComment","1","")%>"><span class="d_4">{tag:待评价}<%if(Count_Comment(0)>0){%><em>(<%=Count_Comment(0) %>)</em><%} %></span></a>
+</div>
+<div class="agent">
+<ul>
+<li><a href="<%=URL("P_UserAgent","")%>"><em><%=CurrentUser.id %></em><p><%=Tag("邀请码")%></p></a></li>
+<li><a href="<%=URL("P_UserAgentList",""+System.DateTime.Now.Date.ToShortDateString()+","+System.DateTime.Now.Date.ToShortDateString()+"")%>"><em><%=AgentInfo.UserCountday%></em><p><%=Tag("日推广人数")%></p></a></li>
+<li><a href="<%=URL("P_UserAgentList",""+System.DateTime.Now.Date.AddDays(0 - System.DateTime.Now.Day + 1).ToString("yyyy-MM-dd")+","+System.DateTime.Now.Date.ToShortDateString()+"")%>"><em><%=AgentInfo.UserCountmonth%></em><p><%=Tag("月推广人数")%></p></a></li>
+<li><a href="<%=URL("P_UserAgentList","")%>"><em><%=AgentInfo.UserCount%></em><p><%=Tag("总推广人数")%></p></a></li>
+</ul>
+</div>
+<div class="othermenu">
+<a href="<%=URL("P_UserOrders","")%>"> <span class="d_1">{tag:我的订单}</span></a>
+<%if(SYS.IsClosetuihuo=="0"){ %>
+<a href="<%=URL("P_UserReturn","")%>"> <span class="d_2">{tag:退货订单}</span></a>
+<%}%>
+<a href="<%=URL("P_UserOftenBuy","")%>"> <span class="d_3">{tag:常购清单}</span></a>
+<a href="<%=URL("P_UserLike","")%>"> <span class="d_4">{tag:我的收藏}</span></a>
+<a href="<%=URL("P_UserBank","")%>"> <span class="d_5">{tag:收款账号}</span></a>
+<a href="<%=URL("P_UserMoney","")%>"> <span class="d_6">{tag:资金记录}</span></a>
+<a href="<%=URL("P_UserPoint","")%>"> <span class="d_7">{tag:积分记录}</span></a>
+<a href="<%=URL("P_UserAgentMoney","")%>"> <span class="d_8">{tag:佣金查询}</span></a>
+<a href="<%=URL("P_UserCard","")%>"> <span class="d_9">{tag:我的卡券}</span></a>
+<a href="<%=URL("P_UserAsk","")%>"> <span class="d_10">{tag:商品咨询}</span></a>
+<a href="<%=URL("P_UserAccount","")%>"> <span class="d_11">{tag:绑定帐号}</span></a>
+<a href="<%=URL("P_UserQuestion","")%>"> <span class="d_12">{tag:安全问题}</span></a>
+<a href="<%=URL("P_UserAddress","")%>"> <span class="d_15">{tag:收货地址}</span></a>
+<a href="<%=URL("P_UserProfile","")%>"> <span class="d_14">{tag:资料管理}</span></a>
+<a href="<%=URL("P_UserChangePassword","")%>"> <span class="d_13">{tag:修改密码}</span></a>
+</div>
+<a href="javascript:LoginOut();"><div class="loginout">{tag:登录注销}</div></a>
+</div>

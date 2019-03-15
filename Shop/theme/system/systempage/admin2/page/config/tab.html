@@ -1,0 +1,91 @@
+﻿{layout:default} {class:Shop.Admin.storeConfig.Tab}
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="tab.aspx.cs" Inherits="Shop.Admin.storeConfig.Tab"
+    MasterPageFile="~/Master/Admin.Master" %>
+<lbhead>
+    <title><%=Tag("导航设置")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="add"><a href="javascript:void(0);" onclick="EditTab(0);"><b></b><span><%=Tag("添加")%></span></a></li>
+    <li class="del"><a href="javascript:void(0);" onclick="DELTab();"><b></b><span><%=Tag("删除")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("商品专题")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox">
+        <select id="lang">
+            <option value="">┌<%=Tag("语言")%></option>
+            <%=Shop.Bussiness.Language.LanguageOption(lang) %>
+        </select>
+        <input type="text" id="key" class="input-query" value="<%=key %>" style="width: 150px;" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" />
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th>
+                <%=Tag("名称")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("排序")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_Tab model in models)
+          { %>
+        <tr class="list" ondblclick="EditTab(<%=model.id %>)">
+            <td>
+                <input type="checkbox" name="id" value="<%=model.id %>" del="true" name="check_" />
+            </td>
+            <td>
+                <%=Shop.Bussiness.Language.Content(model.Tname,lang) %>
+            </td>
+            <td>
+                <%=model.Tsort%>
+            </td>
+            <td>
+                <a href="javascript:" onclick="EditTab(<%=model.id %>)"><%=Tag("编辑")%></a>
+                | <a href="Tab_Child.aspx?id=<%=model.id %>"><%=Tag("类别")%></a>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <script>
+        function search_() {
+            var lang = $("#lang").val();
+            var key = $("#key").val();
+            var mode = $("#mode").val();
+            var position = $("#position").val();
+            window.location.href = "?key=" + escape(key) + "&lang=" + lang + "&mode=" + mode + "&position=" + position;
+        }
+        function EditTab(id) {
+            var title_ = "<%=Tag("编辑")%>";
+            if (id==0) title_ ="<%=Tag("添加")%>"
+            var url_ = "tab_edit_window.aspx?id=" + id;
+            var width_ = 800;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+            //tipsWindown("编辑导航", "url:get?" + url_ + "", width_, height_, "true", "", "true", ""); 
+        }
+        function DELTab() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=Tab_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

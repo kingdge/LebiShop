@@ -1,0 +1,164 @@
+﻿{layout:default} {class:Shop.Admin.theme.Default}
+<lbhead>
+    <title><%=Tag("模板管理")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("模板管理")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("模板管理")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 m-b-10">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-info" onclick="Edit(0);"><i class="ti-plus"></i> <%=Tag("添加")%></button>
+                        <button class="btn btn-danger" onclick="location.href='ThemeOnline.aspx'"><i class="ti-cloud"></i> <%=Tag("在线模板")%></button>
+                        <%if (LB.Tools.RequestTool.GetConfigKey("ThemeUpdate").Trim() != "0"){ %>
+                        <button class="btn btn-success" onclick="CheckVersion()"><i class="ti-check"></i> <%=Tag("检查更新")%></button>
+                        <%}%>
+                        <%}%>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <%=Tag("缩略图")%>
+                                </th>
+                                <th>
+                                    <%=Tag("名称")%>
+                                </th>
+                                <th>
+                                    <%=Tag("支持语言")%>
+                                </th>
+                                <th>
+                                    <%=Tag("启用语言")%>
+                                </th>
+                                <th>
+                                    <%=Tag("路径")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_Theme model in models){%>
+                            <tr ondblclick="Theme(<%=model.id %>);">
+                                <td>
+                                    <a href="<%=Shop.Bussiness.ThemeUrl.CheckURL(WebPath + model.Path_Files+"/"+model.ImageUrl) %>" data-lightbox="image<%=model.id %>"><img src="<%=Shop.Bussiness.ThemeUrl.CheckURL(WebPath + model.Path_Files+"/"+model.ImageSmallUrl) %>" /></a>
+                                </td>
+                                <td>
+                                    <%=model.Name %><br /><em><%=Tag("版本")%>：<%=model.Version %></em><br /><em><%=Tag("排序")%>：<%=model.Sort%></em>
+                                </td>
+                                <td>
+                                    <%=model.Language %>
+                                </td>
+                                <td>
+                                    <%=GetLanguage(model)%>
+                                </td>
+                                <td>
+                                    <%=model.Path_Files %>
+                                </td>
+                                <td>
+                                    <a href="javascript:void(0)" onclick="Edit(<%=model.id %>);">
+                                        <%=Tag("编辑")%>
+                                    </a> | <a href="javascript:void(0)" onclick="Theme(<%=model.id %>);">
+                                        <%=Tag("编辑模板")%>
+                                    </a> | <a href="javascript:void(0)" onclick="CreateTheme(<%=model.id %>);">
+                                        <%=Tag("生成模板")%>
+                                    </a> | <a href="javascript:void(0)" onclick="Advert(<%=model.id %>);">
+                                        <%=Tag("广告位")%>
+                                    </a> | <a href="javascript:void(0)" onclick="CopyConfirm(<%=model.id %>);">
+                                        <%=Tag("复制")%>
+                                    </a> | <a href="javascript:void(0)" onclick="DeleteConfirm(<%=model.id %>);">
+                                        <%=Tag("删除")%>
+                                    </a>
+                                    <%if (model.IsUpdate == 1){%>
+                                    <%if (model.IsNew==1 && model.LebiUser!=SYS.LicenseUserName && LB.Tools.RequestTool.GetConfigKey("ThemeUpdate").Trim() != "0")
+                                    { %>
+                                    | <a href="javascript:void(0)" onclick="DownLoadConfirm(<%=model.id %>);"><%=Tag("升级")%></a>
+                                    <%} %>
+                                    <%} %>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation ">
+                            <%=PageString%>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        function Theme(id) {
+            window.location = "skin.aspx?id="+id;
+        }
+        function Edit(id) {
+            window.location = "theme_edit.aspx?id="+id;
+        }
+        function Theme(id) {
+            window.location = "skin.aspx?id=" + id;
+        }
+        function DeleteConfirm(id) {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要删除吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick","Del("+ id +");");
+        }
+        function Del(id) {
+            $("#Modal-Confirm").modal("hide");
+            var postData = { "id": id };
+            var url="<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=Theme_Del";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function CreateTheme(Theme_id) {
+            var postData = { "Theme_id": Theme_id };
+            var url="<%=site.AdminPath %>/ajax/ajax_aspx.aspx?__Action=CreateTheme";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+        function Advert(id){
+            window.location = "advert.aspx?id=" + id;
+        }
+        function DownLoadConfirm(id) {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认操作吗？升级将覆盖模板中所有修改！")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick","DownLoad("+ id +");");
+        }
+        function DownLoad(id) {
+            $("#Modal-Confirm").modal("hide");
+            var postData = { "id": id };
+            var url="<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=Theme_Update";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function CopyConfirm(id) {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认操作吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick","Copy("+ id +");");
+        }
+        function Copy(id) {
+            $("#Modal-Confirm").modal("hide");
+            var postData = { "id": id };
+            var url="<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=Theme_Copy";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function CheckVersion()
+        {
+            var url="<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=Theme_CheckVersion";
+            RequestAjax(url,'',function(res){MsgBox(1, "<%=Tag("发现更新")%>", "?")});
+        }
+    </script>
+</lbscripts>

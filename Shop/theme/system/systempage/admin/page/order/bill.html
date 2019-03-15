@@ -1,0 +1,129 @@
+﻿{layout:default} {class:Shop.Admin.order.Bill}
+<lbhead>
+    <title><%=Tag("发票管理")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <%if (PageReturnMsg == ""){%>
+            <li class="del"><a href="javascript:void(0);" onclick="DelObj();"><b></b><span><%=Tag("删除")%></span></a></li>
+            <%}%>
+            <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a>
+                > <%=Tag("发票管理")%>
+                > <a href="<%=site.AdminPath %>/order/default.aspx?t=<%=t %>"><%=GetTypeName(t)%></a></span>
+                
+            </li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox">
+        <select name="status" id="status">
+            <option value="0">┌<%=Tag("状态")%></option>
+            <%=Shop.Bussiness.EX_Type.TypeOption("BillStatus", status)%>
+        </select>
+        <select id="t" name="Pro_Type_id">
+            <option value="0">┌<%=Tag("全部类别")%></option>
+            <%=Shop.Bussiness.EX_Type.TypeOption("BillType", t)%>
+        </select>
+        <input type="text" name="dateFrom" id="dateFrom" size="12" class="input-calendar" value="<%=dateFrom %>" /> - <input type="text" name="dateTo" id="dateTo" size="12" class="input-calendar" value="<%=dateTo %>" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" align="absmiddle" />
+    </div>
+    <table class="datalist">
+        <tr class="title">
+           <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th width="120px">
+                <%=Tag("订单编号")%>
+            </th>
+            <th width="100px">
+                <%=Tag("订单状态")%>
+            </th>
+            <th width="100px">
+                <%=Tag("会员")%>
+            </th>
+            <th width="80px">
+                <%=Tag("金额")%>
+            </th>
+            <th width="80px">
+                <%=Tag("税金")%>
+            </th>
+            <th width="120px">
+                <%=Tag("类型")%>
+            </th>
+            <th width="100px">
+                <%=Tag("状态")%>
+            </th>
+            <th width="130px">
+                <%=Tag("日期")%>
+            </th>
+            <th>
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_Bill model in models)
+          {%>
+        <tr class="list" ondblclick="Edit(<%=model.id %>);">
+            <td style="text-align:center">
+                <input type="checkbox" name="id" value="<%=model.id %>" del="true" />
+            </td>
+            <td>
+                <a target="_blank" href="<%=GetOrder(model.Order_id).Type_id_OrderType==212?"t":"" %>order_view.aspx?id=<%=model.Order_id %>"><%=model.Order_Code %></a>
+            </td>
+            <td>
+                <%=Shop.Bussiness.Order.OrderStatus(GetOrder(model.Order_id), CurrentLanguage.Code)%>
+            </td>
+            <td>
+                <%=model.User_UserName %>
+            </td>
+            <td>
+                <%=FormatMoney(model.Money) %>
+            </td>
+            <td>
+                <%=FormatMoney(model.Money * model.TaxRate ) %>
+            </td>
+            <td>
+                <%=Lang(BillType(model.BillType_id).Name)%>
+            </td>
+            <td>
+                <%=Shop.Bussiness.EX_Type.TypeName(model.Type_id_BillStatus)%>
+            </td>
+            <td>
+                <%=FormatTime(model.Time_Add) %>
+            </td>
+            <td>
+                <a href="javascript:Edit(<%=model.id %>);"><%=Tag("编辑") %></a>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function search_() {
+            var t = $("#t").val();
+            var status = $("#status").val();
+            var dateFrom = $("#dateFrom").val();
+            var dateTo = $("#dateTo").val();
+            window.location = "?t="+t+"&status="+ status + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo;
+        }
+        function Edit(id) {
+            var title_ = "<%=Tag("发票管理")%>";
+            var url_ = "bill_edit_window.aspx?id=" + id;
+            var width_ = 500;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function DelObj(id) {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=Bill_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

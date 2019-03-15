@@ -1,0 +1,34 @@
+﻿{layout:simple} 
+{class:Shop.Admin.admin.Admin_url_Edit_window}
+<lbbody>
+<table
+    id="common" class="table">
+    <tr>
+        <th>
+            URL：
+        </th>
+        <td style="text-align: left;">
+            <input type="text" class="input" shop="true" min="notnull" name="Url" id="Url" value="<%=model.Url %>"
+                style="width: 350px;" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+            <div class="tools tools-m">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    function SaveObj() {
+        if (!CheckForm("shop", "span"))
+            return false;
+        var Url = $("#Url").val();
+        var url = "<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=Admin_url_Edit&id=<%=model.id %>&Url="+Url+"&gid=<%=group.id %>";
+        RequestAjax(url,'',function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+</script>
+</lbbody>

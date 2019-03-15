@@ -1,0 +1,198 @@
+﻿{layout:default} {class:Shop.Admin.Config.cardtlist}
+<lbhead>
+    <title><%=Tag("优惠券")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <style type="text/css">.mainbody_top{display:none;height:0;overflow:hidden}</style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="add"><a href="javascript:void(0);" onclick="AddObj(0);"><b></b><span><%=Tag("添加")%></span></a></li>
+    <li class="del"><a href="javascript:void(0);" onclick="Delete();"><b></b><span><%=Tag("删除")%></span></a></li>
+    <li class="edit"><a href="javascript:void(0);" onclick="cardexport();"><b></b><span><%=Tag("导出")%></span></a></li>
+    <li class="edit"><a  href="javascript:void(0);" onclick="EditObj(0);"><b></b><span><%=Tag("批量修改")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("优惠券")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox">
+        <%--状态：<select id="status">
+            <option value="0">┌<%=Tag("全部")%></option>
+            <%=Shop.Bussiness.EX_Type.TypeOption("CardStatus", status)%>
+        </select>
+        面值：<input name="money" type="text" id="money" class="input-query" value="<%=money %>" style="width:70px;"/>
+        有效期：<input type="text" name="dateFrom" id="dateFrom" size="12" class="input-calendar" value="<%=dateFrom %>" /> - <input type="text" name="dateTo" id="dateTo" size="12" class="input-calendar" value="<%=dateTo %>" />
+        &nbsp;--%>
+        <input name="key" type="text" id="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" align="absmiddle" />
+        <div style="margin-top:5px;">
+        <a href="javascript:void(0);" onclick="SearchWindow();"><%=Tag("高级搜索")%></a>
+        <%=su.Description%>
+        </div>
+    </div>
+    <table id="list" class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("名称")%>
+            </th>
+             <th style="width: 100px">
+                <%=Tag("编号")%>
+            </th>
+            <% if (type == 311)
+               { %>
+            <th style="width: 100px">
+                <%=Tag("密码")%>
+            </th>
+            <%} %>
+            <th style="width: 100px">
+                <%=Tag("会员")%>
+            </th>
+            <th style="width: 60px">
+                <%=Tag("面值")%>
+            </th>
+            <th style="width: 60px">
+                <%=Tag("剩余")%>
+            </th>
+            <th style="width: 60px">
+                <%=Tag("最低消费")%>
+            </th>
+            <th style="width: 60px">
+                <%=Tag("找零")%>
+            </th>
+            <th style="width: 60px">
+                <%=Tag("单独使用")%>
+            </th>
+            <th style="width: 60px">
+                <%=Tag("状态")%>
+            </th>
+            <th >
+                <%=Tag("有效期")%>
+            </th>
+            <th >
+                <%=Tag("限制分类")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_Card model in models)
+          {%>
+        <tr class="list" ondblclick="EditObj(<%=model.id %>);" >
+            <td style="text-align:center">
+                <input type="checkbox" name="id" value="<%=model.id %>" del="true" />
+            </td>
+            <td>
+                <%=TypeName(model.CardOrder_id)%>
+            </td>
+            <td>
+                <%=model.Code%>
+            </td>
+             <% if (type == 311)
+               { %>
+            <td>
+                <%=model.Password%>
+            </td>
+            <%} %>
+            <td>
+                <%=model.User_UserName%>
+            </td>
+            <td>
+                <%=FormatMoney(model.Money)%>
+            </td>
+            <td>
+                <%=FormatMoney(model.Money_Last)%>
+            </td>
+            <td>
+                <%=FormatMoney(model.Money_Buy)%>
+            </td>
+            <td>
+                <%=model.IsPayOnce == 1 ? Tag("否") : Tag("是")%>
+            </td>
+             <td>
+                <%=model.IsCanOtherUse == 0 ? Tag("是") : Tag("否")%>
+            </td>
+            <td>
+                <%=Shop.Bussiness.EX_Type.TypeName(model.Type_id_CardStatus,CurrentLanguage)%>
+            </td>
+            <td>
+                <%=FormatDate(model.Time_Begin)+"-"+FormatDate(model.Time_End)%>
+            </td>
+            <td><%=Shop.Bussiness.EX_Product.TypeNames(model.Pro_Type_ids,CurrentLanguage.Code) %>&nbsp;</td>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function AddObj(id) {
+            window.location="cardtype.aspx?type=<%=type %>";
+        }
+        function CreateObj(id) {
+            var title_ = "<%=Tag("生成优惠券")%>";
+            var url_ = "card_create_window.aspx?id=" + id;
+            var width_ = 450;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function Update() {
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=Pay_Update";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function DeleteObj() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=Pay_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function Delete() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/Ajax/ajax_sale.aspx?__Action=Card_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+         function search_(scurl) {
+            var key = $("#key").val();
+            if(scurl==undefined || scurl=='')
+                scurl='<%=su.URL %>';
+            window.location = "?key=" + escape(key) + "&user_id=<%=user_id %>&"+scurl;
+        }
+        function cardexport()
+        {
+            var key = $("#key").val();
+            var dateFrom = $("#dateFrom").val();
+            var dateTo = $("#dateTo").val();
+            var status = $("#status").val();
+            var money = $("#money").val();
+            window.location = "<%=site.AdminPath %>/ajax/export.aspx?__Action=Card&key=" + escape(key) + "&user_id=<%=user_id %>&<%=su.URL %>";
+        }
+        function SearchWindow() {
+            var title_ = "<%=Tag("卡券查询")%>";
+            var url_ = "card_search.aspx?callback=search_&<%=su.URL %>";
+            var width_ = 500;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function EditObj(ids) {
+            if (ids == 0){
+                var ids = GetChkCheckedValues("id");
+            }
+            var url_ = "card_edit_window.aspx?ids="+ids+"&<%=su.URL %>";
+            var title_="<%=Tag("批量修改") %>";
+            var width_ = 500;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

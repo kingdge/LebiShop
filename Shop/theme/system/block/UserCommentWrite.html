@@ -1,0 +1,109 @@
+﻿<!--
+Name:用户中心-评论提交
+Page:All
+-->
+<script type="text/javascript" src="{/js}ajaxfileupload.js"></script>
+<div class="nbbox clearfix">
+    <div class="user">
+        <ul class="tablist">
+            <li><a href="<%=URL("P_UserComment","0","")%>"><span>{tag:已评价商品}</span></a></li>
+            <li class="selected"><a href="<%=URL("P_UserComment","1","")%>"><span>{tag:待评价商品}<em>(<%=Count_Comment(0) %>)</em></span></a></li>
+        </ul>
+        <div class="dl-table clearfix">
+        <dl>
+            <dt>{tag:商品}：</dt>
+            <dd><% if (order_product.ImageOriginal == ""){ %>&nbsp;<%}else{ %><a href="<%=URL("P_Product",order_product.Product_id) %>" target="_blank"><img style="height: 30px; width: 30px; vertical-align: middle" src="<%=Image(order_product.ImageOriginal,50,50) %>" /></a><%} %>
+                <a href="<%=URL("P_Product",order_product.Product_id) %>" target="_blank"><%=Lang(order_product.Product_Name)%></a></dd>
+        </dl>
+        <dl>
+            <dt>{tag:评分}：</dt>
+            <dd><ul class="comment_star">
+                <li>
+                    <input type="radio" name="star" value="5" shop="true" checked /><em class="comments_bg stars_5"></em></li>
+                <li>
+                    <input type="radio" name="star" value="4" shop="true" /><em class="comments_bg stars_4"></em></li>
+                <li>
+                    <input type="radio" name="star" value="3" shop="true" /><em class="comments_bg stars_3"></em></li>
+                <li>
+                    <input type="radio" name="star" value="2" shop="true" /><em class="comments_bg stars_2"></em></li>
+                <li>
+                    <input type="radio" name="star" value="1" shop="true" /><em class="comments_bg stars_1"></em></li>
+            </ul></dd>
+        </dl>
+        <dl>
+            <dt>{tag:内容}：</dt>
+            <dd><textarea id="Content" name="Content" cols="80" rows="3" class="textarea" style="height: 150px; width: 80%;" shop="true"></textarea></dd>
+        </dl>
+        <dl>
+            <dt>{tag:晒单照片}：</dt>
+            <dd><ul id="imagestable"></ul>
+                <div class="clear"></div>
+                <div><input type="file" onchange="uploadImage()" class="input" name="fileimage" id="fileimage"></div>
+            </dd>
+        </dl>
+        <dl class="dl-btn">
+            <dt></dt>
+            <dd><a href="javascript:void(0)" onclick="submit();" class="btn btn-11"><s></s>{tag:发表评价}</a><input type="hidden" id="Images" name="Images" value="" shop="true"/><input type="hidden" id="ImagesSmall" name="ImagesSmall" value="" shop="true"/></dd>
+        </dl>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function submit() {
+        var postData = GetFormJsonData("shop");
+        var url = path+"/Ajax/Ajax_userin.aspx?__Action=Comment_Write&id=<%=id %>";
+        RequestAjax(url, postData, function () { MsgBox(1, "{tag:操作成功}", "<%=URL("P_UserComment","0","")%>") });
+    }
+    function uploadImage() {
+        $.ajaxFileUpload
+        (
+	        {
+	            url: path + '/ajax/imageupload_comment.aspx',
+	            secureuri: false,
+	            fileElementId: 'fileimage',
+	            dataType: 'json',
+	            success: function (data, status) {
+	                    if (data.msg != 'OK') {
+	                        MsgBox(2, data.msg, "");
+	                    }
+	                    else {
+	                        if (data.ImageSmall.length > 0) {
+	                           insertimage(data.ImageUrl,data.ImageSmall);
+	                        }
+	                    }
+	                
+	            }
+	        }
+        )
+    }
+    function insertimage(image,small)
+    {
+        var str='<li class="imagespreviewlist" image="'+image+'">';
+        str+='<span class="image" ><img src="'+small+'"></span>';
+        str+='<span class="image-manage" ><a onclick="deleteimage(\''+image+'\',\''+small+'\');" href="javascript:void(0)">{tag:删除}</a></span>';
+        str+='</li>'
+        $('#imagestable').append(str);
+        var images=$("#Images").val();
+        var smalls=$("#ImagesSmall").val();
+        $("#Images").val(images+'@'+image);
+        $("#ImagesSmall").val(smalls+'@'+small);
+        if($("#imagestable li").length>4)
+        {
+            $("#fileimage").hide();
+        }
+    }
+    function deleteimage(image,small)
+    {
+        $("li[image='"+image+"']").remove();
+        var images=$("#Images").val();
+        var smalls=$("#ImagesSmall").val();
+        images=images.replace('@'+image,'');
+        smalls=smalls.replace('@'+small,'');
+        $("#Images").val(images);
+        $("#ImagesSmall").val(smalls);
+        if($("#imagestable li").length<5)
+        {
+            $("#fileimage").show();
+        }
+    }
+</script>

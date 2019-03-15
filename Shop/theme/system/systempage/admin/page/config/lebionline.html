@@ -1,0 +1,32 @@
+﻿{layout:default} {class:Shop.Admin.config.lebionline}
+<lbhead>
+    <title><%=Tag("在线客服")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <style>
+        .bottom{height: 0;overflow: hidden;display: none;}
+        textarea{font-size: 12px;}
+    </style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <li class="name"><span id="navIgation">
+                <%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a>
+                > <a href="filelist.aspx">
+                    <%=Tag("在线客服")%></a></span></li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <%
+    if (!Shop.LebiAPI.Service.Instanse.Check("managelicenese")){
+    %>
+    <iframe id="iframe1" frameborder="0" scrolling="yes" style="width: 100%; height: 1300px;"
+        src="http://www.lebi.cn/forum/post.aspx?<%=url %>"></iframe>
+    <%}%>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+    </div>
+</lbbottom>

@@ -1,0 +1,134 @@
+﻿{layout:default} {class:Shop.Admin.cms.PageList}
+<lbhead>
+    <title><%=Tag(node.Name)%>-<%=pnode.Name%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="add"><a href="<%=Shop.Bussiness.NodePage.AdminPage(node) %>"><b></b><span><%=Tag("添加")%></span></a></li>
+    <li class="language"><a href="javascript:void(0);" onclick="Update('<%=node.id %>',0,'Page');"><b></b><span><%=Tag("语言")%></span></a></li>
+    <li class="del"><a href="javascript:void(0);" onclick="Page_Del();"><b></b><span><%=Tag("删除")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：
+    <a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > 
+    <%if (pnode.Name !="CMS"){ %><a href="UserNodeList.aspx?code=<%=pnode.Code %>"><%=pnode.Name%></a> > <%} %>
+    <%=Tag(node.Name)%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox">
+        <select id="lang">
+            <option value="">┌<%=Tag("语言")%></option>
+            <%=Shop.Bussiness.Language.LanguageOption(lang)%>
+        </select>
+        <input type="text" name="dateFrom" id="dateFrom" size="12" class="input-calendar" value="<%=dateFrom %>" /> - <input type="text" name="dateTo" id="dateTo" size="12" class="input-calendar" value="<%=dateTo %>" />
+        <input type="text" id="key" name="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" />
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'ids\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("语言")%>
+            </th>
+            <th style="width: 400px">
+                <%=Tag("名称")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("打开方式")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("颜色")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("浏览")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("排序")%>
+            </th>
+            <th style="width:140px">
+                <%=Tag("时间")%>
+            </th>
+            <th >
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+            <%foreach (DB.LebiShop.Lebi_Page model in pages)
+              {%>
+            <tr class="list" ondblclick="Page_Edit('<%=Shop.Bussiness.NodePage.AdminPage(model) %>');">
+                <td style="text-align:center">
+                    <input type="checkbox" name="ids" del="true" value="<%=model.id %>" />
+                </td>
+                <td>
+                    <div class="more" style="width: 80px;" title="<%=LanguageName(model.Language_ids)%>">
+                    <%=LanguageName(model.Language_ids)%>
+                    </div>
+                </td>
+                <td>
+                    <%=model.Name%>
+                </td>
+                <td>
+                    <%=model.target=="_blank"?Tag("新窗口"):Tag("当前窗口")%>
+                </td>
+                <td>
+                    <%if (model.NameColor!=""){ %><img border="0" src="<%=AdminImage("rect.gif")%>" width="18" align="absmiddle" style="background-Color:<%=model.NameColor %>"><%}else{ %>&nbsp;<%} %>
+                </td>
+                <td>
+                    <%=model.Count_Views%>
+                </td>
+                <td>
+                    <%=model.Sort%>
+                </td>
+                <td>
+                    <%=FormatTime(model.Time_Add)%>
+                </td>
+                <td>
+                    <a href="<%=Shop.Bussiness.NodePage.AdminPage(model) %>"><%=Tag("编辑")%></a>
+                </td>
+            </tr>
+            <%} %>
+    </table>
+    <script type="text/javascript">
+        function search_() {
+            var lang = $("#lang").val();
+            var key = $("#key").val();
+            var dateFrom = $("#dateFrom").val();
+            var dateTo = $("#dateTo").val();
+            window.location = "?Node_id=<%=Node_id%>&key=" + escape(key) + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&lang=" + lang;
+        }
+        function Node_Edit(pid, id) {
+            var title_ = "编辑结点";
+            var url_ = "usernode_edit_window.aspx?id=" + id + "&pid=" + pid;
+            var width_ = 800;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function Page_Del(id) {
+            if (!confirm("确认要删除？"))
+                return false;
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_node.aspx?__Action=Page_Del";
+            RequestAjax(url,postData,function(){MsgBox(1,"<%=Tag("操作成功")%>","?")});
+        }
+        function Page_Edit(url) {
+            window.location = url;
+        }
+        function Update(id,ids,table) {
+            var title_ = "<%=Tag("设置语言")%>";
+            if (ids == 0)
+                ids = GetChkCheckedValues("ids");
+            var url_ = "<%=site.AdminPath %>/config/setlanguage_edit_window.aspx?id=" + id+"&ids=" + ids+"&table="+table;
+            var width_ = 400;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom"><%=PageString%></div>
+</lbbottom>

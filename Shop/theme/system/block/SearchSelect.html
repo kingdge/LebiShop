@@ -1,0 +1,35 @@
+﻿<!--
+Name:商品筛选
+Page:P_ProductCategory
+-->
+<div class="nbbox clearfix">
+    <div class="searchselect">
+        <div class="mt">
+            <h2>
+                {Tag:商品筛选}</h2>
+        </div>
+        <div class="mc clearfix">
+            <ul class="selectvalue">
+                <li>${#table:Lebi_Brand;#where:','+Pro_Type_id+',' like '%,"+pro_type.id+",%';#order:Sort desc;#top:999;
+                    <% 
+            if({i}==1 && RecordCount>0){
+                    %>
+                    <span>{Tag:商品品牌}：</span> <a href="<%=URL("P_ProductCategory",""+id+",0,"+cid+",$,$,"+tid+"") %>"
+                        <%=pid==0?"class=\"selectall\"":"" %>>{Tag:全部}</a>
+                    <%} %>
+                    <a href="<%=URL("P_ProductCategory",""+id+","+{id}+","+cid+",$,$,"+tid+"") %>" <%=pid=={id}?"class=\"selectone\"":"" %>>
+                        <%=Lang({Name}) %></a> }$ </li>
+                ${#table:Lebi_ProPerty;#where:parentid=0 and id in ("+property.ProPerty132+");#order:Sort desc;#model:pty;#top:999;
+                <li><span>
+                    <%=Lang({Name}) %>：</span> <a href="<%=URL("P_ProductCategory",""+id+","+pid+","+Categoryhref(pty.id,0,cid)+",$,$,"+tid+"") %>"
+                        <%=(cid.Contains(pty.id+"|0") || !cid.Contains(pty.id+"|"))?"class=\"selectall\"":"" %>>
+                        {Tag:全部}</a> 
+                        ${ #table:Lebi_ProPerty;#where:parentid="+pty.id+";#order:Sort desc;#model:m;#top:999;
+                        <a href="<%=URL("P_ProductCategory",""+id+","+pid+","+Categoryhref(pty.id,m.id,cid)+",$,$,"+tid+"") %>"
+                        <%=cid.Contains(pty.id+"|"+m.id)?"class=\"selectone\"":"" %>>
+                        <%=Lang({Name}) %></a>
+                        }$ 
+               }$
+        </div>
+    </div>
+</div>

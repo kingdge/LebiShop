@@ -1,0 +1,80 @@
+﻿{layout:default} {class:Shop.Admin.theme.part}
+<lbhead>
+    <title><%=Tag("系统模板") %>-<%=Tag("主题管理")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("页面设置") %></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/theme/default.aspx"><%=Tag("主题管理")%></a></li>
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/theme/part.aspx"><%=Tag("系统模板") %></a></li>
+        <%if (file.IndexOf("/") > -1)
+        {
+        string files = file;
+        string[] filesArr;
+        string filepath = "";
+        filesArr = files.Split(new char[1] { '/' });
+        int i = 0;
+        foreach (string _file in filesArr)
+        {
+        for (int ii = 0; ii <= i; ii++)
+        {
+        filepath += filesArr[ii];
+        if (ii < i)
+        filepath += "/";
+        }
+        if (filepath != "" && filepath != null)
+        {
+        %>
+        <li class="breadcrumb-item active"><a href="<%=site.AdminPath %>/theme/part.aspx?file=<%=filepath%>"><%=filesArr[i]%></a></li><%
+        }
+        i++; filepath = "";
+        }
+        }
+        else if (file != "")
+        {
+        %>
+        <li class="breadcrumb-item active"><a href="<%=site.AdminPath %>/theme/part.aspx?file=<%=file%>"><%=file%></a></li><%
+        }
+        %>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr class="no-wrap">
+                                <th>
+                                    <%=Tag("名称")%>
+                                </th>
+                                <th>
+                                    <%=Tag("说明")%>
+                                </th>
+                                <th>
+                                    <%=Tag("限制")%>
+                                </th>
+                                <th>
+                                    <%=Tag("更新时间")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%=GetList() %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function Load(name) {
+            window.location = "part.aspx?file=" + name;
+        }
+    </script>
+</lbbody>

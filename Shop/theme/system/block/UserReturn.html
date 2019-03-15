@@ -1,0 +1,51 @@
+﻿<!--
+Name:用户中心-退货单
+Page:P_UserReturn
+-->
+<div class="nbbox clearfix">
+<div class="user">
+    <div class="searchbox clearfix">
+        <input type="text" name="dateFrom" id="dateFrom" size="12" class="input-calendar" value="<%=dateFrom %>" /> - <input type="text" name="dateTo" id="dateTo" size="12" class="input-calendar" value="<%=dateTo %>" />
+        <input type="text" id="key" name="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" />
+        <a href="javascript:void(0)" onclick="search_();" class="btn btn-12"><s></s>{tag:查询}</a>
+    </div>
+    <table cellpadding="0" cellspacing="0" width="100%" class="tablelist box">
+        <tr>
+            <th style="width:120px;">{tag:订单编号}</th>
+            <th>{tag:订单商品}</th>
+            <th style="width:80px;">{tag:订单金额}</th>
+            <th style="width:120px;">{tag:时间}</th>
+            <th style="width:100px;">{tag:状态}</th>
+            <th style="width:80px;">{tag:操作}</th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_Order o in orders){%>
+        <tr>
+            <td><a href="<%=URL("P_UserReturnDetails",o.id)%>" target="_blank"><%=o.Code %></a></td>
+            <td>
+                <%
+                List<DB.LebiShop.Lebi_Order_Product> order_products = DB.LebiShop.B_Lebi_Order_Product.GetList("Order_id = "+ o.id +"", "id desc");
+                foreach (DB.LebiShop.Lebi_Order_Product o_p in order_products)
+                {
+                %>
+                <a href="<%=URL("P_Product",o_p.Product_id)%>" target="_blank"><img title="<%=Lang(o_p.Product_Name) %>" src="<%=Image(o_p.ImageOriginal,50,50) %>" style="width: 50px; height: 50px;" /></a>
+                <%} %>
+            </td>
+            <td><%=FormatMoney(o.Money_Order) %></td>
+            <td><%=FormatTime(o.Time_Add) %></td>
+            <td><%=ReturnStatus(o) %></td>
+            <td><%if(o.IsShipped==1){ %><a href="<%=URL("P_UserReturnDetails",o.id)%>" target="_blank">{tag:查看}</a><%}else{ %><a href="<%=URL("P_UserReturnShip",o.id)%>" target="_blank">{tag:查看}</a><%} %>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <div class="bottom clearfix"><div class="right"><%=PageString%></div></div>
+</div>
+</div>
+<script type="text/javascript">
+    function search_() {
+        var key = $("#key").val();
+        var dateFrom = $("#dateFrom").val();
+        var dateTo = $("#dateTo").val();
+        window.location = "?key=" + escape(key) + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo;
+    }
+</script>

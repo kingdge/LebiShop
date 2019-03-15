@@ -1,0 +1,38 @@
+﻿<!--
+Name:商品大图
+Page:P_Product
+-->
+<script type="text/javascript" src="{/js}jquery.jqzoom.js"></script>
+<link rel="stylesheet" type="text/css" href="{/js}lightbox/lightbox.min.css" />
+<script type="text/JavaScript">
+    $(document).ready(function () {
+        var liw = 0;var pw = $(".listimage .piclist").width();
+        $(".list-h li").each(function () {liw += $(this).width() + 6;})
+        $(".list-h").width(liw + "px");
+        $("#PicList img").bind("mouseover", function () {var src = $(this).attr("imghead");var jqimg = $(this).attr("imghead");$("#jqzoom img").attr("src", src);$("#jqzoom img").attr("jqimg", jqimg);$(this).attr("class", "current");}).bind("mouseout", function () {$(this).attr("class", "");});
+        $(".jqzoom").jqueryzoom({xzoom: 300,yzoom: 300,offset: 10,position: "right",preload: 1,lens: 1});
+        $(".pic_next").click(function () {if ($(".list-h").is(":animated")) {$(".list-h").stop(true, true);}ml = parseInt($(".list-h").css("left"));r = liw - (pw - ml);if (r < pw) {s = r;} else {s = pw;}$(".list-h").animate({ left: ml - s + "px" }, "slow");})
+        $(".pic_prev").click(function () {if ($(".list-h").is(":animated")) {$(".list-h").stop(true, true);}ml = parseInt($(".list-h").css("left"));if (ml > -pw) {s = ml;} else {s = -pw;}$(".list-h").animate({ left: ml - s + "px" }, "slow");})
+    })
+</script>
+<div class="bigimage jqzoom clearfix" id="jqzoom">
+    <img jqimg="<%=Image(product.ImageOriginal) %>" src="<%=Image(product.ImageOriginal) %>" name="prodView" id="Img1" />
+</div>
+<div class="clear"></div>
+<div class="listimage">
+	<div class="pic_prev"></div>
+    <div id="PicList" class="piclist">
+        <div class="piclistbox">
+        <ul class="list-h">
+            <li><a href="<%=Image(product.ImageOriginal)%>" data-lightbox="image"><img src="<%=Image(product.ImageOriginal,"small") %>" imghead="<%=Image(product.ImageOriginal,"big") %>"/></a></li>
+            <% 
+            foreach(LBimage image in images){
+            %>
+            <li><a href="<%=Image(image.original) %>" data-lightbox="image"><img src="<%=Image(image.original,"small") %>" imghead="<%=Image(image.original,"big") %>"></a></li>
+            <%} %>
+        </ul>
+        </div>
+    </div>
+	<div class="pic_next"></div>
+</div>
+<script type="text/javascript" src="{/js}lightbox/lightbox.min.js"></script>

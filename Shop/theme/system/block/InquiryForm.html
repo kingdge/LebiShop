@@ -1,0 +1,44 @@
+﻿<!--
+Name:留言反馈
+Page:All
+-->
+<div class="nbbox clearfix">
+<div class="userbox">
+    <div class="mt clearfix">
+        <h2>{tag:留言反馈}</h2>
+    </div>
+    <div class="mc clearfix">
+    <div class="dl-table clearfix">
+    <dl>
+        <dt>{tag:昵称}：</dt>
+        <dd><input type="text" name="UserName" id="UserName" value="" size="30" class="input" shop="true" min="notnull"/></dd>
+    </dl>
+    <dl>
+        <dt>{tag:EMAIL}：</dt>
+        <dd><input type="text" name="Email" id="Email" value="" size="30" class="input" shop="true" min="email"/></dd>
+    </dl>
+    <dl>
+        <dt>{tag:标题}：</dt>
+        <dd><input type="text" name="Subject" id="Subject" value="" size="30" class="input" shop="true" min="notnull" style="width:80%;" /></dd>
+    </dl>
+    <dl>
+        <dt>{tag:内容}：</dt>
+        <dd><textarea name="Content" id="Content" cols="80" rows="3" class="textarea" min="notnull" shop="true" style="height:150px;width:80%;"></textarea></dd>
+    </dl>
+    <dl class="dl-btn">
+        <dt></dt>
+        <dd><a href="javascript:void(0)" onclick="submit();" class="btn btn-11"><s></s>{tag:提交}</a></dd>
+    </dl>
+    </div>
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+    function submit() {
+        var postData = GetFormJsonData("shop");
+        if (!CheckForm("shop", "span"))
+            return false;
+        var url = path+"/Ajax/Ajax_user.aspx?__Action=Inquiry";
+        RequestAjax(url, postData, function () { MsgBox(1, "{tag:提交成功}", "?");$("#UserName").val("");$("#Email").val("");$("#Subject").val("");$("#Content").val(""); });
+    }
+</script>

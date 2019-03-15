@@ -1,0 +1,59 @@
+﻿<!--
+Name:用户中心-编辑收款账号
+Page:All
+-->
+<div class="nbbox clearfix">
+<div class="userbox">
+    <div class="mt clearfix">
+        <h2>{tag:收款账号}</h2>
+    </div>
+    <div class="mc clearfix">
+    <div class="dl-table clearfix">
+    <dl>
+        <dt>{tag:收款方式}：</dt>
+        <dd>
+        <label><input type="radio" name="PayType" value="bank" shop="true" onclick="SetType();" <%=model.PayType == "bank"?"":"checked"%> />{tag:银行转账}</label>
+        <label><input type="radio" name="PayType" value="alipay" shop="true" onclick="SetType();" <%=model.PayType == "alipay"?"checked":""%> />{tag:支付宝}</label>
+        </dd>
+    </dl>
+    <dl id="DIVUserName">
+        <dt>{tag:姓名}：</dt>
+        <dd><input type="text" name="UserName" id="UserName" size="30" value="<%=model.UserName %>" min="notnull" class="input" shop="true" /></dd>
+    </dl>
+    <dl id="DIVCode">
+        <dt>{tag:账号}：</dt>
+        <dd><input type="text" name="Code" id="Code" size="30" value="<%=model.Code %>" min="notnull" class="input" shop="true" /></dd>
+    </dl>
+    <dl id="DIVName">
+        <dt>{tag:银行}：</dt>
+        <dd><input type="text" name="Name" id="Name" size="30" value="<%=model.Name %>" min="notnull" class="input" shop="true" /></dd>
+    </dl>
+    <dl class="dl-btn">
+        <dt></dt>
+        <dd><a href="javascript:void(0)" onclick="submit();" class="btn btn-11"><s></s>{tag:提交}</a></dd>
+    </dl>
+    </div>
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+    function submit() {
+        var postData = GetFormJsonData("shop"); 
+        if (!CheckForm("shop", "span"))
+            return false;
+        var url = path+"/ajax/ajax_userin.aspx?__Action=Bank_Edit&id=<%=model.id %>";
+        RequestAjax(url, postData, function () { MsgBox(1, "{tag:操作成功}", "<%=URL("P_UserBank","") %>") });
+    }
+    function SetType()
+    {
+        var Type=$("input[name='PayType']:checked").val();
+        if(Type=="alipay"){
+            $("#DIVName").hide();
+            $("#Name").attr("min","");
+        }else{
+            $("#DIVName").show();   
+            $("#Name").attr("min","notnull");
+        }
+    }
+    SetType();
+</script>

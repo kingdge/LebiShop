@@ -1,0 +1,222 @@
+﻿html{padding:0;margin:0}
+body{width:100%;padding:0;margin:0;font-size:14px;background:#f5f5f5}
+.body{padding-bottom:10px;width:1190px;margin:0 auto}
+.head{width:100%;min-width:1190px;background:#fff}
+.head .center{margin:0 auto 10px auto;width:1190px}
+.head .top{background:#F5F5F5;width:100%;min-width:1190px;height:30px;line-height:30px;border-top:1px solid #dcdcdc;border-bottom:1px solid #dcdcdc;}
+.head .top .sns{width:440px;height:auto;overflow:hidden;float:left}
+.head .top .sns li{width:24px;height:24px;display:inline-block;margin:3px 4px 0 0;float:left;padding:0}
+.head .top .sns li a{background:url(../images/social-icons-msb.png) 0 0 no-repeat;width:24px;height:24px;display:inline-block;transition:background .2s linear 0s;display:block}
+.head .top .sns li a.rss{background-position:0 -175px}
+.head .top .sns li a.rss:hover{background-position:-25px -175px}
+.head .top .sns li a.youtube{background-position:0 -100px}
+.head .top .sns li a.youtube:hover{background-position:-25px -100px}
+.head .top .sns li a.pinterest{background-position:0 -75px}
+.head .top .sns li a.pinterest:hover{background-position:-25px -75px}
+.head .top .sns li a.google{background-position:0 -50px}
+.head .top .sns li a.google:hover{background-position:-25px -50px}
+.head .top .sns li a.twitter{background-position:0 -25px}
+.head .top .sns li a.twitter:hover{background-position:-25px -25px}
+.head .top .sns li a.facebook{background-position:0 0}
+.head .top .sns li a.facebook:hover{background-position:-25px 0}
+.head .top .sns .userstatus{width:100px;padding-left:20px}
+.head .top ul{margin-right:0;float:right}
+.head .top li{float:left;padding-left:10px;line-height:30px}
+.head .top li a,a: visited{color:#666;text-decoration:none}
+.head .top li a: hover{color:#c00;text-decoration:underline}
+.head .top li a: active{color:#900}
+.head .top li img{vertical-align:middle}
+.language{HEIGHT:30px;LINE-HEIGHT:30px;FONT-SIZE:12px;}
+.head .top span{color:#fe0000}
+.head-main{width:1190px;background:#fff;margin:0 auto;padding:5px 0;}
+.head .logo{padding-top:10px;width:280px;height:auto;float:left;margin-left:20px}
+.head .search{float:left;width:430px;margin:0 0 10px 100px;height:80px}
+.head .searchform{margin:18px 0 0 0;}
+.head .search .searchkeyword{width:430px;height:25px;line-height:25px;background-color:#fff;margin:0 auto}
+.head .search .searchkeyword a{margin-right:8px}
+.head:after{clear:both;content:" ";display:block;visibility:hidden;}
+.mainNav{width:100%;min-width:1190px;height:40px;background:#112734;clear:both}
+.mainNav-con{width:1190px;height:auto;margin:0 auto}
+.allnav{width:200px;height:40px;float:left;position:relative;z-index:1}
+.other-menu{width:980px;height:auto;overflow:hidden;float:left}
+.other-menu a{padding:0 0 0 45px;line-height:40px;color:#fff;display:inline-block;font-size:14px}
+.allnav .title{height:40px;display:block;background:#ed145b;line-height:40px;text-align:center;color:#fff;font-size:13px}
+.allnav .title a{color:#fff;font-size:13px}
+.title-icon{width:20px;height:20px;display:block;background:url(../images/shop-icons.png) no-repeat 0 0;float:right;margin:13px 10px 0 0}
+.allnav-show{width:200px;height:390px;background:url(../images/nav-bg.png) repeat;position:absolute;top:40px;z-index:999;display:none;padding-top:20px}
+.allnav-show-block{width:200px;height:390px;background:url(../images/nav-bg.png) repeat;position:absolute;top:40px;z-index:999;padding-top:20px}
+#nav{position:relative;z-index:1;width:200px}
+#nav .mainCate{position:relative;height:34px;zoom:1}
+#nav h3{height:34px;line-height:34px;font-size:14px;overflow:hidden;color:#fff}
+#nav h3 i{width:18px;height:18px;display:inline-block;margin:0 10px 0}
+#nav h3 a{color:#fff}
+#nav .subCate{display:none;background:#f5f5f5;box-shadow:1px 0 2px #978d8d inset;position:absolute;left:200px;top:0;width:365px;padding:0 20px 20px;color:#333}
+#nav .subCate h4{height:26px;line-height:26px;margin:10px 0 10px 0;font-size:16px}
+#nav .subCate h4 a{color:#f08200;font-weight:700}
+#nav .subCate ul{width:400px;float:left;overflow:hidden}
+#nav .subCate li{width:115px;height:auto;margin-right:10px;float:left;display:inline;margin-bottom:10px}
+#nav .subCate li a{display:block;width:115px;height:30px;line-height:30px;text-align:center;color:#404040;font-weight:14px;background:#e2e2e2;word-break:keep-all;white-space:nowrap}
+#nav .subCate li a:hover{background:#f3155e;color:#fff;text-decoration:none}
+#nav .subCate #sub-ul-1{width:100%}
+#nav .subCate .nav-pic{width:365px;height:auto;margin-top:35px}
+#nav .subCate .nav-pic img{width:363px;border:1px solid #dedede}
+#nav .on{background:#f2f2f2;color:#f3155e}
+#nav .on h3 a,#nav .on p a{color:#f3155e;text-decoration:none}
+#nav .on h3{color:#f3155e}
+#nav .on .subCate{display:block!important}
+#mainCate-4 .subCate{top:-100px}
+#mainCate-5 .subCate{top:-164px}
+#mainCate-6 .subCate{top:auto;bottom:0}
+.ind-banner{width:100%;min-width:1190px;position:relative;height:410px;background:#000}
+.ind-banner .bd{margin:0 auto;position:relative;z-index:0;overflow:hidden}
+.ind-banner .bd ul{width:100%!important}
+.ind-banner .bd li{width:100%!important;height:410px;overflow:hidden;text-align:center}
+.ind-banner .bd li a{display:block;height:410px}
+.ind-banner .hd{width:100%;position:absolute;z-index:1;bottom:0;left:0;height:30px;line-height:30px}
+.ind-banner .hd ul{text-align:center}
+.ind-banner .hd ul li{cursor:pointer;display:inline-block;zoom:1;width:42px;height:11px;margin:1px;overflow:hidden;background:#000;filter:alpha(opacity=50);opacity:.5;line-height:999px}
+.ind-banner .hd ul .on{background:red}
+.ind-banner .next,.ind-banner .prev{display:block;position:absolute;z-index:1;top:50%;margin-top:-30px;left:15%;z-index:1;width:40px;height:60px;background:url(../images/slider-arrow.png) -126px -137px #000 no-repeat;cursor:pointer;filter:alpha(opacity=50);opacity:.5;display:none}
+.ind-banner .next{left:auto;right:15%;background-position:-6px -137px}
+.main-con{width:1190px;height:auto;overflow:hidden;margin:30px auto}
+.ind-left{height:auto;overflow:hidden;float:left}
+.ind-left .title{font-size:18px;font-weight:700;color:#333;margin-bottom:10px}
+.ind-left .ind-left-hot{width:178px;height:auto;overflow:hidden;padding:10px;border:1px solid #e4e1e1;margin-bottom:15px;background:#fff}
+.ind-left .ind-left-hot img{width:178px;height:178px}
+.ind-left .shopname{color:#666;font-size:14px;margin:5px 0;display:block;text-align:left;line-height:18px;overflow:hidden}
+.ind-left .shopname a{color:#666}
+.ind-left .shopprice{color:#dc1111;font-size:14px;font-weight:700;display:block;text-align:center}
+.ind-left-ad{width:200px;height:auto;overflow:hidden;margin-bottom:15px}
+.ind-left-keyword,.tuijian{width:188px;height:auto;border:1px solid #e4e1e1;margin-bottom:15px;padding:5px;overflow:hidden;background:#fff}
+.ind-left-keyword a{color:#666;display:inline-block;margin-right:5px}
+.tuijian .tuijian-list{border-bottom:1px dashed #dbdbdb;overflow:hidden;margin-bottom:5px;padding-bottom:5px}
+.tuijian-list img{width:70px;height:70px;float:left;margin-right:5px}
+.tuijian-list .shopname{font-size:12px;text-align:left;padding:0;height:40px;overflow:hidden;line-height:160%}
+.ind-right{width:965px;height:auto;overflow:hidden;float:right}
+.ind-right .title{border-bottom:2px solid #333;padding-bottom:2px;overflow:hidden;margin-bottom:15px}
+.ind-right .title h2{font-size:24px;font-weight:700;line-height:20px;width:300px;float:left;height:28px}
+.ind-right .title h2 a{color:#333}
+.ind-right .more-key{width:650px;float:right;text-align:right}
+.ind-right .more-key a{height:28px;display:inline-block;text-align:center;line-height:24px;padding:0 8px;color:#666}
+.ind-right .more-key a:hover{color:#666}
+.ind-right-hot{width:965px;overflow:hidden;margin-bottom:15px}
+.ind-right-hot ul{width:1000px}
+.ind-right-hot ul li{float:left;margin-right:15px;display:inline;width:230px;height:230px;overflow:hidden;position:relative}
+.ind-right-hot ul li .photo{width:230px;height:230px;overflow:hidden}
+.ind-right-hot .rsp{width:230px;height:230px;overflow:hidden;position:absolute;background:#000;top:0;left:0}
+.ind-right-hot .text{position:absolute;width:230px;height:230px;left:-230px;top:0;overflow:hidden}
+.ind-right-hot .text h3{width:230px;margin-top:80px;height:50px;line-height:50px;text-align:center;color:#FFF;font-size:20px}
+.ind-right-hot .text a{text-decoration:none}
+.ind-right-hot .text div{text-align:center;color:#FFF;font-size:18px}
+.ind-right-list{width:965px;overflow:hidden;margin-bottom:10px}
+.ind-right-list ul{width:1000px}
+.ind-right-list li{width:228px;height:auto;overflow:hidden;position:relative;float:left;margin:0 15px 15px 0;border:1px solid #e4e1e1;background:#fff;padding-bottom:15px}
+.ind-right-list li:hover{border:1px solid #f08200}
+.ind-right-list li .zhekou{position:absolute;left:0;top:0}
+.ind-right-list li .shop-img img{width:230px;height:230px}
+.ind-right-list .shopname{color:#666;font-size:16px;margin:5px 0;display:block;text-align:justify;height:40px;line-height:18px;overflow:hidden;padding:0 8px}
+.ind-right-list .shopname a{color:#333}
+.ind-right-list .shopprice{color:#dc1111;font-size:18px;font-weight:700;display:block;float:left;width:120px;height:33px;line-height:33px;margin:0 0 0 10px}
+.buy-icon{width:90px;height:33px;float:right;margin-right:7px;margin-top:2px;background:url(../images/buy-icon.jpg) right no-repeat}
+.ind-tabs{width:1190px;height:auto;overflow:hidden;margin:0 auto 15px;clear:both}
+.ind-tabs .hd{height:37px;overflow:hidden}
+.ind-tabs .hd li{height:35px;display:inline-block;text-align:center;line-height:35px;background:#f3f3f3;color:#333;border:1px solid #e4e1e1;margin-right:8px;padding:0 15px;cursor:pointer}
+.ind-tabs .hd .on{background:#f3155e;border:1px solid #ED145B;color:#fff}
+.ind-tabs .bd{width:1128px;height:auto;overflow:hidden;border:1px solid #e4e1e1;background:#fff;padding:30px;margin-top:-1px}
+.ind-tabs .bd .pic{width:230px;height:230px;float:left;margin-right:30px}
+.ind-tabs .bd .info{float:left;width:868px}
+.ind-tabs .bd .info .desc{min-height:210px}
+.ind-tabs .bd .info .desc p{color:#666;line-height:24px;margin-bottom:10px;text-align:justify}
+.ind-tabs .bd .info .read-more{font-weight:700;color:#333;font-size:16px}
+.footer{width:1190px;height:auto;overflow:hidden;border-top:2px solid #ED145B;background:#fff;margin:0 auto 30px;padding-top:10px}
+.footer ul{float:left;height:auto;margin:0 15px 10px 0;padding:0 10px 10px;width:205px}
+.footer ul li{background:url(../images/ico.png) no-repeat 5px -861px;line-height:150%;padding-left:12px}
+.footer h3{padding:0 0 5px;font-weight:700;color:#fe900e}
+.footer ul li a{color:#666;font-size:12px}
+.footer ul.joinlinks{width:190px}
+.footer ul.joinlinks li{display:inline;float:left;height:26px;margin-right:12px;padding:0;width:26px}
+.footer ul.joinlinks .f{background:url(../images/join-ico.jpg) no-repeat scroll -1px 0}
+.footer ul.joinlinks .b{background:url(../images/join-ico.jpg) no-repeat scroll -44px 0}
+.footer ul.joinlinks .t1{background:url(../images/join-ico.jpg) no-repeat scroll -87px 0}
+.footer ul.joinlinks .y{background:url(../images/join-ico.jpg) no-repeat scroll -131px 0}
+.footer ul.joinlinks .t2{background:url(../images/join-ico.jpg) no-repeat scroll -174px 0}
+.footer ul.joinlinks li a{display:block;width:26px;height:26px}
+.main-im{position:fixed;right:10px;top:300px;z-index:100;width:110px;height:272px}
+.main-im .qq-a{display:block;width:106px;height:116px;font-size:14px;color:#0484cd;text-align:center;position:relative}
+.main-im .qq-a span{bottom:5px;position:absolute;width:90px;left:10px}
+.main-im .qq-hover-c{width:70px;height:70px;border-radius:35px;position:absolute;left:18px;top:10px;overflow:hidden;z-index:9}
+.main-im .qq-container{z-index:99;position:absolute;width:109px;height:118px;border-top-left-radius:10px;border-top-right-radius:10px;border-bottom:1px solid #ddd;background:url(../images/qq-icon-bg.png) no-repeat center 8px}
+.main-im .img-qq{max-width:60px;display:block;position:absolute;left:6px;top:3px;-moz-transition:all .5s;-webkit-transition:all .5s;-o-transition:all .5s;transition:all .5s}
+.main-im .im-qq:hover .img-qq{max-width:70px;left:1px;top:8px;position:absolute}
+.main-im .im_main{background:#F9FAFB;border:1px solid #ddd;border-radius:10px;background:#F9FAFB;display:none}
+.main-im .im_main .im-tel{color:#000;text-align:center;width:109px;height:105px;border-bottom:1px solid #ddd;line-height:18px}
+.main-im .im_main .im-tel div{font-weight:700;font-size:12px;margin-top:9px}
+.main-im .im_main .im-tel .tel-num{font-family:Arial;font-weight:700;color:#e66d15}
+.main-im .im_main .im-tel:hover{background:#fafafa}
+.main-im .im_main .weixing-container{width:55px;height:47px;border-right:1px solid #ddd;background:#f5f5f5;border-bottom-left-radius:10px;background:url(../images/weixing-icon.png) no-repeat center center;float:left}
+.main-im .im_main .weixing-show{width:112px;height:172px;background:#fff;border-radius:10px;border:1px solid #ddd;position:absolute;left:-125px;top:-126px}
+.main-im .im_main .weixing-show .weixing-sanjiao{width:0;height:0;border-style:solid;border-color:transparent transparent transparent #fff;border-width:6px;left:112px;top:134px;position:absolute;z-index:2}
+.main-im .im_main .weixing-show .weixing-sanjiao-big{width:0;height:0;border-style:solid;border-color:transparent transparent transparent #ddd;border-width:8px;left:112px;top:132px;position:absolute}
+.main-im .im_main .weixing-show .weixing-ma{width:104px;height:103px;padding-left:5px;padding-top:5px}
+.main-im .im_main .weixing-show .weixing-txt{position:absolute;top:110px;left:7px;width:100px;margin:0 auto;text-align:center;font-size:12px;line-height:20px;color:#666}
+.main-im .im_main .go-top{width:50px;height:47px;background:#f5f5f5;border-bottom-right-radius:10px;background:url(../images/toTop-icon.png) no-repeat center center;float:right}
+.main-im .im_main .go-top a{display:block;width:52px;height:47px}
+.main-im .close-im{position:absolute;right:10px;top:-12px;z-index:100;width:24px;height:24px}
+.main-im .close-im a{display:block;width:24px;height:24px;background:url(../images/close_im.png) no-repeat left top}
+.main-im .close-im a:hover{text-decoration:none}
+.main-im .open-im{cursor:pointer;margin-left:68px;width:40px;height:133px;background:url(../images/open_im.png) no-repeat left top}
+.bodyside .mbox{border:1px solid #e4e1e1;background:#fff}
+.bodyside .mbox .mt{background:#231815;height:39px;line-height:39px;font-size:16px}
+.bodyside .mbox .mt h2{color:#fff;font-size:16px;line-height:39px;padding-left:10px}
+.bodymain{width:965px}
+.bodymain .nbbox .searchselect{background:#fff;border:1px solid #e4e1e1;border-top:2px solid #231815}
+.bodymain .nbbox .mt{background:0 0}
+.bodymain .nbbox .mt h2{line-height:35px;color:#333}
+.bodymain .nbbox .selectvalue .selectall{background:#444;color:#fff}
+.bodymain .nbbox #filter{background:#fff}
+.productlist{width:965px;overflow:hidden}
+.productlist ul{width:1000px}
+.productlist ul li.grid{width:228px;height:auto;overflow:hidden;position:relative;float:left;margin:15px 15px 0 0;border:1px solid #e4e1e1;background:#fff;padding:0 0 15px 0}
+.productlist ul li.grid:hover{border:1px solid #f08200}
+.productlist ul li.grid .zhekou{position:absolute;left:0;top:0}
+.productlist ul li.grid .proimg,.productlist ul li.grid .proimg p{width:230px;height:230px;padding:0}
+.productlist .shop-img img,.productlist ul li.grid img{margin:0;padding:0;width:230px;height:230px;max-width:230px;max-height:230px}
+.productlist .shopname,.productlist ul li.grid .proname{color:#666;font-size:16px;margin:5px 0;display:block;text-align:justify;height:40px;line-height:19px;overflow:hidden;padding:0 8px}
+.productlist .shopname a,.productlist ul li.grid .proname a{color:#333}
+.productlist .shopprice{color:#dc1111;font-size:18px;font-weight:700;display:block;float:left;width:150px;height:33px;line-height:33px;margin:0 0 0 10px}
+.productlist ul li.grid .marketprice{display:none}
+.productlist ul li.grid .buyprice{float:left;margin:0 0 0 6px;width:60%;height:33px;line-height:33px}
+.productlist ul li.grid .probtn{float:right;margin:0 6px 0 0;width:30%;height:33px;line-height:33px}
+.productlist ul li.grid .buy.btn.btn-12{line-height:999px;width:33px;height:33px;float:right;background:url(../images/buy-icon.jpg) right no-repeat}
+.productlist ul li.grid .buy.btn.btn-12 s{background:0 0;margin:0;padding:0}
+.productlist ul li.list{width:965px}
+.productlist ul li.list:hover{border-bottom:1px solid #f08200}
+.productlist ul li.list .introduction,.productlist ul li.list .proinfo,.productlist ul li.list .proname,.productlist ul li.list .proprice,.productlist ul li.list .supplier{width:645px}
+.productdetail .con{width:625px}
+.product-cont .cont img,.nodecontent .content img{width:expression(this.width > 945 ? 945:true);max-width:945px;VERTICAL-ALIGN:middle;}
+.location{margin:10px 0}
+.product-tab .tablist{width:965px}
+.product-cont .cont{width:945px}
+.product-cont{background:#fff;margin-top:-11px}
+.process-min{width:1190px}
+.bodymain .mc{width:965px}
+.head-main .callphones{position:absolute;width:350px;right:0;font-size:12px;line-height:20px;color:#666;top:5px;text-align:right}
+.head-main .toplink{margin:33px 10px 0 0}
+.user .reg .mt h2{padding-left:20px}
+.footer_logos{width:1190px;overflow:hidden}
+.footer_logos-list{width:1200px;height:auto;overflow:hidden}
+.footer_logos-list a{width:88px;height:31px;line-height:31px;float:left;display:block;margin:0 10px 10px 10px;overflow:hidden}
+.footer_logos-list a img{width:88px;height:31px}
+.keifu{position:fixed;top:10%;right:0;width:131px;z-index:990}
+.keifu_tab{width:160px}
+.icon_keifu{width:26px;height:100px;float:left;background:url(../images/keifu.png) 0 0;position:relative;display:block;cursor:pointer}
+.keifu_box{float:left;width:131px;display:none}
+.keifu_tab img{display:block}
+.keifu_head{width:131px;height:41px;background:url(../images/keifu.png);background-position:0 -103px;font-size:0;line-height:0;position:relative}
+.keifu_close:link,.keifu_close:visited{display:block;width:11px;height:11px;background:url(../images/keifu.png) -42px 0;position:absolute;top:5px;right:5px}
+.keifu_close:hover{background-position:-60px 0}
+.keifu_con{border-left:7px solid #029bdb;border-right:7px solid #029bdb;padding-top:15px;background:#fbfbfb}
+.keifu_con li{height:33px;padding-left:12px}
+.keifu_con .weixin{height:96px}
+.keifu_con .bt{font-size:16px;height:30px;line-height:30px;text-align:left;padding:0 0 0 20px;color:#012646}
+.keifu_bot{width:131px;height:119px;background:url(../images/keifu.png);background-position:0 -149px}

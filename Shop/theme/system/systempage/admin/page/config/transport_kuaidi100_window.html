@@ -1,0 +1,40 @@
+﻿{layout:simple} {class:Shop.Admin.storeConfig.Transport_kuaidi100_window}
+<lbbody>
+<table class="table">
+    <tr>
+        <th style="width: 20%;">
+            <%=Tag("接口状态")%>：
+        </th>
+        <td style="width: 80%;">
+            <label><input type="radio" name="KuaiDi100Status" shop="true" value="1" <%=model.KuaiDi100Status=="1"?"checked":"" %> /><%=Tag("开启")%></label>
+            <label><input type="radio" name="KuaiDi100Status" shop="true" value="0" <%=model.KuaiDi100Status=="0"?"checked":"" %> /><%=Tag("关闭")%></label>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("身份秘钥")%>：
+        </th>
+        <td style="text-align: left;">
+            <input type="text" class="input" shop="true" min="notnull" name="KuaiDi100" id="KuaiDi100" value="<%=model.KuaiDi100 %>" style="width: 200px;" /> <a href="https://www.kuaidi100.com/openapi/applyapi.shtml" target="_blank"><%=Tag("点击申请")%></a>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+            <div class="tools tools-m">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    function SaveObj() {
+        var postData = GetFormJsonData("shop");
+        if (!CheckForm("shop", "span"))
+            return false;
+        var url="<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=Kuaidi100_Edit";
+        RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+    }
+</script>
+</lbbody>

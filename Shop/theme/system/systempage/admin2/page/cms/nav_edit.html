@@ -1,0 +1,122 @@
+﻿{layout:default} {class:Shop.Admin.cms.Nav_Edit}
+<lbhead>
+    <title><%=node.Name%>-<%=pnode.Name%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <link rel="stylesheet" type="text/css" href="<%=site.AdminAssetsPath %>/plugins/bigcolorpicker/jquery.bigcolorpicker.css" />
+</lbfile>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=node.Name%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><a href="<%=Shop.Bussiness.NodePage.AdminIndexPage(node) %>"><%=node.Name%></a></li>
+        <%if (page.Name !="") {%>
+        <li class="breadcrumb-item active"><%=page.Name%></li><%} %>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form action="javascript:SaveObj();" novalidate>
+                    <div class="form-group">
+                        <label for="Name"><%=Tag("标题")%>：</label>
+                        <div class="input-group">
+                            <input type="text" id="Name" name="Name" value="<%=page.Name %>" style="color:<%=page.NameColor %>" class="form-control" shop="true" required>
+                            <div class="input-group-append">
+                                <span class="input-group-text" id="s_NameColor" style="cursor: pointer;background-color:<%=page.NameColor %>">
+                                    <i class="ti-paint-bucket"></i>
+                                </span>
+                            </div>
+                            <input type="hidden" id="NameColor" name="NameColor" value="<%=page.NameColor %>" shop="true">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Jump"><%=Tag("跳转页面")%>：</label>
+                        <select name="Jump" id="Jump" class="form-control" shop="true" onchange="ChangeJump()">
+                            <%=GetMenu(page.url)%>
+                        </select>
+                    </div>
+                    <div class="form-group" id="urltr">
+                        <label for="url"><%=Tag("URL")%>：</label>
+                        <input type="text" id="url" name="url" value="<%=page.url %>" class="form-control" shop="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="target_self"><%=Tag("打开方式")%>：</label>
+                        <div class="input-group">
+                            <label class="custom-control custom-radio m-r-20">
+                                <input type="radio" id="target_self" name="target" value="_self" class="custom-control-input" shop="true" <%=page.target=="_self"?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("当前窗口")%></span>
+                            </label>
+                            <label class="custom-control custom-radio">
+                                <input type="radio" id="target_blank" name="target" value="_blank" class="custom-control-input" shop="true" <%=page.target=="_blank"?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("新窗口")%></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Language"><%=Tag("语言")%>：</label>
+                        <%=Shop.Bussiness.Language.SiteLanguageCheckbox("Language_ids", page.Language_ids, CurrentLanguage.Code)%>
+                    </div>
+                    <div class="form-group">
+                        <label for="Sort"><%=Tag("排序序号")%>：</label>
+                        <input type="text" class="form-control" id="Sort" name="Sort" value="<%=page.Sort %>" shop="true" onkeyup="value=value.replace(/[^\d]/g,'')">
+                    </div>
+                    <%if (PageReturnMsg == ""){%>
+                    <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                    <%}%>
+                </form>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script src="<%=site.AdminAssetsPath %>/plugins/bigcolorpicker/jquery.bigcolorpicker.min.js"></script>
+    <script>
+        $(function () {
+            $("#NameColor").bigColorpicker("NameColor");
+            $("#s_NameColor").bigColorpicker(function (el, color) { $(el).css("background-color", color); $("#NameColor").val(color); $("#Name").css("color", color); });
+        });
+        ! function(window, document, $) {
+            "use strict";
+            $("input,select,textarea").not("[type=submit]").jqBootstrapValidation()
+        }(window, document, jQuery);
+        function SaveObj() {
+            var postData = GetFormJsonData("shop");
+            var Node_id = <%=node.id %>;
+            var url = "<%=site.AdminPath %>/ajax/ajax_node.aspx?__Action=Page_Edit&id=<%=page.id %>&Node_id="+Node_id;
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "PageList.aspx?Node_id="+Node_id)});
+        }
+        function ChangeJump()
+        {
+            var obj=$("#Jump option:selected");
+            var code=obj.attr('code');
+            var id=obj.attr('value')
+            if($("#Jump").val()=="0")
+            {
+                $("#urltr").show();
+                $("#url").val('');
+            }
+            else
+            {
+                $("#urltr").hide();
+                $("#url").val(code+':'+id);
+            }
+        }
+        function SetJump()
+        {
+            var obj=$("#Jump option:selected");
+            var code=obj.attr('code');
+            var id=obj.attr('value')
+            if($("#Jump").val()=="0")
+            {
+                $("#urltr").show();
+            }
+            else
+            {
+                $("#urltr").hide();
+            }
+        }
+        SetJump();
+    </script>
+</lbscripts>

@@ -1,0 +1,48 @@
+﻿<!--
+Name:商品搜索框横版
+Page:All
+-->
+<script type="text/javascript">
+    $(function () {
+        blurInput('#keyword', '<%if (Rstring("Keyword")!=""){ %><%=Rstring("Keyword")%><%}else{%>${#table:Lebi_Searchkey;#where:Type=1;#order:Sort desc,id desc;#top:1;<%=Lang({Name})%>}$<%} %>');
+        $(".searchform .button").click(function(){
+            var typename = $('#searchtype').attr('typename');
+            var url = "";
+            if (typename=="product")
+            {
+                var url = "<%=URL("P_Search","[key]") %>";
+            }
+            if (typename=="shop")
+            {
+                url = "<%=URL("P_ShopSearch","[key]") %>";
+            }
+            location.href = url.replace("[key]",escape($("#keyword").val()));
+            return false;
+        });
+        $(".searchform dd a").click(function(){
+            $(".searchform dl span").text($(this).text());
+            $(".searchform dl span").attr("typename",$(this).attr("typename"));
+            $(".searchform dd").hide();
+        });
+        $(".searchform-type").hover(function () {
+            $(".searchform dd").show();
+        }, function () {
+            $(".searchform dd").hide();
+        });
+    });		
+</script>
+<div class="searchform">
+<div class="searchform-type">
+<dl>
+    <dt><span id="searchtype" typename="product">{Tag:商品}</span><em class="ico-jtb"></em></dt>
+    <dd>
+        <a typename="product" href="javascript:void(0)">{Tag:商品}</a>
+        <%if (Shop.LebiAPI.Service.Instanse.Check("plugin_gongyingshang")){ %>
+        <a typename="shop" href="javascript:void(0)">{Tag:店铺}</a>
+        <%}%>
+    </dd>
+</dl>
+</div>
+<input id="keyword" value="" type="text" name="keyword" onfocus="if (this.value != '') {this.value = '';}" />
+<input type="button" value="{Tag:搜索}" class="button" />
+</div>

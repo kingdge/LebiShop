@@ -1,0 +1,108 @@
+﻿{layout:default} {class:Shop.Admin.admin.Default}
+<lbhead>
+    <title><%=Tag("系统用户")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="add"><a href="javascript:void(0);" onclick="EditObj(0);"><b></b><span><%=Tag("添加")%></span></a></li>
+    <li class="del"><a href="javascript:void(0);" onclick="DeleteObj();"><b></b><span><%=Tag("删除")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("系统用户")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th style="width: 150px">
+                <%=Tag("登陆帐号")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("姓名")%>
+            </th>
+            <th style="width: 60px">
+                <%=Tag("头像")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("权限组")%>
+            </th>
+            <th style="width: 60px">
+                <%=Tag("状态")%>
+            </th>
+            <th style="width: 60px">
+                <%=Tag("登录次数")%>
+            </th>
+            <th style="width: 130px">
+                <%=Tag("添加日期")%>
+            </th>
+            <th style="width: 130px">
+                <%=Tag("最后登陆")%>
+            </th>
+            <th>
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_Administrator model in models)
+          {%>
+        <tr class="list" ondblclick="EditObj(<%=model.id %>);">
+            <td style="text-align:center">
+                <input type="checkbox" name="id" value="<%=model.id %>" del="true" />
+            </td>
+            <td>
+                <%=model.UserName %>
+            </td>
+            <td>
+                <%=model.RealName %>&nbsp;
+            </td>
+            <td>
+                <%if (model.Avatar != "")
+                  { %><img src="<%=site.WebPath + model.Avatar %>" style="max-height:25px" /><%}
+                  else
+                  { %>&nbsp;<%} %>
+            </td>
+            <td>
+                <%=Admingroup(model.Admin_Group_id) %>
+            </td>
+            <td>
+                <%=Shop.Bussiness.EX_Type.TypeName(model.Type_id_AdminStatus) %>
+            </td>
+            
+            <td>
+                <%=model.Count_Login %>
+            </td>
+            <td>
+                <%=FormatTime(model.Time_Add) %>
+            </td>
+            <td>
+                <%=FormatTime(model.Time_Last) %>
+            </td>
+            <td>
+                <a href="javascript:void(0)" onclick="EditObj(<%=model.id %>);"><%=Tag("编辑")%></a> | <a href="javascript:void(0)" onclick="AdminPWD(<%=model.id %>);"><%=Tag("编辑密码")%></a> | <a href="Log.aspx?type=0&id=<%=model.id %>"><%=Tag("操作日志")%></a> | <a href="Log.aspx?type=1&id=<%=model.id %>"><%=Tag("登陆日志")%></a>        
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function EditObj(id) {
+            var url_ = "admin_user_edit.aspx?id=" + id;
+            location.href=url_;
+        }
+        function DeleteObj() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_admin.aspx?__Action=Admin_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

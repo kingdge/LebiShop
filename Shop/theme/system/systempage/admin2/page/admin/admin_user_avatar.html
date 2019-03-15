@@ -1,0 +1,225 @@
+﻿{layout:default}
+{class:Shop.Admin.admin.Administrator_Edit}
+<lbhead>
+    <title><%=Tag("系统用户")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <link rel="stylesheet" type="text/css" href="<%=site.AdminAssetsPath %>/plugins/jquery.imgareaselect-0.9.10/css/imgareaselect-default.css" />
+</lbfile>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("系统用户")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><a href="default.aspx"><%=Tag("系统用户")%></a></li>
+        <li class="breadcrumb-item active"><%=model.UserName%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <center class="m-t-30">
+                    <img src="<%=model.Avatar %>" class="img-circle" width="150">
+                    <h4 class="card-title m-t-10"><%=model.UserName %></h4>
+                    <h6 class="card-subtitle"><%=model.RealName %></h6>
+                    <div class="row text-center justify-content-md-center">
+                        <div class="col-12"><i class="ti-timer" title="<%=Tag("添加日期")%>"></i> <%=model.Time_Add %></div>
+                    </div>
+                </center>
+                <div>
+                    <hr>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <ul class="list-style-none">
+                            <li><a href="javascript:void(0)" onclick="EditPWD(<%=model.id %>);"><i class="ti-key"></i> <%=Tag("编辑密码")%></a></li>
+                            <li><a href="Log.aspx?type=0&id=<%=model.id %>" target="_blank"><i class="ti-hand-open"></i> <%=Tag("操作日志")%></a></li>
+                            <li><a href="Log.aspx?type=1&id=<%=model.id %>" target="_blank"><i class="ti-unlock"></i> <%=Tag("登陆日志")%></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="card">
+            <div class="col-md-12">
+                <ul class="nav nav-tabs customtab m-t-15" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link" href="admin_user_edit.aspx?id=<%=model.id %>" role="tab"><%=model.UserName%></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="admin_user_avatar.aspx?id=<%=model.id %>" role="tab"><%=Tag("头像")%></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-content">
+                <div class="tab-pane active" id="home" role="tabpanel">
+                    <div class="card-body">
+                        <div class="avatarbg">
+                            <img id="avatar" src="<%=ImageUrl %>" />
+                        </div>
+                        <div class="avatarthumb">
+                            <img id="imgCut" src="<%=AvatarUrl %>" />
+                        </div>
+                        <br />
+                        <div class="uploadimg">
+                            <input type="file" name="file_avatar" id="file_avatar" onchange="uploadImage('avatar')" />
+                        </div>
+                        <input type="hidden" id="x1" value="75" />
+                        <input type="hidden" id="y1" value="0" />
+                        <input type="hidden" id="x2" value="225" />
+                        <input type="hidden" id="y2" value="150" />
+                        <input id="hidImageUrl" type="hidden" value="<%=ImageUrl %>" />
+                        <input id="maxWidth" type="hidden" value="150" />
+                        <input id="maxHeight" type="hidden" value="150" />
+                        <input id="Avatar" name="Avatar" type="hidden" shop="true" value="<%=model.Avatar %>" />
+                        <div class="row m-t-20">
+                            <div class="col-12">
+                                <%if (PageReturnMsg == ""){%>
+                                <button class="btn btn-success" onclick="SaveObj();"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                                <%}%>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+    <script src="<%=site.AdminAssetsPath %>/plugins/jquery.imgareaselect-0.9.10/jquery.imgareaselect.pack.js"></script>
+    <script>
+        var imageWidth = 500;
+        var imageHeiht = 500;
+        $(document).ready(function () {
+            $("#avatar").attr("src", "<%=ImageUrl %>");
+            $("#hidImageUrl").val("<%=ImageUrl %>");
+            $("#imgCut").attr("src", "<%=AvatarUrl %>");
+            $('#maxWidth').val($('#avatar').width());
+            $('#maxHeight').val($('#avatar').height());
+            $('img#avatar').imgAreaSelect({
+                aspectRatio: "1:1",
+                x1: 75,
+                y1: 0,
+                x2: 225,
+                y2: 150,
+                maxWidth: 150,
+                maxHeight: 150,
+                minWidth: 150,
+                minHeight: 150,
+                onSelectEnd: function (img, selection) {
+                    $('#y1').val(selection.y1);
+                    $('#x1').val(selection.x1);
+                    $('#x2').val(selection.x2);
+                    $('#y2').val(selection.y2);
+                },
+                onSelectChange: preview
+            });
+        });
+        function EditPWD(id) {
+            $.ajax({
+                url: "admin_pwd_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {id: id},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+                $("#EditModal").modal("show");
+            });
+        }
+        function SaveObj() {
+            $('#avatar').imgAreaSelect({
+                onSelectEnd: function (img, selection) {
+                    $('#x1').val(selection.x1);
+                    $('#y1').val(selection.y1);
+                    $('#x2').val(selection.x2);
+                    $('#y2').val(selection.y2);
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: WebPath + "/ajax/imageupload_avatar_cut.aspx",
+                data: { imgUrl: $('#hidImageUrl').val(), pointX: $("#x1").val(), pointY: $("#y1").val() },
+                success: function (msg) {
+                    if (msg.indexOf('upload/avatar') != -1) {
+                        $("#Avatar").val(msg);
+                        if (!CheckForm("shop", "span"))
+                            return false;
+                        var postData = GetFormJsonData("shop");
+                        var url = "<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=Admin_Avatar_Edit&id=<%=model.id %>";
+                        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "default.aspx")});
+                    }
+                    //else {
+                    //    alert("error");
+                    //}
+                },
+                error: function (xhr, msg, e) {
+                    alert("error");
+                }
+            });
+        }
+        function preview(img, selection) {
+            if (!selection.width || !selection.height)
+                return;
+            $("#imgCut").attr("src", $("#hidImageUrl").val());
+            var maxWidth = $("#maxWidth").val()
+            var maxHeight = $("#maxHeight").val()
+            var scaleX = 150 / (selection.width || 1);
+            var scaleY = 150 / (selection.height || 1);
+            $('#imgCut').css({
+                width: Math.round(scaleX * maxWidth) + 'px',
+                height: Math.round(scaleY * maxHeight) + 'px',
+                marginLeft: '-' + Math.round(scaleX * selection.x1) + 'px',
+                marginTop: '-' + Math.round(scaleY * selection.y1) + 'px'
+            });
+            $('#x1').val(selection.x1);
+            $('#y1').val(selection.y1);
+            $('#x2').val(selection.x2);
+            $('#y2').val(selection.y2);
+        }
+        function uploadImage(id) {
+            $.ajaxFileUpload
+            (
+	            {
+	                url: WebPath + '/ajax/imageupload_avatar.aspx',
+	                secureuri: false,
+	                fileElementId: 'file_' + id,
+	                dataType: 'json',
+	                success: function (data, status) {
+	                    if (data.msg != 'OK') {
+	                        MsgBox(2, data.msg, "");
+	                    }
+	                    else {
+	                        $("#maxWidth").val(data.width);
+	                        $("#maxHeight").val(data.height);
+	                        $("#avatar").attr("src", data.ImageUrl);
+	                        $("#hidImageUrl").val(data.ImageUrl);             //上传路径存入隐藏域
+	                        $("#imgCut").attr("src", data.ImageUrl);
+	                        $("#imgCut").attr("style", "float: left;position: relative;overflow: hidden;width: 150px;height: 150px");
+	                        $('img#avatar').imgAreaSelect({
+	                            aspectRatio: "1:1",
+	                            x1: 75,
+	                            y1: 0,
+	                            x2: 225,
+	                            y2: 150,
+	                            maxWidth: 150,
+	                            maxHeight: 150,
+	                            minWidth: 150,
+	                            minHeight: 150,
+	                            onSelectEnd: function (img, selection) {
+	                                $('#y1').val(selection.y1);
+	                                $('#x1').val(selection.x1);
+	                                $('#x2').val(selection.x2);
+	                                $('#y2').val(selection.y2);
+	                            },
+	                            onSelectChange: preview
+	                        });
+	                    }
+	                }
+	            }
+            )
+        }
+    </script>
+</lbscripts>

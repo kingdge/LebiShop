@@ -1,0 +1,57 @@
+﻿{layout:simple} {class:Shop.Admin.product.product_site_edit_window}
+<lbbody>
+<table cellspacing="0" border="0" style="width: 100%;" class="table">
+    
+    <tr>
+        <th style="vertical-align:top">
+            <%=Tag("显示站点")%>：
+        </th>
+        <td>
+            <%=site.SiteCheckbox("Site_ids","",CurrentLanguage.Code)%>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("数据来源")%>：
+        </th>
+        <td>
+            <label><input type="radio" name="DataType" value="1" shop="true" <%if (ids == ""){%>checked<%}%> /><%=Tag("全部")%></label>
+            <label><input type="radio" name="DataType" value="0" shop="true" <%if (ids != ""){%>checked<%}%> /><%=Tag("选择")%></label>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("更新类型")%>：
+        </th>
+        <td>
+            <label><input type="radio" name="UpdateType" value="1" shop="true" checked /><%=Tag("追加")%></label>
+            <label><input type="radio" name="UpdateType" value="0" shop="true" /><%=Tag("覆盖")%></label>
+        </td>
+    </tr>
+    <tr>
+        <td class="action" colspan="2">
+            <div class="tools tools-m clear">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<input type="hidden" id="ids" name="ids" value="<%=ids %>" shop="true" />
+<script type="text/javascript">
+    function SaveObj() {
+        var DataType=$("input[name='DataType']:checked").val();
+        var ids = $("#ids").val();
+        if (DataType == 0){
+            if (ids == ""){
+                MsgBox(2, "<%=Tag("没有选择任何数据")%>", "");
+                return;
+            }
+        }
+        var postData = GetFormJsonData("shop");
+        var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Product_Site_Edit";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?");});
+    }
+</script>
+</lbbody>

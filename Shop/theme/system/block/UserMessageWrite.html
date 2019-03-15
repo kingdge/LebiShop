@@ -1,0 +1,46 @@
+﻿<!--
+Name:用户中心-站内信-写信
+Page:P_UserMessageWrite
+-->
+<div class="nbbox clearfix">
+<div class="user">
+    <ul class="tablist">
+        <li><a href="<%=URL("P_UserMessage","0","")%>"><span>{tag:收件箱}<em>(<%=Count_Message(0) %>)</em></span></a></li>
+        <li><a href="<%=URL("P_UserMessage","1","")%>"><span>{tag:发件箱}</span></a></li>
+        <li class="selected"><a href="<%=URL("P_UserMessageWrite","","")%>"><span>{tag:发信息}</span></a></li>
+    </ul>
+    <div class="mc clearfix">
+    <div class="dl-table clearfix">
+    <dl>
+        <dt>{tag:类型}：</dt>
+        <dd><select name="Message_Type_id" shop="true">
+            <%foreach (DB.LebiShop.Lebi_Message_Type model in message_types)
+            {%>
+            <option value="<%=model.id %>"><%=Lang(model.Name)%></option>
+            <%} %>
+			</select>
+        </dd>
+    </dl>
+    <dl>
+        <dt>{tag:标题}：</dt>
+        <dd><input type="text" id="Title" name="Title" class="input" style="width: 80%;" value="" shop="true" /></dd>
+    </dl>
+    <dl>
+        <dt>{tag:内容}：</dt>
+        <dd><textarea id="Content" name="Content" cols="80" rows="3" class="textarea" style="height:150px;width: 80%;" shop="true"></textarea></dd>
+    </dl>
+    <dl class="dl-btn">
+        <dt></dt>
+        <dd><a href="javascript:void(0)" onclick="submit();" class="btn btn-11"><s></s>{tag:发送}</a></dd>
+    </dl>
+    </div>
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+    function submit() {
+        var postData = GetFormJsonData("shop");
+        var url = path+"/Ajax/Ajax_userin.aspx?__Action=Message_Write";
+        RequestAjax(url, postData, function () { MsgBox(1, "{tag:发送成功}", "<%=URL("P_UserMessage","1","")%>") });
+    }
+</script>

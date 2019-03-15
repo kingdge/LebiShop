@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="Com.Alipay.wap.call_back_url" Codebehind="call_back_url.aspx.cs" %>

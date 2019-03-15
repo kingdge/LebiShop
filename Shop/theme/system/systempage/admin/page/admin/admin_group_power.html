@@ -1,0 +1,174 @@
+﻿{layout:default} 
+{class:Shop.Admin.admin.Admin_Group_power}
+<lbhead>
+    <title><%=Tag("权限组")%>-<%=Tag("管理权限")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <style>
+        .bottom{height: 0;overflow: hidden;display: none;}
+    </style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <%if (PageReturnMsg == ""){%>
+            <li class="submit"><a href="javascript:void(0);" onclick="SavePower();"><b></b><span><%=Tag("保存")%></span></a></li>
+            <%}%>
+            <li class="rotate"><a href="javascript:void(0);" onclick="javascript:history.back();"><b></b><span><%=Tag("返回")%></span></a></li>
+            <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="Admin_Group.aspx">
+                    <%=Tag("权限组")%></a> >
+                <%=Lang(group.Name) %>
+            </span></li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table
+        class="datatitle">
+        <tr>
+            <td>
+                <%=Tag("过滤页面")%>
+            </td>
+        </tr>
+    </table>
+    <div class="proBox clear">
+        <ul class="btns clear">
+            <li class="add" onclick="EditURL(0);">
+                <%=Tag("添加")%></li>
+            <li class="delete" onclick="DelURL(0);">
+                <%=Tag("删除")%></li>
+        </ul>
+        <div class="iTabHead">
+            <table class="datalist">
+                <tr class="title">
+                    <th style="width: 40px" class="selectAll">
+                        <a href="javascript:void(0);" onclick="$('input[name=\'uid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));">
+                            <%=Tag("全选")%></a>
+                    </th>
+                    <th>
+                        URL
+                    </th>
+                    <th style="width: 200px">
+                        <%=Tag("操作")%>
+                    </th>
+                </tr>
+                <%foreach (DB.LebiShop.Lebi_Admin_Power model in purls)
+                  {%>
+                <tr class="list" ondblclick="EditURL(<%=model.id %>);">
+                    <td style="text-align:center">
+                        <input type="checkbox" name="uid" value="<%=model.id %>" delurl="true" />
+                    </td>
+                    <td>
+                        <%=model.Url%>
+                    </td>
+                    <td>
+                        <a href="javascript:void(0)" onclick="EditURL(<%=model.id %>);">
+                            <%=Tag("编辑")%></a>
+                    </td>
+                </tr>
+                <%} %>
+            </table>
+        </div>
+    </div>
+    <table
+        class="datatitle">
+        <tr>
+            <td>
+                <%=Tag("分组权限")%>
+            </td>
+        </tr>
+    </table>
+    <div class="proBox clear">
+        <ul class="btns clear">
+            <li class="add" onclick="EditObj(0);">
+                <%=Tag("添加")%></li>
+            <li class="select" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));">
+                <%=Tag("全选")%></li>
+        </ul>
+        <div class="iTabHead">
+            <table class="datalist">
+                <%foreach (DB.LebiShop.Lebi_Admin_Limit pl in models){
+                %>
+                <tr class="list">
+                    <td style="width:100px;">
+                        <a href="javascript:EditObj(<%=pl.id %>)">
+                            <%=Tag(pl.Name)%></a>
+                    </td>
+               
+                    <td align="left">
+                        <% 
+                    int i = 0;
+                    foreach (DB.LebiShop.Lebi_Admin_Limit l in GetLimit(pl.id))
+                    {
+                        i++;
+                        %>
+                        <div class="limit">
+                            <label><input type="checkbox" name="id" value="<%=l.id %>" power="true" <%=Check(l.id)?"checked":"" %> />
+                            <a href="javascript:EditObj(<%=l.id %>)">
+                                <%=Tag(l.Name)%></a><br /><em><%=l.Code%></em></label>
+                        </div>
+                        <%} %>
+                    </td>
+                </tr>
+                <%}%>
+                <%if (count > 0){
+                %>
+                <tr class="list">
+                    <td><%=Tag("未分组")%></td>
+                
+                    <td align="left">
+                        <% 
+                    int i = 0;
+                    foreach (DB.LebiShop.Lebi_Admin_Limit l in GetLimit(222))
+                    {
+                        i++;
+                        %>
+                        <div class="limit">
+                            <label><input type="checkbox" name="id" value="<%=l.id %>" power="true" <%=Check(l.id)?"checked":"" %> />
+                            <a href="javascript:EditObj(<%=l.id %>)">
+                                <%=Tag(l.Name)%></a><br /><em><%=l.Code%></em></label>
+                        </div>
+                        <%} %>
+                    </td>
+                </tr>
+                <%}%>
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function EditObj(id) {
+            var title_ = "<%=Tag("编辑分组")%>";
+            if (id == 0)
+                var title_ = "<%=Tag("添加分组")%>";
+            var url_ = "admin_limit_edit_window.aspx?id=" + id;
+            var width_ = 500;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function EditURL(id) {
+            var title_ = "<%=Tag("编辑过滤页面")%>";
+            var url_ = "Admin_url_Edit_window.aspx?gid=<%=group.id %>&id=" + id;
+            var width_ = 500;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function DelURL() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return;
+            var postData = GetFormJsonData("delurl");
+            var url = "<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=Admin_url_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function SavePower() {
+            var postData = GetFormJsonData("power");
+            var url = "<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=SavePower&gid=<%=group.id %>";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "#")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+</div>
+</lbbottom>

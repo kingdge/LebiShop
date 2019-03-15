@@ -1,0 +1,76 @@
+﻿{layout:simple} {class:Shop.Admin.config.LanguageTag_Import_window}
+<lbbody>
+<table class="table">
+<tr>
+    <th style="width: 20%">
+        <%=Tag("语言")%>：
+    </th>
+    <td>
+        <select id="languagecode" shop="true">
+            <%foreach (DB.LebiShop.Lebi_Language_Code code in langs)
+                {%>
+                <option value="<%=code.Code %>"><%=code.Name %></option>
+            <%} %>
+        </select>
+    </td>
+</tr>
+<tr>
+    <th>
+        <%=Tag("匹配类型")%>：
+    </th>
+    <td>
+        <select id="Type" shop="true">
+            <option value="0"><%=Tag("标签")%></option>
+            <option value="1">ID</option>
+        </select>
+    </td>
+</tr>
+<tr>
+    <th>
+        <%=Tag("数据文件")%>：
+    </th>
+    <td colspan="3" style="width: 85%;">
+        <input type="text" shop="true" id="uploadfile" name="uploadfile" class="input" style="width: 300px;" value="" /> 
+        <input id="file_uploadfile" name="file_uploadfile" class="input" type="file" /> 
+        <input id="Button2" onclick="uploadFile('uploadfile');" value="<%=Tag("上传") %>" class="button" type="button" />
+        <span id="status_uploadfile"></span>
+    </td>
+</tr>
+<tr>
+<td colspan="2" class="action">
+<div class="tools tools-m clear">
+    <ul>
+        <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("提交")%></span></a></li>
+    </ul>
+</div>
+</td>
+</tr>
+</table>
+<script type="text/javascript">
+function SaveObj() {
+    var languagecode = $("#languagecode").val();
+    var Type = $("#Type").val();
+    var uploadfile = $("#uploadfile").val();
+    var url = "<%=site.AdminPath %>/ajax/export.aspx?__Action=LanguageTag_Import";
+    var postData = {"languagecode": languagecode,"Type": Type,"uploadfile": uploadfile};
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: postData,
+        dataType: 'json',
+        beforeSend: function () {
+            MsgBox(4, "<%=Tag("正在处理") %> ……", "-");
+        },
+        success: function (res) {
+            if (res.msg == "OK") {
+                MsgBox(1, "<%=Tag("操作成功") %>", "?");
+            }
+            else {
+                MsgBox(2, res.msg, "");
+                return false;
+            }
+        }
+    });
+}
+</script>
+</lbbody>

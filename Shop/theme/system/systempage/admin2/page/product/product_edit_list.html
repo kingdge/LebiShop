@@ -1,0 +1,113 @@
+﻿{layout:simple} {class:Shop.Admin.product.product_Edit_list}
+<lbbody>
+    <div class="row">
+        <div class="col-12 m-b-10">
+            <button class="btn btn-info btn-xs btn-sm" onclick="CreateProduct();"><i class="ti-plus"></i> <%=Tag("生成")%></button>
+            <button class="btn btn-success btn-xs btn-sm" onclick="Product_Edit_muti();"><i class="ti-check"></i> <%=Tag("保存")%></button>
+            <button class="btn btn-danger btn-xs btn-sm" onclick="DeleteConfirm()"><i class="ti-trash"></i> <%=Tag("删除")%></button>
+            <%if (mutiadd_property == 0){ %>
+            <button class="btn btn-default btn-xs btn-sm" onclick="Product_Image_Edit()"><i class="ti-image"></i> <%=Tag("修改图片")%></button>
+            <%} %>
+            <button class="btn btn-default btn-xs btn-sm" onclick="Product_Status_Edit_muti(1);"><i class="ti-arrow-up"></i> <%=Tag("上架")%></button>
+            <button class="btn btn-default btn-xs btn-sm" onclick="Product_Status_Edit_muti(0);"><i class="ti-arrow-down"></i> <%=Tag("下架")%></button>
+        </div>
+    </div>
+    <%if (tid > 0){%>
+    <div class="form-group">
+        <label for="ProPertyMain"><%=Tag("主规格")%>：</label>
+        <select id="ProPertyMain" name="ProPertyMain" class="form-control" shop="true" sonproduct="true">
+            <option value="0"><%=Tag("不设置")%></option>
+            <%foreach (DB.LebiShop.Lebi_ProPerty pro in ggs){%>
+            <option value="<%=pro.id %>" <%=modelp.ProPertyMain==pro.id?"selected":"" %> ><%=Lang(pro.Name)%></option>
+            <%} %>
+        </select>
+    </div>
+    <%foreach (DB.LebiShop.Lebi_ProPerty pro in ggs){%>
+    <div class="form-group">
+        <label for=""><%=Lang(pro.Name)%>：</label>
+        <div class="input-group">
+            <%=Getpro131List(pro.id)%>
+        </div>
+    </div>
+    <%}} %>
+    <div class="table-responsive">
+        <table class="table table-hover no-wrap">
+            <thead>
+                <tr>
+                    <th style="width: 40px;">
+                        <a href="javascript:void(0);" onclick="$('input[name=\'sonproductid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));">
+                            <%=Tag("全选")%>
+                        </a>
+                    </th>
+                    <%if (mutiadd_property == 0){ %>
+                    <th>
+                        <%=Tag("图片")%>
+                    </th>
+                    <%} %>
+                    <th>
+                        <%=Tag("编号")%>
+                    </th>
+                    <th>
+                        <%=Tag("规格")%>
+                    </th>
+                    <%if (mutiadd_property == 0){ %>
+                    <th>
+                        <%=Tag("商品名称")%>
+                    </th>
+                    <%} %>
+                    <th style="width: 7%">
+                        <%=Tag("市场价")%>
+                    </th>
+                    <th style="width: 7%">
+                        <%=Tag("销售价")%>
+                    </th>
+                    <%if (modelp.Type_id_ProductType == 321){ %>
+                    <th style="width: 7%">
+                        <%=Tag("抢购价")%>
+                    </th>
+                    <%}else if (modelp.Type_id_ProductType == 322){ %>
+                    <th style="width: 7%">
+                        <%=Tag("团购价")%>
+                    </th>
+                    <%}else if (modelp.Type_id_ProductType == 323){ %>
+                    <th style="width: 7%">
+                        <%=Tag("换购积分")%>
+                    </th>
+                    <%} %>
+                    <%if (Shop.Bussiness.EX_Admin.CheckPower("product_price_cost")){ %>
+                    <th style="width: 7%">
+                        <%=Tag("成本价")%>
+                    </th>
+                    <%} %>
+                    <th style="width: 7%">
+                        <%=Tag("库存")%>
+                    </th>
+                    <th style="width: 7%">
+                        <%=Tag("状态")%>
+                    </th>
+                    <%if (mutiadd_property == 0){ %>
+                    <th>
+                        <%=Tag("操作")%>
+                    </th>
+                    <%} %>
+                </tr>
+            </thead>
+            <tbody id="subproducts"></tbody>
+        </table>
+    </div>
+    <script>
+        function getsubproducts() {
+            $.ajax({
+                type: "POST",
+                url: "subproduct_list.aspx?pid=<%=pid %>&randnum=<%=randnum %>&mutiadd_property=<%=mutiadd_property %>",
+                data: '',
+                success: function (res) {
+                    $("#subproducts").html(res);
+                }
+            });
+        }
+        $(function () {
+            getsubproducts();
+        });
+    </script>
+</lbbody>

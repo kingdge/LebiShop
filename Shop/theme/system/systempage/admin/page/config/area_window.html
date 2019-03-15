@@ -1,0 +1,66 @@
+﻿{layout:simple} {class:Shop.Admin.storeConfig.Area_window}
+<lbbody>
+<div class="mainbody_top">
+<div style="margin-left:1px">
+    <div class="tools">
+    <ul>
+    <li class="submit"><a href="javascript:void(0);" onclick="SelectAreaOK();"><b></b><span><%=Tag("提交")%></span></a></li>
+    </ul>
+    </div>
+</div>
+</div>
+<div class="mainbody" id="body_main" style="height:370px;max-height:370px;overflow-y: auto;">
+<table class="datalist">
+<tr class="title">
+    <th style="width: 40px" class="selectAll">
+        <a href="javascript:void(0);" onclick="$('input[name=\'areaid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+    </th>
+    <th style="width: 200px">
+        <%=Tag("地区名称")%>
+    </th>
+    <th >
+        <%=Tag("下级地区")%>
+    </th>         
+</tr>
+<%foreach (DB.LebiShop.Lebi_Area model in models)
+  {%>
+    <tr class="list">
+        <td style="text-align:center">
+            <input type="checkbox" name="areaid" ShopKeyID="true" value="<%=model.id %>" />
+        </td>
+        <td >
+             <%=model.Name %><input type="hidden" name="areaid_<%=model.id %>" id="areaid_<%=model.id %>" value="<%=model.Name %>" />   
+        </td>
+        <td >
+      <% 
+          if (SonArea(model.id) > 0) {
+              Response.Write("<a href=\"javascript:SelectArea(" + model.id + ",'" + notid + "')\">"+ Tag("查看") +"</a>");
+              
+          }
+      %>&nbsp;   
+        </td>
+    </tr>
+<%} %>
+</table>
+</div>
+<script type="text/javascript">
+    function SelectAreaOK() {
+        var chkArr = $("input[name='areaid']");
+        var param = "";
+        var temp = "";
+        var ids = GetChkCheckedValues("areaid");
+        for (var i = 0; i < chkArr.length; i++) {
+            if (chkArr[i].checked) {
+                if ($('#areaid_' + chkArr[i].value + '').val() != "") {
+                    temp = '<li ondblclick="delitem();" title="<%=Tag("双击删除") %>" class="iName"><input type="hidden" name="Area_ids" id="Area_ids" value="' + chkArr[i].value + '" shop="true" /><span>' + $('#areaid_' + chkArr[i].value + '').val() + '</span></li>';
+                    $('#Area_idsList ul').append(temp);
+                }
+            }
+        }
+        $('#Area_idsList ul li').selectedElement({ css: 'on' });
+//        $("#Area_ids").val(ids);
+        $("#areadiv").dialog('close');
+    }
+    addtrbg(".datalist");
+</script>
+</lbbody>

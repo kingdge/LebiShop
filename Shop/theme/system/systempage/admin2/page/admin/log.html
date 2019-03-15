@@ -1,0 +1,188 @@
+﻿{layout:default} 
+{class:Shop.Admin.admin.Log}
+<lbhead>
+    <title><%if (type == "1"){ %><%=Tag("登陆日志")%><%}else{ %><%=Tag("操作日志")%><%}%>-<%=Tag("管理权限")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <link href="<%=site.AdminAssetsPath %>/plugins/daterangepicker/daterangepicker.css" rel="stylesheet">
+</lbfile>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%if (type == "1"){ %><%=Tag("登陆日志")%><%}else{ %><%=Tag("操作日志")%><%}%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%if (type == "1"){ %><%=Tag("登陆日志")%><%}else{ %><%=Tag("操作日志")%><%}%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-danger" onclick="DeleteConfirm()"><i class="ti-trash"></i> <%=Tag("删除")%></button>
+                        <%}%>
+                        <button class="btn btn-default" data-toggle="modal" data-target="#SearchModal"><i class="ti-filter"></i> <%=Tag("搜索")%></button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table m-t-10 table-hover no-wrap">
+                        <thead>
+                            <tr class="no-wrap">
+                                <th class="selectAll" style="width:40px">
+                                    <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+                                </th>
+                                <th>
+                                    <%=Tag("系统用户")%>
+                                </th>
+                                <th>
+                                    <%=Tag("数据表")%>
+                                </th>
+                                <th>
+                                    <%=Tag("内容")%>
+                                </th>
+                                <th>
+                                    <%=Tag("描述")%>
+                                </th>
+                                <th>
+                                    <%=Tag("时间")%>
+                                </th>
+                                <th>
+                                    <%=Tag("IP地址")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_Log model in models){%>
+                            <tr ondblclick="View(<%=model.id %>);">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox<%=model.id %>" name="id" value="<%=model.id %>" class="custom-control-input" del="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=model.AdminName %>
+                                </td>
+                                <td>
+                                    <%=model.TableName %>&nbsp;
+                                </td>
+                                <td>
+                                    <%=LB.Tools.Utils.GetUnicodeSubString(model.Content, 26, "...")%>
+                                </td>
+                                <td>
+                                    <%=LB.Tools.Utils.GetUnicodeSubString(model.Description, 26, "...")%>
+                                </td>
+                                <td>
+                                    <%=FormatTime(model.Time_Add) %>
+                                </td>
+                                <td>
+                                    <a href="http://www.ip138.com/ips138.asp?ip=<%=model.IP_Add%>&action=2" target="_blank"><%=model.IP_Add%></a>
+                                </td>
+                                <td>
+                                    <a href="javascript:void(0)" onclick="View(<%=model.id %>);"><%=Tag("查看")%></a>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation">
+                            <%=PageString%>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="SearchModal" tabindex="-1" role="dialog" aria-labelledby="SearchModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"><%=Tag("搜索")%></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <select name="id" id="id" class="form-control">
+                                <option value="0"><%=Tag("系统用户")%></option>
+                                <%=Administrator_TypeOption("PointStatus", id)%>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select name="type" id="type" class="form-control">
+                                <option value=""><%=Tag("日志类型")%></option>
+                                <option value="0" <%if (type == "0"){ %>selected<%} %>><%=Tag("操作日志")%></option>
+                                <option value="1" <%if (type == "1"){ %>selected<%} %>><%=Tag("登陆日志")%></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text" name="daterange" id="daterange" class="form-control">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        <span class="ti-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input name="key" type="text" id="key" class="form-control" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="ti-close"></i> <%=Tag("关闭")%></button>
+                    <button type="button" class="btn btn-success"onclick="search_();"><i class="ti-search"></i> <%=Tag("搜索")%></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    {MOD:DateRangePicker}
+    <script>
+        function search_() {
+            $('#SearchModal').modal("hide");
+            var key = $("#key").val();
+            var type = $("#type").val();
+            var dateFrom = "";
+            var dateTo = "";
+            var daterange = $("#daterange").val();
+            if (daterange.indexOf(" - ") >-1){
+                dateFrom = daterange.split(" - ")[0];
+                dateTo = daterange.split(" - ")[1];
+            }
+            var id = $("#id").val();
+            window.location = "?key=" + escape(key) + "&lb=<%=lb %>&dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&type=" + type + "&id=" + id;
+        }
+        function View(id) {
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "log_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {id: id},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function DeleteConfirm() {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要删除吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "DeleteObj();");
+        }
+        function DeleteObj() {
+            $("#Modal-Confirm").modal("hide");
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=Log_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbscripts>

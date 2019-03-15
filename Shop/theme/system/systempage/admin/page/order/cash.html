@@ -1,0 +1,168 @@
+﻿{layout:default} {class:Shop.Admin.order.cash}
+<lbhead>
+    <title><%=Tag("提现管理")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <%if (PageReturnMsg == ""){%>
+            <li class="submit"><a href="javascript:void(0);" onclick="UpdateObj();"><b></b><span><%=Tag("已付款")%></span></a></li>
+            <li class="del"><a href="javascript:void(0);" onclick="DelObj();"><b></b><span><%=Tag("删除")%></span></a></li>
+            <%}%>
+            <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a>
+                > <%=Tag("提现管理")%>
+                </span>
+                
+            </li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox clear">
+        <div class="searchbox-l" style="width:15%">
+        <ul class="tabmenus">
+            <li><a href="cashalipay.aspx"><span><%=Tag("支付宝批量付款")%></span></a></li>
+        </ul>
+        </div>
+        <div class="searchbox-r" style="width:75%">
+        <select name="status" id="status">
+            <option value="0">┌<%=Tag("状态")%></option>
+            <%=Shop.Bussiness.EX_Type.TypeOption("CashStatus", status)%>
+        </select>
+        <select name="paytype" id="paytype">
+            <option value="">┌<%=Tag("收款方式")%></option>
+            <option value="alipay" <%=paytype == "alipay"?"selected":""%>>┌<%=Tag("支付宝")%></option>
+            <option value="bank" <%=paytype == "bank"?"selected":""%>>┌<%=Tag("银行转账")%></option>
+        </select>
+        <select name="type" id="type">
+            <option value="0">┌<%=Tag("类型")%></option>
+            <option value="1" <%=type == 1?"selected":""%>>┌<%=Tag("会员")%></option>
+            <option value="2" <%=type == 2?"selected":""%>>┌<%=Tag("供应商")%></option>
+        </select>
+        <input type="text" name="dateFrom" id="dateFrom" size="12" class="input-calendar" value="<%=dateFrom %>" /> - <input type="text" name="dateTo" id="dateTo" size="12" class="input-calendar" value="<%=dateTo %>" />
+        <input type="text" id="key" name="key" class="input-query"value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" align="absmiddle" /><input type="hidden" name="user_id" id="user_id" value="<%=user_id%>" />
+        </div>
+    </div>
+    <table class="datalist">
+        <tr class="title">
+           <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th width="140px">
+                <%=Tag("时间")%>
+            </th>
+            <th width="100px">
+                <%=Tag("金额")%>
+            </th>
+            <th width="150px">
+                <%=Tag("会员")%>
+            </th>
+            <th width="100px">
+                <%=Tag("收款方式")%>
+            </th>
+            <th width="150px">
+                <%=Tag("姓名")%>
+            </th>
+            <th width="150px">
+                <%=Tag("账户")%>
+            </th>
+            <th width="150px">
+                <%=Tag("银行")%>
+            </th>
+            <th width="100px">
+                <%=Tag("状态")%>
+            </th>
+            <th width="140px">
+                <%=Tag("操作时间")%>
+            </th>
+            <th width="100px">
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%decimal pagemoney = 0;foreach (DB.LebiShop.Lebi_Cash model in models)
+          {%>
+        <tr class="list" ondblclick="Edit(<%=model.id %>);">
+            <td style="text-align:center">
+                <input type="checkbox" name="id" value="<%=model.id %>" del="true" />
+            </td>
+            <td>
+                <%=FormatTime(model.Time_add) %>
+            </td>
+            <td>
+                <%=model.Money-model.Fee %>
+            </td>
+            <td>
+                [<%=model.Supplier_id == 0 ? Tag("会员") : Tag("供应商")%>]<%=model.User_UserName %><%=model.Supplier_SubName %>
+            </td>
+            <td>
+                <%=model.PayType == "alipay"?Tag("支付宝"):Tag("银行转账")%>
+            </td>
+            <td>
+                <%=model.AccountName %>
+            </td>
+            <td>
+                <%=model.AccountCode %>
+            </td>
+            <td>
+                <%=model.Bank %>
+            </td>
+            <td>
+                <%=Shop.Bussiness.EX_Type.TypeName(model.Type_id_CashStatus)%>
+            </td>
+            <td>
+                <%=FormatTime(model.Time_update)%>
+            </td>
+            <td>
+                <a href="javascript:Edit(<%=model.id %>);"><%=Tag("查看") %></a>
+                
+            </td>
+        </tr>
+        <%pagemoney += (model.Money-model.Fee);} %>
+        <tr class="list">
+            <td colspan="2" align="right">
+                <%=Tag("小计") %>：
+            </td>
+            <td colspan="9">
+                <strong><%=pagemoney %></strong>
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+        function search_() {
+            var t = $("#t").val();
+            var status = $("#status").val();
+            var paytype = $("#paytype").val();
+            var type = $("#type").val();
+            var user_id = $("#user_id").val();
+            var dateFrom = $("#dateFrom").val();
+            var dateTo = $("#dateTo").val();
+            var key = $("#key").val();
+            window.location = "?status="+ status + "&paytype="+ paytype + "&type="+ type + "&user_id="+ user_id +"&dateFrom=" + dateFrom + "&dateTo=" + dateTo +"&key=" + escape(key);
+        }
+        function Edit(id) {
+            var title_ = "<%=Tag("提现管理")%>";
+            var url_ = "cash_edit_window.aspx?id=" + id;
+            var width_ = 500;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function DelObj(id) {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=Cash_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function UpdateObj() {
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=Cash_Update";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

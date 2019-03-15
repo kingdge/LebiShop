@@ -1,0 +1,61 @@
+﻿<!--
+Name:用户中心-常购清单
+Page:All
+-->
+<div class="nbbox clearfix">
+<div class="user">
+    <div class="searchbox clearfix">
+        <input type="text" name="dateFrom" id="dateFrom" size="12" class="input-calendar" value="<%=dateFrom %>" /> - <input type="text" name="dateTo" id="dateTo" size="12" class="input-calendar" value="<%=dateTo %>" />
+        <input type="text" id="key" name="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" />
+        <a href="javascript:void(0)" onclick="search_();" class="btn btn-12"><s></s>{tag:查询}</a>
+    </div>
+    <table cellpadding="0" cellspacing="0" width="100%" class="tablelist box">
+        <tr>
+            <th style="width:30px;" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));">{tag:全选}</a>
+            </th>
+            <th style="width:40px;">{tag:图片}</th>
+            <th>{tag:商品}</th>
+            <th style="width:80px;">{tag:价格}</th>
+            <th style="width:80px;">{tag:数量}</th>
+            <th style="width:80px;">{tag:购买周期}</th>
+            <th style="width:120px;">{tag:预购时间}</th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_User_Product u_p in user_products)
+        {DB.LebiShop.Lebi_Product product=GetProduct(u_p.Product_id);
+        %>
+        <tr>
+            <td><input type="checkbox" name="id" value="<%=u_p.id %>" sel="true" /><input type="hidden" name="Uid" value="<%=u_p.id %>" shop="true" /></td>
+            <td><% if (product.ImageOriginal == ""){ %>&nbsp;<%}else{ %><a href="<%=URL("P_Product",u_p.Product_id) %>" target="_blank"><img style="height: 30px;width: 30px;vertical-align:middle" src="<%=Image(product.ImageOriginal,50,50) %>" /></a><%} %>
+            </td>
+            <td><a href="<%=URL("P_Product",u_p.Product_id) %>" target="_blank"><%=Lang(product.Name)%></a></td>
+            <td><%=FormatMoney(product.Price) %></td>
+            <td><input name="Count<%=u_p.id %>" id="Count<%=u_p.id %>" type="text" value="<%=u_p.count %>" onkeyup="value=value.replace(/[^\d]/g,'');" shop="true" size="3" maxlength="5" class="input" /></td>
+            <td><input name="WarnDays<%=u_p.id %>" id="WarnDays<%=u_p.id %>" type="text" value="<%=u_p.WarnDays %>" onkeyup="value=value.replace(/[^\d]/g,'');" shop="true" size="3" maxlength="5" class="input" /> {tag:天}</td>
+            <td><%=FormatDate(u_p.Time_addemail)%></td>
+        </tr>
+        <%} %>
+    </table>
+    <div class="bottom clearfix"><div class="left"><a href="javascript:void(0)" onclick="Delete();" class="btn btn-11"><s></s>{tag:删除}</a><a href="javascript:void(0)" onclick="Update();" class="btn btn-11"><s></s>{tag:保存}</a><a href="javascript:void(0)" onclick="LikeToBasket();" class="btn btn-7"><s></s>{tag:加入购物车}</a></div><div class="right"><%=PageString%></div></div>
+</div>
+</div>
+<script type="text/javascript" >
+    function search_() {
+        var key = $("#key").val();
+        var dateFrom = $("#dateFrom").val();
+        var dateTo = $("#dateTo").val();
+        window.location = "?key=" + escape(key) + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo;
+    }
+    function Delete() {
+        if (!confirm("{tag:确认要删除吗？}"))
+            return false;
+        var postData = GetFormJsonData("sel");
+        var url = path+"/Ajax/Ajax_userin.aspx?__Action=UserOftenBuy_Del";
+        RequestAjax(url, postData, function () { MsgBox(1, "{tag:操作成功}", "?") });
+    }
+    function Update() {
+        var postData = GetFormJsonData("shop");
+        var url = path+"/Ajax/Ajax_userin.aspx?__Action=UserOftenBuy_Update";
+        RequestAjax(url,postData,function(){MsgBox(1, "{tag:操作成功}", "?")});
+    }
+</script>

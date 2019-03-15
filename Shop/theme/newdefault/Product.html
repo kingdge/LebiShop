@@ -1,0 +1,56 @@
+﻿{Layout:3r2c}
+<lbheadfile>
+    <meta property="og:title" content="<%=Lang(product.Name) %>">
+    <meta property="og:type" content="product">
+    <meta property="og:url" content="<%=LB.Tools.RequestTool.GetRequestUrl() %>">
+    <meta property="og:image" content="<%=Image(product.ImageOriginal)%>">
+    <meta property="og:site_name" content="<%=Lang(SYS.Name) %>">
+    <meta property="og:description" content="{description}">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="600">
+    <meta property="og:image:height" content="600">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:image:width" content="600">
+    <meta property="twitter:image:height" content="600">
+    <meta property="twitter:site" content="<%=Lang(SYS.Name) %>">
+    <meta property="twitter:creator" content="<%=Lang(SYS.Name) %>">
+    <meta property="twitter:image" content="<%=Image(product.ImageOriginal)%>">
+</lbheadfile>
+<lbleft>
+{MOD:ViewHistory}
+{MOD:NewsTop}
+</lbleft>
+<lbright>
+<div class="nbbox">
+<div class="productdetail">
+<div class="image left">
+{MOD:ProductImages}
+<div class="jiathis-share">
+<!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+	<a class="jiathis_button_email"></a>
+	<a class="jiathis_button_fb"></a>
+	<a class="jiathis_button_twitter"></a>
+	<a class="jiathis_button_googleplus"></a>
+	<a class="jiathis_button_stumbleupon"></a>
+	<a class="jiathis_button_gmail"></a>
+	<a class="jiathis_button_linkedin"></a>
+	<a class="jiathis_button_pinterest"></a>
+	<a class="jiathis_button_tumblr"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+</div>
+</div>
+<div class="con left">
+                        
+{MOD:ProductInfo}
+</div>
+<div class="clear"></div>
+</div>
+<div class="nbbox">
+{MOD:Tab_ProductContent}
+</div>
+</div>
+</lbright>

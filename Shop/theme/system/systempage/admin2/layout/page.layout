@@ -1,0 +1,39 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="Shop.Bussiness.AdminPageBase"  %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" />
+	<meta name="author" content="LebiShop" />
+	{HOLDER:lbhead}
+    <link href="<%=site.AdminAssetsPath %>/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<%=site.AdminAssetsPath %>/plugins/jqueryui/jquery-ui.min.css" rel="stylesheet">
+    <link href="<%=site.AdminCssPath %>/style.css" rel="stylesheet">
+    <link href="<%=site.AdminCssPath %>/colors/blue.css" id="theme" rel="stylesheet">
+    <link href="<%=site.AdminCssPath %>/custom.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+    {HOLDER:lbfile}
+    <script>
+        var AdminPath = "<%=site.AdminPath %>";var WebPath ="<%=site.WebPath %>";var AdminImagePath = "<%=site.AdminImagePath %>";var requestPage = "<%=LB.Tools.RequestTool.GetRequestUrl().ToLower() %>";var refPage = "<%=LB.Tools.RequestTool.GetUrlReferrer().ToLower() %>";
+    </script>
+</head>
+<body class="fix-sidebar fix-header card-no-border">
+	{HOLDER:lbbody}
+    <script src="<%=site.AdminAssetsPath %>/plugins/jquery/jquery.min.js"></script>
+    <script src="<%=site.AdminAssetsPath %>/plugins/jqueryui/jquery-ui.min.js"></script>
+    <script src="<%=site.AdminAssetsPath %>/plugins/popper/popper.min.js"></script>
+    <script src="<%=site.AdminAssetsPath %>/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="<%=site.AdminJsPath %>/jquery.slimscroll.js"></script>
+    <script src="<%=site.AdminJsPath %>/sidebarmenu.js"></script>
+    <script src="<%=site.AdminAssetsPath %>/plugins/sticky-kit-master/dist/sticky-kit.min.js"></script>
+    <script src="<%=site.AdminJsPath %>/custom.min.js"></script>
+    <script src="<%=site.AdminJsPath %>/Cookies.js"></script>
+    <script src="<%=site.AdminJsPath %>/main.js"></script>
+    <script src="<%=site.AdminJsPath %>/messagebox.js"></script>
+    {HOLDER:lbscripts}
+</body>
+</html>

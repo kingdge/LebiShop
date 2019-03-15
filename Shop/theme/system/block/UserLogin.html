@@ -1,0 +1,68 @@
+﻿<!--
+Name:会员登录
+Page:All
+-->
+<div class="mbox clearfix">
+<div class="userlogin">
+<div class="mt">
+<%if (CurrentUser.id > 0 && CurrentUser.IsAnonymous==0){%>
+    <h2><a href="<%=URL("P_UserCenter","") %>" title="{tag:会员中心}"><%if (CurrentUser.Face.Trim() != ""){ %><img src="<%=CurrentUser.Face %>" height="20"  /><%} %><%if (CurrentUser.NickName != "") { Response.Write(CurrentUser.NickName); } else { Response.Write(CurrentUser.UserName); } %></a></h2>
+<%} else{ %>
+    <h2>{tag:会员登录}</h2>
+<%}%>
+</div>
+<div class="mc clearfix">
+<%if (CurrentUser.id > 0 && CurrentUser.IsAnonymous==0){%>
+    <ul class="signuped">
+        <li><a href="<%=URL("P_UserCenter","")%>"><span>{tag:会员中心}</span></a></li>
+        <li><a href="<%=URL("P_UserOrders","")%>"><span>{tag:我的订单}</span></a></li>
+        <li><a href="<%=URL("P_UserMessage","0")%>"><span>{tag:收件箱}<em>(<%=Count_NewMessage() %>)</em></span></a></li>
+        <li><a href="javascript:LoginOut();"><span>{tag:登录注销}</span></a></li>
+    </ul>
+<%}else{ %>
+    <ul class="signup">
+        <li class="username">
+            <label>
+                {tag:用户名}：
+            </label>
+            <span>
+                <input type="text" name="UserName" id="login_UserName" shop="true" size="20" class="input" />
+            </span>
+        </li>
+        <li class="password">
+            <label>
+                {tag:密码}：
+            </label>
+            <span>
+                <input type="password" name="Password" id="login_Password" shop="true" size="20" class="input" />
+            </span>
+        </li>   
+        <%if (SYS.Verifycode_UserLogin == "1"){ %>
+        <li class="code">
+            <label>
+                {tag:验证码}：
+            </label>
+            <span>
+                <input type="text" name="verifycode" id="login_verifycode" shop="true" shop="true" size="5" class="input" />
+                <img class="img_c" align="absmiddle" style="width: 55px; " title="{tag:点击刷新验证码}" id="img1" src="<%=WebPath%>/code.aspx" language="javascript" onclick="this.src=this.src+'?'" />
+            </span>
+        </li>
+        <%} %>
+        <li class="formsubmit">
+            <a href="javascript:void(0)" onclick="userloginsubmit();" class="btn btn-7"><s></s>{tag:登录}</a>&nbsp;&nbsp;<a href="<%=URL("P_ForgetPassword","")%>">{tag:忘记密码}</a>
+        </li>
+    </ul>
+<%} %>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+    function userloginsubmit() {
+        var Password = $("#login_Password").val();
+        var UserName = $("#login_UserName").val();
+        var verifycode = $("#login_verifycode").val();
+        var postData = GetFormJsonData("shop");
+        var url = path + "/ajax/ajax_user.aspx?__Action=User_Login&url=<%=LB.Tools.RequestTool.GetRequestUrlNonDomain()%>&token=<%=GetUrlToken(LB.Tools.RequestTool.GetRequestUrlNonDomain()) %>";
+        RequestAjax(url, postData, function (res) { MsgBox(1, "{tag:登录成功}", res.url) });
+    }
+</script>

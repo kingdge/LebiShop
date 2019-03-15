@@ -1,0 +1,109 @@
+﻿{MOD:Top}
+<!DOCTYPE html>
+<html>
+<head id="Head1">
+    {MOD:HeadFile}
+</head>
+<body>
+{MOD:Head}
+<script type="text/javascript">
+    $(".allnav-show").attr("class","allnav-show-block");
+</script>
+<div class="ind-banner">
+    <div class="bd">
+        {ad:Index1}
+    </div>
+    <div class="hd" style="z-index:0;"><ul></ul></div>
+    <span class="prev"></span>
+    <span class="next"></span>
+</div><!--banner-->
+<script type="text/javascript">
+	/* 控制左右按钮显示 */
+	jQuery(".ind-banner").hover(function(){ jQuery(this).find(".prev,.next").stop(true,true).fadeTo("show",0.5) },function(){ jQuery(this).find(".prev,.next").fadeOut() });
+	/* 调用SuperSlide */
+	jQuery(".ind-banner").slide({ titCell:".hd ul", mainCell:".bd ul", effect:"fold",  autoPlay:true, autoPage:true, trigger:"click",
+		startFun:function(i){
+			var curLi = jQuery(".ind-banner .bd li").eq(i); /* 当前大图的li */
+			if( !!curLi.attr("_src") ){
+				curLi.css("background-image",curLi.attr("_src")).removeAttr("_src") /* 将_src地址赋予li背景，然后删除_src */
+			}
+		}
+	});
+</script>
+<div class="main-con">
+	<div class="ind-left">
+        <h2 class="title">{tag:热销商品}</h2>
+${#table:Lebi_Product;#where:"+ProductWhere+" and Type_id_ProductType = 320;#top:3;#order:Count_Views desc,id desc;#model:producttop;
+        <div class="ind-left-hot">
+        	<a href="<%=URL("P_Product",{id})%>"><img src="<%=Image(producttop,"medium") %>" /></a>
+            <p class="shopname"><a href="<%=URL("P_Product",{id})%>"><%=Lang({Name})%></a></p>
+            <span class="shopprice"><%=FormatMoney(ProductPrice(producttop))%></span>
+   	  </div><!--hot-->
+}$
+        <div class="ind-left-ad">{ad:IndexLeft01}</div><!--ad-->
+        <h2 class="title">{tag:销售排行榜}</h2>
+        <div class="tuijian">
+${#table:Lebi_Product;#where:"+ProductWhere+" and Type_id_ProductType = 320 and "+ TagWhere(34) +";#top:4;#order:Sort desc,id desc;#model:tab_tag_pro;
+        	<div class="tuijian-list">
+            	<div class="img"><a href="<%=URL("P_Product",{id}) %>"><img src="<%=Image(tab_tag_pro,"medium") %>"></a></div>
+                <p class="shopname"><a href="<%=URL("P_Product",{id}) %>"><%=Lang({Name}) %></a></p>
+            	<span class="shopprice"><%=FormatMoney(ProductPrice(tab_tag_pro)) %></span>
+            </div>
+}$
+        </div><!--tuijian最近出售-->
+    </div><!--left-->
+    <div class="ind-right">
+    	<div class="title">
+        	<h2>{tag:精品推荐}</h2>
+        </div><!--title-->
+      <div class="ind-right-hot">
+            <ul class="clearfix">
+               {AD:IndexRightHot}
+            </ul>
+        </div><!--hot-->
+        <script type="text/javascript">
+			$(document).ready(function(){	
+				$(".ind-right-hot ul li .rsp").hide();	
+				$(".ind-right-hot	 ul li").hover(function(){
+					$(this).find(".rsp").stop().fadeTo(500,0.5)
+					$(this).find(".text").stop().animate({left:'0'}, {duration: 500})
+				},
+				function(){
+					$(this).find(".rsp").stop().fadeTo(500,0)
+					$(this).find(".text").stop().animate({left:'300'}, {duration: "fast"})
+					$(this).find(".text").animate({left:'-300'}, {duration: 0})
+				});
+			});
+			</script>
+
+${#table:Lebi_Pro_Type;#where:"+ProductCategoryWhere+" and Parentid = 0 and IsShow = 1 and IsIndexShow = 1;#order:Sort desc,id desc;#model:category;#tag:cpt0;
+         <div class="title">
+        	<h2><%=Lang({Name}) %></h2>
+            <div class="more-key"> 
+ 	${#table:Lebi_Pro_Type;#where:"+ProductCategoryWhere+" and Parentid = "+category.id+" and IsShow = 1 and IsIndexShow = 1;#top:5;#order:Sort desc,id desc;#model:category1;
+            <a href="<%=URL("P_ProductCategory",category1.id,Lang(category1.Url))%>" target="_blank"><%=Lang(category1.Name) %></a>
+ 	}$
+            </div>
+        </div><!--title-->
+        <div class="ind-right-list">
+        	<ul>
+       ${#table:Lebi_Product;#where:"+ProductWhere+" and Type_id_ProductType = 320 and "+ CategoryWhere(category.id) +";#top:4;#order:Sort desc,id desc;#model:pro;#tag:cpt1;
+                <li>
+                	<i class="zhekou"><!--<img src="Theme/weiyu/images/zk.jpg">--></i>
+                	<a href="<%=URL("P_Product",{id}) %>"  class="shop-img"><img src="<%=Image({ImageOriginal},"medium") %>"></a>
+                    <p class="shopname">
+                        <a href="<%=URL("P_Product",{id}) %>"><%=Lang({Name}) %></a></p>
+                    <span class="shopprice"><%=FormatMoney(ProductPrice(pro)) %></span> 
+                    <a href="<%=URL("P_Product",{id}) %>" class="buy-icon"></a>
+                </li>
+       }$
+            </ul>
+        </div><!--list-->
+ }$
+  </div><!--right-->
+</div>
+{MOD:Tab_BrandTop}
+<div class="clear"></div>
+    {MOD:Foot}
+</body>
+</html>

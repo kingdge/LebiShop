@@ -1,0 +1,108 @@
+﻿{layout:default} {class:Shop.Admin.user.UserLevel}
+<lbhead>
+    <title><%=Tag("会员分组")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="add"><a href="javascript:void(0);" onclick="Edit(0);"><b></b><span><%=Tag("添加")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="<%=site.AdminPath %>/user/default.aspx"><%=Tag("会员管理")%></a> > <%=Tag("会员分组")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 200px">
+                <%=Tag("名称")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("级别")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("价格文字")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("图片")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("积分水平线")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("折扣")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("会员数量")%>
+            </th>
+            <th>
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_UserLevel model in models)
+          {%>
+        <tr class="list" ondblclick="Edit(<%=model.id %>);">
+            <td>
+                <%=Shop.Bussiness.Language.Content(model.Name, CurrentLanguage.Code)%>
+            </td>
+            <td>
+                <%=model.Grade %>
+            </td>
+            <td>
+                <%=Shop.Bussiness.Language.Content(model.PriceName, CurrentLanguage.Code)%>
+            </td>
+            <td>
+                <%if (model.ImageUrl != "")
+                  { %><img src="<%=site.WebPath + model.ImageUrl %>" style="max-height:30px" /><%}
+                  else
+                  { %>&nbsp;<%} %>
+            </td>
+            <td>
+                <%=model.Lpoint %>
+            </td>
+            <td>
+                <%=model.Price %>
+            </td>
+            <td>
+                <a href="default.aspx?level=<%=model.id %>"><%=Shop.Bussiness.EX_User.UserCount(model.id)%></a>
+            </td>
+            <td>
+                <a href="javascript:void(0)" onclick="Edit(<%=model.id %>);"><%=Tag("编辑")%></a>
+                <%if (model.Grade > 0){%> | <a href="javascript:void(0)" onclick="Del(<%=model.id %>);"><%=Tag("删除")%></a><%} %>
+                <%if (Shop.LebiAPI.Service.Instanse.Check("plugin_productlimit")){%> | <a href="javascript:void(0)" onclick="ProductLimit(<%=model.id %>,'<%=Lang(model.Name)%>');"><%=Tag("商品权限")%></a><%} %>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+<script type="text/javascript">
+    function Edit(id) {
+        window.location = "UserLevel_Edit.aspx?id=" + id;
+    }
+    function Del(id) {
+        if (!confirm("<%=Tag("确认要删除吗？")%>"))
+            return false;
+        var postData = { "id": id };
+    var url= "<%=site.AdminPath %>/ajax/ajax_user.aspx?__Action=UserLevel_Del";
+    RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", '?')});
+            
+    }
+    addtrbg(".datalist");
+    function ProductLimit(id,name){
+        window.open("<%=site.AdminPath %>/product/productlimit_userlevel.aspx?userlevelid="+id);
+        return;
+        var title_ = "<%=Tag("商品权限")%>-"+name;
+        var url_ = "<%=site.AdminPath %>/product/productlimit_window.aspx?userlevelid="+id;
+        var width_ = 900;
+        var height_ = 750;
+        var modal_ = true;
+        EditWindow(title_, url_, width_, height_, modal_, 'selectproduct');
+    }
+
+</script>
+</lbbottom>

@@ -1,0 +1,116 @@
+﻿{layout:default} {class:Shop.Admin.User.Message_Type}
+<lbhead>
+    <title><%=Tag("类别管理")%>-<%=Tag("站内信")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("类别管理")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/user/Message.aspx"><%=Tag("站内信")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("类别管理")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-9 m-b-10">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-info" onclick="Edit(0);"><i class="ti-plus"></i> <%=Tag("添加")%></button>
+                        <button class="btn btn-danger" onclick="DeleteConfirm()"><i class="ti-trash"></i> <%=Tag("删除")%></button>
+                        <%}%>
+                    </div>
+                    <div class="col-md-3 m-b-10">
+                        <div class="input-group">
+                            <input type="text" id="key" name="key" value="<%=key %>" class="form-control" onkeydown="if(event.keyCode==13){search_();}">
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-primary" onclick="search_();"><i class="ti-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th class="selectAll" style="width:40px">
+                                    <a href="javascript:void(0);" onclick="$('input[name=\'sid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+                                </th>
+                                <th>
+                                    <%=Tag("类别名称")%>
+                                </th>
+                                <th>
+                                    <%=Tag("排序")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_Message_Type model in models){%>
+                            <tr ondblclick="Edit(<%=model.id %>)">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox<%=model.id %>" name="sid" value="<%=model.id %>" class="custom-control-input">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=Lang(model.Name)%>
+                                </td>
+                                <td>
+                                    <%=model.Sort%>
+                                </td>
+                                <td>
+                                    <a href="javascript:void(0)" onclick="Edit(<%=model.id %>)"><%=Tag("编辑")%></a>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation ">
+                            <%=PageString%>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        function search_() {
+            var key = $("#key").val();
+            window.location.href = "?key=" + escape(key);
+        }
+        function Edit(id) {
+            if (id == 0) { var title_ = "<%=Tag("添加信息类型")%>"; } else { var title_ = "<%=Tag("编辑类别")%>"; }
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "message_type_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {id: id,title: title_},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function DeleteConfirm() {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要删除吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "Delete();");
+        }
+        function Delete() {
+            $("#Modal-Confirm").modal("hide");
+            var ids = GetChkCheckedValues("sid");
+            var postData = { "ids": ids };
+            var url = "<%=site.AdminPath %>/ajax/ajax_user.aspx?__Action=Message_Type_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbscripts>

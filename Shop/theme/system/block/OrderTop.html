@@ -1,0 +1,23 @@
+﻿<!--
+Name:最新订单
+Page:All
+-->
+<div class="mbox clearfix">
+<div class="ordertop">
+<div class="mt">
+    <h2>{tag:订单状态}</h2>
+</div>
+<div class="mc clearfix">
+<ul>
+    ${#table:Lebi_Order;#where:Type_id_OrderType = 211;#order:id desc;#top:5;#model:ordertop;
+    <li>
+    <span class="status"><%=Shop.Bussiness.Order.OrderStatus(ordertop, CurrentLanguage.Code) %></span>
+    <span class="date"><%=FormatDate({Time_Add}) %></span>
+    <span class="address"><%=LB.Tools.Utils.CutString(Shop.Bussiness.EX_Area.GetAreaName({T_Area_id},2)+{T_Address},20,true) %></span>
+    <span class="name"><%={T_Name} %></span>
+    </li>
+    }$
+</ul>
+</div>
+</div>
+</div>

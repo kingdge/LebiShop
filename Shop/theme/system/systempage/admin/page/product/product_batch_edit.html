@@ -1,0 +1,236 @@
+﻿{layout:default} {class:Shop.Admin.product.product_batch_edit}
+<lbhead>
+    <title><%=Tag("批量修改")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="submit"><a href="javascript:void(0);" onclick="Update();"><b></b><span><%=Tag("保存")%></span></a></li>
+    <li class="up"><a href="javascript:void(0);" onclick="Product_Status_Edit_muti(1);"><b></b><span><%=Tag("上架")%></span></a></li>
+    <li class="down"><a href="javascript:void(0);" onclick="Product_Status_Edit_muti(0);"><b></b><span><%=Tag("下架")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="<%=site.AdminPath %>/product/product_batch_edit.aspx"><%=Tag("批量修改")%></a></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <% LicenseWord(); %>
+    <div class="searchbox">
+        <select id="lang">
+            <option value="">┌<%=Tag("语言")%></option>
+            <%=Shop.Bussiness.Language.LanguageOption(lang) %>
+        </select>
+        <select name="status" id="status">
+            <option value="0">┌<%=Tag("状态")%></option>
+            <%=Shop.Bussiness.EX_Type.TypeOption("ProductStatus", status, CurrentLanguage)%>
+        </select>
+        <select id="Type_id_ProductType" name="Type_id_ProductType">
+            <option value="320">┌<%=Tag("商品类型")%></option>
+            <%=Shop.Bussiness.EX_Type.TypeOption("ProductType", Type_id_ProductType, CurrentLanguage)%>
+        </select>
+        <select id="Pro_Type_id" name="Pro_Type_id">
+            <option value="">┌<%=Tag("全部类别")%></option>
+            <%=Shop.Bussiness.EX_Product.TypeOption(0,Pro_Type_id,0,CurrentLanguage.Code,Shop.Bussiness.EX_Admin.Project().Pro_Type_ids)%>
+        </select>
+        <select id="brand" name="brand">
+            <option value="0">┌<%=Tag("商品品牌")%></option>
+            <%=Shop.Bussiness.EX_Product.BrandOption(brand, CurrentLanguage.Code)%>
+        </select>
+        <select id="tag" name="tag">
+            <option value="0">┌<%=Tag("商品标签")%></option>
+            <%=Shop.Bussiness.EX_Product.Pro_TagOption(tag, CurrentLanguage.Code)%>
+        </select>
+        <input type="text" name="dateFrom" id="dateFrom" size="12" class="input-calendar" value="<%=dateFrom %>" /> - <input type="text" name="dateTo" id="dateTo" size="12" class="input-calendar" value="<%=dateTo %>" />
+        &nbsp;<input name="key" type="text" id="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" align="absmiddle" />
+    </div>
+    <table id="list" class="datalist">
+        <tr class="title">
+            <th width="40" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'sonproductid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th width="40">
+                <%=Tag("图片")%>
+            </th>
+            <th width="80">
+                <%=Tag("编号")%>
+            </th>
+            <th width="*">
+                <%=Tag("商品名称")%>
+            </th>
+            <th width="80">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "Price_MarketDesc"){Response.Write("Price_MarketAsc");}else{Response.Write("Price_MarketDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("市场价")%><%if (OrderBy == "Price_MarketDesc") { Response.Write("↓"); } else if (OrderBy == "Price_MarketAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th width="80">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "PriceDesc"){Response.Write("PriceAsc");}else{Response.Write("PriceDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("销售价")%><%if (OrderBy == "PriceDesc") { Response.Write("↓"); } else if (OrderBy == "PriceAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <%if (Shop.Bussiness.EX_Admin.CheckPower("product_price_cost")){ %>
+            <th width="80">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "Price_CostDesc"){Response.Write("Price_CostAsc");}else{Response.Write("Price_CostDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("成本价")%><%if (OrderBy == "Price_CostDesc") { Response.Write("↓"); } else if (OrderBy == "Price_CostAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <%} %>
+            <%if (Shop.LebiAPI.Service.Instanse.Check("plugin_product_price")){ %>
+                <%foreach(DB.LebiShop.Lebi_UserLevel ul in userlevels){ %>
+                <th width="60">
+                    <%=Lang(ul.Name) %>
+                </th>
+                <%} %>
+            <%}%>
+            <%if (!IsEditStock){ %>
+            <th width="60">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "CountDesc"){Response.Write("CountAsc");}else{Response.Write("CountDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("库存")%><%if (OrderBy == "CountDesc") { Response.Write("↓"); } else if (OrderBy == "CountAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <%}%>
+            <th width="60">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "FreezeDesc"){Response.Write("FreezeAsc");}else{Response.Write("FreezeDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("冻结库存")%><%if (OrderBy == "FreezeDesc") { Response.Write("↓"); } else if (OrderBy == "FreezeAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th width="60">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "SalesDesc"){Response.Write("SalesAsc");}else{Response.Write("SalesDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("显示销量")%><%if (OrderBy == "SalesDesc") { Response.Write("↓"); } else if (OrderBy == "SalesAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th width="60">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "ViewsDesc"){Response.Write("ViewsAsc");}else{Response.Write("ViewsDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("浏览量")%><%if(OrderBy == "ViewsDesc"){Response.Write("↓");}else if (OrderBy == "ViewsAsc"){Response.Write("↑");}%></a>
+            </th>
+            <th width="60">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "SortDesc"){Response.Write("SortAsc");}else{Response.Write("SortDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("排序")%><%if(OrderBy == "SortDesc"){Response.Write("↓");}else if (OrderBy == "SortAsc"){Response.Write("↑");}%></a>
+            </th>
+            <th width="60">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "StatusDesc"){Response.Write("StatusAsc");}else{Response.Write("StatusDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("状态")%><%if (OrderBy == "StatusDesc") { Response.Write("↓"); } else if (OrderBy == "StatusAsc") { Response.Write("↑"); }%></a>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_Product model in models)
+          {
+          List<Shop.Model.ProductUserLevelPrice> ulps=Shop.Bussiness.EX_Product.UserLevelPrice(model.UserLevelPrice);
+          %>
+            <tr class="list" ondblclick="Edit(<%=model.id %>,0);">
+                <td style="text-align:center">
+                    <input type="checkbox" ShopKeyID="true" name="sonproductid" id="<%=model.id %>" value="<%=model.id %>" />
+                    <input type="hidden" name="IDS" shop="true" value="<%=model.id %>" />
+                </td>
+                <td>
+                    <a href="<%=Image(model.ImageOriginal,"big") %>" data-lightbox="image<%=model.id %>"><img style="height: 30px;width: 30px;vertical-align:middle" src="<%=Image(model.ImageOriginal,50,50) %>" /></a>
+                </td>
+                <td>
+                    <input type="text" name="Number<%=model.id %>" id="Number<%=model.id %>" class="input" shop="true" value="<%=model.Number%>" style="width: 80px;" />
+                </td>
+                <td>
+                    <%int i = 0; foreach (DB.LebiShop.Lebi_Language_Code batchlang in Shop.Bussiness.Language.Languages())
+                      {%><input type="<%if (lang == batchlang.Code){%>text<%}else{ %>hidden<%} %>" name="Name<%=model.id %><%=batchlang.Code %>" id="Name<%=batchlang.Code %><%=model.id %>" class="input" shop="true" value="<%=Shop.Bussiness.Language.Content(model.Name, batchlang.Code)%>" style="width: 250px;" /><%i = i+1;
+                      } %>&nbsp;<a href="javascript:void(0)" title="<%=Tag("点击编辑商品名称")%>" onclick="Product_Name_Edit(<%=model.id %>);"><img
+                    src="<%=PageImage("icon/toolsEdit.png")%>" /></a>&nbsp;<a target="_blank" href="<%=Shop.Bussiness.ThemeUrl.GetURL("P_Product",model.id.ToString(),"",CurrentLanguage.Code)%>"><i class="ti-new-window"></i></a>
+                
+                </td>
+                <td>
+                    <input type="text" name="Price_Market<%=model.id %>" id="Price_Market<%=model.id %>" class="input"
+            shop="true" value="<%=FormatMoney(model.Price_Market,"Number") %>" style="width: 70px;" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
+                </td>
+                <td>
+                    <input type="text" name="Price<%=model.id %>" id="Price<%=model.id %>" class="input"
+            shop="true" value="<%=FormatMoney(model.Price,"Number") %>" style="width: 80px;" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
+                </td>
+                <%if (Shop.Bussiness.EX_Admin.CheckPower("product_price_cost")){ %>
+                <td>
+                    <input type="text" name="Price_Cost<%=model.id %>" id="Price_Cost<%=model.id %>" class="input"
+            shop="true" value="<%=FormatMoney(model.Price_Cost,"Number") %>" style="width: 80px;" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
+                </td>
+                <%} %>
+                <%if (Shop.LebiAPI.Service.Instanse.Check("plugin_product_price")){ %>
+                    <%foreach(DB.LebiShop.Lebi_UserLevel ul in userlevels){ %>
+                    <td>
+                        <input type="text" name="UserLevelPrice<%=model.id %>_<%=ul.id %>" id="UserLevelPrice<%=model.id %>_<%=ul.id %>" class="input"
+                shop="true" value="<%=FormatMoney(GetUserLevelPrice(ulps,ul.id),"Number") %>" style="width: 80px;" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
+                    </td>
+                    <%} %>
+                <%} %>
+                <%if (!IsEditStock){ %>
+                <td>
+                    <%if (CountSon(model.id) == 0)
+                      { %>
+                    <input type="text" name="Count_Stock<%=model.id %>" id="Count_Stock<%=model.id %>" class="input"
+            shop="true" value="<%=model.Count_Stock %>" style="width: 80px;" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
+                    <%}else{ %>
+                    <input type="hidden" name="Count_Stock<%=model.id %>" id="Count_Stock<%=model.id %>" shop="true" value="<%=model.Count_Stock %>" /><%=model.Count_Stock %>
+                    <%} %>
+                </td>
+                <%}%>
+                <td>
+                    <input type="text" name="Count_Freeze<%=model.id %>" id="Count_Freeze<%=model.id %>" class="input"
+            shop="true" value="<%=model.Count_Freeze %>" style="width: 60px;" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
+                </td>
+                <td>
+                    <input type="text" name="Count_Sales_Show<%=model.id %>" id="Count_Sales_Show<%=model.id %>" class="input"
+            shop="true" value="<%=model.Count_Sales_Show %>" style="width: 60px;" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
+                </td>
+                <td>
+                    <input type="text" name="Count_Views_Show<%=model.id %>" id="Count_Views_Show<%=model.id %>" class="input"
+            shop="true" value="<%=model.Count_Views_Show %>" style="width: 60px;" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
+                </td>
+                <td>
+                    <input type="text" name="Sort<%=model.id %>" id="Sort<%=model.id %>" class="input"
+            shop="true" value="<%=model.Sort %>" style="width: 60px;" onkeyup="value=value.replace(/[^\d]/g,'')" />
+                </td>
+                <td>
+                    <select name="ProductStatus<%=model.id %>" id="ProductStatus<%=model.id %>" shop="true">
+                        <%=Shop.Bussiness.EX_Type.TypeOption("ProductStatus", model.Type_id_ProductStatus, CurrentLanguage)%>
+                    </select>
+                </td>
+            </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function search_() {
+            var lang = $("#lang").val();
+            var key = $("#key").val();
+            var brand = $("#brand").val();
+            var Pro_Type_id = $("#Pro_Type_id").val();
+            var tag = $("#tag").val();
+            var dateFrom = $("#dateFrom").val();
+            var dateTo = $("#dateTo").val();
+            var status = $("#status").val();
+            var Type_id_ProductType = $("#Type_id_ProductType").val();
+            window.location = "?key=" + escape(key) + "&brand=" + brand + "&tag=" + tag + "&Pro_Type_id=" + Pro_Type_id + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&status=" + status + "&lang=" + lang +"&Type_id_ProductType=" + Type_id_ProductType + "&OrderBy=<%=OrderBy%>";
+        }
+        function Update() {
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Product_Batch_Update";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function Product_Name_Edit(id) {
+            var lang = $("#lang").val();
+            var title_ = "<%=Tag("编辑商品名称")%>";
+            var url_ = "product_name_edit_window.aspx?removelang=" + lang +"&id=" + id;
+            var width_ = 560;
+            var height_ = 200;
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function OrderBy(url) {
+            MsgBox(4, "<%=Tag("正在排序，请稍后")%> ……", url);
+        }
+        function Product_Status_Edit_muti(status) {
+            var postData = GetFormJsonData("ShopKeyID");
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Product_Status_Edit_muti&status=" + status;
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function Product_Sales(number) {
+            var title_ = "<%=Tag("销量")%>"; 
+            var height_ = 300;
+            var url_ = "product_sales_window.aspx?number=" + number;
+            var width_ = 650;
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function Product_Freeze(number) {
+            var title_ = "<%=Tag("冻结库存")%>"; 
+            var height_ = 300;
+            var url_ = "product_freeze_window.aspx?number=" + number;
+            var width_ = 560;
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

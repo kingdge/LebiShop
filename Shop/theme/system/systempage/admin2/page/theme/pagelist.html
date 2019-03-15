@@ -1,0 +1,128 @@
+﻿{layout:default} {class:Shop.Admin.theme.PageList}
+<lbhead>
+    <title><%=Tag("页面设置")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <link href="<%=site.AdminAssetsPath %>/plugins/multiselect/css/jquery.multiselect2side.css" rel="stylesheet">
+</lbfile>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("页面设置") %></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/theme/default.aspx"><%=Tag("主题管理")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("页面设置")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 m-b-10">
+                        <div class="input-group">
+                            <input type="text" id="key" name="key" value="<%=key %>" class="form-control" onkeydown="if(event.keyCode==13){search_();}">
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-primary" onclick="search_();"><i class="ti-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <%=Tag("代码")%>
+                                </th>
+                                <th>
+                                    <%=Tag("名称")%>
+                                </th>
+                                <th>
+                                    <%=Tag("页面")%>
+                                </th>
+                                <th>
+                                    <%=Tag("排序")%>
+                                </th>
+                                <th>
+                                    <%=Tag("类型")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_Theme_Page model in models){%>
+                            <tr ondblclick ="Editobj(<%=model.id %>);">
+                            <td>
+                                <%=model.Code %>
+                            </td>
+                            <td>
+                                <%=model.Name %>
+                            </td>
+                            <td>
+                                <%=model.PageName%>
+                            </td>
+                            <td>
+                                <%=model.Sort %>
+                            </td>
+                            <td>
+                                <%=Shop.Bussiness.EX_Type.TypeName(model.Type_id_PublishType,CurrentLanguage) %>
+                            </td>
+                            <td>
+                                <a href="javascript:void(0)" onclick="Editobj(<%=model.id %>);"><%=Tag("编辑")%></a>
+                                <%if (model.IsAllowHtml == 1 && model.Type_id_PublishType == 122)
+                                { %>
+                                | <a href="javascript:void(0)" onclick="Create(<%=model.id %>);"><%=Tag("生成")%></a>
+                                <%} %>
+                            </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation ">
+                            <div style="text-align:center"><%=Tag("总数") %>： <%=models.Count%></div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script src="<%=site.AdminAssetsPath %>/plugins/multiselect/js/jquery.multiselect2side.js"></script>
+    <script>
+        function search_() {
+            var key = $("#key").val();
+            window.location = "?key=" + escape(key);
+        }
+        function Editobj(id) {
+            var title_ = "<%=Tag("编辑")%>";
+            if (id == 0)
+                var title_ = "<%=Tag("添加")%>";
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "page_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {id: id,title: title_},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function Create(id) {
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "page_create_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {id: id},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+    </script>
+</lbscripts>

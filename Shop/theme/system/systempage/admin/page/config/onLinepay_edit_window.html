@@ -1,0 +1,491 @@
+﻿{layout:simple} {class:Shop.Admin.storeConfig.OnLinePay_Edit_window}
+<lbbody>
+    <%=Shop.Bussiness.Language.AdminLanguageTab("") %>
+    <table class="table">
+        <%foreach (DB.LebiShop.Lebi_Language_Code lang in Shop.Bussiness.Language.Languages()){%>
+        <tbody id="lang_<%=lang.Code %>" class="lang_table" width="100%" style="display: none">
+            <tr>
+                <th style="width: 15%;">
+                    <%=Tag("名称")%>：
+                </th>
+                <td>
+                    <input type="text" shop="true" id="Name<%=lang.Code %>" name="Name<%=lang.Code %>" class="input" style="width:200px" value="<%=Shop.Bussiness.Language.Content(model.Name,lang.Code) %>" />
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("描述")%>：
+                </th>
+                <td style="text-align: left;">
+                    <textarea shop="true" class="textarea" style="width:400px;height:60px;" id="Description<%=lang.Code %>" name="Description<%=lang.Code %>"><%=Shop.Bussiness.Language.Content(model.Description, lang.Code)%></textarea>
+                    <script type="text/javascript">
+                        CKEDITOR.replace('Description<%=lang.Code %>', {
+                            height: '60',
+                            toolbar: 'Basic',
+                            language: '<%=Tag("CKEditor语言")%>'
+                        });
+                    </script>
+                </td>
+            </tr>
+        </tbody>
+        <%} %>
+    </table>
+    <ul id="tablistmain"><li class="selected"><a><span><%=Tag("通用信息")%></span></a></li></ul>
+    <table class="table">
+        <tr>
+            <th valign="top" style="width: 15%;">
+                <%=Tag("接口类型")%>：
+            </th>
+            <td>
+                <select name="TypeName" id="TypeName" autocomplete="off" onChange="ChangeType();" shop="true">
+                    <option value="Paypal" <%=model.TypeName == "Paypal"?"selected":""%>>┌Paypal</option>
+                    <option value="财付通即时到帐接口" <%=model.TypeName == "财付通即时到帐接口"?"selected":""%>>┌财付通即时到帐接口</option>
+                    <option value="支付宝即时到帐" <%=model.TypeName == "支付宝即时到帐"?"selected":""%>>┌支付宝即时到帐</option>
+                    <option value="支付宝担保交易" <%=model.TypeName == "支付宝担保交易"?"selected":""%>>┌支付宝担保交易</option>
+                    <option value="支付宝双接口" <%=model.TypeName == "支付宝双接口"?"selected":""%>>┌支付宝双接口</option>
+                    <option value="支付宝海外支付" <%=model.TypeName == "支付宝海外支付"?"selected":""%>>┌支付宝海外支付</option>
+                    <option value="支付宝手机支付" <%=model.TypeName == "支付宝手机支付"?"selected":""%>>┌支付宝手机支付</option>
+                    <option value="支付宝批量付款" <%=model.TypeName == "支付宝批量付款"?"selected":""%>>┌支付宝批量付款</option>
+                    <option value="网银在线" <%=model.TypeName == "网银在线"?"selected":""%>>┌网银在线</option>
+                    <option value="95epay" <%=model.TypeName == "95epay"?"selected":""%>>┌95epay</option>
+                    <option value="快钱" <%=model.TypeName == "快钱"?"selected":""%>>┌快钱</option>
+                    <option value="微信支付" <%=model.TypeName == "微信支付"?"selected":""%>>┌微信支付</option>
+                    <option value="微信支付H5" <%=model.TypeName == "微信支付H5"?"selected":""%>>┌微信支付H5</option>
+                    <option value="Molpay" <%=model.TypeName == "Molpay"?"selected":""%>>┌Molpay</option>
+                    <option value="智付" <%=model.TypeName == "智付"?"selected":""%>>┌智付</option>
+                    <option value="钱海支付" <%=model.TypeName == "钱海支付"?"selected":""%>>┌钱海支付</option>
+                    <option value="银联全民付" <%=model.TypeName == "银联全民付"?"selected":""%>>┌银联全民付</option>
+                    <option value="汇付宝" <%=model.TypeName == "汇付宝"?"selected":""%>>┌汇付宝</option>
+                    <option value="behpardakht" <%=model.TypeName == "behpardakht"?"selected":""%>>┌Behpardakht</option>
+                    <option value="authroize" <%=model.TypeName == "authroize"?"selected":""%>>┌Authroize</option>
+                    <option value="INIpayWeb" <%=model.TypeName == "INIpayWeb"?"selected":""%>>┌INIpayWeb</option>
+                    <option value="INIpayWap" <%=model.TypeName == "INIpayWap"?"selected":""%>>┌INIpayWap</option>
+                    <option value="conekta" <%=model.TypeName == "conekta"?"selected":""%>>┌Conekta</option>
+                    <option value="tonglianPay" <%=model.TypeName == "tonglianPay"?"selected":""%>>┌通联支付</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th valign="top" style="width: 15%;">
+                <%=Tag("上级")%>：
+            </th>
+            <td>
+                <select name="parentid" id="parentid" autocomplete="off"  shop="true">
+                    <option value="0">┌顶级</option>
+                    <%foreach(DB.LebiShop.Lebi_OnlinePay p in models){%>
+                    <option value="<%=p.id%>" <%=p.id == model.parentid?"selected":""%>><%=Shop.Bussiness.Language.Content(p.Name, CurrentLanguage.Code)%></option>
+                    <%}%>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("接口代码")%>：
+            </th>
+            <td style="text-align: left;">
+                <input type="text" class="input" shop="true" name="Code" id="Code" value="<%=model.Code %>"
+                    style="width: 400px;" />
+            </td>
+        </tr>
+        <tr>
+            <th valign="top" style="width: 15%;">
+                <%=Tag("图片Logo")%>：
+            </th>
+            <td>
+                <div id="image_Logo">
+                    <%if (model.Logo != "")
+                    {%>
+                    <img height="30" src="<%=site.WebPath + model.Logo%>" />
+                    <%} %>
+                </div>
+                <input type="text" shop="true" id="Logo" name="Logo" class="input" style="width: 200px;" value="<%=model.Logo%>" />
+                <input id="file_Logo" name="file_Logo" class="input" type="file" onchange="uploadImage('Logo')" />
+                <!--<input type="button" value="<%=Tag("上传")%>" class="button" onclick="uploadImage('Logo')" />-->
+            </td>
+        </tr>
+        <tr id="tr_username">
+            <th id="username">
+                <%=username%>：
+            </th>
+            <td style="text-align: left;">
+                <input type="text" class="input" shop="true" name="UserName" id="UserName" value="<%=model.UserName %>"
+                       style="width: 400px;" />
+            </td>
+        </tr>
+        <tr>
+            <th id="key">
+                <%=key%>：
+            </th>
+            <td style="text-align: left;">
+                <input type="text" class="input" shop="true" name="UserKey" id="UserKey" value="<%=model.UserKey %>"
+                       style="width: 400px;" />
+            </td>
+        </tr>
+        <tr id="tr_email">
+            <th id="email">
+                <%=email%>：
+            </th>
+            <td style="text-align: left;">
+                <input type="text" class="input" shop="true" name="Email" id="Email" value="<%=model.Email %>"
+                       style="width: 400px;" />
+            </td>
+        </tr>
+        <tr id="tr_appid">
+            <th>
+                Appid：
+            </th>
+            <td style="text-align: left;">
+                <input type="text" class="input" shop="true" name="Appid" id="Appid" value="<%=model.Appid %>"
+                       style="width: 400px;" />
+            </td>
+        </tr>
+        <!--<tr id="tr_appkey">
+            <th>
+                AppSecret：
+            </th>
+            <td style="text-align: left;">
+                <input type="text" class="input" shop="true" name="Appkey" id="Appkey" value="<%=model.Appkey %>"
+                    style="width: 400px;" />
+            </td>
+        </tr>-->
+        <tr id="tr_terminal">
+            <th>
+                <%=Tag("终端号")%>：
+            </th>
+            <td style="text-align: left;">
+                <input type="text" class="input" shop="true" name="terminal" id="terminal" value="<%=model.terminal %>"
+                       style="width: 400px;" />
+            </td>
+        </tr>
+        <tr id="tr_userrealname">
+            <th>
+                <%=Tag("真实姓名")%>：
+            </th>
+            <td style="text-align: left;">
+                <input type="text" class="input" shop="true" name="UserRealName" id="UserRealName" value="<%=model.UserRealName %>"
+                       style="width: 400px;" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("提交URL")%>：
+            </th>
+            <td style="text-align: left;">
+                <input type="text" class="input" shop="true" name="Url" id="Url" value="<%=model.Url %>"
+                       style="width: 400px;" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("手续费")%>：
+            </th>
+            <td style="text-align: left;">
+                <input type="text" class="input" shop="true" name="FeeRate" id="FeeRate" value="<%=model.FeeRate %>" onkeyup="value=value.replace(/[^\d\.]/g,'');" style="width: 70px;" /> %
+                <label><input type="checkbox" name="FreeFeeRate" value="1" shop="true" <%=model.FreeFeeRate==1?"checked":"" %> /><%=Tag("免手续费")%></label>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("是否启用")%>：
+            </th>
+            <td>
+                <label><input type="radio" name="IsUsed" shop="true" value="1" <%=model.IsUsed==1?"checked":"" %> /><%=Tag("是")%></label>
+                <label><input type="radio" name="IsUsed" shop="true" value="0" <%=model.IsUsed==0?"checked":"" %> /><%=Tag("否")%></label>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("启用类型")%>：
+            </th>
+            <td>
+                <label><input type="checkbox" name="showtype" shop="true" value="web" <%=model.showtype.Contains("web")?"checked":"" %> /> Web</label>
+                <label><input type="checkbox" name="showtype" shop="true" value="wap" <%=model.showtype.Contains("wap")?"checked":"" %> /> Wap</label>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("货币")%>：
+            </th>
+            <td>
+                <select id="Currency_id" name="Currency_id" shop="true">
+                    <%=Currency(model.Currency_id)%>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("供应商")%>：
+            </th>
+            <td>
+                <select id="Supplier_id" name="Supplier_id" shop="true">
+                    <option value="0"><%=Tag("商城") %></option>
+                    <%=Shop.Bussiness.EX_Supplier.SupplierOption(model.Supplier_id, CurrentLanguage.Code)%>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th style="vertical-align:top">
+                <%=Tag("语言")%>：
+            </th>
+            <td>
+                <%= Shop.Bussiness.Language.SiteLanguageCheckbox("Language_ids", model.Language_ids,CurrentLanguage.Code,CurrentAdmin)%>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("排序序号")%>：
+            </th>
+            <td style="text-align: left;">
+                <input type="text" class="input" shop="true" name="Sort" id="Sort" value="<%=model.Sort %>" onkeyup="value=value.replace(/[^\d]/g,'');" style="width: 70px;" />
+            </td>
+        </tr>
+        <tr>
+            <th style="vertical-align:top">
+                <%=Tag("内部备注")%>：
+            </th>
+            <td>
+                <textarea id="Remark" shop="true" name="Remark" class="textarea" style="height: 60px;width: 500px;"><%=model.Remark %></textarea>
+                <div class="tools clear">
+                    <ul>
+                        <li class="plus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Remark',100);"><b></b><span><%=Tag("展开")%></span></a></li>
+                        <li class="minus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Remark',-100)"><b></b><span><%=Tag("收缩")%></span></a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="action">
+                <div class="tools tools-m">
+                    <ul>
+                        <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+        LanguageTab_EditPage('<%=CurrentLanguage.Code %>'); //加载默认语言
+        function SaveObj() {
+            <%foreach (DB.LebiShop.Lebi_Language_Code lang in Shop.Bussiness.Language.Languages()){%>
+            var editor<%=lang.Code %> = CKEDITOR.instances.Description<%=lang.Code %>;
+            $("#Description<%=lang.Code %>").val(editor<%=lang.Code %>.getData())
+            <%} %>
+            var postData = GetFormJsonData("shop");
+        if (!CheckForm("shop", "span"))
+            return false;
+        var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=OnlinePay_Edit&id=<%=model.id %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function uploadImage(id) {
+            $.ajaxFileUpload
+            (
+                {
+                    url: WebPath + '/ajax/imageuploadone.aspx?path=config',
+                    secureuri: false,
+                    fileElementId: 'file_' + id,
+                    dataType: 'json',
+                    success: function (data, status) {
+                        if (data.msg != 'OK') {
+                            MsgBox(2, data.msg, "");
+                        }
+                        else {
+                            var imageUrl = data.ImageUrl;
+                            if (imageUrl.length > 0) {
+                                $("#image_" + id + "").html('<img height="30" src=' + WebPath + imageUrl + '>');
+                                $("#" + id + "").val(imageUrl);
+                            }
+                        }
+
+                    }
+                }
+            )
+        }
+        function ChangeType(){
+            var t=$("#TypeName").val();
+            $("#tr_appid").hide();
+            $("#tr_userrealname").hide();
+            $("#tr_terminal").hide();
+            switch (t) {
+                case "Paypal":
+                    $("#Code").val("paypal");
+                    $("#username").html("<%=Tag("帐号") %>：");
+                    $("#key").html("<%=Tag("KEY") %>：");
+                    $("#email").html("<%=Tag("邮箱") %>：");
+                    $("#Url").val("/onlinepay/paypal/default.aspx");
+                    break;
+                case "财付通即时到帐接口":
+                    $("#Code").val("tenpayJSDZ");
+                    $("#username").html("<%=Tag("帐号") %>：");
+                    $("#key").html("<%=Tag("KEY") %>：");
+                    $("#email").html("<%=Tag("邮箱") %>：");
+                    $("#Url").val("/onlinepay/tenpayJSDZ/default.aspx");
+                    break;
+                case "支付宝即时到帐":
+                    $("#Code").val("alipayJSDZ");
+                    $("#username").html("合作者身份(PID)：");
+                    $("#key").html("安全校验码(Key)：");
+                    $("#email").html("支付宝账号：");
+                    $("#Url").val("/onlinepay/alipayJSDZ/default.aspx");
+                    break;
+                case "支付宝担保交易":
+                    $("#Code").val("alipayDBJY");
+                    $("#username").html("合作者身份(PID)：");
+                    $("#key").html("安全校验码(Key)：");
+                    $("#email").html("支付宝账号：");
+                    $("#Url").val("/onlinepay/alipayDBJY/default.aspx");
+                    break;
+                case "支付宝双接口":
+                    $("#Code").val("alipaySJK");
+                    $("#username").html("合作者身份(PID)：");
+                    $("#key").html("安全校验码(Key)：");
+                    $("#email").html("支付宝账号：");
+                    $("#Url").val("/onlinepay/alipaySJK/default.aspx");
+                    break;
+                case "支付宝海外支付":
+                    $("#Code").val("alipayHaiWai");
+                    $("#username").html("合作者身份(PID)：");
+                    $("#key").html("安全校验码(Key)：");
+                    $("#email").html("支付宝账号：");
+                    $("#Url").val("/onlinepay/alipayHaiWai/default.aspx");
+                    break;
+                case "支付宝手机支付":
+                    $("#Code").val("alipayWAP");
+                    $("#username").html("合作者身份(PID)：");
+                    $("#key").html("安全校验码(Key)：");
+                    $("#email").html("支付宝账号：");
+                    $("#Url").val("/onlinepay/alipayWAP/default.aspx");
+                    break;
+                case "支付宝批量付款":
+                    $("#Code").val("alipaybatch");
+                    $("#username").html("合作者身份(PID)：");
+                    $("#key").html("安全校验码(Key)：");
+                    $("#email").html("支付宝账号：");
+                    $("#tr_userrealname").show();
+                    $("#Url").val("/onlinepay/alipaybatch/default.aspx");
+                    break;
+                case "网银在线":
+                    $("#Code").val("wangyinzaixian");
+                    $("#username").html("商户号：");
+                    $("#key").html("MD5密钥：");
+                    $("#email").html("<%=Tag("邮箱") %>：");
+                    $("#Url").val("/onlinepay/wangyinzaixian/default.aspx");
+                    break;
+                case "95epay":
+                    $("#Code").val("95epay");
+                    $("#username").html("<%=Tag("帐号") %>：");
+                    $("#key").html("<%=Tag("KEY") %>：");
+                    $("#email").html("<%=Tag("邮箱") %>：");
+                    $("#Url").val("/onlinepay/95epay/Payment.aspx");
+                    break;
+                case "快钱":
+                    $("#Code").val("kuaiqian");
+                    $("#username").html("<%=Tag("帐号") %>：");
+                    $("#key").html("<%=Tag("KEY") %>：");
+                    $("#email").html("<%=Tag("邮箱") %>：");
+                    $("#Url").val("/onlinepay/kuaiqian/default.aspx");
+                    break;
+                case "微信支付":
+                    $("#Code").val("weixinpay");
+                    $("#username").html("商户号：");
+                    $("#key").html("密钥：");
+                    $("#email").html("商户简称：");
+                    $("#tr_appid").show();
+                    $("#Url").val("/onlinepay/weixinpay/default.aspx");
+                    //$("#tr_appkey").show();
+                    break;
+                case "微信支付H5":
+                    $("#Code").val("weixinpayh5");
+                    $("#username").html("商户号：");
+                    $("#key").html("密钥：");
+                    $("#email").html("商户简称：");
+                    $("#tr_appid").show();
+                    $("#Url").val("/onlinepay/weixinpayh5/default.aspx");
+                    //$("#tr_appkey").show();
+                    break;
+                case "Molpay":
+                    $("#Code").val("molpay");
+                    $("#username").html("Merchant ID：");
+                    $("#key").html("Verify Key：");
+                    $("#email").html("<%=Tag("邮箱") %>：");
+                    $("#Url").val("/onlinepay/molpay/default.aspx");
+                    break;
+                case "智付":
+                    $("#Code").val("dinpay");
+                    $("#username").html("<%=Tag("帐号") %>：");
+                    $("#key").html("<%=Tag("KEY") %>：");
+                    $("#email").html("<%=Tag("邮箱") %>：");
+                    $("#Url").val("/onlinepay/dinpay/default.aspx");
+                    break;
+                case "钱海支付":
+                    $("#Code").val("qianhai");
+                    $("#username").html("商户号：");
+                    $("#key").html("MD5密钥：");
+                    $("#email").html("<%=Tag("邮箱") %>：");
+                    $("#tr_terminal").show();
+                    $("#Url").val("/onlinepay/qianhai/default.aspx");
+                    break;
+                case "银联全民付":
+                    $("#Code").val("yinlianqmf");
+                    $("#username").html("商户号：");
+                    $("#key").html("密钥路径：");
+                    $("#email").html("公钥路径：");
+                    $("#tr_terminal").show();
+                    $("#Url").val("/onlinepay/yinlianqmf/default.aspx");
+                    break;
+                case "汇付宝":
+                    $("#Code").val("huifubao");
+                    $("#username").html("商户号：");
+                    $("#key").html("密钥：");
+                    $("#Url").val("/onlinepay/huifubao/default.aspx");
+                    break;
+                case "behpardakht":
+                    $("#Code").val("behpardakht");
+                    $("#username").html("UserName：");
+                    $("#key").html("PassWord：");
+                    $("#tr_terminal").show();
+                    $("#tr_email").hide();
+                    $("#Url").val("/onlinepay/behpardakht/default.aspx");
+                    break;
+                case "authroize":
+                    $("#Code").val("authroize");
+                    $("#username").html("APILoginID：");
+                    $("#key").html("ApiKey：");
+                    $("#email").html("ApiTransactionKey：");
+                    $("#tr_terminal").hide();
+                    $("#Url").val("/onlinepay/authroizeVisa/default.aspx");
+                    break;
+                case"INIpayWap":
+                    $("#Code").val("INIpayWap");
+                    $("#username").html("商户号：");
+                    $("#key").html("密钥：");
+                    $("#Url").val("/onlinepay/INIpayWap/default.aspx");
+                    break;
+                case"INIpayWeb":
+                    $("#Code").val("INIpayWeb");
+                    $("#username").html("商户号：");
+                    $("#key").html("密钥：");
+                    $("#Url").val("/onlinepay/INIpayWeb/default.aspx");
+                    break;
+                case "conekta":
+                    $("#Code").val("conekta");
+                    $("#username").html("商户号：");
+                    $("#key").html("密钥：");
+                    $("#Url").val("/onlinepay/conektapay/default.aspx");
+                    break;
+                case "tonglianPay":
+                    $("#Code").val("tonglianPay");
+                    $("#username").html("商户号：");
+                    $("#key").html("密钥：");
+                    $("#tr_appid").show();
+
+                    //$("#Url").val("/onlinepay/tonglianPay/default.aspx");
+                    break;
+
+
+                    
+
+            }
+        }
+        ChangeType();
+    </script>
+</lbbody>

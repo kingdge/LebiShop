@@ -1,0 +1,382 @@
+﻿{layout:default} {class:Shop.Admin.order.Default}
+<lbhead>
+    <title><%=Tag("订单管理")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <link href="<%=site.AdminAssetsPath %>/plugins/daterangepicker/daterangepicker.css" rel="stylesheet">
+</lbfile>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("订单管理")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/order/default.aspx?t=<%=t %>"><%=Shop.Bussiness.EX_Type.TypeName(t) %></a></li>
+        <li class="breadcrumb-item active"><%=Tag("订单管理")%> <%=su.Description%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="col-md-12">
+                <ul class="nav nav-tabs customtab m-t-15" role="tablist">
+                    <li class="nav-item">
+                        <a <%if (type==""){Response.Write("class=\"nav-link active\"");}else{Response.Write("class=\"nav-link\"");} %> href="javascript:void(0)" onclick="taburl();" role="tab"><%=Tag("全部订单")%></a>
+                    </li>
+                    <li class="nav-item">
+                        <a <%if (type=="1"){Response.Write("class=\"nav-link active\"");}else{Response.Write("class=\"nav-link\"");} %> href="javascript:void(0)" onclick="taburl(1);" role="tab"><%=Tag("未确认")%></a>
+                    </li>
+                    <li class="nav-item">
+                        <a <%if (type=="2"){Response.Write("class=\"nav-link active\"");}else{Response.Write("class=\"nav-link\"");} %> href="javascript:void(0)" onclick="taburl(2);" role="tab"><%=Tag("已确认")%></a>
+                    </li>
+                    <%if (t == 211){%>
+                    <li class="nav-item">
+                        <a <%if (type=="3"){Response.Write("class=\"nav-link active\"");}else{Response.Write("class=\"nav-link\"");} %> href="javascript:void(0)" onclick="taburl(3);" role="tab"><%=Tag("未支付")%></a>
+                    </li>
+                    <li class="nav-item">
+                        <a <%if (type=="4"){Response.Write("class=\"nav-link active\"");}else{Response.Write("class=\"nav-link\"");} %> href="javascript:void(0)" onclick="taburl(4);" role="tab"><%=Tag("已支付")%></a>
+                    </li>
+                    <li class="nav-item">
+                        <a <%if (type=="5"){Response.Write("class=\"nav-link active\"");}else{Response.Write("class=\"nav-link\"");} %> href="javascript:void(0)" onclick="taburl(5);" role="tab"><%=Tag("未发货")%></a>
+                    </li>
+                    <li class="nav-item">
+                        <a <%if (type=="6"){Response.Write("class=\"nav-link active\"");}else{Response.Write("class=\"nav-link\"");} %> href="javascript:void(0)" onclick="taburl(6);" role="tab"><%=Tag("已发货")%></a>
+                    </li>
+                    <li class="nav-item">
+                        <a <%if (type=="7"){Response.Write("class=\"nav-link active\"");}else{Response.Write("class=\"nav-link\"");} %> href="javascript:void(0)" onclick="taburl(7);" role="tab"><%=Tag("部分发货")%></a>
+                    </li>
+                    <li class="nav-item">
+                        <a <%if (type=="8"){Response.Write("class=\"nav-link active\"");}else{Response.Write("class=\"nav-link\"");} %> href="javascript:void(0)" onclick="taburl(8);" role="tab"><%=Tag("未收货")%></a>
+                    </li>
+                    <li class="nav-item">
+                        <a <%if (type=="9"){Response.Write("class=\"nav-link active\"");}else{Response.Write("class=\"nav-link\"");} %> href="javascript:void(0)" onclick="taburl(9);" role="tab"><%=Tag("已收货")%></a>
+                    </li>
+                    <%} %>
+                    <li class="nav-item">
+                        <a <%if (type=="10"){Response.Write("class=\"nav-link active\"");}else{Response.Write("class=\"nav-link\"");} %> href="javascript:void(0)" onclick="taburl(10);" role="tab"><%=Tag("已完成")%></a>
+                    </li>
+                    <li class="nav-item">
+                        <a <%if (type=="11"){Response.Write("class=\"nav-link active\"");}else{Response.Write("class=\"nav-link\"");} %> href="javascript:void(0)" onclick="taburl(11);" role="tab"><%=Tag("无效订单")%></a>
+                    </li>
+                    <li class="nav-item">
+                        <a <%if (type=="12"){Response.Write("class=\"nav-link active\"");}else{Response.Write("class=\"nav-link\"");} %> href="javascript:void(0)" onclick="taburl(12);" role="tab"><%=Tag("申请取消")%></a>
+                    </li>
+                    <li class="nav-item">
+                        <a <%if (type=="13"){Response.Write("class=\"nav-link active\"");}else{Response.Write("class=\"nav-link\"");} %> href="javascript:void(0)" onclick="taburl(13);" role="tab"><%=Tag("已取消")%></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-9 m-b-10">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-info" onclick="AddOrder()"><i class="ti-plus"></i> <%=Tag("添加订单")%></button>
+                        <button class="btn btn-danger" onclick="DeleteConfirm()"><i class="ti-trash"></i> <%=Tag("删除")%></button>
+                        <button class="btn btn-default" onclick="Express_Log_Add()"><i class="ti-truck"></i> <%=Tag("添加至快递单")%></button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <%=Tag("打印")%>
+                            </button>
+                            <div class="dropdown-menu">
+                                <%
+                                List<DB.LebiShop.Lebi_AdminSkin> skins = DB.LebiShop.B_Lebi_AdminSkin.GetList("Type_id_AdminSkinType = 361", "Sort desc");
+                                foreach (DB.LebiShop.Lebi_AdminSkin skin in skins)
+                                {
+                                %>
+                                    <a href="javascript:void(0);" onclick="AdminSkin('<%=skin.Code%>');" class="dropdown-item"><%=skin.Name%></a>
+                                <%} %>
+                            </div>
+                        </div>
+                        <%
+                        if (Shop.LebiAPI.Service.Instanse.Check("plugin_ordercsv")){
+                            Response.Write("<button class=\"btn btn-default\" onclick=\"Export();\"><i class=\"ti-export\"></i> "+ Tag("导出") +"</button>");
+                        }
+                        %>
+                        <%}%>
+                    </div>
+                    <div class="col-md-3 m-b-10">
+                        <div class="input-group">
+                            <input type="text" id="key" name="key" value="<%=key %>" class="form-control" onkeydown="if(event.keyCode==13){search_();}">
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-primary" onclick="search_();"><i class="ti-search"></i></button>
+                                <button class="btn btn-default" onclick="SearchWindow();"><i class="ti-filter"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px" class="selectAll">
+                                    <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));">
+                                        <%=Tag("全选")%>
+                                    </a>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                                <th>
+                                    <%=Tag("订单编号")%>
+                                </th>
+                                <th>
+                                    <%=Tag("会员")%>
+                                </th>
+                                <th>
+                                    <%=Tag("购买人")%>
+                                </th>
+                                <th>
+                                    <%=Tag("金额")%>
+                                </th>
+                                <th>
+                                    <%=Tag("订单状态")%>
+                                </th>
+                                <th>
+                                    <%=Tag("支付方式")%>
+                                </th>
+                                <th>
+                                    <%=Tag("配送方式")%>
+                                </th>
+                                <th>
+                                    <%=Tag("订购日期")%>
+                                </th>
+                                <%if (domain3admin)
+                                { %>
+                                <th>
+                                    <%=Tag("站点") %>
+                                </th>
+                                <%} %>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%string Mark = "";foreach (DB.LebiShop.Lebi_Order model in models){
+                            if (model.Mark !=0){
+                            switch (model.Mark){
+                            case 1:Mark="text-danger";break;
+                            case 2:Mark="text-primary";break;
+                            case 3:Mark="text-success";break;
+                            case 4:Mark="text-warning";break;
+                            case 5:Mark="text-purple";break;
+                            }
+                            }else{
+                            Mark="text-dark";
+                            }
+                            %>
+                            <tr ondblclick="Edit(<%=model.id %>,<%=model.Type_id_OrderType %>);">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox<%=model.id %>" name="id" value="<%=model.id %>" class="custom-control-input" del="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td onmouseover="GetOrderMemo('<%=model.id %>');">
+                                    <a target="_blank" href="order_view.aspx?id=<%=model.id %>"><i class="ti-new-window"></i></a>
+                                    <a id="OrderMemo<%=model.id %>"><i class="ti-flag <%=Mark%>"></i></a>
+                                </td>
+                                <td>
+                                    <a target="_blank" href="order_view.aspx?id=<%=model.id %>"><%=model.Code %></a>
+                                    <%if (model.Supplier_id > 0){ %>
+                                    <a href="?t=<%=t %>&Supplier_id=<%=model.Supplier_id %>">
+                                        <i class="ti-user" title="<%=Tag("商家")%>：<%=Shop.Bussiness.EX_Supplier.GetSupplier(model.Supplier_id).Company%>"></i>
+                                    </a>
+                                    <%} %>
+                                </td>
+                                <td>
+                                    <%=model.User_UserName %>
+                                </td>
+                                <td>
+                                    <%=model.T_Name %>
+                                </td>
+                                <td>
+                                    <%=FormatMoney(model.Money_Order) %>
+                                </td>
+                                <td>
+                                    <%=Shop.Bussiness.Order.OrderStatus(model, CurrentLanguage.Code, 1) %>
+                                </td>
+                                <td>
+                                    <%=Shop.Bussiness.Language.Content(model.Pay, CurrentLanguage.Code)%>
+                                </td>
+                                <td>
+                                    <%=model.Transport_Name%>
+                                </td>
+                                <td>
+                                    <%=FormatTime(model.Time_Add) %>
+                                </td>
+                                <%if (domain3admin){ %>
+                                <td><%=SiteName(model.Site_id) %></td>
+                                <%} %>
+                            </tr>
+                            <%if (model.DT_id>0){%>
+                            <tr>
+                                <td colspan="13">
+                                    <%=Tag("分销商")%>：
+                                    <%
+                                    DB.LebiShop.Lebi_DT dt = DB.LebiShop.B_Lebi_DT.GetModel(model.DT_id);
+                                    if (dt !=null){
+                                        Response.Write(dt.UserName);
+                                    }
+                                    %>
+                                    &nbsp;&nbsp;<%=Tag("佣金")%>：<%=FormatMoney(model.DT_Money) %>
+                                </td>
+                            </tr>
+                            <%} %>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation ">
+                            <%=PageString%>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="SearchModal" tabindex="-1" role="dialog" aria-labelledby="SearchModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"><%=Tag("高级搜索")%></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text" name="daterange" id="daterange" class="form-control">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        <span class="ti-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="key" name="key" class="form-control" value="<%=key %>" onkeydown="if(event.keyCode==13){modal_search_();}">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="ti-close"></i> <%=Tag("关闭")%></button>
+                    <button type="button" class="btn btn-success" onclick="modal_search_();"><i class="ti-search"></i> <%=Tag("搜索")%></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    {MOD:DateRangePicker}
+    <script>
+        function taburl(type) {
+            if (type == undefined)
+                type = "";
+            window.location = "?t=<%=t%>&user_id=<%=user_id %>&Supplier_id=<%=Supplier_id %>&dateFrom=<%=dateFrom %>&dateTo=<%=dateTo %>&key=<%=HttpUtility.UrlEncode(key) %>&type=" + type;
+        }
+        $(document).ready(function () {
+            var li = $(".datalist .menu");
+            $(li).each(function (i) {
+                var _this = this;
+                $(_this).find(".showmenu").mouseover(function () {
+                    $(".datalist .menu .submenu").hide();
+                    var divindex = $(".datalist .menu").find(".submenu")[i];
+                    $(divindex).show();
+                    $(divindex).mouseleave(function () {
+                        $(divindex).hide();
+                    });
+                });
+            });
+        });
+        function search_(scurl) {
+            var mark = GetRadioCheckedValues("mark");
+            var key = $("#key").val();
+            var dateFrom = $("#dateFrom").val();
+            var dateTo = $("#dateTo").val();
+            if (scurl == undefined || scurl == '')
+                scurl = '<%=su.URL %>';
+            window.location = "?t=<%=t%>&type=<%=type%>&mark=" + mark + "&key=" + escape(key) + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&" + scurl;
+        }
+        function Edit(id, t) {
+            if (t == 211)
+                window.open("order_view.aspx?id=" + id);
+            else
+                window.open("torder_view.aspx?id=" + id);
+        }
+        function DeleteConfirm() {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要删除吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "DeleteObj();");
+        }
+        function DeleteObj() {
+            $("#Modal-Confirm").modal("hide");
+            var ids = GetChkCheckedValues("id");
+            var postData = { "ids": ids };
+            var url = "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=Order_Del";
+            RequestAjax(url, postData, function () { MsgBox(1, "<%=Tag("操作成功")%>", "?") });
+        }
+        function GetOrderMemo(id) {
+            $.ajax({
+                type: "POST",
+                url: AdminPath + "/ajax/ajax_order.aspx?__Action=Order_Memo&random=" + Math.random(),
+                data: { "id": id },
+                success: function (res) {
+                    $("#OrderMemo" + id).attr("title",res);
+                }
+            });
+        }
+        function AddOrder() {
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "<%=site.AdminPath %>/order/order_add_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {},
+            }).done(function (result) {
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function Express_Log_Add() {
+            var ids = GetChkCheckedValues("id");
+            var postData = { "ids": ids };
+            var url = "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=Express_Log_Add";
+            RequestAjax(url, postData, function () { MsgBox(1, "<%=Tag("操作成功")%>", "Express_Log.aspx") });
+        }
+        function AdminSkin(code) {
+            var ids = GetChkCheckedValues("id");
+            if (ids == "") {
+                MsgBox(2, "<%=Tag("请先选择")%>", "");
+                return;
+            }
+            window.open("<%=site.AdminPath %>/custom/" + code + ".aspx?id=" + ids);
+        }
+        <%if (Shop.LebiAPI.Service.Instanse.Check("plugin_ordercsv")) {  %>
+        function Export() {
+            var ids = GetChkCheckedValues("id");
+            if (ids == "") {
+                MsgBox(2, "<%=Tag("请先选择")%>", "");
+                return;
+            }
+            var title_ = "<%=Tag("批量导出")%>";
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "<%=site.AdminPath %>/plugin/Lebi.OrderCsv/export_window.aspx",
+                type: "GET",
+                cache: false,
+                data: { ids: ids},
+            }).done(function (result) {
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        <%} %>
+        function SearchWindow() {
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "order_search_window.aspx?callback=search_&<%=su.URL %>",
+                type: "GET",
+                cache: false,
+                data: {},
+            }).done(function (result) {
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+    </script>
+</lbscripts>

@@ -1,0 +1,130 @@
+﻿{layout:default} {class:Shop.Admin.theme.advertment}
+<lbhead>
+    <title><%=Tag("广告位")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("广告位") %></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/theme/default.aspx"><%=Tag("主题管理")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("广告位") %></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 m-b-10">
+                        <div class="input-group">
+                            <input type="text" id="key" name="key" value="<%=key %>" class="form-control" onkeydown="if(event.keyCode==13){search_();}">
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-primary" onclick="search_();"><i class="ti-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive sorttable">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <%=Tag("代码")%>
+                                </th>
+                                <th>
+                                    <%=Tag("说明")%>
+                                </th>
+                                <th>
+                                    <%=Tag("模板")%>
+                                </th>
+                                <th>
+                                    <%=Tag("尺寸")%>
+                                </th>
+                                <th>
+                                    <%=Tag("图片数")%>
+                                </th>
+                                <th>
+                                    <%=Tag("排序")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_Theme_Advert model in models){%>
+                            <tr ondblclick="window.location='AdvertList.aspx?id=<%=model.id %>&tid=<%=model.Theme_id %>';">
+                                <td>
+                                    {AD:<%=model.Code%>}
+                                </td>
+                                <td>
+                                    <%=model.Description%>
+                                </td>
+                                <td>
+                                    <%=GetThemeName(model.Theme_id)%>
+                                </td>
+                                <td>
+                                    <%=model.Width + " * " + model.Height%>
+                                </td>
+                                <td>
+                                    <a href="AdvertList.aspx?id=<%=model.id %>&tid=<%=model.Theme_id %>"><%=DB.LebiShop.B_Lebi_Advert.Counts("Theme_Advert_id=" + model.id)%></a>
+                                </td>
+                                <td>
+                                    <%=model.Sort%>
+                                </td>
+                                <td>
+                                    <a href="javascript:void(0)" onclick="Editobj(<%=model.Theme_id %>,<%=model.id %>);"><%=Tag("编辑")%></a> | <a href="AdvertList.aspx?id=<%=model.id %>&tid=<%=model.Theme_id %>"><%=Tag("图片列表")%></a> | <a href="javascript:void(0)" onclick="AdvertImage(<%=model.id %>,0);"><%=Tag("添加图片")%></a>
+                                </td>
+                            </tr>
+                            <%}%>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation">
+                            <%=PageString%>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+    <script>
+        function search_() {
+            var key = $("#key").val();
+            window.location = "?id=<%=id%>&key=" + escape(key);
+        }
+        function Editobj(tid, id) {
+            var title_ = "<%=Tag("编辑")%>";
+            if (id == 0)
+                var title_ = "<%=Tag("添加")%>";
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "advert_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {id: id,tid: tid,title: title_},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function AdvertImage(aid,id) {
+            var title_ = "<%=Tag("编辑")%>";
+            if (id == 0)
+                var title_ = "<%=Tag("添加")%>";
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "advertimage_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {id: id,aid: aid,title: title_},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+    </script>
+</lbscripts>

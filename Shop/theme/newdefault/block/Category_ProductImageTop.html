@@ -1,0 +1,31 @@
+﻿<!--
+Name:本类热门商品图文
+Page:P_ProductCategory
+-->
+<div class="ind-left">
+	<h2 class="title">{tag:热门商品}</h2>
+	${#table:Lebi_Product;#where:"+ProductWhere+" and Type_id_ProductType = 320;#top:3;#order:Count_Views desc,id desc;#model:producttop;
+	<div class="ind-left-hot">
+		<a href="<%=URL("P_Product",{id})%>"><img src="<%=Image(producttop,"medium") %>" /></a>
+		<p class="shopname"><a href="<%=URL("P_Product",{id})%>"><%=Lang({Name})%></a></p>
+		<span class="shopprice"><%=FormatMoney(ProductPrice(producttop))%></span>
+    </div>
+	}$
+	<div class="ind-left-ad">{ad:IndexLeft01}</div><!--ad-->
+	<h2 class="title">{tag:热门搜索}</h2>
+	<div class="ind-left-keyword">
+	${#table:Lebi_Searchkey;#order:Sort desc,id desc;#top:15;
+	<%if ({Type}==1){ %><a href="<%=URL("P_Search",""+Lang({Name})+"") %>"><%}else{ %><a href="{%URL%}" target="_blank"><%} %><span><%=Lang({Name})%></span></a>,
+	}$ 
+	</div>
+	<h2 class="title">{tag:新品上架}</h2>
+	<div class="tuijian">
+	${#table:Lebi_Product;#where:"+ProductWhere+" and Type_id_ProductType = 320 and "+ TagWhere(1) +";#top:4;#order:Sort desc,id desc;#model:tab_tag_pro;
+		<div class="tuijian-list">
+			<div class="img"><a href="<%=URL("P_Product",{id}) %>"><img src="<%=Image(tab_tag_pro,"medium") %>"></a></div>
+			<p class="shopname"><a href="<%=URL("P_Product",{id}) %>"><%=Lang({Name}) %></a></p>
+			<span class="shopprice"><%=FormatMoney(ProductPrice(tab_tag_pro)) %></span>
+		</div>
+	}$
+	</div>
+</div><!--left-->

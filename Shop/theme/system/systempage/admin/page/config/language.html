@@ -1,0 +1,118 @@
+﻿{layout:default} {class:Shop.Admin.sorteConfig.Language}
+<lbhead>
+    <title><%=Tag("站点设置")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <%if (models.Count < sitenum){ %>
+    <li class="add"><a href="javascript:void(0);" onclick="AddSite();"><b></b><span><%=Tag("添加")%></span></a></li>
+    <%} %>
+    <li class="del"><a href="javascript:void(0);" onclick="Del();"><b></b><span><%=Tag("删除")%></span></a></li>
+    <%if(NeedCody){ %>
+    <li class="edit"><a href="javascript:void(0);" onclick="CopyFiles();"><b></b><span><%=Tag("同步系统文件")%></span></a></li>
+    <%} %>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("站点设置")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table class="datalist">
+        <tr class="title">
+<!--            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'Fid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>-->
+            <th style="width: 60px">
+                <%=Tag("ID")%>
+            </th>
+            <th style="width: 150px">
+                <%=Tag("站点简称")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("站点路径")%>
+            </th>
+            <%if (domain3admin) {%>
+            <th style="width: 150px">
+                <%=Tag("站点域名")%>
+            </th>    
+            <%} %>
+            <th style="width: 100px">
+                <%=Tag("WAP站点")%>
+            </th>
+            <th style="width: 200px">
+                <%=Tag("站点语言")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("排序")%>
+            </th>
+            <th>
+                <%=Tag("编辑")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_Site model in models)
+          {%>
+        <tr class="list" ondblclick="EditArea(<%=model.id %>);" >
+<!--            <td style="text-align:center">
+                <input type="checkbox" name="Fid" del="true" value="<%=model.id %>" />
+                <input type="hidden" name="IDS" shop="true" value="<%=model.id %>" />
+            </td>-->
+            <td>
+                <%=model.id %>
+            </td>
+            <td>
+                <%=model.SubName %> <a href="<%if (model.Domain==""){ %><%=models.FirstOrDefault().Domain=="" ? site.WebPath + model.Path : "http://"+ models.FirstOrDefault().Domain + model.Path%><%}else{ %>http://<%=model.Domain%><%} %>" target="_blank"><i class="ti-new-window"></i></a>
+            </td>
+            <td>
+                <%=model.Path %>
+            </td>
+            <%if (domain3admin) {%>
+            <td>
+                <%=model.Domain %>
+            </td>
+            <%} %>
+            <td>
+                <%=model.IsMobile == 1 ? "<span style=\"color:#ff0000\">" + Tag("是") + "</span>" : "" + Tag("否") + ""%>
+            </td>
+            <td>
+                <%foreach (DB.LebiShop.Lebi_Language lang in Shop.Bussiness.Language.SiteLanguages(model.id)){%>
+                <%=lang.Name %>&nbsp;
+                <%} %>
+            </td>
+            <td>
+                <%=model.Sort %>
+            </td>
+            <td>
+                <a href="language_edit.aspx?id=<%=model.id %>"><%=Tag("编辑")%></a><%if (models.Count > 1 && model.id > 1){ %> | <a href="javascript:void(0);" onclick="DelSite(<%=model.id %>);"><%=Tag("删除")%></a><%} %>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function AddSite()
+        {
+            var postData = '';
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=AddSite";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "language_edit.aspx?id="+res.id)});
+        }
+        function DelSite(id)
+        {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = { "id": id };
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=Site_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function CopyFiles()
+        {
+             var postData = '';
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=UpdateSonSite";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+    </div>
+</lbbottom>

@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D6871DF1-C7D1-4117-9F17-829FEE6A083A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Shop.Model</RootNamespace>
+    <AssemblyName>Shop.Model</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="API\Order.cs" />
+    <Compile Include="API\UserAddress.cs" />
+    <Compile Include="API\User.cs" />
+    <Compile Include="BaseConfig.cs" />
+    <Compile Include="ExpressPrint.cs" />
+    <Compile Include="KuaiDi100.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WaterConfig.cs" />
+    <Compile Include="LanguageContent.cs" />
+    <Compile Include="LBimage.cs" />
+    <Compile Include="ServicePanel.cs" />
+    <Compile Include="TransportProduce.cs" />
+    <Compile Include="LBAPI.cs" />
+    <Compile Include="UserService.cs" />
+    <Compile Include="LBLanguage.cs" />
+    <Compile Include="KeyValue.cs" />
+    <Compile Include="ProductProperty.cs" />
+    <Compile Include="SearchModel.cs" />
+    <Compile Include="BasketShop.cs" />
+    <Compile Include="PluginConfig.cs" />
+    <Compile Include="ProductStepPrice.cs" />
+    <Compile Include="BaseConfig_Supplier.cs" />
+    <Compile Include="BaseConfig_DT.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DB.shop\DB.LebiShop.csproj">
+      <Project>{7db4dee2-e21d-44d9-a26b-fa4e5fdfb016}</Project>
+      <Name>DB.LebiShop</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

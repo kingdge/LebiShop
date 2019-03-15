@@ -1,0 +1,109 @@
+﻿{layout:default} {class:Shop.Admin.promotion.EmailTask}
+<lbhead>
+    <title><%=Tag("群发邮件")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("群发邮件")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("群发邮件")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 m-b-10">
+                        <%if (PageReturnMsg == ""){%>
+                        <a class="btn btn-info" href="emailtask_edit.aspx" target="_blank"><i class="ti-plus"></i> <%=Tag("添加")%></a>
+                        <button class="btn btn-danger" onclick="DeleteConfirm()"><i class="ti-trash"></i> <%=Tag("删除")%></button>
+                        <%}%>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th class="selectAll" style="width:40px">
+                                    <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+                                </th>
+                                <th>
+                                    <%=Tag("主题")%>
+                                </th>
+                                <th>
+                                    <%=Tag("发送对象")%>
+                                </th>
+                                <th>
+                                    <%=Tag("状态")%>
+                                </th>
+                                <th>
+                                    <%=Tag("添加时间")%>
+                                </th>
+                                <th>
+                                    <%=Tag("管理员")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_EmailTask model in models){%>
+                            <tr>
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox<%=model.id %>" name="id" value="<%=model.id %>" class="custom-control-input" del="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=Lang(model.EmailTitle) %>
+                                </td>
+                                <td>
+                                    <%=userlevel(model.UserLevel_ids)%>
+                                </td>
+                                <td>
+                                    <%=model.IsSubmit==1?"<span class=\"label label-success\">" + Tag("已提交") + "</span>" : "<span class=\"label label-danger\">" + Tag("未提交") + "</span>"%>
+                                </td>
+
+                                <td>
+                                    <%=FormatTime(model.Time_add) %>
+                                </td>
+                                <td>
+                                    <%=model.Admin_UserName%>
+                                </td>
+                                <td>
+                                    <a href="emailtask_edit.aspx?id=<%=model.id %>" target="_blank"><%=model.IsSubmit==1?Tag("查看"):Tag("编辑") %></a>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation ">
+                            <%=PageString%>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        function DeleteConfirm() {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要删除吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "Delete();");
+        }
+        function Delete() {
+            $("#Modal-Confirm").modal("hide");
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_sale.aspx?__Action=EmailTask_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbscripts>

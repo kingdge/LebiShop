@@ -1,0 +1,74 @@
+﻿{layout:simple} {class:Shop.Admin.order.order_baseinfo_edit_window}
+<lbbody>
+    <form action="javascript:SaveObj();" novalidate>
+        <div class="modal-header">
+            <h4 class="modal-title"><%=Tag("编辑")%></h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        </div>
+        <div class="modal-body" style="max-height:500px;overflow-y:auto;">
+            <div class="form-group">
+                <label for="Pay_id"><%=Tag("付款方式")%>：</label>
+                <div class="input-group">
+                    <select id="Pay_id" name="Pay_id" class="form-control" orderbaseinfo="true" onchange="changepay();">
+                        <%=paylist(model.Pay_id)%>
+                    </select>
+                    <select id="OnlinePay_id" name="OnlinePay_id" class="form-control" style="display:none" orderbaseinfo="true">
+                        <%=onlinepaylist(model.OnlinePay_id)%>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Transport_id"><%=Tag("配送方式")%>：</label>
+                <select id="Transport_id" name="Transport_id" class="form-control" orderbaseinfo="true" onchange="changetransport();">
+                    <%=transportlist(model.Transport_id)%>
+                </select>
+            </div>
+            <div id="trPickUp_id" style="display:none">
+                <h4 class="nav-tips m-t-20 m-b-10"><%=Tag("自提")%></h4>
+                <div class="form-group">
+                    <label for="PickUp_id"><%=Tag("自提点")%>：</label>
+                    <select id="PickUp_id" name="PickUp_id" class="form-control" orderbaseinfo="true">
+                        <%=pickuplist(model.PickUp_id)%>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="PickUp_Date"><%=Tag("时间")%>：</label>
+                    <input type="text" id="PickUp_Date" name="PickUp_Date" value="<%=FormatDate(model.PickUp_Date) %>" class="form-control" orderbaseinfo="true">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="ti-close"></i> <%=Tag("关闭")%></button>
+            <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+        </div>
+    </form>
+    <script>
+        $('#PickUp_Date').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: { format: 'YYYY-MM-DD' }
+        });
+        function SaveObj() {
+            $("#EditModal").modal("hide");
+            var postData = GetFormJsonData("orderbaseinfo");
+            var url = "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=Order_baseinfo_Edit&id=<%=model.id %>";
+            RequestAjax(url, postData, function () { MsgBox(1, "<%=Tag("操作成功")%>", "?") });
+        }
+        function changepay() {
+            var code = $('#Pay_id option:selected').attr('code');
+            if (code == 'OnlinePay')
+                $('#OnlinePay_id').show();
+            else
+                $('#OnlinePay_id').hide();
+        }
+        function changetransport() {
+            var code = $('#Transport_id option:selected').attr('code');
+            if (code == '332')
+                $('#trPickUp_id').show();
+            else
+                $('#trPickUp_id').hide();
+        }
+        changetransport();
+        changepay();
+    </script>
+</lbbody>

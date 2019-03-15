@@ -1,0 +1,78 @@
+﻿<!--
+Name:用户中心-推广佣金-佣金查询
+Page:P_UserAgentMoney
+-->
+<div class="nbbox clearfix">
+<div class="user">
+    <div class="searchbox">
+        <select name="status" id="status">
+            <option value="0">┌<%=Tag("状态")%></option>
+            <%=Shop.Bussiness.EX_Type.TypeOption("AgentMoneyStatus", status)%>
+        </select>
+        <input type="text" id="key" name="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" />
+        <a href="javascript:void(0)" onclick="search_();" class="btn btn-12"><s></s>{tag:查询}</a>
+        <a href="javascript:void(0);" onclick="TackAgentMoney();" class="btn btn-12"><s></s><%=Tag("转入现金账户")%></a>
+        <div style="margin-top:5px;">
+             <%=Tag("有效金额") %>：<%=CurrentCurrency.Msige %><%=zmoney.ToString("0.00")%>&nbsp;&nbsp;<%=Tag("可提现金额") %>：<%=CurrentCurrency.Msige %><%=money.ToString("0.00")%>
+        </div>
+    </div>
+    <div class="table-list loadlist">
+        <%foreach (DB.LebiShop.Lebi_Agent_Money model in models){%>
+        <div class="loadli">
+        <table cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <th style="width:200px"><%=Tag("订单")%>：<%=model.Order_Code%></th>
+            <th><%=Shop.Bussiness.EX_Type.TypeName(model.Type_id_AgentMoneyStatus,CurrentLanguage.Code)%></th>
+            <th style="width:60px"><%=FormatMoney(model.Money) %></th>
+        </tr>
+        <tr>
+            <th><%=Tag("类型")%>：<%=Shop.Bussiness.EX_Type.TypeName(model.Type_id_AgentMoneyType,CurrentLanguage.Code)%></th>
+            <td colspan="2"><%=FormatTime(model.Time_add)%></td>
+        </tr>
+        </table>
+        </div>
+        <%} %>
+    </div>
+    <%if (CurrentSite.IsMobile==0){ %>
+        <div class="bottom clearfix"><div class="right"><%=PageString%></div></div>
+    <%}else{%>
+    <div class="loadpage">
+        <a data-next="<%=NextPage%>"></a>
+    </div>
+    <script>
+        $(document).ready(function () {
+            var container = document.querySelector('.loadlist');
+            var ias = $.ias({
+                container: ".loadlist",
+                item: ".loadli",
+                pagination: ".loadpage",
+                next: ".loadpage a"
+            });
+            ias.on('render', function (items) {
+                //$(items).css({ opacity: 0 });
+            });
+            ias.on("rendered", function (items) {
+            });
+            ias.extension(new IASSpinnerExtension({ html: "<div class=\"loadinginfo\"><img src=\"{src}\" />&nbsp;{Tag:加载中}</div>" }));
+            ias.extension(new IASTriggerExtension({ text: '{Tag:加载更多}', offset: 100, html: "<div class=\"loadinginfo more\"><p>{text}</p></div>" }));
+            ias.extension(new IASNoneLeftExtension({
+                text: '', html: ""
+            }));
+        });
+    </script>
+    <%}%>
+</div>
+</div>
+<script type="text/javascript">
+    function search_(scurl) {
+        var key = $("#key").val();
+        var status = $("#status").val();
+        window.location = "?key=" + escape(key) + "&status=" + status;
+    }
+    function TackAgentMoney() { 
+        if (!confirm("<%=Tag("确认提交吗？")%>"))
+            return false;
+        var url = path+"/Ajax/Ajax_agent.aspx?__Action=TackAgentMoney";
+        RequestAjax(url,'',function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+</script>

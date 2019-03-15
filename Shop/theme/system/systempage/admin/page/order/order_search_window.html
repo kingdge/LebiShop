@@ -1,0 +1,222 @@
+﻿{layout:simple} {class:Shop.Admin.order.order_search_widow}
+<lbbody>
+<table class="table">
+    <tr>
+        <th style="width: 20%">
+            <%=Tag("订单号码")%>：
+        </th>
+        <td>
+            <input name="Code" id="Code" value="<%=model.Code %>" shop="true" type="text" class="input" style="width: 200px;" onkeydown="if(event.keyCode==13){SearchOrder();}" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("用户")%>：
+        </th>
+        <td>
+            <input name="UserName" id="UserName" value="<%=model.UserName %>" shop="true" type="text" class="input" style="width: 200px;" onkeydown="if(event.keyCode==13){SearchOrder();}" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("收货人")%>：
+        </th>
+        <td>
+            <input name="T_Name" value="<%=model.T_Name %>" shop="true" type="text" class="input" style="width: 200px;" onkeydown="if(event.keyCode==13){SearchOrder();}" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("收货地址")%>：
+        </th>
+        <td>
+            <input name="T_Address" value="<%=model.T_Address %>" shop="true" type="text" class="input" style="width: 200px;" onkeydown="if(event.keyCode==13){SearchOrder();}" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("收货电话")%>：
+        </th>
+        <td>
+            <input name="T_MobilePhone" value="<%=model.T_MobilePhone %>" shop="true" type="text" class="input" style="width: 200px;" onkeydown="if(event.keyCode==13){SearchOrder();}" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("收货EMAIL")%>：
+        </th>
+        <td>
+            <input name="T_Email" value="<%=model.T_Email %>" shop="true" type="text" class="input" style="width: 200px;" onkeydown="if(event.keyCode==13){SearchOrder();}" />
+        </td>
+    </tr>
+   <%if (Shop.LebiAPI.Service.Instanse.Check("plugin_gongyingshang"))
+          { %>
+    <tr>
+        <th>
+            <%=Tag("商家")%>：
+        </th>
+        <td>
+            <select id="Supplier_id" name="Supplier_id" shop="true">
+                <option value="0">
+                    <%=Tag("全部")%></option>
+                <%=Shop.Bussiness.EX_Supplier.SupplierOption(model.Supplier_id, CurrentLanguage.Code)%>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("商家收款")%>：
+        </th>
+        <td>
+             <label><input type="checkbox" name="IsSupplierCash" shop="true" value="1" <%=model.IsSupplierCash.Contains("1")?"checked":"" %> /><%=Tag("是")%></label>
+             <label><input type="checkbox" name="IsSupplierCash" shop="true" value="0" <%=model.IsSupplierCash.Contains("0")?"checked":"" %> /><%=Tag("否")%></label>
+        </td>
+    </tr>
+    <%} %>
+    <tr>
+        <th>
+            <%=Tag("下单时间")%>：
+        </th>
+        <td>
+            <input name="Time_Add1" id="Time_Add1" shop="true" type="text" class="input-calendar" style="width: 120px;" value="<%=model.Time_Add1 %>"/>
+            -
+            <input name="Time_Add2" id="Time_Add2" shop="true" type="text" class="input-calendar" style="width: 120px;" value="<%=model.Time_Add2 %>"/>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("金额")%>：
+        </th>
+        <td>
+            <input name="Money_Order1" shop="true" type="text" class="input" style="width: 70px;" onkeyup="value=value.replace(/[^\d]/g,'')" value="<%=model.Money_Order1 %>" onkeydown="if(event.keyCode==13){SearchOrder();}" />
+            -
+            <input name="Money_Order2" shop="true" type="text" class="input" style="width: 70px;" onkeyup="value=value.replace(/[^\d]/g,'')" value="<%=model.Money_Order2 %>" onkeydown="if(event.keyCode==13){SearchOrder();}" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("已确认")%>：
+        </th>
+        <td>
+             <label><input type="checkbox" name="IsVerified" shop="true" value="1" <%=model.IsVerified.Contains("1")?"checked":"" %> /><%=Tag("是")%></label>
+             <label><input type="checkbox" name="IsVerified" shop="true" value="0" <%=model.IsVerified.Contains("0")?"checked":"" %> /><%=Tag("否")%></label>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("已付款")%>：
+        </th>
+        <td>
+             <label><input type="checkbox" name="IsPaid" shop="true" value="1" <%=model.IsPaid.Contains("1")?"checked":"" %> /><%=Tag("是")%></label>
+             <label><input type="checkbox" name="IsPaid" shop="true" value="0" <%=model.IsPaid.Contains("0")?"checked":"" %> /><%=Tag("否")%></label>
+        </td>
+    </tr>
+   <tr>
+        <th>
+            <%=Tag("已发货")%>：
+        </th>
+        <td>
+             <label><input type="checkbox" name="IsShipped" shop="true" value="1" <%=model.IsShipped.Contains("1")?"checked":"" %> /><%=Tag("是")%></label>
+             <label><input type="checkbox" name="IsShipped" shop="true" value="0" <%=model.IsShipped.Contains("0")?"checked":"" %> /><%=Tag("否")%></label>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("已全部发货")%>：
+        </th>
+        <td>
+             <label><input type="checkbox" name="IsShipped_All" shop="true" value="1" <%=model.IsShipped_All.Contains("1")?"checked":"" %> /><%=Tag("是")%></label>
+             <label><input type="checkbox" name="IsShipped_All" shop="true" value="0" <%=model.IsShipped_All.Contains("0")?"checked":"" %> /><%=Tag("否")%></label>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("已收货")%>：
+        </th>
+        <td>
+             <label><input type="checkbox" name="IsReceived" shop="true" value="1" <%=model.IsReceived.Contains("1")?"checked":"" %> /><%=Tag("是")%></label>
+             <label><input type="checkbox" name="IsReceived" shop="true" value="0" <%=model.IsReceived.Contains("0")?"checked":"" %> /><%=Tag("否")%></label>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("已全部收货")%>：
+        </th>
+        <td>
+             <label><input type="checkbox" name="IsReceived_All" shop="true" value="1" <%=model.IsReceived_All.Contains("1")?"checked":"" %> /><%=Tag("是")%></label>
+             <label><input type="checkbox" name="IsReceived_All" shop="true" value="0" <%=model.IsReceived_All.Contains("0")?"checked":"" %> /><%=Tag("否")%></label>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("已完结")%>：
+        </th>
+        <td>
+             <label><input type="checkbox" name="IsCompleted" shop="true" value="1" <%=model.IsCompleted.Contains("1")?"checked":"" %> /><%=Tag("是")%></label>
+             <label><input type="checkbox" name="IsCompleted" shop="true" value="0" <%=model.IsCompleted.Contains("0")?"checked":"" %> /><%=Tag("否")%></label>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("无效")%>：
+        </th>
+        <td>
+             <label><input type="checkbox" name="IsInvalid" shop="true" value="1" <%=model.IsInvalid.Contains("1")?"checked":"" %> /><%=Tag("是")%></label>
+             <label><input type="checkbox" name="IsInvalid" shop="true" value="0" <%=model.IsInvalid.Contains("0")?"checked":"" %> /><%=Tag("否")%></label>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("商品编号")%>：
+        </th>
+        <td>
+            <input name="Product_Number" value="<%=model.Product_Number %>" shop="true" type="text" class="input" style="width: 200px;" onkeydown="if(event.keyCode==13){SearchOrder();}" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("用户留言")%>：
+        </th>
+        <td>
+            <input name="Remark_User" value="<%=model.Remark_User %>" shop="true" type="text" class="input" style="width: 200px;" onkeydown="if(event.keyCode==13){SearchOrder();}" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("客服备注")%>：
+        </th>
+        <td>
+            <input name="Remark_Admin" value="<%=model.Remark_Admin %>" shop="true" type="text" class="input" style="width: 200px;" onkeydown="if(event.keyCode==13){SearchOrder();}" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+            <div class="tools tools-m clear">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SearchOrder();"><b></b><span><%=Tag("提交")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<input name="Product_id" value="<%=model.Product_id %>" shop="true" type="hidden" class="input" />
+<script type="text/javascript">
+    $(function () {
+        $(".calendar,.input-calendar").datepicker({dateFormat:"yy-mm-dd"});
+    });
+    function SearchOrder()
+    {
+        var postData = GetFormJsonData("shop");
+        var url = "<%=site.AdminPath %>/ajax/ajax_search.aspx?__Action=OrderSearch";
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: postData,
+            dataType: 'json',
+            success: function (res) {
+                <%=callback %>(res.url);
+            }
+        });
+    }
+</script>
+</lbbody>

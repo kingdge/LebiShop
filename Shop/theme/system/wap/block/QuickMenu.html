@@ -1,0 +1,33 @@
+﻿<!--
+Name:常用菜单
+Page:All
+-->
+<div class="nbbox clearfix">
+<div class="quickmenu">
+<div class="mc clearfix">
+   <div class="item"><span class="itemname"><h3><a href="<%=URL("P_Index", "")%>">{Tag:首页}</a></h3><s></s></span></div>
+   <div class="item"><span class="itemname"><h3><a href="<%=URL("P_Basket", "")%>">{Tag:购物车} (<em><%=Basket_Product_Count() %></em>)</a></h3><s></s></span></div>
+   <%if(CurrentUser.id>0){ %>
+   <div class="item"><span class="itemname"><h3><a href="<%=URL("P_UserCenter", "")%>">{Tag:会员中心}</a></h3><s></s></span></div>
+   <div class="item"><span class="itemname"><h3><a href="<%=URL("P_UserOrders", "")%>">{tag:我的订单}</a></h3><s></s></span></div>
+   <div class="item"><span class="itemname"><h3><a href="<%=URL("P_UserCard", "")%>">{tag:我的卡券}</a></h3><s></s></span></div>
+   <div class="item"><span class="itemname"><h3><a href="<%=URL("P_UserLike", "")%>">{tag:我的收藏}</a></h3><s></s></span></div>
+   <div class="item"><span class="itemname"><h3><a href="<%=URL("P_UserOftenBuy", "")%>">{tag:常购清单}</a></h3><s></s></span></div>
+   <div class="item"><span class="itemname"><h3><a href="<%=URL("P_UserComment", "")%>">{tag:商品评价} (<em><%=Count_Comment(0) %></em>)</a></h3><s></s></span></div>
+   <div class="item"><span class="itemname"><h3><a href="<%=URL("P_UserAsk", "")%>">{tag:商品咨询} (<em><%=Count_ProductAsk(0) %></em>)</a></h3><s></s></span></div>
+   <div class="item"><span class="itemname"><h3><a href="<%=URL("P_UserMessage","0")%>">{tag:站内信} (<em><%=Count_Message(0) %></em>)</a></h3><s></s></span></div>
+   <div class="item"><span class="itemname"><h3><a href="<%=URL("P_UserProfile", "")%>">{tag:资料管理}</a></h3><s></s></span></div>
+    <%}%>
+   <%if (Shop.LebiAPI.Service.Instanse.Check("plugin_agent")){ %>
+   <div class="item"><span class="itemname"><h3><a href="<%=URL("P_UserAgent","")%>">{tag:推广佣金}</a></h3><s></s></span></div>
+   <div class="item"><span class="itemname"><h3><a href="<%=URL("P_UserAgentMoney","")%>">{tag:佣金查询}</a></h3><s></s></span></div>
+   <%} %>
+	${#table:Lebi_Page;#Where:Node_id="+Node("FootMenu").id+" and ','+Language_ids+',' like '%," + CurrentLanguage.id + ",%';#order:Sort desc;#pageindex:1;#pagesize:10;
+   <div class="item"><span class="itemname"><h3><a href="<%=URL("","",{url})%>">{%Name%}</a></h3><s></s></span></div>
+	}$
+   <%if(CurrentUser.id==0){ %>
+    <div class="item last"><span class="itemname"><h3><a href="<%=URL("P_Login", "")%>">{Tag:会员登录}</a></h3><s></s></span></div>
+   <%} %>
+</div>
+</div>
+</div>

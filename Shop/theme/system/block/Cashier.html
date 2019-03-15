@@ -1,0 +1,45 @@
+﻿<!--
+Name:订单提交成功
+Page:P_Cashier
+-->
+<%
+DB.LebiShop.Lebi_OnlinePay onlinepay=DB.LebiShop.B_Lebi_OnlinePay.GetModel(order.OnlinePay_id);
+DB.LebiShop.Lebi_Pay pay=DB.LebiShop.B_Lebi_Pay.GetModel(order.Pay_id);
+%>
+<div id="cashier">
+<div class="nbbox clearfix">
+<div class="userbox">
+    <div class="mt clearfix">
+        <h2>{tag:订单已成功提交}</h2>
+    </div>
+    <div class="mc clearfix">
+    <div class="cont">
+        <%if(CurrentUser.IsAnonymous!=1){
+            if(order.Type_id_OrderType==215){ %>
+        <a href="<%=URL("P_UserOrders","")%>" class="btn btn-11"><s></s>{tag:查看订单}</a>
+        <%}else{ %>
+        <a href="<%=URL("P_UserOrderDetails",order.id)%>" class="btn btn-11"><s></s>{tag:查看订单}</a>
+        <%}} %>
+        <%
+        if((onlinepay!=null && order.IsPaid==0 && pay.Code=="OnlinePay") || order.Type_id_OrderType==215){
+        %>
+        <a href="<%=URL("P_Pay",order.id+","+order.Code+",cashier")%>" target="_blank" class="btn btn-7"><s></s>{tag:立即付款}</a>
+        <%} %>
+    </div>
+    </div>
+    </div>
+</div>
+</div>
+<%
+if((onlinepay!=null && order.IsPaid==0 && pay.Code=="OnlinePay") || order.Type_id_OrderType==215){
+if (SYS.IsReduceBasketStep == "1"){
+//Response.Redirect(URL("P_Pay",order.id+","+order.Code+",cashier"));
+//Response.End();
+%>
+<form method="post" id="directpay" target="_blank" action="<%=URL("P_Pay",order.id+","+order.Code+",cashier")%>" style="display:none">
+    <input type="submit" name="btn-directpay" />
+</form>
+<script>setTimeout($("#directpay").submit(), 2000);</script>
+<%
+}}
+%>

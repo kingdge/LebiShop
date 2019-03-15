@@ -1,0 +1,54 @@
+﻿{Layout:3r2c}
+{class:Shop.P_ShopIndex}
+<lbheadfile>
+<script type="text/javascript">
+    function AddFavorite(sURL, sTitle) {
+        try {
+            window.external.addFavorite(sURL, sTitle);
+        }
+        catch (e) {
+            try {
+                window.sidebar.addPanel(sTitle, sURL, "");
+            }
+            catch (e) {
+                alert("{Tag:加入收藏失败，请使用Ctrl+D进行添加}");
+            }
+        }
+    }
+</script>
+</lbheadfile>
+<lbleft>
+<div id="shopcategory">
+    <h4>{Tag:商品分类}</h4>
+    <div class="categories">
+        ${#table:Lebi_Supplier_ProductType;#where:parentid = 0 and Supplier_id = "+id+";#order:Sort
+        desc,id desc;#pageindex:1;
+        <dl <%if ((parentcid == 0 && {i} == 1) || parentcid == {id}){ %>class="current" <%} %>>
+            <dt class="double">
+                <label class="pic">
+                </label>
+                <a href="<%=URL("P_ShopIndex",""+id+","+{id}+"") %>">
+                    <%=Lang({Name}) %></a></dt>
+            <dd>
+                <ul>
+                    ${#table:Lebi_Supplier_ProductType;#where:parentid = "+{id}+" and Supplier_id =
+                    "+id+";#order:Sort desc,id desc;#pageindex:1;
+                    <li class="<%=cid=={id}?"currentlink":"" %>"><a href="<%=URL("P_ShopIndex",""+id+","+{id}+"") %>">
+                        <%=Lang({Name}) %></a></li>
+                    }$
+                </ul>
+            </dd>
+        </dl>
+        }$
+    </div>
+</div>
+{MOD:ShopService}
+<div class="banner"><a href="javascript:void(0);" onclick="AddFavorite(window.location,document.title)"><img src="{image}shopcollect.jpg" /></a></div>
+</lbleft>
+<lbright>
+{MOD:ShopProductList}
+</lbright>
+<lbfoot>
+{MOD:SupplierServicePannel}
+<script type="text/javascript" src="{js}shoplist.js"></script>
+</lbfoot>

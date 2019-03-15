@@ -1,0 +1,22 @@
+﻿<!--
+Name:热门商品图文
+Page:All
+-->
+<div class="mbox clearfix">
+<div class="producttop">
+<div class="mt">
+    <h2>{tag:热门商品}</h2>
+</div>
+<div class="mc">
+    <ul class="image">
+        ${#table:Lebi_Product;#where:"+ProductWhere+" and Type_id_ProductType = 320;#top:10;#order:Count_Views desc,id desc;#model:pro;
+        <li>
+            <div class="proimg"><p><a href="<%=URL("P_Product",{id})%>"><img <%if (CurrentLanguage.IsLazyLoad==1){ %>class="lazy" src="{/image}lazy.gif" data-original<%}else{ %>src<%} %>="<%=Image({ImageOriginal},"medium") %>" alt="<%=Lang({Name})%>" title="<%=Lang({Name})%>" /></a></p></div>
+            <div class="proname"><a href="<%=URL("P_Product",{id})%>" title="<%=Lang({Name})%>"><%=Lang({Name})%></a></div>
+            <div class="proprice"><%if ({Price_Market} > 0){ %><div class="marketprice"><i>{Tag:市场价}：</i><strong><%=FormatMoney(ProductPrice_Market(pro)) %></strong></div><%} %><div class="buyprice"><i><%=Lang(CurrentUserLevel.PriceName) %>：</i><strong><%=FormatMoney(ProductPrice(pro)) %></strong></div></div>
+        </li>
+        }$
+    </ul>
+</div>
+</div>
+</div>

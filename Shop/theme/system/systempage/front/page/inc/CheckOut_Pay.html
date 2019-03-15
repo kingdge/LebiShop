@@ -1,0 +1,61 @@
+﻿{layout:simple}
+{class:Shop.inc.CheckOut_Pay}
+<lbbody>
+<div id="pay_edit">
+<div class="dl-table clearfix">
+    <%
+    foreach(DB.LebiShop.Lebi_Pay model in pays ){
+    %>
+    <dl>
+        <dt><label><input type="radio" name="pay_id" value="<%=model.id %>" <%=model.id==CurrentUser.Pay_id?"checked":"" %> order="true" Code="<%=model.Code %>" onclick="Setpay();" /> <%=Lang(model.Name)%></label></dt>
+        <dd><em><%=Lang(model.Description)%></em>
+            <%if (model.Code == "OnlinePay")
+            { %>
+            <div id="onlinepay" style="display:none;">
+            <div class="dl-table clearfix" id="onlinepaylist">
+            <% 
+                foreach (DB.LebiShop.Lebi_OnlinePay onpay in onpays)
+                {
+                    DB.LebiShop.Lebi_OnlinePay sononpay = Getpay(onpay);
+                    if (sononpay == null)
+                        continue;
+                %>
+                <dl>
+                    <dt><label><input type="radio" name="onlinepay_id" value="<%=sononpay.id %>" <%=(sononpay.id==CurrentUser.OnlinePay_id||sononpay.parentid==CurrentUser.OnlinePay_id)?"checked":"" %> order="true" /> <%if (onpay.Logo != ""){ %><img src="<%=Image(sononpay.Logo) %>" style="height:40px;"/><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%}%><%=Lang(sononpay.Name)%></label></dt>
+                    <dd><%=Lang(sononpay.Description)%><%if (sononpay.FeeRate > 0 && sononpay.FreeFeeRate !=1){ %><%=Tag("手续费")%>：<%=sononpay.FeeRate%> %<%} %></dd>
+                </dl>
+                <%} %>
+            </div>
+            </div>
+            <%}
+            else {if(model.Code != "OfflinePay"){ %>
+            <div id="bank<%=model.id%>" class="bank" style="display:none;">
+            <div class="dl-table clearfix" id="Div2">
+                <dl>
+                    <dt><label><input type="checkbox" id="CustomOfflineMoney<%=model.id%>" name="CustomOfflineMoney<%=model.id%>" value="1" order="true" onclick="CustomOfflineMoney(<%=model.id%>);" /><%=Tag("超额打款")%></label></dt>
+                    <dd>
+                        <div id="FillOfflineMoney<%=model.id%>" style="display:none;">
+                            <%=Tag("打款金额")%>：<input type="text" id="OfflineMoney<%=model.id%>" name="OfflineMoney<%=model.id%>" onkeyup="value=value.replace(/[^\d\.]/g,'')" maxlength="10" value="" order="true" class="input" style="width:80px;" />
+                            <em><%=Tag("超过订单需要支付的部分，将自动进入账号余额")%></em>
+                        </div>
+                    </dd>
+                </dl>
+            </div>
+            </div>
+            <%}}%>
+        </dd>
+    </dl>
+    <%} %>
+</div>
+</div>
+<script type="text/javascript">
+    function CustomOfflineMoney(id){
+        if ($("#CustomOfflineMoney"+ id).is(":checked")) {
+            $("#FillOfflineMoney"+id).show();
+        }else{
+            $("#FillOfflineMoney"+id).hide();
+        }
+    }
+    Setpay();
+</script>
+</lbbody>

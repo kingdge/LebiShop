@@ -1,0 +1,99 @@
+﻿{layout:default} 
+{class:Shop.Admin.admin.Admin_group_menu}
+<lbhead>
+    <title><%=Tag("权限组")%>-<%=Tag("管理权限")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <style>
+        .bottom{height: 0;overflow: hidden;display: none;}
+    </style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <%if (PageReturnMsg == ""){%>
+            <li class="add"><a href="javascript:void(0);" onclick="Edit(0,0);"><b></b><span><%=Tag("添加")%></span></a></li>
+            <li class="selectAll"><a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><b></b><span><%=Tag("全选")%></span></a></li>
+            <li class="submit"><a href="javascript:void(0);" onclick="SaveMenu();"><b></b><span><%=Tag("保存")%></span></a></li>
+            <%}%>
+            <li class="rotate"><a href="javascript:void(0);" onclick="javascript:history.back();"><b></b><span><%=Tag("返回")%></span></a></li>
+            <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="Admin_Group.aspx">
+                    <%=Tag("权限组")%></a> > 
+                <%=Lang(group.Name) %> > <%=Tag("编辑菜单")%>
+            </span></li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <%foreach (DB.LebiShop.Lebi_Menu p in models)
+      { %>
+    <div class="proBox clear">
+        <ul class="btns clear">
+            <li class="menu"><input type="checkbox" name="id" id="p2_<%=p.id %>" value="<%=p.id %>" power="true" <%=Check(p.id)?"checked":"" %> onclick ="selectall(this,<%=p.id %>);"/>
+            <a href="javascript:void(0);" onclick="Edit(0,<%=p.id %>);"><%if (p.Image != ""){%><img height="16" src="<%=site.WebPath + p.Image%>" /> <%} %><%=Tag(p.Name)%></a></li>
+            <li class="add" onclick="Edit(<%=p.id %>,0);">
+                <%=Tag("添加")%></li>
+        </ul>
+        <div class="iTabHead">
+            <table class="datalist">
+                <%foreach (DB.LebiShop.Lebi_Menu p2 in GetMenu(p.id))
+                  {
+                %>
+                <tr class="list">
+                    <td style="width:150px;">
+                        <input type="checkbox" name="id" p2_<%=p.id %>="true" value="<%=p2.id %>"  power="true" <%=Check(p2.id)?"checked":"" %> id="p3_<%=p2.id %>" onclick ="selectall(this,<%=p2.id %>);" />
+                        <a href="javascript:Edit(<%=p.id %>,<%=p2.id %>)">
+                            <%=Tag(p2.Name)%></a>
+
+                        <a class="add" href="javascript:void(0);" onclick="Edit(<%=p2.id %>,0);">
+                            <%=Tag("添加")%></a>
+                    </td>
+                    <td align="left">
+                        <% 
+                            foreach (DB.LebiShop.Lebi_Menu p3 in GetMenu(p2.id))
+                        {
+                        %>
+                        <div class="limit">
+                            <input type="checkbox" name="id" value="<%=p3.id %>" power="true" p2_<%=p.id %>="true" p3_<%=p2.id %>="true" <%=Check(p3.id)?"checked":"" %> />
+                            <a href="javascript:Edit(<%=p2.id %>,<%=p3.id %>)">
+                                <%=Tag(p3.Name)%></a>
+                        </div>
+                        <%} %>
+                    </td>
+                </tr>
+                <%}%>
+            </table>
+        </div>
+    </div>
+<%} %>
+    <script type="text/javascript">
+        function Edit(pid,id) {
+            var title_ = "<%=Tag("编辑菜单")%>";
+            var url_ = "menu_edit_window.aspx?id=" + id+"&pid="+pid;
+            var width_ = 600;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function SaveMenu() {
+            var postData = GetFormJsonData("power");
+            var url = "<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=SaveMenu&gid=<%=group.id %>";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "#")});
+        }
+        function selectall(obj,id){
+            var flag=$(obj).is(":checked");
+            $("input[" + $(obj).attr('id')+"='true']").each(function () {
+                if(flag)
+                    $(this).attr("checked", true);
+                else
+                    $(this).attr("checked", false);
+                
+            });
+        }
+
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+</div>
+</lbbottom>

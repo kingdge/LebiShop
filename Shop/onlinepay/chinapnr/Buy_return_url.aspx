@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="chinapnr.Buy_return_url" Codebehind="Buy_return_url.aspx.cs" %>

@@ -1,0 +1,39 @@
+﻿<!--
+Name:客服面板
+Page:P_ShopIndex
+-->
+<%if (supplierservicepannel.Status == "1"){%>
+<%if (supplierservicepannel.Style == "1"){%>
+<script type="text/javascript" src="{/}/supplier/js/user/ServicePanel<%=id %>.js"></script>
+<div id="divShopServicePannel" onmouseout="ShowShopServicePannel(event);" style="z-index:9998;width: 170px; position:absolute; right:0">
+<layer id="divShopServicePannel">
+<div id="ShopServicePannelOnline" style="display:none;">
+<div class="servicepannel">
+<div class="menutop"><img src="{/image}<%=CurrentLanguage.Code %>/ServicePanel/<%=supplierservicepannel.Theme%>_1.gif" alt="" /></div>
+<div class="menucenter"><div style="background:url({/image}<%=CurrentLanguage.Code %>/ServicePanel/<%=supplierservicepannel.Theme%>_2.gif) repeat-y">
+${#table:Lebi_ServicePanel_Group;#where:Supplier_id = "+ id +" and ','+Language_ids+',' like '%,"+ CurrentLanguage.id + ",%';#order:Sort desc;#model:group;
+<ul class="group clearfix">
+<h2>{%Name%}</h2>
+<ul class="group-user clearfix">
+${#table:Lebi_ServicePanel;#where:Supplier_id = "+ id +" and ServicePanel_Group_id = "+group.id+" and ','+Language_ids+',' like '%,"+ CurrentLanguage.id + ",%';#order:Sort desc,id desc;#model:user;
+<%
+    string url = GetServicePanelType(user.ServicePanel_Type_id).Url;
+    url = url.Replace("{@uid}",user.Account);
+    url = url.Replace("{@uname}",user.Name);
+%>
+<li><a target="blank" href="<%=url%>"><img src="<%if (GetServicePanelType(user.ServicePanel_Type_id).IsOnline == 1){
+    Response.Write(GetServicePanelType(user.ServicePanel_Type_id).Code.Replace("{@uid}",user.Account));
+}else{
+    Response.Write(Image(GetServicePanelType(user.ServicePanel_Type_id).Face));
+}%>" border="0" align="absmiddle" />&nbsp;{%Name%}</a></li>
+}$
+</ul>
+</li></ul>
+}$
+</div></div>
+<div class="menufoot" style="background:url({/image}<%=CurrentLanguage.Code %>/ServicePanel/<%=servicepannel.Theme%>_3.gif) top no-repeat"><img src="{/image}<%=CurrentLanguage.Code %>/ServicePanel/<%=supplierservicepannel.Theme%>_3.gif" /></div>
+</div>
+</div></layer>
+<div id="ShopServicePannelMenu" onmouseover="ShopServicePannelOver();"><img src="{/image}<%=CurrentLanguage.Code %>/ServicePanel/menu_<%=supplierservicepannel.Theme%>.gif" style="right:0;border:none;cursor:pointer;width:26px;height:136px;position: absolute;" /></div>
+</div>
+<%} }%>

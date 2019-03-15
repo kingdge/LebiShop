@@ -1,0 +1,161 @@
+﻿<!--
+Name:会员登录
+Page:All
+-->
+<div class="nbbox clearfix">
+    <div class="user">
+        <div class="login clearfix">
+            <div class="left">
+                <div id="advert">
+                <% Advertisement("Login"); %>
+                </div>
+                <div id="weixin" style="display:none;text-align:center;padding:0 0 50px 220px;">
+                        <div id="qrcode"></div>
+                        <div style="padding:10px 0 0 0;">使用微信“扫一扫”功能扫描此二维码登录</div>
+                </div>
+            </div>
+            <div class="right">
+                <div class="userloginbox">
+                    <div class="mt clearfix">
+                        <h2>{tag:会员登录}</h2>
+                    </div>
+                    <div class="mc clearfix">
+                    <div class="dl-table clearfix">
+                    <dl>
+                        <dt>{tag:用户名}：</dt>
+                        <dd><input name="UserName" id="UserName" shop="true" type="text" size="20" class="input" /></dd>
+                    </dl>
+                    <dl>
+                        <dt>{tag:密码}：</dt>
+                        <dd><input type="password" name="Password" shop="true" id="Password" size="20" class="input" /></dd>
+                    </dl>
+                    <%if (SYS.Verifycode_UserLogin == "1"){ %>
+                    <dl id="code" class="last" <%if (LoginError != true){ %>style="display:none"<%}else{ %>style="display:" <%} %>>
+                        <dt>{tag:验证码}：</dt>
+                        <dd><input name="verifycode" type="text" id="verifycode" shop="true" size="6" class="input" /><img class="verifycode" id="img1" src="<%=WebPath%>/code.aspx" /><img src="{/image}reload.gif" class="refresh" title="{tag:点击刷新验证码}" onclick="refresh('img1')" /></dd>
+                    </dl>
+                    <%} %>
+                    <dl>
+                        <dt></dt>
+                        <dd><a href="javascript:void(0)" onclick="submitlogin();" class="btn btn-7"><s></s>{tag:登录}</a>&nbsp;&nbsp;<a href="<%=URL("P_ForgetPassword","")%>">{tag:忘记密码}</a></dd>
+                    </dl>
+                    </div>
+                    <div class="msg-error" id="msg-error"><b></b></div>
+                    <div class="platform">
+                    <%
+                        string platform_login = SYS.platform_login;
+                        if (DT_id > 0){
+                            platform_login = ShopCache.GetBaseConfig_DT(DT_id).platform_login;
+                        }
+                    %>
+                    <%if (CurrentSite.IsMobile==0){ %>
+                    <%if(platform_login.Contains("weixin")){ %>
+                    <a href="javascript:void(0);" onclick="wechat();">
+                        <img src="<%=Image(Shop.Platform.weixin.GetInstance(DT_id,CurrentSite).ImageURL) %>" /></a>
+                    <%} %>
+                    <%} %>
+                    <%if(platform_login.Contains("qq")){ %>
+                    <a href="<%=Shop.Platform.QQ.GetInstance(DT_id).LoginURL(backurl) %>">
+                        <img src="<%=Image(Shop.Platform.QQ.GetInstance(DT_id).ImageURL) %>" /></a>
+                    <%} %>
+                    <%if(platform_login.Contains("weibo")){ %>
+                    <a href="<%=Shop.Platform.Weibo.GetInstance(DT_id).LoginURL(backurl) %>">
+                        <img src="<%=Image(Shop.Platform.Weibo.GetInstance(DT_id).ImageURL) %>" /></a>
+                    <%} %>
+                    <%if(platform_login.Contains("taobao")){ %>
+                    <a href="<%=Shop.Platform.Taobao.GetInstance(DT_id).LoginURL(backurl) %>">
+                        <img src="<%=Image(Shop.Platform.Taobao.GetInstance(DT_id).ImageURL) %>" /></a>
+                    <%} %>
+                    <%if(platform_login.Contains("facebook")){ %>
+                    <a href="<%=Shop.Platform.Facebook.GetInstance(DT_id).LoginURL(backurl) %>">
+                        <img src="<%=Image(Shop.Platform.Facebook.GetInstance(DT_id).ImageURL) %>" /></a>
+                    <%} %>
+                    </div>
+                    </div>
+                    <div class="mes">
+                        <h2><span>{tag:还不是商城会员？}</span></h2>
+                        <div class="cont">
+                            {tag:一分钟轻松注册，就可以方便购物！}<a href="<%=URL("P_Register", ""+HttpUtility.UrlEncode(backurl)+"," + GetUrlToken(backurl)+ "") %>">{tag:免费注册}</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).keyup(function (event) {
+        if (event.keyCode == 13) {
+            submitlogin();
+        }
+    });
+    function submitlogin() {
+        $("#msg-error").hide();
+        var Password = $("#Password").val();
+        var UserName = $("#UserName").val();
+        var verifycode = $("#verifycode").val();
+        if (UserName == "") {
+            MsgError("{tag:请输入用户名}");
+            return false;
+        }
+        if (Password == "") {
+            MsgError("{tag:请输入密码}");
+            return false;
+        }
+        <%if (SYS.Verifycode_UserLogin == "1"){ %>
+        <%if (LoginError){ %>
+        if (verifycode == "") {
+            MsgError("{tag:请输入验证码}");
+            return false;
+        }
+        <%}%>
+        <%} %>
+        var postData = GetFormJsonData("shop");
+        $.ajax({
+            type: "POST",
+            url: path+"/ajax/ajax_user.aspx?__Action=User_Login&url=<%=HttpUtility.UrlEncode(backurl) %>&token=<%=token %>&t=" + Math.random(),
+            data: postData,
+            dataType: 'json',
+            success: function (res) {
+                if (res.msg == "OK") {
+                    MsgBox(1, "{tag:登录成功}", res.url);
+                }
+                else {
+                    $("#code").show();
+                    MsgError(res.msg);
+                }
+            }
+        });
+    }
+    function wechat(){
+        if($("#weixin").is(":hidden")){
+            $("#qrcode").html('<img src="'+path+'/ajax/ajax_user.aspx?__Action=GetQrCode&url=<%=HttpUtility.UrlEncode(backurl) %>&token=<%=token %>" style="width:200px;height:200px"/>');  
+            $("#weixin").show();
+            $("#advert").hide();
+            setInterval("wechatlogin()",3000);
+        }else{
+            $("#weixin").hide();
+            $("#advert").show();
+        }
+    }
+    <%if(SYS.platform_login.Contains("weixin")){ %>
+    var wflag=0;
+    function wechatlogin()
+    {
+        if(wflag==0){
+            wflag=1;
+            $.ajax({
+                type: "POST",
+                url: path+"/ajax/ajax_user.aspx?__Action=wechatlogin&t=" + Math.random(),
+                data: '',
+                dataType: 'json',
+                success: function (res) {
+                    if(res.msg=='OK')
+                        window.location='<%=backurl %>';
+                    else
+                        wflag=0;
+                }
+            });
+        }
+    }
+    <%} %>
+</script>

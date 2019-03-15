@@ -1,0 +1,9 @@
+﻿<!--
+Name:语言选择横版
+Page:All
+-->
+<div class="language">
+${#Source:Languages;
+<a <%if ({i}==RecordCount){%>class="last"<%} %> href="javascript:SetLanguage({%id%},'{%Code%}','{%Path%}');"><%if ({ImageUrl}!=""){%><img src="<%=Image({ImageUrl}) %>" title="{%Name%}" /><%}%>{%Name%}</a>
+}$
+</div>

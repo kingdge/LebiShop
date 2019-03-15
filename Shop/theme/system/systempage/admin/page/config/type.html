@@ -1,0 +1,84 @@
+﻿{layout:default} {class:Shop.Admin.Config.Type}
+<lbhead>
+    <title><%=Tag("类型管理")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <link rel="stylesheet" type="text/css" href="<%=site.AdminJsPath %>/bigcolorpicker/jquery.bigcolorpicker.css" />
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/bigcolorpicker/jquery.bigcolorpicker.min.js"></script>
+</lbfile>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="submit"><a href="javascript:void(0);" onclick="Edits();"><b></b><span><%=Tag("保存")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("类型管理")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox">
+        <input type="text" id="key" name="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" />
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px">
+                <%=Tag("ID")%>
+            </th>
+            <th style="width: 200px">
+                <%=Tag("名称")%>
+            </th>
+            <th style="width: 200px">
+                <%=Tag("代码")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("排序")%>
+            </th>
+            <th>
+                <%=Tag("颜色")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_Type model in models)
+          {%>
+        <script type="text/javascript">
+            $(function () {
+                $("#s_Color<%=model.id %>").bigColorpicker(function (el, color) { $(el).css("background-color", color); $("#Color<%=model.id %>").val(color); });
+            });
+        </script>
+        <tr class="list">
+            <td style="text-align:center">
+                <input type="hidden" name="IDS" shop="true" value="<%=model.id %>" />
+                <%=model.id%>
+            </td>
+            <td>
+                <%=model.Name%>
+            </td>
+            <td>
+                <%=model.Class%>
+            </td>
+            <td>
+                <input type="text" class="input" shop="true" id="Sort<%=model.id %>" name="Sort<%=model.id %>" value="<%=model.Sort %>" style="width: 70px;" onblur='value=value.replace(/[^\d]/g,"");' onkeyup='value=value.replace(/[^\d]/g,"")' onbeforepaste='clipboardData.setData("text",clipboardData.getData("text").replace(/[^\d]/g,""))' />
+            </td>
+            <td>
+                <input type="text" class="input" shop="true" id="Color<%=model.id %>" name="Color<%=model.id %>" value="<%=model.Color %>" style="width: 70px;" /><img id="s_Color<%=model.id %>" border="0" src="<%=AdminImage("rect.gif")%>" width="18" align="absmiddle" style="cursor: pointer; background-color: <%=model.Color %>">
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function search_() {
+            var key = $("#key").val();
+            window.location = "?key=" + escape(key);
+        }
+        function Edits() {
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=Type_Update";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

@@ -1,0 +1,144 @@
+﻿{layout:default} {class:Shop.Admin.theme.Default}
+<lbhead>
+    <title><%=Tag("模板管理")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <%if (PageReturnMsg == ""){%>
+            <li class="add"><a href="javascript:void(0);" onclick="Edit(0);"><b></b><span>
+                <%=Tag("添加")%></span></a></li>
+            <%
+            if (!Shop.LebiAPI.Service.Instanse.Check("managelicenese")){
+            %>
+            <li class="skin"><a href="ThemeOnline.aspx"><b></b><span>
+                <%=Tag("在线模板")%></span></a></li>
+            <%if (LB.Tools.RequestTool.GetConfigKey("ThemeUpdate").Trim() != "0"){ %>
+                <li class="down"><a href="javascript:void(0);" onclick="CheckVersion();"><b></b><span><%=Tag("检查更新")%></span></a></li>
+            <%}%>
+            <%}%>
+            <%}%>
+            <li class="name"><span id="navIgation">
+                <%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a>
+                >
+                <%=Tag("模板管理")%></span></li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 100px;">
+                <%=Tag("缩略图")%>
+            </th>
+            <th style="width: 150px;">
+                <%=Tag("名称")%>
+            </th>
+            <th style="width: 100px;">
+                <%=Tag("支持语言")%>
+            </th>
+            <th style="width: 100px;">
+                <%=Tag("启用语言")%>
+            </th>
+            <th style="width: 150px;">
+                <%=Tag("路径")%>
+            </th>
+            <th>
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_Theme model in models)
+          {%>
+        <tr class="list" ondblclick="Theme(<%=model.id %>);">
+            <td>
+             <a href="<%=Shop.Bussiness.ThemeUrl.CheckURL(WebPath + model.Path_Files+"/"+model.ImageUrl) %>" data-lightbox="image<%=model.id %>"><img src="<%=Shop.Bussiness.ThemeUrl.CheckURL(WebPath + model.Path_Files+"/"+model.ImageSmallUrl) %>" /></a>
+            </td>
+            <td>
+                <%=model.Name %><br /><em><%=Tag("版本")%>：<%=model.Version %></em><br /><em><%=Tag("排序")%>：<%=model.Sort%></em>
+            </td>
+            <td>
+                <%=model.Language %>
+            </td>
+            <td>
+                <%=GetLanguage(model)%>
+            </td>
+            <td>
+                <%=model.Path_Files %>
+            </td>
+            <td>
+                <a href="javascript:void(0)" onclick="Edit(<%=model.id %>);">
+                    <%=Tag("编辑")%></a> | <a href="javascript:void(0)" onclick="Theme(<%=model.id %>);">
+                        <%=Tag("编辑模板")%></a> | <a href="javascript:void(0)" onclick="CreateTheme(<%=model.id %>);">
+                            <%=Tag("生成模板")%></a> | <a href="javascript:void(0)" onclick="Advert(<%=model.id %>);">
+                                <%=Tag("广告位")%></a> | <a href="javascript:void(0)" onclick="Copy(<%=model.id %>);">
+                                    <%=Tag("复制")%></a> | <a href="javascript:void(0)" onclick="Del(<%=model.id %>);">
+                                    <%=Tag("删除")%></a>
+                <%if (model.IsUpdate == 1){%>
+                <%if (model.IsNew==1 && model.LebiUser!=SYS.LicenseUserName && LB.Tools.RequestTool.GetConfigKey("ThemeUpdate").Trim() != "0")
+                  { %>
+                  | <a href="javascript:void(0)" onclick="DownLoad(<%=model.id %>);"><%=Tag("升级")%></a>
+                <%} %>
+                <%} %>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function Theme(id) {
+            window.location = "skin.aspx?id="+id;
+        }
+        function Edit(id) {
+            var title_ = "<%=Tag("编辑模板")%>";
+            if (id == 0)
+                var title_ = "<%=Tag("添加模板")%>";
+            var url_ = "theme_edit_window.aspx?id=" + id;
+            var width_ = 800;
+            var height_ = "auto";
+            var modal_ = true;
+            //EditWindow(title_, url_, width_, height_, modal_);
+            window.location = "theme_edit.aspx?id="+id;
+        }
+        function Theme(id) {
+            window.location = "skin.aspx?id=" + id;
+        }
+        function Del(id) {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = { "id": id };
+            var url="<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=Theme_Del";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function CreateTheme(Theme_id) {
+            var postData = { "Theme_id": Theme_id };
+            var url="<%=site.AdminPath %>/ajax/ajax_aspx.aspx?__Action=CreateTheme";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+        function Advert(id){
+            window.location = "advert.aspx?id=" + id;
+        }
+        function DownLoad(id) {
+            if (!confirm("<%=Tag("确认操作吗？升级将覆盖模板中所有修改！")%>"))
+                return false;
+            var postData = { "id": id };
+            var url="<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=Theme_Update";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function Copy(id) {
+            if (!confirm("<%=Tag("确认操作吗？")%>"))
+                return false;
+            var postData = { "id": id };
+            var url="<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=Theme_Copy";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function CheckVersion()
+        {
+            var url="<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=Theme_CheckVersion";
+            RequestAjax(url,'',function(res){MsgBox(1, "<%=Tag("发现更新")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+        <%=PageString%>
+    </div>
+</lbbottom>

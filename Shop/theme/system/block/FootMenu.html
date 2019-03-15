@@ -1,0 +1,7 @@
+﻿<!--
+Name:底部栏目
+Page:All
+-->
+${#table:Lebi_Page;#Where:Node_id="+Node("FootMenu").id+" and ','+Language_ids+',' like '%,"+ CurrentLanguage.id + ",%';#order:Sort desc;#top:10;
+<a class="menu" href="<%=URL("","",{url})%>" target="{%target%}" style="color:{%NameColor%}"><span>{%Name%}</span></a> 
+}$

@@ -1,0 +1,135 @@
+﻿<!--
+Name:全部商品分类
+Page:P_AllProductCategories
+-->
+<style>
+.categories-body{position:relative;z-index:10}
+.categories {
+	position: relative;
+	z-index: 0;
+	overflow: hidden;
+	background: #f9f9f9;
+}
+.categories li,.categories ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.categories .categories-block {
+	position: relative;
+	float: left;
+	margin-right: 1px;
+	width: 80px;
+	border-right: 1px solid #ddd;
+	background: #e6e6e6;
+}
+.categories .categories-block ul {
+	position: relative;
+	padding-top: 0px;
+	background: #e6e6e6;
+}
+.categories .categories-block .fixed {
+	position: fixed;
+	top: 0;
+}
+.categories .categories-block .to-bottom {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+}
+.categories .categories-block li {
+	border-top: 1px solid #e6e6e6;
+	border-bottom: 1px solid #ddd;
+}
+.categories .categories-block li:first-child {
+	border-top: 0px;
+	border-bottom: 1px solid #e6e6e6;
+}
+.categories .categories-block li a {
+	display: block;
+	padding: 0 5px;
+	width: 70px;
+	height:35px;
+	line-height:35px;
+	font-size: 14px;
+	-webkit-tap-highlight-color: transparent;
+}
+.categories .categories-block li.current {
+	border-top: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	background: #f9f9f9;
+}
+.categories .categories-block li:first-child.current {
+	border-top: 0px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	background: #f9f9f9;
+}
+.categories .categories-block li.current a {
+	padding-right: 6px;
+	background: #f9f9f9;
+	color: #f60;
+}
+.categories .categories-sub {
+	overflow: hidden;padding:0;
+}
+.categories .categories-sub h2{
+	height:35px;line-height:35px;color:#000;font-size:1.2em;padding:0 10px
+}
+.categories .categories-sub ul {
+	margin: 0;
+}
+.categories .categories-sub .categories-single-sub {
+	float:left;width:28.5%;margin-left:10px;
+}
+.categories .categories-sub .categories-single-sub:last-child {
+	border-bottom: none;
+}
+.categories .categories-sub .img{
+    display:block;width:100%;height:100%;
+}
+.categories .categories-sub .img img{
+    width:100%;height:100%;
+}
+.categories .categories-sub h3{
+    text-align:center;height:30px;line-height:30px;color:#000;font-size:1.2em;overflow:hidden
+}
+</style>
+<div class="categories-body">                             
+    <div class="categories clearfix">
+        <div class="categories-block">
+            <ul>
+            <%
+            int id = Shop.Tools.RequestTool.RequestInt("id",0);
+            if (id == 0){
+                id = EX_Product.ShowTypes(0,CurrentSite.id).FirstOrDefault().id;
+            }
+            foreach(Lebi_Pro_Type c0 in EX_Product.ShowTypes(0,CurrentSite.id))
+            {
+            %>
+            <li <%if (id == c0.id){ %>class="current"<%} %>>
+                <a href="<%=URL("P_AllProductCategories",c0.id) %>"><%=Lang(c0.Name) %></a>
+            </li>
+            <%}%>
+            </ul>
+        </div>
+        <div class="categories-sub">
+            <%
+            foreach(Lebi_Pro_Type c1 in EX_Product.ShowTypes(id,CurrentSite.id))
+            {     
+            %>
+            <h2><a href="<%=URL("P_ProductCategory",""+c1.id+"",Lang(c1.Url)) %>"><%=Lang(c1.Name) %></a></h2>
+            <ul class="clearfix">
+                <%
+                foreach(Lebi_Pro_Type c2 in EX_Product.ShowTypes(c1.id,CurrentSite.id))
+                {
+                %>
+                <li class="categories-single-sub clearfix">
+                    <div class="img"><a href="<%=URL("P_ProductCategory",""+c2.id+"",Lang(c2.Url)) %>"><img src="<%=Image(c2.ImageSmall) %>" /></a></div>
+                    <h3><a href="<%=URL("P_ProductCategory",""+c2.id+"",Lang(c2.Url)) %>"><%=Lang(c2.Name) %></a></h3>
+                </li>
+                <%}%>
+            </ul>
+            <%}%>
+        </div>
+    </div>
+</div>

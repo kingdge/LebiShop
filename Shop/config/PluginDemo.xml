@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<PluginConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Assembly>Lebi.PluginDemo</Assembly>
+  <Name>插件开发演示</Name>
+  <Version>1</Version>
+  <Company>LebiShop</Company>
+</PluginConfig>

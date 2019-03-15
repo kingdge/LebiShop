@@ -1,0 +1,109 @@
+﻿{layout:default} 
+{class:Shop.Admin.admin.Admin_Group}
+<lbhead>
+    <title><%=Tag("权限组")%>-<%=Tag("管理权限")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("权限组")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("权限组")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-info" onclick="EditObj(0);"><i class="ti-plus"></i> <%=Tag("添加")%></button>
+                        <button class="btn btn-danger" onclick="DeleteConfirm()"><i class="ti-trash"></i> <%=Tag("删除")%></button>
+                        <%}%>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table m-t-10 table-hover no-wrap">
+                        <thead>
+                            <tr class="no-wrap">
+                                <th style="width:40px;" class="selectAll">
+                                    <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+                                </th>
+                                <th>
+                                    <%=Tag("分组名称")%>
+                                </th>
+                                <th>
+                                    <%=Tag("排序")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_Admin_Group model in models){%>
+                            <tr ondblclick="Edit(<%=model.id %>);">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox<%=model.id %>" name="id" value="<%=model.id %>" class="custom-control-input" del="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=Lang(model.Name)%>
+                                </td>
+                                <td>
+                                    <%=model.Sort %>
+                                </td>
+                                <td>
+                                    <a href="javascript:void(0)" onclick="EditObj(<%=model.id %>);"><%=Tag("编辑")%></a>
+                                    | <a href="admin_group_power.aspx?id=<%=model.id %>" target="_blank"><%=Tag("编辑权限")%></a>
+                                    | <a href="admin_group_menu.aspx?id=<%=model.id %>" target="_blank"><%=Tag("编辑菜单")%></a>
+                                    | <a href="Admin_group_indexmenu.aspx?id=<%=model.id %>" target="_blank"><%=Tag("桌面菜单")%></a>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation ">
+                            <%=PageString%>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        function EditObj(id) {
+            $("#EditModal").modal("show");
+            var title_ = "<%=Tag("编辑权限组")%>";
+            if (id == 0){
+                var title_ = "<%=Tag("添加权限组")%>";
+            }
+            $.ajax({
+                url: "admin_group_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {id: id,title: title_},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function DeleteConfirm() {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要删除吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "DeleteObj();");
+        }
+        function DeleteObj() {
+            $("#Modal-Confirm").modal("hide");
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=Admin_Group_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbscripts>

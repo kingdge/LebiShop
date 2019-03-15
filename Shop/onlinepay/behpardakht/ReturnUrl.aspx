@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="behpardakht.ReturnUrl" Codebehind="ReturnUrl.aspx.cs" %>

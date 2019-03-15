@@ -1,0 +1,79 @@
+﻿{layout:default} {class:Shop.Admin.agent.UserLevel}
+<lbhead>
+    <title><%=Tag("会员分组")%>-<%=Tag("代理")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="<%=site.AdminPath %>/user/default.aspx"><%=Tag("会员管理")%></a> > <%=Tag("会员分组")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 200px">
+                <%=Tag("名称")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("级别")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("会员数量")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("一级佣金")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("二级佣金")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("三级佣金")%>
+            </th>
+            <th>
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_UserLevel model in models)
+          {%>
+        <tr class="list" ondblclick="Edit(<%=model.id %>);">
+            <td>
+                <%=Shop.Bussiness.Language.Content(model.Name, CurrentLanguage.Code)%>
+            </td>
+            <td>
+                <%=model.Grade %>
+            </td>
+            <td>
+                <a href="user.aspx?level=<%=model.id %>"><%=Shop.Bussiness.EX_User.UserCount(model.id)%></a>
+            </td>
+            <td>
+                <%=Shop.Bussiness.Agent.UserLevel_Commission(model.id).Angent1_Commission %> %
+            </td>
+            <td>
+                <%=Shop.Bussiness.Agent.UserLevel_Commission(model.id).Angent2_Commission %> %
+            </td>
+            <td>
+                <%=Shop.Bussiness.Agent.UserLevel_Commission(model.id).Angent3_Commission %> %
+            </td>
+            <td>
+                <a href="javascript:void(0)" onclick="Edit(<%=model.id %>);"><%=Tag("编辑")%></a>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+<script type="text/javascript">
+    function Edit(id) {
+        var title_ = "<%=Tag("编辑")%>";
+        var url_ = "userlevel_edit_window.aspx?id=" + id;
+        var width_ = 400;
+        var height_ = 200;
+        var modal_ = true;
+        EditWindow(title_, url_, width_, height_, modal_);
+    }
+</script>
+</lbbottom>

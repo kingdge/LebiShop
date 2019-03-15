@@ -1,0 +1,179 @@
+﻿{layout:default} {class:Shop.Admin.order.Default}
+<lbhead>
+    <title>
+        <%=Tag("充值单管理")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/jquery-ui/timepicker-addon.js"></script>
+    <%if (CurrentLanguage.Code=="CN"){%><script type="text/javascript" src="<%=site.AdminJsPath %>/jquery-ui/timepicker-zh-CN.js"></script><%}%>
+    <link rel="stylesheet" type="text/css" href="<%=site.AdminJsPath %>/jquery-ui/timepicker-addon.css" />
+    <script type="text/javascript">
+        $(function () {
+            $(".input-calendar").datetimepicker({dateFormat:"yy-mm-dd",showSecond:true,timeFormat:"HH:mm:ss",stepHour:1,stepMinute:1,tepSecond:1});
+        });
+    </script>
+</lbfile>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <%if (PageReturnMsg == ""){%>
+            <li class="del"><a href="javascript:void(0);" onclick="Del();"><b></b><span><%=Tag("删除")%></span></a></li>
+            <%}%>
+            <li class="name"><span id="navIgation">
+                <%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("充值单管理")%> > <a href="<%=site.AdminPath %>/order/default.aspx?t=<%=t %>"><%=Shop.Bussiness.EX_Type.TypeName(t) %></a></span> </li>
+        </ul>
+    </div>
+</lbpath>
+<lbtop>
+    <div class="mainbody_top">
+        <ul class="tablist">
+            <li <%if (type==""){Response.Write("class=\"selected\"");} %>><a href="?t=<%=t%>&user_id=<%=user_id %>&Supplier_id=<%=Supplier_id %>&dateFrom=<%=dateFrom %>&dateTo=<%=dateTo %>&key=<%=HttpUtility.UrlEncode(key) %>&type=">
+                <span>
+                    <%=Tag("全部订单")%></span></a></li>
+           
+            <li <%if (type=="3"){Response.Write("class=\"selected\"");} %>><a href="?t=<%=t%>&user_id=<%=user_id %>&Supplier_id=<%=Supplier_id %>&dateFrom=<%=dateFrom %>&dateTo=<%=dateTo %>&key=<%=HttpUtility.UrlEncode(key) %>&type=3">
+                <span>
+                    <%=Tag("未支付")%></span></a></li>
+            <li <%if (type=="4"){Response.Write("class=\"selected\"");} %>><a href="?t=<%=t%>&user_id=<%=user_id %>&Supplier_id=<%=Supplier_id %>&dateFrom=<%=dateFrom %>&dateTo=<%=dateTo %>&key=<%=HttpUtility.UrlEncode(key) %>&type=4">
+                <span>
+                    <%=Tag("已支付")%></span></a></li>
+            
+        </ul>
+    </div>
+</lbtop>
+<lbbody>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/My97DatePicker/WdatePicker.js"></script>
+    <div class="searchbox">
+        <input type="text" name="dateFrom" id="dateFrom" size="12" class="input-calendar" value="<%=dateFrom %>" style="width:150px" />
+        -
+        <input type="text" name="dateTo" id="dateTo" size="12" class="input-calendar" value="<%=dateTo %>" style="width:150px" />
+        <input type="text" id="key" name="key" class="input-query"value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" />
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));">
+                    <%=Tag("全选")%></a>
+            </th>
+            <th width="110px">
+                <%=Tag("订单编号")%>
+            </th>
+            <th width="100px">
+                <%=Tag("会员")%>
+            </th>
+            <th width="80px">
+                <%=Tag("金额")%>
+            </th>
+             <th width="100px">
+                <%=Tag("状态")%>
+            </th>
+            <th width="120px">
+                <%=Tag("支付方式")%>
+            </th>
+           <th>
+                <%=Tag("备注")%>
+            </th>
+           <th width="130px">
+                <%=Tag("相关订单")%>
+            </th>
+            <th width="130px">
+                <%=Tag("日期")%>
+            </th>
+            <%if (domain3admin)
+              { %>
+            <th style="width: 70px">
+               <%=Tag("站点") %> 
+            </th>
+            <%} %>
+        </tr>
+        <%int Mark = 0;foreach (DB.LebiShop.Lebi_Order model in models){
+        if (model.Mark !=0){
+        Mark=model.Mark;
+        }else{
+        Mark=0;
+        }
+        %>
+        <tr class="list" ondblclick="Edit(<%=model.id %>,<%=model.Type_id_OrderType %>);">
+            <td style="text-align:center">
+                <input type="checkbox" name="id" value="<%=model.id %>" del="true" />
+            </td>
+            <td>
+                <a href="javascript:void(0);" onclick="Edit(<%=model.id %>,<%=model.Type_id_OrderType %>);"><%=model.Code %></a>
+            </td>
+            <td>
+                <%=model.User_UserName %>
+            </td>
+            <td>
+                <%=FormatMoney(model.Money_Order) %>
+            </td>
+            <td>
+                <%=Shop.Bussiness.Order.OrderStatus(model, CurrentLanguage.Code, 0) %>
+            </td>
+            <td>
+                <%=Shop.Bussiness.Language.Content(model.Pay, CurrentLanguage.Code)%>
+                <%=Shop.Bussiness.Language.Content(model.OnlinePay, CurrentLanguage.Code)%>
+            </td>
+            <td>
+                <%=model.Remark_Admin %>
+            </td>
+            <td>
+                <%
+                if(model.Order_id>0)
+                {
+                    DB.LebiShop.Lebi_Order co=DB.LebiShop.B_Lebi_Order.GetModel(model.Order_id);
+                    if(co!=null){%>
+                    <a href="order_view.aspx?id=<%=co.id%>" target="_blank"><%=co.Code%></a>
+                
+                <%    }
+                }%>
+            </td>
+            <td>
+                <%=FormatTime(model.Time_Add) %>
+            </td>
+             <%if (domain3admin)
+              { %>
+            <td><%=SiteName(model.Site_id) %></td>
+            <%} %>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function search_() {
+            var mark = GetRadioCheckedValues("mark");
+            var key = $("#key").val();
+            var dateFrom = $("#dateFrom").val();
+            var dateTo = $("#dateTo").val();
+            window.location = "?t=<%=t%>&type=<%=type%>&user_id=<%=user_id %>&Supplier_id=<%=Supplier_id %>&mark="+ mark +"&key=" + escape(key) + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo;
+        }
+        function Edit(id,t) {
+
+            var title_ = "<%=Tag("管理充值单")%>";
+            var url_ = "moneyorder_edit_window.aspx?id=" + id;
+            var width_ = 500;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_, 'moneyorder_edit_window');
+        }
+        function Del() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var ids = GetChkCheckedValues("id");
+            var postData = { "ids": ids };
+            var url = "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=Order_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function AdminSkin(code){
+            var ids = GetChkCheckedValues("id");
+            if (ids == ""){
+                MsgBox(2, "<%=Tag("请先选择")%>", "");
+                return;
+            }
+            window.open("<%=site.AdminPath %>/custom/" + code + ".aspx?id=" + ids);
+        }
+    </script>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+        <%=PageString%>
+    </div>
+</lbbottom>

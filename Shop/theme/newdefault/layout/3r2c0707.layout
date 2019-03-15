@@ -1,0 +1,113 @@
+﻿{MOD:Top}
+<!DOCTYPE html PUBliC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+{MOD:HeadFile} 
+{HOLDER:lbheadfile}
+</head>
+<body>
+  {MOD:Head}
+  <div class="mainNav">
+    <div class="mainNav-con">
+      <div class="allnav">
+        <h2 class="title">
+          {tag:SHOP ALL CATEGORIES}<i class="title-icon"></i>
+        </h2>
+        <div class="allnav-show">
+          <ul id="nav">
+            <%
+                        int ic0=0;
+            foreach(Lebi_Pro_Type c0 in EX_Product.ShowTypes(0,CurrentSite.id))
+            {
+            ic0++;
+            if(ic0>5)
+            continue;
+            %>
+            <li id="mainCate-1" class="mainCate">
+              <h3>
+                <i class="nav-icon">
+                  <%if(c0.ImageSmall!=""){ %>
+                    <img src="<%=c0.ImageSmall %>" style="width:18px;height:18px;" /><%} %></i><%=Lang(c0.Name) %>
+              </h3>
+              <div class="subCate">
+                <h4>
+                  <%=Lang(c0.Name) %> >>
+                </h4>
+                <ul>
+                  <%
+                                    int ic1=0;
+                  foreach(Lebi_Pro_Type c1 in EX_Product.ShowTypes(c0.id,CurrentSite.id))
+                  {
+                  %>
+                  <li>
+                    <a href=""
+                      <%=URL("P_ProductCategory",""+c1.id+"") %>"><%=Lang(c1.Name) %>
+                    </a>
+                  </li>
+
+                  <%} %>
+                </ul>
+                <div class="nav-pic">
+                  <img src="Theme/weiyu/images/w-ad.jpg" width="365" height="154" />
+                </div>
+              </div>
+            </li>
+            <%} %>
+          </ul>
+        </div>
+      </div>
+      <!--主菜单-->
+      <div class="other-menu">
+        <a href="#">New product</a>
+        <a href="#">Top Sellers</a>
+        <a href="#">Deals</a>
+        <a href="#">Clearance</a>
+        <a href="#">Top Sellers</a>
+        <a href="#">Deals</a>
+        <a href="#">Clearance</a>
+      </div>
+    </div>
+  </div><!--nav-->
+  <script type="text/javascript">
+   $(document).ready(function(){
+    $('.allnav').mousemove(function(){
+    $(this).find('.allnav-show').slideDown("1000");//you can give it a speed
+    });
+    $('.allnav').mouseleave(function(){
+    $(this).find('.allnav-show').slideUp("fast");
+    });
+    });
+    jQuery("#nav").slide({
+    type:"menu", //效果类型
+    titCell:".mainCate", // 鼠标触发对象
+    targetCell:".subCate", // 效果对象，必须被titCell包含
+    delayTime:0, // 效果时间
+    triggerTime:0, //鼠标延迟触发时间
+    defaultPlay:false,//默认执行
+    returnDefault:true//返回默认
+    });
+  </script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+$('.allnav').mousemove(function(){
+$(this).find('.allnav-show').slideDown("1000");//you can give it a speed
+});
+$('.allnav').mouseleave(function(){
+$(this).find('.allnav-show').slideUp("fast");
+});
+});
+</script>
+<div class="body clearfix">
+    <div class="location"><div class="path"><%=path%></div></div>
+    <div class="bodyside clearfix">
+        {HOLDER:lbleft}
+    </div>
+    <div class="bodymain clearfix">
+        {HOLDER:lbright}
+    </div>
+</div>
+{MOD:Foot}
+{HOLDER:lbfoot}
+</body>
+</html>

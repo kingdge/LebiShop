@@ -1,0 +1,61 @@
+﻿{layout:default} {class:Shop.Admin.Config.MyServices}
+<lbhead>
+    <title><%=Tag("我的授权")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+<style type="text/css">.mainbody_top{display:none;height:0;overflow:hidden}</style>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="submit"><a href="javascript:void(0);" onclick="Update();"><b></b><span><%=Tag("更新")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("我的授权")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table id="list" class="datalist">
+        <tr class="title">
+            <th style="width: 200px">
+                <%=Tag("名称")%>
+            </th>
+            
+            <th style="">
+                <%=Tag("过期时间")%>
+            </th>
+        </tr>
+        <%foreach (Shop.Model.UserService model in models)
+          {%>
+        <tr class="list" >
+            
+            <td>
+                <%=model.Name%>
+            </td>
+            <td>
+                <%=model.T%>
+            </td>
+        </tr>
+        <%} %>
+        <tr>
+            <td colspan="2" class="classfaq">
+            <div class="faq_main">
+            
+                <p class="faq_title"><%=Tag("帮助")%>：</p>
+                如果您新购买的授权没有显示在以上列表里面，请点击“更新”按钮获取授权。</br>
+                
+            </div>
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+        function Update() {
+            var url = "<%=site.AdminPath %>/ajax/ajax_service.aspx?__Action=Lincense_Update";
+            RequestAjax(url,'',function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

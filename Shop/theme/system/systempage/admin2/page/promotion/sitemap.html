@@ -1,0 +1,49 @@
+﻿{layout:default} {class:Shop.Admin.storeConfig.Sitemap}
+<lbhead>
+    <title><%=Tag("网站地图")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("网站地图")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("网站地图")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form action="javascript:SaveObj();" novalidate>
+                    <div class="form-group">
+                        <label for=""><%=Tag("地图路径")%>：</label>
+                        <div class="input-group">
+                            http://<%=LB.Tools.RequestTool.GetRequestDomain()%>/Sitemap.xml
+                        </div>
+                    </div>
+                    <%if (PageReturnMsg == ""){%>
+                    <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("生成")%></button>
+                    <%}%>
+                </form>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title"><%=Tag("使用答疑")%></h4>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <%=Tag("将网站地图提交给搜索引擎，即可完成网站信息的自动收录。")%>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        function SaveObj() {
+            var postData = "";
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=Sitemap_Edit";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+    </script>
+</lbscripts>

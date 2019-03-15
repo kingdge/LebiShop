@@ -1,0 +1,11 @@
+﻿<div class="mhead clearfix">
+	<a href="javascript:history.go(-1);" class="a-back"><span>{Tag:返回}</span></a>
+	<h2 id="pagename">{title}</h2>
+	<a href="<%=URL("P_AllProductCategories","")%>" class="a-cate"><span>{Tag:商品分类}</span></a>
+</div>
+<script>
+    var pagetitle = $("#pagename").html();
+    if (pagetitle.indexOf(" - ") > -1) {
+        $("#pagename").html(pagetitle.split(' - ')[0]);
+    }
+</script>

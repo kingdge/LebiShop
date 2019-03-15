@@ -1,0 +1,71 @@
+﻿<!--
+Name:用户中心-首页
+Page:All
+-->
+<div class="nbbox clearfix">
+<div class="userbox">
+    <div class="mt">
+        <h2><%=CurrentUser.NickName %>&nbsp;{tag:欢迎您回来}</h2>
+    </div>
+    <div class="mc default-info">
+        <div class="dl-table clearfix">
+        <dl>
+            <dt>{tag:帐号等级}：</dt>
+            <dd><%=Lang(CurrentUserLevel.Name) %></dd>
+        </dl>
+        <dl>
+            <dt>{tag:登录次数}：</dt>
+            <dd><%=CurrentUser.Count_Login %></dd>
+        </dl>
+        <dl>
+            <dt>{tag:帐户余额}：</dt>
+            <dd><%=FormatMoney(CurrentUser.Money) %> <a href="<%=URL("P_Recharge","") %>"  class="click">{tag:充值}</a></dd>
+        </dl>
+        <dl>
+            <dt>{tag:积分}：</dt>
+            <dd><%=CurrentUser.Point %></dd>
+        </dl>
+        <dl>
+            <dt>{tag:注册时间}：</dt>
+            <dd><%=FormatTime(CurrentUser.Time_Reg) %></dd>
+        </dl>
+        <dl>
+            <dt>{tag:最后登录}：</dt>
+            <dd><%=FormatTime(CurrentUser.Time_Last) %></dd>
+        </dl>
+        </div>
+    </div>
+</div>
+</div>
+<div class="nbbox clearfix">
+<div class="userbox">
+    <div class="mt">
+        <h2>{tag:数据统计}</h2>
+    </div>
+    <div class="mc default-static">
+        <div class="dl-table clearfix">
+        <dl>
+            <dt>{tag:我的订单}：</dt>
+            <dd>{tag:总计}：<a href="<%=URL("P_UserOrders","")%>"><strong><%=Shop.Bussiness.Order.GetCount_Order("","","User_id = "+ CurrentUser.id +" and Type_id_OrderType = 211") %></strong></a>&nbsp;&nbsp;{tag:等待付款}：<a href="<%=URL("P_UserOrders","")%>?status=1"><strong><%=Shop.Bussiness.Order.GetCount_Order("","","User_id = "+ CurrentUser.id +" and Type_id_OrderType = 211 and IsPaid = 0") %></strong></a>&nbsp;&nbsp;{tag:等待收货}：<a href="<%=URL("P_UserOrders","")%>?status=2"><strong><%=Shop.Bussiness.Order.GetCount_Order("","","User_id = "+ CurrentUser.id +" and Type_id_OrderType = 211 and IsShipped = 1 and IsReceived = 0") %></strong></a>&nbsp;&nbsp;{tag:已收货}：<a href="<%=URL("P_UserOrders","")%>?status=3"><strong><%=Shop.Bussiness.Order.GetCount_Order("","","User_id = "+ CurrentUser.id +" and Type_id_OrderType = 211 and IsReceived = 1") %></strong></a>&nbsp;&nbsp;{tag:已完成}：<a href="<%=URL("P_UserOrders","")%>?status=2"><strong><%=Shop.Bussiness.Order.GetCount_Order("","","User_id = "+ CurrentUser.id +" and Type_id_OrderType = 211 and IsCompleted = 1") %></strong></a></dd>
+        </dl>
+        <dl>
+            <dt>{tag:我的收藏}：</dt>
+            <dd>{tag:总计}：<a href="<%=URL("P_UserLike","")%>"><strong><%=Like_Product_Count() %></strong></a></dd>
+        </dl>
+        <dl>
+            <dt>{tag:商品评价}：</dt>
+            <dd>{tag:总计}：<a href="<%=URL("P_UserLike","")%>"><strong><%=Count_Comment(0)+Count_Comment(1) %></strong></a>&nbsp;&nbsp;{tag:已评价}：<a href="<%=URL("P_UserComment","0","")%>"><strong><%=Count_Comment(1) %></strong></a>&nbsp;&nbsp;{tag:待评价}：<%if(Count_Comment(0)>0){%><a href="<%=URL("P_UserComment","1","")%>"><strong style="color:#ff0000"><%=Count_Comment(0) %></strong></a><%}else{ %>0<%} %></dd>
+        </dl>
+        <dl>
+            <dt>{tag:商品咨询}：</dt>
+            <dd>{tag:总计}：<a href="<%=URL("P_UserAsk","")%>"><strong><%=Count_ProductAsk(0)+Count_ProductAsk(1) %></strong></a>&nbsp;&nbsp;{tag:已回复}：<a href="<%=URL("P_UserAsk","","")%>?status=283"><strong><%=Count_ProductAsk(1) %></strong></a>&nbsp;&nbsp;
+                        {tag:未回复}：<%if(Count_ProductAsk(0)>0){%><a href="<%=URL("P_UserAsk","","")%>?status=282"><strong style="color:#ff0000"><%=Count_ProductAsk(0) %></strong></a><%}else{ %>0<%} %></dd>
+        </dl>
+        <dl>
+            <dt>{tag:站内信}：</dt>
+            <dd>{tag:总计}：<a href="<%=URL("P_UserMessage","0")%>"><strong><%=Shop.Bussiness.Message.GetCount_Message("", "", "User_id_To = "+ CurrentUser.id +" or User_id_From = "+ CurrentUser.id +"")%></strong></a>&nbsp;&nbsp;{tag:收件箱}：<a href="<%=URL("P_UserMessage","0")%>"><strong><%=Shop.Bussiness.Message.GetCount_Message("", "", "User_id_To = "+ CurrentUser.id +"")%></strong></a>&nbsp;&nbsp;{tag:发件箱}：<a href="<%=URL("P_UserMessage","1")%>"><strong><%=Shop.Bussiness.Message.GetCount_Message("", "", "User_id_From = "+ CurrentUser.id +"")%></strong></a>&nbsp;&nbsp;{tag:新信息}：<%if(Count_Message(0)>0){%><a href="<%=URL("P_UserMessage","0")%>"><strong style="color:#ff0000"><%=Count_Message(0) %></strong></a><%}else{ %>0<%} %></dd>
+        </dl>
+        </div>
+    </div>
+</div>
+</div>

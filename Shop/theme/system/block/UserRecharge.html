@@ -1,0 +1,76 @@
+﻿<!--
+Name:充值页面
+Page:All
+-->
+<div class="nbbox clearfix">
+<div class="userbox">
+    <div class="mt clearfix">
+        <h2>{tag:充值}</h2>
+    </div>
+    <div class="mc clearfix">
+    <div class="dl-table clearfix">
+    <dl>
+        <dt>{tag:充值金额}(<%=DefaultCurrency.Msige %>)：</dt>
+        <dd><input name="RMoney" id="RMoney" size="30" onkeyup="value=value.replace(/[^\d\.]/g,'');" class="input" /></dd>
+    </dl>
+    <dl>
+        <dt>{tag:支付方式}：</dt>
+        <dd>
+            <label onclick="changepaytype(0);"><input type="radio" name="paytype" value="0" checked order="true" /> <%=Tag("在线支付")%></label>
+            &nbsp;
+            <label onclick="changepaytype(1);"><input type="radio" name="paytype" value="1" order="true" /> <%=Tag("线下支付")%></label>
+        </dd>
+    </dl>
+   <dl id="pt0">
+        <dt>&nbsp;</dt>
+        <dd><%foreach(DB.LebiShop.Lebi_OnlinePay op in onlinepays){ %>
+            <label><input type="radio" name="onlinepay_id" value="<%=op.id %>" <%=op.id==CurrentUser.OnlinePay_id?"checked":"" %> url="<%=op.Url %>" order="true" /> <%=Lang(op.Name)%></label><br />
+            <%}%></dd>
+    </dl>
+    <dl id="pt1" style="display:none">
+        <dt>&nbsp;</dt>
+        <dd><%foreach(DB.LebiShop.Lebi_Pay op in pays){ %>
+            <label><input type="radio" name="Pay_id" value="<%=op.id %>" checked order="true" /> <%=Lang(op.Name)%></label><br />
+            <%}%></dd>
+    </dl>
+    <dl class="dl-btn">
+        <dt></dt>
+        <dd id="message"><a href="javascript:void(0)" onclick="submit();" class="btn btn-11"><s></s>{tag:提交}</a></dd>
+    </dl>
+    </div>
+    </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function submit() {
+        var RMoney = $("#RMoney").val();
+        var onlinepay_id = $("input[name='onlinepay_id']:checked").val();
+        var paytype = $("input[name='paytype']:checked").val();
+        var Pay_id = $("input[name='Pay_id']:checked").val();
+        if (RMoney == "" || RMoney<=0) {
+            CheckNO("RMoney", "{tag:充值金额必须大于0}");
+            return false;
+        }
+        var postData = { "RMoney": RMoney, "onlinepay_id": onlinepay_id, "Pay_id": Pay_id, "paytype": paytype };
+        var url = path + "/ajax/ajax_order.aspx?__Action=CreateMoneyOrder";
+        if (paytype == 1) {
+            RequestAjax(url, postData, function (res) {
+                MsgBox(1, '{tag:操作成功}');
+                $('#message').html('<span style="color:red;">{tag:操作成功}!</span>');
+            });
+        }
+        else {
+            RequestAjax(url, postData, function (res) { MsgBoxClose(res.url, "") });
+        }
+    }
+    function changepaytype(t) {
+        if (t == 1) {
+            $('#pt0').hide();
+            $('#pt1').show();
+        } else {
+            $('#pt1').hide();
+            $('#pt0').show();
+        }
+    }
+    changepaytype(0);
+</script>

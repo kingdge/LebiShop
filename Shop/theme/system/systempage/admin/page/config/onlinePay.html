@@ -1,0 +1,208 @@
+﻿{layout:default} {class:Shop.Admin.storeConfig.OnLinePay}
+<lbhead>
+    <title><%=Tag("在线支付")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+    <script type="text/javascript" src="<%=site.WebPath %>/Editor/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript" src="<%=site.WebPath %>/Editor/ckfinder/ckfinder.js"></script>
+</lbfile>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="add"><a href="javascript:void(0);" onclick="EditObj(0);"><b></b><span><%=Tag("添加")%></span></a></li>
+    <li class="del"><a href="javascript:void(0);" onclick="DeleteObj();"><b></b><span><%=Tag("删除")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("在线支付")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table id="list" class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'Delid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th style="width: 150px">
+                <%=Tag("名称")%>
+            </th>
+            <th style="width: 150px">
+                <%=Tag("接口类型")%>
+            </th>
+            <th style="width: 120px">
+                <%=Tag("接口代码")%>
+            </th>
+            <th style="width: 120px">
+                <%=Tag("LOGO")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("货币")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("手续费")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("启用")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("启用类型")%>
+            </th>
+            <th style="width: 120px">
+                <%=Tag("供应商")%>
+            </th>
+            <th style="width: 200px">
+                <%=Tag("显示语言")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("排序")%>
+            </th>
+            <th>
+                <%=Tag("内部备注")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_OnlinePay model in models)
+          {
+          DB.LebiShop.Lebi_Supplier supplier = DB.LebiShop.B_Lebi_Supplier.GetModel(model.Supplier_id);
+            if (supplier == null)
+                supplier = new DB.LebiShop.Lebi_Supplier();
+          
+          %>
+        <tr class="list" ondblclick="EditObj(<%=model.id %>);" >
+            <td style="text-align:center">
+                <input type="checkbox" name="Delid" del="true" value="<%=model.id %>" />
+                <input type="hidden" name="IDS" shop="true" value="<%=model.id %>" />
+            </td>
+            <td>
+                <b><%=Shop.Bussiness.Language.Content(model.Name, CurrentLanguage.Code)%></b>
+</td>
+            <td><%=model.TypeName %></td>
+            <td><%=model.Code %></td>
+            <td>
+                <% if (model.Logo == "")
+                   { %>
+                &nbsp;
+                <%}
+                   else
+                   { %>
+                <img src="<%=site.WebPath + model.Logo %>" style="height: 30px;" name="logoimg" />
+                <%} %>
+            </td>
+           <td><%=model.Currency_Name%></td>
+            <td>
+                <%=model.FeeRate %> %
+            </td>
+            <td>
+                <%=model.IsUsed == 1 ? "<span style=\"color:#ff0000\">" + Tag("是") + "</span>" : "" + Tag("否") + ""%>
+            </td>
+            <td>
+                <%=model.showtype %>
+            </td>
+            <td>
+                <%=supplier.SubName %>
+            </td>
+            <td>
+                <div class="more" style="width: 200px;" title="<%=LanguageName(model.Language_ids)%>">
+                <%=LanguageName(model.Language_ids)%>
+                </div>
+            </td>
+            <td>
+                <%=model.Sort %>
+            </td>
+            <td>
+                <%=model.Remark %>
+            </td>
+            <td>
+                <a href="javascript:void(0)" onclick="EditObj(<%=model.id %>);"><%=Tag("编辑")%></a> | <a href="javascript:void(0)" onclick="CopyObj(<%=model.id %>);"><%=Tag("复制")%></a>
+            </td>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_OnlinePay son in GetPays(model.id))
+        {
+        supplier = DB.LebiShop.B_Lebi_Supplier.GetModel(son.Supplier_id);
+        if (supplier == null)
+        supplier = new DB.LebiShop.Lebi_Supplier();
+
+        %>
+        <tr class="list" ondblclick="EditObj(<%=son.id %>);">
+            <td style="text-align:center">
+                <input type="checkbox" name="Delid" del="true" value="<%=son.id %>" />
+                <input type="hidden" name="IDS" shop="true" value="<%=son.id %>" />
+            </td>
+            <td>
+                &nbsp;&nbsp;|-- <%=Shop.Bussiness.Language.Content(son.Name, CurrentLanguage.Code)%>
+            </td>
+            <td><%=son.TypeName %></td>
+            <td><%=son.Code %></td>
+            <td>
+                <% if (son.Logo == "")
+                { %>
+                &nbsp;
+                <%}
+                else
+                { %>
+                <img src="<%=site.WebPath + son.Logo %>" style="height: 30px;" name="logoimg" />
+                <%} %>
+            </td>
+            <td><%=son.Currency_Name%></td>
+            <td>
+                <%=son.FeeRate %> %
+            </td>
+            <td>
+                <%=son.IsUsed == 1 ? "<span style=\"color:#ff0000\">" + Tag("是") + "</span>" : "" + Tag("否") + ""%>
+            </td>
+            <td>
+                <%=son.showtype %>
+            </td>
+            <td>
+                <%=supplier.SubName %>
+            </td>
+            <td>
+                <div class="more" style="width: 200px;" title="<%=LanguageName(model.Language_ids)%>">
+                    <%=LanguageName(son.Language_ids)%>
+                </div>
+            </td>
+            <td>
+                <%=son.Sort %>
+            </td>
+            <td>
+                <%=son.Remark %>
+            </td>
+            <td>
+                <a href="javascript:void(0)" onclick="EditObj(<%=son.id %>);"><%=Tag("编辑")%></a> | <a href="javascript:void(0)" onclick="    CopyObj(<%=son.id %>);"><%=Tag("复制")%></a>
+            </td>
+        </tr>
+        <%} %>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function EditObj(id) {
+            var title_ = "<%=Tag("编辑在线支付")%>";
+            if (id == 0)
+                var title_ = "<%=Tag("添加在线支付")%>";
+            var url_ = "onlinepay_edit_window.aspx?id=" + id;
+            var width_ = 700;
+            var height_ = "600";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function CopyObj(id) {
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=OnlinePay_Copy&id=" + id;
+            RequestAjax(url,"",function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function DeleteObj() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=OnlinePay_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

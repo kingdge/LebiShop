@@ -1,0 +1,383 @@
+﻿{layout:default} {class:Shop.Admin.storeConfig.appconfig}
+<lbhead>
+    <title><%=Tag("APP设置") %>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <link rel="stylesheet" type="text/css" href="<%=site.AdminAssetsPath %>/plugins/bigcolorpicker/jquery.bigcolorpicker.css" />
+</lbfile>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("APP设置") %></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("APP设置") %></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form action="javascript:SaveObj();" novalidate>
+                    <div class="row m-b-20">
+                        <div class="col-12">
+                            <%if (PageReturnMsg == ""){%>
+                            <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                            <button type="button" class="btn btn-default" onclick="Config();"><i class="ti-settings"></i> <%=Tag("推送配置")%></button>
+                            <%}%>
+                        </div>
+                    </div>
+                    <ul class="nav nav-tabs customtab" role="tablist">
+                        <%
+                        int mi=0;
+                        List<DB.LebiShop.Lebi_Language_Code> tablangs = Shop.Bussiness.Language.Languages();foreach (DB.LebiShop.Lebi_Language_Code lang in tablangs){
+                        %>
+                        <li class="nav-item"> <a class="nav-link <%if (tablangs.FirstOrDefault().Code == lang.Code){%>active show<%}%>" data-toggle="tab" href="#lang_<%=lang.Code %>" role="tab" aria-selected="true"><%=lang.Name %></a> </li>
+                        <%}%>
+                    </ul>
+                    <div class="tab-content m-t-20">
+                        <%foreach (DB.LebiShop.Lebi_Language_Code lang in tablangs){%>
+                        <div class="tab-pane <%if (langs.FirstOrDefault().Code == lang.Code){%>active show<%}%>" id="lang_<%=lang.Code %>" role="tabpanel">
+                            <div class="form-group">
+                                <label for="app_name"><%=Tag("名称")%>：</label>
+                                <input type="text" id="app_name<%=lang.Code %>" name="app_name<%=lang.Code %>" value="<%=Lang(app_name,lang.Code) %>" class="form-control" shop="true">
+                            </div>
+                            <h5 class="box-title m-t-20"><%=Tag("顶部Logo")%></h5>
+                            <div class="form-group">
+                                <label for="app_toplogo<%=lang.Code %>"><%=Tag("图片地址")%>：</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="image_app_toplogo<%=lang.Code %>"><%if (Lang(app_toplogo,lang.Code) != ""){%><img src="<%=Lang(app_toplogo,lang.Code) %>" height="20" /><%}else{ %><i class="ti-image"></i><%}%></span>
+                                    </div>
+                                    <input type="text" id="app_toplogo<%=lang.Code %>" name="app_toplogo<%=lang.Code %>" value="<%=Lang(app_toplogo,lang.Code) %>" class="form-control" shop="true">
+                                    <div class="input-group-append fileupload">
+                                        <span class="input-group-text"><i class="ti-upload"></i></span>
+                                        <input type="file" id="file_app_toplogo<%=lang.Code %>" name="file_app_toplogo<%=lang.Code %>" class="upload" onchange="uploadImage('app_toplogo<%=lang.Code %>')">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="app_toplogourl<%=lang.Code %>"><%=Tag("URL")%>：</label>
+                                <input type="text" id="app_toplogourl<%=lang.Code %>" name="app_toplogourl<%=lang.Code %>" value="<%=Lang(app_toplogourl,lang.Code) %>" class="form-control" shop="true">
+                            </div>
+                            <h5 class="box-title m-t-20"><%=Tag("左上角图标")%></h5>
+                            <div class="form-group">
+                                <label for="app_lefticon<%=lang.Code %>"><%=Tag("图片地址")%>：</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="image_app_lefticon<%=lang.Code %>"><%if (Lang(app_lefticon,lang.Code) != ""){%><img src="<%=Lang(app_lefticon,lang.Code) %>" height="20" /><%}else{ %><i class="ti-image"></i><%}%></span>
+                                    </div>
+                                    <input type="text" id="app_lefticon<%=lang.Code %>" name="app_lefticon<%=lang.Code %>" value="<%=Lang(app_lefticon,lang.Code) %>" class="form-control" shop="true">
+                                    <div class="input-group-append fileupload">
+                                        <span class="input-group-text"><i class="ti-upload"></i></span>
+                                        <input type="file" id="file_app_lefticon<%=lang.Code %>" name="file_app_lefticon<%=lang.Code %>" class="upload" onchange="uploadImage('app_lefticon<%=lang.Code %>')">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="app_lefturl<%=lang.Code %>"><%=Tag("URL")%>：</label>
+                                <input type="text" id="app_lefturl<%=lang.Code %>" name="app_lefturl<%=lang.Code %>" value="<%=Lang(app_lefturl,lang.Code) %>" class="form-control" shop="true">
+                            </div>
+                            <h5 class="box-title m-t-20"><%=Tag("右上角图标")%></h5>
+                            <div class="form-group">
+                                <label for="app_righticon<%=lang.Code %>"><%=Tag("图片地址")%>：</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="image_app_righticon<%=lang.Code %>"><%if (Lang(app_righticon,lang.Code) != ""){%><img src="<%=Lang(app_righticon,lang.Code) %>" height="20" /><%}else{ %><i class="ti-image"></i><%}%></span>
+                                    </div>
+                                    <input type="text" id="app_righticon<%=lang.Code %>" name="app_righticon<%=lang.Code %>" value="<%=Lang(app_righticon,lang.Code) %>" class="form-control" shop="true">
+                                    <div class="input-group-append fileupload">
+                                        <span class="input-group-text"><i class="ti-upload"></i></span>
+                                        <input type="file" id="file_app_righticon<%=lang.Code %>" name="file_app_righticon<%=lang.Code %>" class="upload" onchange="uploadImage('app_righticon<%=lang.Code %>')">
+                                    </div>
+                                </div>
+                            </div>
+                            <h5 class="box-title m-t-20"><%=Tag("顶部区域")%></h5>
+                            <div class="row">
+                                <div class="form-group col-sm-3">
+                                    <label for="app_topbackground<%=lang.Code %>"><%=Tag("背景颜色")%>：</label>
+                                    <div class="input-group">
+                                        <input type="text" id="app_topbackground<%=lang.Code %>" name="app_topbackground<%=lang.Code %>" value="<%=Lang(app_topbackground,lang.Code) %>" class="form-control" shop="true">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" id="s_app_topbackground<%=lang.Code %>" style="cursor: pointer;background-color:<%=Lang(app_topbackground,lang.Code) %>">
+                                                <i class="ti-paint-bucket"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-3">
+                                    <label for="app_topline<%=lang.Code %>"><%=Tag("边框颜色")%>：</label>
+                                    <div class="input-group">
+                                        <input type="text" id="app_topline<%=lang.Code %>" name="app_topline<%=lang.Code %>" value="<%=Lang(app_topline,lang.Code) %>" class="form-control" shop="true">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" id="s_app_topline<%=lang.Code %>" style="cursor: pointer;background-color:<%=Lang(app_topline,lang.Code) %>">
+                                                <i class="ti-paint-bucket"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-3">
+                                    <label for="app_topcolor<%=lang.Code %>"><%=Tag("文字颜色")%>：</label>
+                                    <div class="input-group">
+                                        <input type="text" id="app_topcolor<%=lang.Code %>" name="app_topcolor<%=lang.Code %>" value="<%=Lang(app_topcolor,lang.Code) %>" class="form-control" shop="true">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" id="s_app_topcolor<%=lang.Code %>" style="cursor: pointer;background-color:<%=Lang(app_topcolor,lang.Code) %>">
+                                                <i class="ti-paint-bucket"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h5 class="box-title m-t-20"><%=Tag("底部区域")%></h5>
+                            <div class="row">
+                                <div class="form-group col-sm-3">
+                                    <label for="app_bottombackground<%=lang.Code %>"><%=Tag("背景颜色")%>：</label>
+                                    <div class="input-group">
+                                        <input type="text" id="app_bottombackground<%=lang.Code %>" name="app_bottombackground<%=lang.Code %>" value="<%=Lang(app_bottombackground,lang.Code) %>" class="form-control" shop="true">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" id="s_app_bottombackground<%=lang.Code %>" style="cursor: pointer;background-color:<%=Lang(app_bottombackground,lang.Code) %>">
+                                                <i class="ti-paint-bucket"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-3">
+                                    <label for="app_bottomline<%=lang.Code %>"><%=Tag("边框颜色")%>：</label>
+                                    <div class="input-group">
+                                        <input type="text" id="app_bottomline<%=lang.Code %>" name="app_bottomline<%=lang.Code %>" value="<%=Lang(app_bottomline,lang.Code) %>" class="form-control" shop="true">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" id="s_app_bottomline<%=lang.Code %>" style="cursor: pointer;background-color:<%=Lang(app_bottomline,lang.Code) %>">
+                                                <i class="ti-paint-bucket"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-3">
+                                    <label for="app_bottomcolor<%=lang.Code %>"><%=Tag("文字颜色")%>：</label>
+                                    <div class="input-group">
+                                        <input type="text" id="app_bottomcolor<%=lang.Code %>" name="app_bottomcolor<%=lang.Code %>" value="<%=Lang(app_bottomcolor,lang.Code) %>" class="form-control" shop="true">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" id="s_app_bottomcolor<%=lang.Code %>" style="cursor: pointer;background-color:<%=Lang(app_bottomcolor,lang.Code) %>">
+                                                <i class="ti-paint-bucket"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-3">
+                                    <label for="app_lefturl<%=lang.Code %>"><%=Tag("菜单数量")%>：</label>
+                                    <input type="text" id="app_bottomcount<%=lang.Code %>" name="app_bottomcount<%=lang.Code %>" value="<%=Lang(app_bottomcount,lang.Code) %>" class="form-control" shop="true">
+                                </div>
+                            </div>
+                            <h5 class="box-title m-t-20"><%=Tag("启动图片")%></h5>
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label for="app_startimage<%=lang.Code %>"><%=Tag("图片地址")%>：</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="image_app_startimage<%=lang.Code %>"><%if (Lang(app_startimage,lang.Code) != ""){%><img src="<%=Lang(app_startimage,lang.Code) %>" height="20" /><%}else{ %><i class="ti-upload"></i><%}%></span>
+                                        </div>
+                                        <input type="text" id="app_startimage<%=lang.Code %>" name="app_startimage<%=lang.Code %>" value="<%=Lang(app_startimage,lang.Code) %>" class="form-control">
+                                        <div class="input-group-append fileupload">
+                                            <span class="input-group-text"><i class="ti-upload"></i></span>
+                                            <input type="file" id="file_app_startimage<%=lang.Code %>" name="file_app_startimage<%=lang.Code %>" class="upload" onchange="uploadImage('app_startimage<%=lang.Code %>')">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label for="app_starturl<%=lang.Code %>"><%=Tag("URL")%>：</label>
+                                    <input type="text" id="app_starturl<%=lang.Code %>" name="app_starturl<%=lang.Code %>" value="<%=Lang(app_starturl,lang.Code) %>" class="form-control" shop="true">
+                                </div>
+                                <div class="form-group col-sm-3">
+                                    <label for="app_waittimes<%=lang.Code %>"><%=Tag("停留时间")%>：</label>
+                                    <input type="text" id="app_waittimes<%=lang.Code %>" name="app_waittimes<%=lang.Code %>" value="<%=Lang(app_waittimes,lang.Code) %>" class="form-control" shop="true">
+                                </div>
+                            </div>
+                            <h5 class="box-title m-t-20"><%=Tag("升级")%></h5>
+                            <div class="row">
+                                <div class="form-group col-sm-3">
+                                    <label for="app_version<%=lang.Code %>"><%=Tag("版本号")%>：</label>
+                                    <input type="text" id="app_version<%=lang.Code %>" name="app_version<%=lang.Code %>" value="<%=Lang(app_version,lang.Code) %>" class="form-control" shop="true">
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label for="app_downloadurl<%=lang.Code %>"><%=Tag("下载地址")%>：</label>
+                                    <input type="text" id="app_downloadurl<%=lang.Code %>" name="app_downloadurl<%=lang.Code %>" value="<%=Lang(app_downloadurl,lang.Code) %>" class="form-control" shop="true">
+                                </div>
+                            </div>
+                            <h5 class="box-title m-t-20"><%=Tag("APP菜单")%></h5>
+                            <div class="table-responsive">
+                                <table class="table table-hover no-wrap">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:10%">
+                                                <%=Tag("排序")%>
+                                            </th>
+                                            <th style="width:20%">
+                                                <%=Tag("文字")%>
+                                            </th>
+                                            <th style="width:15%">
+                                                <%=Tag("图标")%>
+                                            </th>
+                                            <th style="width:40%">
+                                                <%=Tag("URL")%>
+                                            </th>
+                                            <th>
+                                                <%=Tag("操作")%> [<a href="javascript:addrow('<%=lang.Code %>',$('#mi').val());"><%=Tag("增加")%></a>]
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="menustable<%=lang.Code %>">
+                                        <%
+                                        foreach(Shop.Model.BaseConfigAppMenu menu in Getmenus(Lang(val,lang.Code))){
+                                        mi++;
+                                        %>
+                                        <tr id="tr<%=mi %>">
+                                            <td>
+                                                <input type="text" name="menu_sort<%=lang.Code %>" value="<%=menu.Sort %>" onkeyup="value=value.replace(/[^\d]/g,'')" class="form-control form-control-sm" shop="true">
+                                            </td>
+                                            <td>
+                                                <input type="text" name="menu_name<%=lang.Code %>" value="<%=menu.Name %>" class="form-control form-control-sm" shop="true">
+                                            </td>
+                                            <td>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="image_menu_icon<%=lang.Code %>_<%=mi %>"><%if (menu.Icon != ""){%><img src="<%=menu.Icon %>" height="20" /><%}else{ %><i class="ti-image"></i><%}%></span>
+                                                    </div>
+                                                    <input type="text" id="menu_icon<%=lang.Code %>_<%=mi %>" name="menu_icon<%=lang.Code %>" value="<%=menu.Icon %>" class="form-control form-control-sm" shop="true">
+                                                    <div class="input-group-append fileupload">
+                                                        <span class="input-group-text"><i class="ti-upload"></i></span>
+                                                        <input type="file" id="file_menu_icon<%=lang.Code %>_<%=mi %>" name="file_menu_icon<%=lang.Code %>_<%=mi %>" class="upload" onchange="uploadImage('menu_icon<%=lang.Code %>_<%=mi %>')">
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <input type="text" name="menu_url<%=lang.Code %>" value="<%=menu.URL %>" class="form-control form-control-sm" shop="true">
+                                            </td>
+                                            <td>
+                                                <input type="hidden" name="mi<%=lang.Code %>" value="<%=mi %>" shop="true">
+                                                <a href="javascript:void(0);" onclick="$(this).parent().parent().remove();"><%=Tag("删除")%></a>
+                                            </td>
+                                        </tr>
+                                        <%
+                                        if(menu.Son!=null){
+                                        foreach(Shop.Model.BaseConfigAppMenuSon son in menu.Son){
+                                        //mi++;
+                                        %>
+                                        <tr>
+                                            <td>
+                                                &nbsp;|-<input type="text" name="<%=mi %>menu_sort<%=lang.Code %>" value="<%=son.Sort %>" onkeyup="value=value.replace(/[^\d]/g,'')" class="form-control form-control-sm" shop="true">
+                                            </td>
+                                            <td>
+                                                <input type="text" name="<%=mi %>menu_name<%=lang.Code %>" value="<%=son.Name %>" class="form-control form-control-sm" shop="true">
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                                <input type="text" name="<%=mi %>menu_url<%=lang.Code %>" value="<%=son.URL %>" class="form-control form-control-sm" shop="true">
+                                            </td>
+                                            <td>
+                                                <a href="javascript:void(0);" onclick="$(this).parent().parent().remove();"><%=Tag("删除")%></a>
+                                            </td>
+                                        </tr>
+                                        <%}} %>
+                                        <%} %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <%} %>
+                    </div>
+                    <%if (PageReturnMsg == ""){%>
+                    <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                    <input type="hidden" id="mi" name="mi" value="<%=mi%>" />
+                    <%}%>
+                </form>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script src="<%=site.AdminAssetsPath %>/plugins/bigcolorpicker/jquery.bigcolorpicker.min.js"></script>
+    <script src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+    <script>
+        function addrow(code,mi)
+        {
+            mi++;
+            $("#mi").val(mi);
+            var filename = "menu_icon"+ code +"_"+mi+"";
+            var row='<tr id="tr'+mi+'"><td><input type="text" name="menu_sort'+code+'" value="0" class="form-control form-control-sm" shop="true" onkeyup="value=value.replace(/[^\\d]/g,\'\')" /></td>';
+            row+='<td><input type="text" name="menu_name'+code+'" value="" class="form-control form-control-sm" shop="true" /></td>';
+            row += '<td><div class="input-group"><div class="input-group-prepend"><span class="input-group-text" id="image_menu_icon' + code + '_' + mi + '"><i class="ti-image"></i></span></div><input type="text" id="menu_icon'+code+'_'+mi+'" name="menu_icon'+code+'" value="" class="form-control form-control-sm" shop="true"><div class="input-group-append fileupload"><span class="input-group-text" id="image_menu_icon'+code+'_'+mi+'"><i class="ti-upload"></i></span><input type="file" id="file_menu_icon'+code+'_'+mi+'" name="file_menu_icon'+code+'_'+mi+'" class="upload" onchange="uploadImage(\''+filename+'\')"></div></div></td>';
+            row+='<td><input type="text" name="menu_url'+code+'" value="" class="form-control form-control-sm" shop="true" /></td>';
+            row+='<td><a href="javascript:void(0);" onclick="$(this).parent().parent().remove();"><%=Tag("删除")%></a>';
+            //row+=' | <a href="javascript:void(0);" onclick="addsonrow(\''+code+'\','+mi+');"><%=Tag("添加子菜单")%></a>';
+            row+='<input type="hidden" class="input" shop="true" name="mi" value="'+mi+'" />';
+            row+='</td></tr>';
+            $("#menustable"+code).append(row);
+        }
+        function addsonrow(code,i)
+        {
+            //mi++;
+            var row='<tr><td>&nbsp;|-<input type="text" name="'+i+' menu_sort'+code+'" value="0" onkeyup="value=value.replace(/[^\\d]/g,\'\')" class="form-control form-control-sm" shop="true"></td>';
+            row+='<td><input type="text" name="'+i+'menu_name'+code+'" value="" class="form-control form-control-sm" shop="true"></td>';
+            row+='<td>';
+            row+='';
+            row+='</td>';
+            row+='<td><input type="text" name="'+i+'menu_url'+code+'" value="" class="form-control form-control-sm" shop="true"></td>';
+            row+='<td><a href="javascript:void(0);" onclick="$(this).parent().parent().remove();"><%=Tag("删除")%></a></td></tr>';
+            $("#tr"+i).after(row);
+        }
+        <%
+        List<DB.LebiShop.Lebi_Language_Code> looplangs = Shop.Bussiness.Language.Languages();foreach (DB.LebiShop.Lebi_Language_Code lang in looplangs){
+        %>
+        $(function () {
+            $("#s_app_topbackground<%=lang.Code %>").bigColorpicker(function (el, color) { $(el).css("background-color", color); $("#app_topbackground<%=lang.Code %>").val(color); });
+            $("#s_app_topline<%=lang.Code %>").bigColorpicker(function (el, color) { $(el).css("background-color", color); $("#app_topline<%=lang.Code %>").val(color); });
+            $("#s_app_topcolor<%=lang.Code %>").bigColorpicker(function (el, color) { $(el).css("background-color", color); $("#app_topcolor<%=lang.Code %>").val(color); });
+            $("#s_app_bottombackground<%=lang.Code %>").bigColorpicker(function (el, color) { $(el).css("background-color", color); $("#app_bottombackground<%=lang.Code %>").val(color); });
+            $("#s_app_bottomline<%=lang.Code %>").bigColorpicker(function (el, color) { $(el).css("background-color", color); $("#app_bottomline<%=lang.Code %>").val(color); });
+            $("#s_app_bottomcolor<%=lang.Code %>").bigColorpicker(function (el, color) { $(el).css("background-color", color); $("#app_bottomcolor<%=lang.Code %>").val(color); });
+        });
+        <%} %>
+        function uploadImage(id) {
+            $.ajaxFileUpload({
+	            url: WebPath + '/ajax/imageuploadone.aspx?path=config',
+	            secureuri: false,
+	            fileElementId: 'file_' + id,
+	            dataType: 'json',
+	            success: function (data, status) {
+	                if (data.msg != 'OK') {
+	                    MsgBox(2, data.error, "");
+	                }
+	                else {
+	                    var imageUrl = data.ImageUrl;
+	                    if (imageUrl.length > 0) {
+	                        $("#image_" + id + "").html('<img src="' + imageUrl + '" height="20" />');
+	                        $("#" + id + "").val(imageUrl);
+	                        //$("#img" + id + "").attr('src',imageUrl);
+	                        //$("#menu_icon" + id + "").val(imageUrl);
+	                        //$("#" + id + "").val(imageUrl);
+	                        //$("#img" + id + "").show();
+	                    }
+	                }
+	            },
+	            error: function (data, status, e) {
+	                MsgBox(2, data.msg, "");
+	            }
+	        })
+        }
+        function SaveObj() {
+            var postData = GetFormJsonData("shop");
+            var url="<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=APPMenu_Edit";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+        function Config() {
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "appconfig_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+    </script>
+</lbscripts>

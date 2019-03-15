@@ -1,0 +1,142 @@
+﻿{layout:default} {class:Shop.Admin.storeConfig.LanguageTag}
+<lbhead>
+    <title><%=Tag("语言标签")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+</lbfile>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <%if (PageReturnMsg == ""){%>
+            <li class="submit"><a href="javascript:void(0);" onclick="Update();"><b></b><span><%=Tag("保存")%></span></a></li>
+            <li class="del"><a href="javascript:void(0);" onclick="DEL();"><b></b><span><%=Tag("删除")%></span></a></li>
+            <li class="edit"><a href="?mode=NeedTranslation"><b></b><span><%=Tag("待翻译")%></span></a></li>
+            <li class="export"><a href="javascript:void(0);" onclick="Export();"><b></b><span><%=Tag("导出")%></span></a></li>
+            <li class="import"><a href="javascript:void(0);" onclick="Import();"><b></b><span><%=Tag("导入")%></span></a></li>
+            <%}%>
+            <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("语言标签")%></span></li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox clear">
+        <input type="text" id="key" name="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" value="" />
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'sid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));">
+                    <%=Tag("全选")%></a>
+            </th>
+            <th style="width: 150px">
+                <%=Tag("标签")%>
+            </th>
+            <%foreach (DB.LebiShop.Lebi_Language_Code lang in langs)
+              { %>
+            <th style="width: 150px">
+                <%=lang.Name %> <a id="<%=lang.Code %>A" href="javascript:void(0);" onclick="TagUpdate('<%=lang.Code %>')" style="display: none;">更新</a>
+                <div id="<%=lang.Code %>C" style="display: none;"></div>
+                <input type="hidden" id="<%=lang.Code %>V" style="display: none;" value="0" />
+            </th>
+           <%} %>
+            <th>&nbsp;</th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_Language_Tag model in models)
+          {%>
+        <tr class="list" ondblclick="Edit(<%=model.id %>)">
+            <td style="text-align:center">
+                <input type="checkbox" value="<%=model.id %>" name="sid" />
+                <input type="hidden" name="id" shop="true" value="<%=model.id %>" />
+            </td>
+            <td>
+                <%=model.tag%>
+            </td>
+            <%foreach (DB.LebiShop.Lebi_Language_Code lang in langs)
+             { %>
+            <td>
+                <input type="text" id="<%=lang.Code+model.id %>" name="<%=lang.Code+model.id %>" shop="true" class="input" style="width: 150px" value="<%=Server.HtmlEncode(TagValue(model,lang.Code)) %>" />
+            </td>
+            <%} %>
+            <td>&nbsp;</td>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function search_() {
+            var key = $("#key").val();
+            window.location = "?key=" + escape(key);
+        }
+        function TagVersion(lang) {
+            var postData = { "lang": lang };
+            var url = "<%=site.AdminPath %>/ajax/ajax_service.aspx?__Action=LanguageTagVersion";
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: postData,
+                dataType: "json",
+                success: function (res) {
+                    if (res.version != "0") {
+                        $("#" + lang + "A").show();
+                        $("#" + lang + "C").html(res.content);
+                        $("#" + lang + "V").val(res.version);
+                    }
+                }
+            }); 
+        }
+        function Update() {
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=LanguageTag_Edits";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+        function DEL() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var id = GetChkCheckedValues("sid");
+            var postData = { "id": id };
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=LanguageTag_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function Export() {
+            var title_ ="<%=Tag("导出")%>"
+            var url_ = "languagetag_export_window.aspx";
+            var width_ = 300;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function Import() {
+            var title_ ="<%=Tag("导入")%>"
+            var url_ = "languagetag_import_window.aspx";
+            var width_ = 500;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function TagUpdate(lang) {
+            var title_ = "更新记录";
+            var div_=lang + "C";
+            var width_ = 600;
+            var height_ = 430;
+            var modal_ = true;
+            ShowWindow(title_, div_, width_, height_, modal_,'editwindow');
+        }
+        function TagUpdateDO(lang) {
+            var postData = {"lang":lang,"version":$("#" + lang + "V").val()};
+            var url = "<%=site.AdminPath %>/ajax/ajax_service.aspx?__Action=LanguageTagUpdate";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        <%
+        if (page == 1){
+        foreach (DB.LebiShop.Lebi_Language_Code lang in langs){ %>
+            TagVersion("<%=lang.Code %>");
+        <%}} %>
+    </script>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+        <%=PageString%>
+    </div>
+    <div style="display: none; text-align: left;" id="editwindow">
+    </div>
+</lbbottom>

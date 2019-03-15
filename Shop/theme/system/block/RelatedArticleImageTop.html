@@ -1,0 +1,22 @@
+﻿<!--
+Name:相关文章图文模式
+Page:P_ArticleDetails
+-->
+<div class="mbox clearfix">
+<div class="articletop">
+<div class="mt">
+    <h2>{tag:相关文章}</h2>
+</div>
+<div class="mc clearfix">
+    <ul>
+        ${#table:Lebi_Page;#where:Node_id = "+ node.id +" and Language like '%" + CurrentLanguage.Code +"%' and id <> "+ id +";#order:id desc;#top:10;
+        <%if ({ImageSmall} !=""){ %>
+        <li class="image"><div class="image"><p><a href="<%=URL("P_ArticleDetails",{id},{url})%>" target="_blank"><img <%if (CurrentLanguage.IsLazyLoad==1){ %>class="lazy" src="{/image}lazy.gif" data-original<%}else{ %>src<%} %>="<%=Image({ImageSmall}) %>" title="<%=Lang({Name}) %>" /></a></p></div><div class="title"><a href="<%=URL("P_ArticleDetails",{id},{url})%>" title="{%Name%}" target="_blank"><span style="color:{%NameColor%}">{%Name%}</span></a></div></li>
+        <%} else{%>
+        <li class="text"><div class="title"><a href="<%=URL("P_ArticleDetails",{id},{url})%>" title="{%Name%}" target="_blank"><span style="color:{%NameColor%}">{%Name%}</span></a></div></li>
+        <%} %>
+        }$
+    </ul>
+</div>
+</div>
+</div>

@@ -1,0 +1,84 @@
+﻿{layout:simple} {class:Shop.Admin.product.productlimit_list_window}
+<lbbody>
+    <div class="table-responsive">
+        <table class="table table-hover no-wrap">
+            <thead>
+                <tr>
+                    <th>
+                        <%=Tag("商品图片")%>
+                    </th>
+                    <th>
+                        <%=Tag("商品编号")%>
+                    </th>
+                    <th style="">
+                        <%=Tag("商品名称")%>
+                    </th>
+                    <th>
+                        <%=Tag("单位")%>
+                    </th>
+                    <th>
+                        <a href="javascript:void(0);" onclick="$('input[cname=\'IsShow\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));">
+                            <%=SYS.ProductLimitType=="0" ||userlevel.id>0?Tag("禁止浏览"):Tag("允许浏览")%>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="javascript:void(0);" onclick="$('input[cname=\'IsPriceShow\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));">
+                            <%=SYS.ProductLimitType=="0"||userlevel.id>0?Tag("禁止看价"):Tag("允许看价")%>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="javascript:void(0);" onclick="$('input[cname=\'IsBuy\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));">
+                            <%=SYS.ProductLimitType=="0"||userlevel.id>0?Tag("禁止购买"):Tag("允许购买")%>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <%foreach (DB.LebiShop.Lebi_Product model in products){
+                DB.LebiShop.Lebi_Product_Limit limit=GetLimitInfo(model.id);
+                %>
+                <tr ondblclick="selectproductone(<%=model.id %>,'<%=model.Number%>');">
+                    <td style="text-align:center">
+                        <img src="<%=Image(model.ImageOriginal,50,50) %>" style="max-width:50px;max-height:50px;" />
+                    </td>
+                    <td>
+                        <%=model.Number %>
+                    </td>
+                    <td style="max-width:400px;word-wrap: break-word;">
+                        <%=Sub(Lang(model.Name),60) %>
+                    </td>
+                    <td>
+                        <%=GetUnitName(model.Units_id) %>
+                    </td>
+                    <td>
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" id="IsShow<%=model.id%>" name="IsShow<%=model.id%>" cname="IsShow" value="1" class="custom-control-input" limit="true" <%=limit.IsShow==1?"checked":""%>>
+                            <span class="custom-control-label"></span>
+                        </label>
+                    </td>
+                    <td>
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" id="IsPriceShow<%=model.id%>" name="IsPriceShow<%=model.id%>" cname="IsPriceShow" value="1" class="custom-control-input" limit="true" <%=limit.IsPriceShow==1?"checked":""%>>
+                            <span class="custom-control-label"></span>
+                        </label>
+                    </td>
+                    <td>
+                        <label class="custom-control custom-checkbox">
+                            <input type="checkbox" id="IsBuy<%=model.id%>" name="IsBuy<%=model.id%>" cname="IsBuy" value="1" class="custom-control-input" limit="true" <%=limit.IsBuy==1?"checked":""%>>
+                            <span class="custom-control-label"></span>
+                        </label>
+                        <input type="hidden" name="limitproductid" value="<%=model.id%>" limit="true" />
+                    </td>
+                </tr>
+                <%} %>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="Page navigation ">
+                <%=PageString%>
+            </nav>
+        </div>
+    </div>
+</lbbody>

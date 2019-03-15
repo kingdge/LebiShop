@@ -1,0 +1,41 @@
+﻿{Layout:3r2c}
+<lbheadfile>
+    <meta property="og:title" content="<%=Lang(product.Name) %>">
+    <meta property="og:type" content="product">
+    <meta property="og:url" content="<%=LB.Tools.RequestTool.GetRequestUrl() %>">
+    <meta property="og:image" content="<%=Image(product.ImageOriginal)%>">
+    <meta property="og:site_name" content="<%=Lang(SYS.Name) %>">
+    <meta property="og:description" content="{Tag:抢购价}: <%=CurrentCurrency.Code%><%=FormatMoney(ProductPrice(product),"decimal") %>,{description}">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="600">
+    <meta property="og:image:height" content="600">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:image:width" content="600">
+    <meta property="twitter:image:height" content="600">
+    <meta property="twitter:site" content="<%=Lang(SYS.Name) %>">
+    <meta property="twitter:creator" content="<%=Lang(SYS.Name) %>">
+    <meta property="twitter:image" content="<%=Image(product.ImageOriginal)%>">
+    <meta property="twitter:label1" content="{Tag:抢购价}">
+    <meta property="twitter:data1" content="<%=CurrentCurrency.Code%><%=FormatMoney(ProductPrice(product),"decimal") %>">
+</lbheadfile>
+<lbleft>
+{MOD:ViewHistory}
+{MOD:NewsTop}
+</lbleft>
+<lbright>
+<div class="nbbox">
+<div class="productdetail">
+<div class="image left">
+{MOD:ProductImages}
+</div>
+<div class="con left">
+                        
+{MOD:ProductInfo}
+</div>
+<div class="clear"></div>
+</div>
+<div class="nbbox">
+{MOD:Tab_ProductContent}
+</div>
+</div>
+</lbright>

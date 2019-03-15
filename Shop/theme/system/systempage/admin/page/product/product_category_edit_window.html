@@ -1,0 +1,52 @@
+﻿{layout:simple} {class:Shop.Admin.product.product_category_edit_window}
+<lbbody>
+<table cellspacing="0" border="0" style="width: 100%;" class="table">
+        <tr>
+            <th>
+                <%=Tag("商品类别")%>：
+            </th>
+            <td>
+                <select name="Pro_Type_id" shop="true" id="Pro_Type_id">
+                    <%=Shop.Bussiness.EX_Product.TypeOption(0, 0, 0, CurrentLanguage.Code,Shop.Bussiness.EX_Admin.Project().Pro_Type_ids)%>
+                </select>
+            </td>
+        </tr>
+    <tr>
+        <th style="vertical-align:top">
+            <%=Tag("扩展类别")%>：
+        </th>
+        <td>
+            <select name="Pro_Type_id_other" id="Pro_Type_id_other" shop="true" multiple="multiple" size="8">
+                <%=Shop.Bussiness.EX_Product.TypeOption(0, 0, 0, CurrentLanguage.Code,Shop.Bussiness.EX_Admin.Project().Pro_Type_ids)%>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td class="action" colspan="2">
+            <div class="tools tools-m clear">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    function SaveObj() {
+        var postData = GetFormJsonData("shop");
+        var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Product_Category_Edit&ids=<%=ids %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?");});
+    }
+    $(function () {
+        $("#Pro_Type_id_other").multiselect2side({
+            selectedPosition: "right",
+            moveOptions: false,
+            //search: "<img src='img/search.gif' align=\"absmiddle\" /> ",
+            labelsx: "",
+            labeldx: "",
+            autoSort: false,
+            autoSortAvailable: false
+        });
+    }); 
+</script>
+</lbbody>

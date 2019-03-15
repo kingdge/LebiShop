@@ -1,0 +1,197 @@
+﻿{layout:default} {class:Shop.Admin.storeConfig.WaterConfig_Edit}
+<lbhead>
+    <title><%=Tag("水印设置")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+    <style>
+        .bottom{height: 0;overflow: hidden;display: none;}
+    </style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("提交")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("水印设置")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table class="table">
+        <tr>
+            <th>
+                <%=Tag("水印功能")%>：
+            </th>
+            <td>
+                <label><input name="OnAndOff" type="radio" shop="true" value="1" <%=model.OnAndOff=="1"?"checked":"" %> /><%=Tag("开启")%></label>
+                <label><input name="OnAndOff" type="radio" shop="true" value="0" <%=model.OnAndOff=="0"?"checked":"" %> /><%=Tag("关闭")%></label>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("水印类型")%>：
+            </th>
+            <td>
+                <label><input name="PicAndText" type="radio" shop="true" value="Logo" <%=model.PicAndText=="Logo"?"checked":"" %> /><%=Tag("图片")%></label>
+                <label><input name="PicAndText" type="radio" shop="true" value="text" <%=model.PicAndText=="text"?"checked":"" %> /><%=Tag("文字")%></label>
+            </td>
+        </tr>
+        <tr>
+            <th style="vertical-align:top">
+                <%=Tag("水印图片")%>：
+            </th>
+            <td>
+                <div id="image_WM_PicPath">
+                    <%if (model.WM_PicPath != "")
+                      {%>
+                    <img height="30" src="<%=site.WebPath + model.WM_PicPath%>" />
+                    <%} %>
+                </div>
+                <input type="text" shop="true" id="WM_PicPath" name="WM_PicPath" style="width: 200px" value="<%=model.WM_PicPath %>" class="input" />
+                <input id="file_WM_PicPath" name="file_WM_PicPath" type="file" onchange="uploadImage('WM_PicPath')" class="input" />
+                <!--<input type="button" value="<%=Tag("上传")%>" onclick="uploadImage('WM_PicPath')" class="button" />-->
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("水印文字")%>：
+            </th>
+            <td>
+                <input type="text" shop="true" id="WM_Text" name="WM_Text" style="width: 200px" value="<%=model.WM_Text %>"
+                    class="input" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("水印位置")%>：
+            </th>
+            <td>
+                <select shop="true" id="WM_Location" name="WM_Location">
+                    <option value="LeftTop" <%=model.WM_Location=="LeftTop"?"selected":"" %>><%=Tag("左上角")%></option>
+                    <option value="LeftBottom" <%=model.WM_Location=="LeftBottom"?"selected":"" %>><%=Tag("左下角")%></option>
+                    <option value="RightTop" <%=model.WM_Location=="RightTop"?"selected":"" %>><%=Tag("右上角")%></option>
+                    <option value="RightBottom" <%=model.WM_Location=="RightBottom"?"selected":"" %>><%=Tag("右下角")%></option>
+                    <option value="Tile" <%=model.WM_Location=="Tile"?"selected":"" %>><%=Tag("平铺")%></option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("水印透明度")%>：
+            </th>
+            <td>
+                <input type="text" shop="true" id="WM_Transparence" MaxLength="3" name="WM_Transparence" style="width:35px" value="<%=model.WM_Transparence %>" onkeyup="value=value.replace(/[^\d]/g,'')" class="input"  />
+                ％ <em><%=Tag("最大值为100")%></em>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("水印字体")%>：
+            </th>
+            <td>
+                <select shop="true" id="WM_Font" name="WM_Font">
+                    <%=getfont(model.WM_Font)%>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("文字大小")%>：
+            </th>
+            <td>
+                <input type="text" shop="true" id="WM_FontSize" maxlength="2" name="WM_FontSize" style="width: 35px" value="<%=model.WM_FontSize %>" class="input" /> <%=Tag("像素")%>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("文字颜色")%>：
+            </th>
+            <td>
+                <select shop="true" id="WM_FontColor" name="WM_FontColor">
+                    <%=getcolor(model.WM_Font)%>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("文字形状")%>：
+            </th>
+            <td>
+                <select shop="true" id="WM_FontForm" name="WM_FontForm">
+                    <option value="None" <%=model.WM_FontForm=="None"?"selected":"" %>><%=Tag("禁用样式")%></option>
+                    <option value="Bold" <%=model.WM_FontForm=="Bold"?"selected":"" %>><%=Tag("加粗")%></option>
+                    <option value="Underline" <%=model.WM_FontForm=="Underline"?"selected":"" %>><%=Tag("下划线")%></option>
+                    <option value="Italic" <%=model.WM_FontForm=="Italic"?"selected":"" %>><%=Tag("倾斜")%></option>
+                    <option value="Strikeout" <%=model.WM_FontForm=="Strikeout"?"selected":"" %>><%=Tag("中划线")%></option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("位置偏移")%>：
+            </th>
+            <td>
+                X：<input type="text" shop="true" id="WM_PlaceX" maxlength="3" name="WM_PlaceX" style="width: 45px"
+                    value="<%=model.WM_PlaceX %>" onkeyup="value=value.replace(/[^\d]/g,'')" class="input" />
+                <%=Tag("像素")%>&nbsp;&nbsp;
+                Y：<input type="text" shop="true" id="WM_PlaceY" maxlength="3" name="WM_PlaceY" style="width: 45px"
+                    value="<%=model.WM_PlaceY %>" onkeyup="value=value.replace(/[^\d]/g,'')" class="input" />
+                <%=Tag("像素")%>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("水印尺寸")%>：
+            </th>
+            <td>
+                <input type="text" shop="true" id="WM_Width" maxlength="3" name="WM_Width" style="width: 45px"
+                    value="<%=model.WM_Width %>" onkeyup="value=value.replace(/[^\d]/g,'')" class="input" />
+                ×
+                <input type="text" shop="true" id="WM_Height" maxlength="3" name="WM_Height" style="width: 45px"
+                    value="<%=model.WM_Height %>" onkeyup="value=value.replace(/[^\d]/g,'')" class="input" />
+                <%=Tag("像素")%> <em><%=Tag("width × height")%></em>
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+        function SaveObj() {
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=WaterConfig_Edit";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function uploadImage(id) {
+            $.ajaxFileUpload
+        (
+	        {
+	            url: WebPath + '/ajax/imageuploadone.aspx',
+	            secureuri: false,
+	            fileElementId: 'file_' + id,
+	            dataType: 'json',
+	            success: function (data, status) {
+	         
+	                    if (data.msg != 'OK') {
+	                        MsgBox(2, data.msg, "");
+	                    }
+	                    else {
+	                        var imageUrl = data.ImageUrl;
+	                        if (imageUrl.length > 0) {
+	                            $("#image_" + id + "").html('<img height="30" src=' + WebPath + imageUrl + '>');
+	                            $("#" + id + "").val(imageUrl);
+	                        }
+	                    }
+	                
+	            },
+	            error: function (data, status, e) {
+	                MsgBox(2, data.msg, "");
+	            }
+	        }
+        )
+        }
+    </script>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+    </div>
+</lbbottom>

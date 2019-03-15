@@ -1,0 +1,123 @@
+﻿<!--
+Name:用户中心-退货单详情
+Page:P_UserReturnDetails
+-->
+<div id="orderstate">
+    <div class="mt">
+        <div class="left">
+            <strong><span class="ftx14"><%=ReturnStatus(order)%></span></strong>
+        </div>
+        <div class="right">
+            <div class="toolbar">
+            </div>
+        </div>
+    </div>
+    <%if(order.IsCompleted==0){ %>
+    <div class="mm">
+        <%}else{ %>
+        <div class="mc">
+            <%} %>
+            <%foreach (DB.LebiShop.Lebi_Comment c in comments){%>
+            <div>
+                <span style="color: #dddddd"><%=c.Time_Add %></span> <%=c.User_UserName%><%=c.Admin_UserName%> : <%=c.Content%>
+            </div>
+            <%} %>
+        </div>
+        <%if(order.IsCompleted==0){ %>
+        <div class="mc">
+            <input type="text" id="comment" style="width:400px" class="input" />
+            <a href="javascript:void(0)" onclick="submitcomment(<%=order.id %>);" class="btn btn-11"><s></s>{tag:留言}</a>
+        </div>
+        <%} %>
+    </div>
+    <div id="orderinfo" class="clearfix">
+        <div class="mt"><strong>{tag:订单信息}</strong></div>
+        <div class="mc">
+            <dl class="fore clearfix">
+                <dt>{tag:货运信息}</dt>
+                <%foreach (DB.LebiShop.Lebi_Transport_Order t_o in transport_orders){%>
+                <dd>
+                    <ul>
+                        <li>{tag:快递公司}：<%=t_o.Transport_Name %></li>
+                        <li>{tag:运单号}：<%=t_o.Code %></li>
+                        <li>{tag:状态}：<%=TypeName(t_o.Type_id_TransportOrderStatus) %></li>
+                    </ul>
+                </dd>
+                <%foreach (Shop.Model.KuaiDi100.KuaiDi100data d in Shop.Bussiness.EX_Area.GetKuaiDi100(t_o).data){ %>
+                <dd>
+                    <ul>
+                    <li><%=d.time %></li>
+                    <li><%=d.context %></li>
+                    </ul>
+                </dd>
+                <%} %>
+                <%} %>
+            </dl>
+            <dl class="fore clearfix">
+                <dt>{tag:收货人信息}</dt>
+                <dd>
+                    <ul>
+                        <li>{tag:收货人}：<%=order.T_Name %></li>
+                        <li>{tag:地址}：<%=Shop.Bussiness.EX_Area.GetAreaName(order.T_Area_id)%> <%=order.T_Address %></li>
+                        <li>{tag:固定电话}：<%=order.T_Phone %></li>
+                        <li>{tag:手机号码}：<%=order.T_MobilePhone %></li>
+                        <li>{tag:电子邮件}：<%=order.T_Email %></li>
+                    </ul>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{tag:支付及配送方式}</dt>
+                <dd>
+                    <ul>
+                        <li>{tag:支付方式}：<%=Lang(order.Pay) %></li>
+                        <li>{tag:配送方式}：<%=order.Transport_Name %></li>
+                    </ul>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{tag:订单清单}</dt>
+                <dd class="p-list">
+                    <table width="100%" cellspacing="0" cellpadding="0">
+                        <tbody>
+                        <%foreach (DB.LebiShop.Lebi_Order_Product o_p in order_products){%>
+                        <tr>
+                            <td style="width:50px" valign="top" rowspan="2"><a href="<%=URL("P_Product",o_p.Product_id) %>"><img src="<%=Image(o_p.ImageOriginal,50,50) %>" style="width:50px;height:50px;" /></a></td>
+                            <td style="text-align:left" valign="top">
+                            <%if(o_p.Type_id_OrderProductType==252){Response.Write("["+Tag("赠品")+"]");} %><a href="<%=URL("P_Product",o_p.Product_id) %>"><%=Lang(o_p.Product_Name) %></a><br />
+                            <%if (o_p.ProPerty134!=""){ %><%=o_p.ProPerty134%><%} %>
+                            <%=Shop.Bussiness.EX_Product.ProPertyNameStr(Shop.Bussiness.EX_Product.GetProduct(o_p.Product_id), CurrentLanguage.Code)%></td>
+                            <td style="width:60px" valign="top"><%=FormatMoney(o_p.Price) %></td>
+                        </tr>
+                        <tr>
+                            <td coslpan="2" style="text-align:left">×<%=o_p.Count%></td>
+                        </tr>
+                        <%} %>
+                        </tbody>
+                    </table>
+                </dd>
+            </dl>
+        </div>
+        <div class="total">
+            <ul>
+                <li><span>{tag:商品总额}：</span><%=FormatMoney(order.Money_Product) %></li>
+                <li><span>+ {tag:运费}：</span><%=FormatMoney(order.Money_Transport) %></li>
+                <li><span>+ {tag:税金}：</span><%=FormatMoney(order.Money_Bill) %></li>
+            </ul>
+            <span class="clear"></span>
+            <div class="extra">
+                {tag:退款金额}：<span class="red"><b><%=FormatMoney(order.Money_Give) %></b></span></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function submitcomment(order_id) {
+        var comment = $("#comment").val();
+        if (comment == "") {
+            MsgBox(2, "{tag:请填写留言内容}", "");
+            return false;
+        }
+        var postData = { "comment": comment, "order_id": order_id };
+        var url = path+"/ajax/ajax_order.aspx?__Action=OrderComment_Edit";
+        RequestAjax(url, postData, function () { MsgBox(1, "{tag:操作成功}", "?") });
+    }
+</script>

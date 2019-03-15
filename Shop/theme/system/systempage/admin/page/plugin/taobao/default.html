@@ -1,0 +1,161 @@
+﻿{layout:default} {class:Shop.admin.plugin.taobao._default}
+<lbhead>
+    <title>
+        <%=Tag("基本设置") %>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+        <ul>
+           
+            <li class="name"><span id="navIgation">
+                <%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a>
+                >
+                <%=Tag("淘宝同步") %></span></li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="licensealt">
+        <p class="title">使用说明</p>
+        1, 登录<a href="http://www.lebi.cn/pf/" target="_blank">http://www.lebi.cn/pf/</a> 进行店铺授权<br/>
+        2，下载商品分类数据，商品数据至中转数据库<br/>
+        3，回到本页面将中转数据库中的数据下载到您的商城<br/>
+    </div>
+    <table
+        id="common" class="table">
+        <tbody>
+            <tr>
+                <th>
+                    <%=Tag("店铺")%>：
+                </th>
+                <td id="shopnick">
+                    <%=shopnick%>
+                </td>
+            </tr>
+            <tbody id="dodown">
+            <tr>
+                <th>
+                    第一步：
+                </th>
+                <td>
+                    下载基础数据(商品分类，商品属性) <input id="" onclick="property();" value="开始" type="button" />
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    第二步：
+                </th>
+                <td>
+                    下载商品数据 <input id="Button1" onclick="product();" value="开始" type="button" />
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <div id="status_down"></div>
+                </td>
+            </tr>
+            </tbody>
+        </tbody>
+    </table>
+    
+    <script type="text/javascript">
+        function CheckUser() { 
+            var postData = '';
+            var url="ajax.aspx?__Action=Taobao_CheckUser";
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: postData,
+                dataType: 'json',
+                success: function (res) {
+                    if (res.msg == "OK") {
+                        $('#shopnick').html(res.data);
+                        $('#dodown').show();
+                    }
+                    else {
+                        $('#shopnick').html(res.msg);
+                        $('#dodown').hide();
+                        return false;
+                    }
+                }
+            });
+        }
+        function category() {
+            var url = "ajax.aspx?__Action=Taobao_category";
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: '',
+                dataType: 'json',
+                beforeSend: function () {
+                    ChangeStatus('正在下载商品分类数据');
+                },
+                success: function (res) {
+                    if (res.msg == "OK") {
+                        ChangeStatus('商品分类数据下载完成');
+                    }
+                    else {
+                        ChangeStatus(res.msg);
+                    }
+                }
+            });
+        }
+        //属性规格
+        function property() {
+            $('#status_down').html('');
+            var url = "ajax.aspx?__Action=Taobao_property";
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: '',
+                dataType: 'json',
+                beforeSend: function () {
+                    ChangeStatus('正在下载商品属性资料');
+                },
+                success: function (res) {
+                    if (res.msg == "OK") {
+                        ChangeStatus('商品属性资料下载完成');
+                        category();
+                    }
+                    else {
+                        ChangeStatus(res.msg);
+                        return false;
+                    }
+                }
+            });
+        }
+        //商品
+        function product() {
+            var url = "ajax.aspx?__Action=Taobao_Product";
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: '',
+                dataType: 'json',
+                beforeSend: function () {
+                    ChangeStatus('正在下载商品');
+                },
+                success: function (res) {
+                    if (res.msg == "OK") {
+                        ChangeStatus('商品下载完成');
+                    }
+                    else {
+                        ChangeStatus(res.msg);
+                        return false;
+                    }
+                }
+            });
+        }
+        function ChangeStatus(str) {
+            var myDate = new Date();
+            var mytime = myDate.toLocaleTimeString();
+            $('#status_down').append(mytime+': '+str+'<br>');
+        }
+
+        CheckUser(); 
+    </script>
+</lbbody>
+<lbbottom>
+    <input type="hidden" id="pwd" runat="server" />
+</lbbottom>

@@ -1,0 +1,201 @@
+﻿{layout:default} {class:Shop.Admin.product.Property}
+<lbhead>
+    <title><%=Tag(tmodel.Name)%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <link href="<%=site.AdminAssetsPath %>/plugins/multiselect/css/jquery.multiselect2side.css" rel="stylesheet">
+</lbfile>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("标签")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag(tmodel.Name)%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-xlg-2 col-lg-3 col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="card-body inbox-panel p-t-0 p-b-0">
+                        <ul class="list-group list-group-full">
+                            <li class="list-group-item"><a href="property_tag.aspx"><i class="ti-settings"></i> <%=Tag("标签")%></a></li>
+                            <%foreach (DB.LebiShop.Lebi_Type t in types){ %>
+                            <li class="list-group-item <%if (t.id==tid){Response.Write("active");} %>"><a href="?tid=<%=t.id %>"><i class="ti-tag"></i> <%=Tag(t.Name)%></a></li>
+                            <%} %>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="card-body inbox-panel p-t-0 p-b-0">
+                        <ul class="list-group list-group-full">
+                            <li class="list-group-item <%if (tag=="none"){Response.Write("active");} %>"><a href="?tid=<%=tid %>&tag=none"><span><%=Tag("无标签")%></span></a></li>
+                            <%foreach (DB.LebiShop.Lebi_ProPerty_Tag t in tags){ %>
+                            <li class="list-group-item <%if (t.Name==tag){Response.Write("active");} %>"><a href="?tid=<%=tid %>&tag=<%=t.Name%>"><span><%=t.Name%></span></a></li>
+                            <%} %>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xlg-10 col-lg-9 col-md-9">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-9 m-b-10">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-info" onclick="EditProPerty(0);"><i class="ti-plus"></i> <%=Tag("添加")%></button>
+                        <button class="btn btn-danger" onclick="DeleteConfirm(0)"><i class="ti-trash"></i> <%=Tag("删除")%></button>
+                        <%if (tid == 131 || tid == 132 || tid == 133 || tid == 134){%>
+                        <button class="btn btn-default" onclick="EditCategory()"><i class="ti-loop"></i> <%=Tag("关联分类")%></button>
+                        <%}%>
+                        <%}%>
+                    </div>
+                    <div class="col-md-3 m-b-10">
+                        <div class="input-group">
+                            <input type="text" id="key" name="key" value="<%=key %>" class="form-control" onkeydown="if(event.keyCode==13){search_();}">
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-primary" onclick="search_();"><i class="ti-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th class="selectAll" style="width:40px">
+                                    <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+                                </th>
+                                <th>
+                                    <%=Tag("ID")%>
+                                </th>
+                                <th>
+                                    <%=Tag("属性名称")%>
+                                </th>
+                                <th style="width:25%">
+                                    <%=Tag("项目")%>
+                                </th>
+                                <th>
+                                    <%=Tag("标签")%>
+                                </th>
+                                <th>
+                                    <%=Tag("排序")%>
+                                </th>
+                                <th>
+                                    <%=Tag("商家")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_ProPerty model in models){ %>
+                            <tr ondblclick="EditProPerty(<%=model.id %>)">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox<%=model.id %>" name="id" value="<%=model.id %>" class="custom-control-input" del="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=model.id%>
+                                </td>
+                                <td>
+                                    <%=Shop.Bussiness.Language.Content(model.Name, CurrentLanguage.Code)%>
+                                </td>
+                                <td>
+                                    <%=GetProPerty(model.id,3)%>
+                                </td>
+                                <td>
+                                    <a href="?tid=<%=tid %>&tag=<%=model.Tag%>"><%=model.Tag%></a>
+                                </td>
+                                <td>
+                                    <%=model.Sort%>
+                                </td>
+                                <td><%=model.Supplier_id > 0?"<span class=\"label label-success\">" + Tag("是") + "</span>" : "<span class=\"label label-danger\">" + Tag("否") + "</span>"%></td>
+                                <td>
+                                    <%if (model.Type_id_ProPertyType != 133)
+                                    { %>
+                                    <a href="javascript:void(0);" onclick="Property(<%=model.id %>);"><%=Tag("编辑子项")%></a> |
+                                    <%} %>
+                                    <a href="javascript:void(0);" onclick="EditProPerty(<%=model.id%>);"><%=Tag("编辑")%></a> | <a href="javascript:" onclick="DelProPerty(<%=model.id %>)"><%=Tag("删除")%></a>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation">
+                            <%=PageString%>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script src="<%=site.AdminAssetsPath %>/plugins/multiselect/js/jquery.multiselect2side.js"></script>
+    <script>
+        function EditProPerty(id) {
+            var title_ = "<%=Tag("编辑属性规格")%>";
+            if (id == 0) title_ = "<%=Tag("添加属性规格")%>";
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "property_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {id:id,tid:'<%=tid%>',title:title_},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function Property(id) {
+            window.location = "property_value.aspx?pid="+id;
+        }
+        function DeleteConfirm(id) {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要删除吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "DelProPerty(" + id + ");");
+        }
+        function DelProPerty(id) {
+            $("#Modal-Confirm").modal("hide");
+            var postData;
+            if (id == 0)
+                postData = GetFormJsonData("del");
+            else
+                postData = { "id": id };
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Property_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function search_() {
+            var key = $("#key").val();
+            window.location = "?tid=<%=tid %>&tag=<%=tag %>&key=" + escape(key);
+        }
+        function EditCategory() {
+            var ids = GetChkCheckedValues("id");
+            if (ids == ""){
+                MsgBox(2, "<%=Tag("请先选择")%>", "");
+                return;
+            }
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "property_category_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {ids:ids,tid:'<%=tid%>'},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+    </script>
+</lbscripts>

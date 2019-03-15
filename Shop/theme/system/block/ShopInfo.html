@@ -1,0 +1,25 @@
+﻿<!--
+Name:商家店铺资料
+Page:All
+-->
+<div id="shopinfo" class="mbox clearfix">
+<div class="shopinfo">
+<div class="mt">
+    <h2>{tag:店铺资料}</h2>
+</div>
+<div class="mc">
+    <ul>
+    <li>{tag:店铺简称}：<%=Lang(supplier.Name) %></li>
+    <li>{tag:公司名称}：<%=supplier.Company %></li>
+    <li>{tag:联系人}：<%=supplier.RealName %></li>
+    <li>{tag:手机号码}：<%=supplier.MobilePhone %></li>
+    <li>{tag:电话号码}：<%=supplier.Phone %></li>
+    <li>{tag:Email}：<%=supplier.Email %></li>
+    <li>{tag:QQ号码}：<%=supplier.QQ %></li>
+    <li>{tag:邮编}：<%=supplier.Postalcode %></li>
+    <li>{tag:地区}：<%=Shop.Bussiness.EX_Area.GetAreaName(supplier.Area_id)%></li>
+    <li>{tag:地址}：<%=supplier.Address %></li>
+    </ul>
+</div>
+</div>
+</div>

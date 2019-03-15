@@ -1,0 +1,25 @@
+﻿<!--
+Name:积分换购图文
+Page:All
+-->
+<div class="mbox clearfix">
+<div class="producttop">
+<div class="mt">
+    <h2>{tag:积分换购}</h2>
+</div>
+<div class="mc">
+    <ul class="image">
+        ${#table:Lebi_Product;#where:"+ProductWhere+" and Type_id_ProductType = 323 and (Time_Start < '"+FormatTime(System.DateTime.Now)+"' and Time_Expired > '"+FormatTime(System.DateTime.Now)+"');#top:10;#order:Sort desc,id desc;#model:pro_exchange;
+        <li>
+            <div class="proimg"><p><a href="<%=URL("P_Product",{id})%>" target="_blank"><img <%if (CurrentLanguage.IsLazyLoad==1){ %>class="lazy" src="{/image}lazy.gif" data-original<%}else{ %>src<%} %>="<%=Image({ImageOriginal},"medium") %>" alt="<%=Lang({Name})%>" /></a></p></div>
+            <div class="proname"><a href="<%=URL("P_Product",{id})%>" title="<%=Lang({Name})%>" target="_blank"><%=Lang({Name})%></a></div>
+            <div class="proprice clearfix">
+            <%if (ProductPrice(pro_exchange) > 0){ %><div class="marketprice"><i>{Tag:销售价}：</i><strong><%=FormatMoney(ProductPrice(pro_exchange)) %></strong></div><%} %>
+            <div class="buyprice"><i>{Tag:积分}：</i><strong>{%Price_Sale%}</strong></div>
+            </div>
+        </li>
+        }$
+    </ul>
+</div>
+</div>
+</div>

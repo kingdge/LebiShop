@@ -1,0 +1,18 @@
+﻿<!--
+Name:语言选择
+Page:All
+-->
+<div class="mbox clearfix">
+<div class="currency">
+<div class="mt">
+    <h2>{tag:网站语言}</h2>
+</div>
+<div class="mc">
+<ul class="text">
+    ${#Source:Languages;
+    <li <%if ({i}==RecordCount){%>class="last"<%} %>><a href="javascript:SetLanguage({%id%},'{%Code%}','{%Path%}');"><%if ({ImageUrl}!=""){%><img src="<%=Image({ImageUrl}) %>" title="{%Name%}" /><%}%>{%Name%}</a></li>
+    }$
+</ul>
+</div>
+</div>
+</div>

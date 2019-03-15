@@ -1,0 +1,117 @@
+﻿<!--
+Name:通用侧边栏
+Page:P_All
+-->
+<link rel="stylesheet" type="text/css" href="{/js}sidebar/base.css" />
+<script type="text/javascript" src="{/js}sidebar/sidebar.js"></script>
+<div class="mui-mbar-tabs">
+	<div class="quick_link_mian">
+		<div class="quick_links_panel">
+			<div id="quick_links" class="quick_links">
+				<li>
+					<a href="javascript:void(0);" class="ico_account"><i class="i_ico_account"></i></a>
+					<div class="ibar_login_box status_login">
+						<div class="avatar_box">
+							<p class="avatar_imgbox">
+                                <%if(CurrentUser.Face.Trim()!=""){ %>
+                                <img src="<%=CurrentUser.Face %>" />
+                                <%}else{ %>
+                                <img src="{/js}sidebar/no-img_mid_.jpg" />
+                                <%} %>
+                            </p>
+							<ul class="user_info">
+								<li><%=Tag("用户名") %>：<%=Shop.Bussiness.EX_User.LoginStatus()?CurrentUser.UserName:Tag("未登录") %></li>
+								<li><%=Tag("级别") %>：<%=Lang(CurrentUserLevel.Name) %></li>
+							</ul>
+						</div>
+						<div class="login_btnbox">
+                            <%if(Shop.Bussiness.EX_User.LoginStatus()){ %>
+							<a href="<%=URL("P_UserOrders","") %>" class="login_order"><%=Tag("我的订单") %></a>
+							<a href="<%=URL("P_UserLike","")%>" class="login_favorite"><%=Tag("我的收藏") %></a>
+                            <%}else{ %>
+                            <a href="<%=URL("P_Login","") %>" class="login_order"><%=Tag("登录") %></a>
+							<a href="<%=URL("P_Register","")%>" class="login_favorite"><%=Tag("注册") %></a>
+                            <%} %>
+						</div>
+						<i class="icon_arrow_white"></i>
+					</div>
+				</li>
+				<li id="shopCart">
+					<a href="<%=URL("P_Basket", "") %>" class="ico_basket" ><i class="i_ico_basket"></i><div class="span"><%=Tag("购物车") %></div><span class="cart_num"><%=Basket_Product_Count() %></span></a>
+				</li>
+				<li>
+					<a class="ico_history"><i class="i_ico_history"></i></a>
+					<div class="mp_tooltip"><%=Tag("我的足迹") %><i class="icon_arrow_right_black"></i></div>
+				</li>
+				<li>
+					<a href="<%=URL("P_UserLike", "") %>" class="ico_like"><i class="i_ico_like"></i></a>
+					<div class="mp_tooltip"><%=Tag("我的收藏") %><i class="icon_arrow_right_black"></i></div>
+				</li>
+			</div>
+			<div class="quick_toggle">
+				<li>
+					<a href="<%=URL("P_Help","") %>" class="ico_service"><i class="i_ico_service"></i></a>
+					<div class="mp_service" style="display:none;">
+                        <div class="servicepannel">
+                        ${#table:Lebi_ServicePanel_Group;#where:Supplier_id = 0 and ','+Language_ids+',' like '%,"+ CurrentLanguage.id + ",%';#order:Sort desc;#model:siderbargroup;
+                            <ul class="group clearfix"><li>
+                            <h2>{%Name%}</h2>
+                            <ul class="group-user clearfix">
+                            ${#table:Lebi_ServicePanel;#where:Supplier_id = 0 and ServicePanel_Group_id = "+siderbargroup.id+" and ','+Language_ids+',' like '%,"+ CurrentLanguage.id + ",%';#order:Sort desc,id desc;#model:buser;
+                            <%
+                                string url = GetServicePanelType(buser.ServicePanel_Type_id).Url;
+                                url = url.Replace("{@uid}",buser.Account);
+                                url = url.Replace("{@uname}",buser.Name);
+                            %>
+                            <li><a target="blank" href="<%=url%>"><img src="<%if (GetServicePanelType(buser.ServicePanel_Type_id).IsOnline == 1){
+                                Response.Write(GetServicePanelType(buser.ServicePanel_Type_id).Code.Replace("{@uid}",buser.Account));
+                            }else{
+                                Response.Write(Image(GetServicePanelType(buser.ServicePanel_Type_id).Face));
+                            }%>" border="0" align="absmiddle" />&nbsp;{%Name%}</a></li>
+                            }$
+                            </ul>
+                            </li></ul>
+                            }$
+                        </div>
+                        <i class="icon_arrow_white"></i>
+
+                    </div>
+				</li>
+				<li id="mp_qrcode">
+					<a href="#none" class="ico_qrcode"><i class="i_ico_qrcode"></i></a>
+					<div class="mp_qrcode" style="display:none;"><img src="<%=SYS.platform_weixin_image_qrcode%>" width="150" height="150" /><i class="icon_arrow_white"></i></div>
+				</li>
+				<li><a href="#top" class="return_top"><i class="top"></i></a></li>
+			</div>
+		</div>
+		<div id="quick_links_pop" class="quick_links_pop hide"></div>
+	</div>
+</div>
+<!--[if lte IE 8]>
+<script src="{/js}sidebar/ieBetter.js"></script>
+<![endif]-->
+<script type="text/javascript" src="{/js}sidebar/parabola.js"></script>
+<script type="text/javascript">
+    $(".quick_links_panel li").mouseenter(function () {
+        $(this).children(".mp_tooltip").animate({ left: -92, queue: true });
+        $(this).children(".mp_tooltip").css("visibility", "visible");
+        $(this).children(".ibar_login_box").css("display", "block");
+    });
+    $(".quick_links_panel li").mouseleave(function () {
+        $(this).children(".mp_tooltip").css("visibility", "hidden");
+        $(this).children(".mp_tooltip").animate({ left: -121, queue: true });
+        $(this).children(".ibar_login_box").css("display", "none");
+    });
+    $(".quick_toggle li:first").mouseover(function () {
+        $(".mp_service").show();
+    });
+    $(".quick_toggle li:first").mouseleave(function () {
+        $(".mp_service").hide();
+    });
+    $(".quick_toggle li#mp_qrcode").mouseover(function () {
+        $(".mp_qrcode").show();
+    });
+    $(".quick_toggle li#mp_qrcode").mouseleave(function () {
+        $(".mp_qrcode").hide();
+    });
+</script>

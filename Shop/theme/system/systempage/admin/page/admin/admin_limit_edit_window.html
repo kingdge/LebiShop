@@ -1,0 +1,72 @@
+﻿{layout:simple} 
+{class:Shop.Admin.admin.admin_limit_edit_window}
+<lbbody>
+<table class="table">
+    <tr>
+        <th style="width: 20%;">
+            <%=Tag("权限名称")%>：
+        </th>
+        <td>
+            <input type="text" shop="true" min="notnull" id="Name" name="Name" class="input" value="<%=model.Name %>" style="width:200px" />
+        </td>
+    </tr>
+    <%if (model.parentid > 0)
+      { %>
+      <tr>
+        <th style="width: 20%;">
+            <%=Tag("权限代码")%>：
+        </th>
+        <td style="text-align: left;">
+            <%=model.Code %>  
+            <a href="javascript:LimitCode_Del(<%=model.id %>)"><%=Tag("删除") %></a>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("权限分组")%>：
+        </th>
+        <td style="text-align: left;">
+            <select shop="true" name="parentid" id="parentid">
+                <% foreach (DB.LebiShop.Lebi_Admin_Limit l in GetLimit(0))
+                   { %>
+                <option value="<%=l.id %>" <%=l.id==model.parentid?"selected":"" %>>
+                    <%=Tag(l.Name)%></option>
+                <%} %>
+            </select>
+        </td>
+    </tr>
+    <%} %>
+    <tr>
+        <th style="width: 20%;">
+            <%=Tag("排序序号")%>：
+        </th>
+        <td style="text-align: left;">
+            <input type="text" class="input" shop="true" name="Sort" id="Sort" value="<%=model.Sort %>" style="width: 70px;" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+            <div class="tools tools-m">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    function SaveObj() {
+        var postData = GetFormJsonData("shop");
+        if (!CheckForm("shop", "span"))
+            return false;
+        var url = "<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=Admin_limit_Edit&id=<%=model.id %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", '?')});
+    }
+    function LimitCode_Del(id) {
+        if (!confirm("<%=Tag("确认要删除吗？")%>"))
+            return false;
+        var url = "<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=Admin_limit_Del&id="+id;
+        RequestAjax(url,'',function(){MsgBox(1, "<%=Tag("操作成功")%>", '?')});
+    }
+</script>
+</lbbody>

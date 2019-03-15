@@ -1,0 +1,80 @@
+﻿{layout:simple} {class:Shop.Admin.Config.Card_Create_window}
+<lbbody>
+<table
+    id="common" class="table">
+    <tr>
+        <th>
+            <%=Tag("类型")%>：
+        </th>
+        <td>
+            <%=Tag("名称")%>：<%=Shop.Bussiness.Language.Content(model.Name,CurrentLanguage.Code) %>,
+            <%=Tag("面值")%>：<%=model.Money %>,
+            <%=Tag("头字母")%>：<%=model.IndexCode %>
+        </td>
+    </tr>
+    <tr>
+        <th style="width: 20%;">
+            <%=Tag("有效期")%>：
+        </th>
+        <td>
+            <%=FormatDate(model.Time_Begin) %> - <%=FormatDate(model.Time_End) %>
+        </td>
+    </tr>
+    <tr>
+        <th style="width: 20%;">
+            <%=Tag("号码段")%>：
+        </th>
+        <td>
+            <%=model.NO_Start %> -  <%=model.NO_End %>
+        </td>
+    </tr>
+    <tr>
+        <th style="width: 20%;">
+            <%=Tag("生成进度")%>：
+        </th>
+        <td >
+          <span id="status"></span><span id="code"><%=model.NO_Now %></span> 
+        </td>
+    </tr>
+    
+    <tr>
+        <td colspan="2" class="action">
+            <div class="tools tools-m clear">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="Create();"><b></b><span><%=Tag("生成")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    var no_now=<%=model.NO_Now %>;
+    function Create() { 
+        var url = "<%=site.AdminPath %>/ajax/ajax_sale.aspx?__Action=Card_Create";
+        $.ajax({
+        type: "POST",
+        url: url,
+        data: {'CardType':<%=model.id %>},
+        dataType: 'json',
+        success: function (res) {
+            if (res.msg == "OK") {
+                $("#code").html(res.code);
+                if(res.status!='OK'){
+                    $("#status").html("<%=Tag("正在生成") %>");
+                    Create();
+                }else{
+                    $("#status").html("<%=Tag("生成完毕") %>");
+                }
+                return false;
+            }
+            else {
+                MsgBox(2, res.msg, "");
+                return false;
+            }
+        }
+    });
+    }
+
+
+</script>
+</lbbody>

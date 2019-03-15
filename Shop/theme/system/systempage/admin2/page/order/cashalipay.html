@@ -1,0 +1,137 @@
+﻿{layout:default} {class:Shop.Admin.order.cashalipay}
+<lbhead>
+    <title><%=Tag("支付宝批量付款")%>-<%=Tag("提现管理")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("单次最多处理1000条")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><a href="cash.aspx"><%=Tag("提现管理")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("支付宝批量付款")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 m-b-10">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-success" onclick="UpdateObj()"><i class="ti-check"></i> <%=Tag("付款")%></button>
+                        <button class="btn btn-danger" onclick="DeleteConfirm()"><i class="ti-trash"></i> <%=Tag("删除")%></button>
+                        <%}%>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px" class="selectAll">
+                                    <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+                                </th>
+                                <th>
+                                    <%=Tag("时间")%>
+                                </th>
+                                <th>
+                                    <%=Tag("金额")%>
+                                </th>
+                                <th>
+                                    <%=Tag("会员")%>
+                                </th>
+                                <th>
+                                    <%=Tag("姓名")%>
+                                </th>
+                                <th>
+                                    <%=Tag("账户")%>
+                                </th>
+                                <th>
+                                    <%=Tag("状态")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作时间")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_Cash model in models){%>
+                            <tr ondblclick="Edit(<%=model.id %>);">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox<%=model.id %>" name="id" value="<%=model.id %>" class="custom-control-input" del="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=FormatTime(model.Time_add) %>
+                                </td>
+                                <td>
+                                    <%=model.Money-model.Fee %>
+                                </td>
+                                <td>
+                                    <%=model.Supplier_id == 0 ? "<span class=\"label label-success\">" + Tag("会员") + "</span>" : "<span class=\"label label-danger\">" + Tag("供应商") + "</span>"%> <%=model.User_UserName %><%=model.Supplier_SubName %>
+                                </td>
+                                <td>
+                                    <%=model.AccountName %>
+                                </td>
+                                <td>
+                                    <%=model.AccountCode %>
+                                </td>
+                                <td>
+                                    <%=Shop.Bussiness.EX_Type.TypeName(model.Type_id_CashStatus)%>
+                                </td>
+                                <td>
+                                    <%=FormatTime(model.Time_update)%>
+                                </td>
+                                <td>
+                                    <a href="javascript:Edit(<%=model.id %>);"><%=Tag("查看") %></a>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation ">
+                            <%=PageString%>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        function Edit(id) {
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "cash_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: { id: id },
+            }).done(function (result) {
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function DeleteConfirm() {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要删除吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "DeleteObj();");
+        }
+        function DeleteObj() {
+            $("#Modal-Confirm").modal("hide");
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=Cash_Del";
+            RequestAjax(url, postData, function () { MsgBox(1, "<%=Tag("操作成功")%>", "?") });
+        }
+        function UpdateObj() {
+            var ids = GetChkCheckedValues("id");
+            var url = "<%=site.WebPath %>/onlinepay/alipaybatch/default.aspx?ids=" + ids;
+            window.open(url);
+        }
+    </script>
+</lbscripts>

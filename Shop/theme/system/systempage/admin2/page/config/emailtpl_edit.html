@@ -1,0 +1,185 @@
+﻿{layout:default} {class:Shop.Admin.Config.EmailTPL_Edit}
+<lbhead>
+    <title><%=Tag("邮件模板") %>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+</lbfile>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("邮件模板")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><a href="emailtpl_edit.aspx"><%=Tag("邮件模板")%></a></li>
+        <li class="breadcrumb-item active"><%=typename %></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-xlg-2 col-lg-3 col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title"><%=Tag("会员模板")%></h4>
+                <div>
+                    <hr>
+                </div>
+                <div class="row">
+                    <div class="card-body inbox-panel p-t-0 p-b-0">
+                        <ul class="list-group list-group-full">
+                            <li class="list-group-item<%if (type =="EmailTPL_newuser"){ %> active<%} %>"><a href="?type=EmailTPL_newuser"><i class="ti-file"></i> <%=Tag("新用户注册")%></a></li>
+                            <li class="list-group-item<%if (type =="EmailTPL_getpwd"){ %> active<%} %>"><a href="?type=EmailTPL_getpwd"><i class="ti-file"></i> <%=Tag("找回密码")%></a></li>
+                            <li class="list-group-item<%if (type =="EmailTPL_ordersubmit"){ %> active<%} %>"><a href="?type=EmailTPL_ordersubmit"><i class="ti-file"></i> <%=Tag("订单提交")%></a></li>
+                            <li class="list-group-item<%if (type =="EmailTPL_orderpaid"){ %> active<%} %>"><a href="?type=EmailTPL_orderpaid"><i class="ti-file"></i> <%=Tag("订单付款")%></a></li>
+                            <li class="list-group-item<%if (type =="EmailTPL_ordershipping"){ %> active<%} %>"><a href="?type=EmailTPL_ordershipping"><i class="ti-file"></i> <%=Tag("订单发货")%></a></li>
+                            <li class="list-group-item<%if (type =="EmailTPL_changgouqingdan"){ %> active<%} %>"><a href="?type=EmailTPL_changgouqingdan"><i class="ti-file"></i> <%=Tag("常购清单")%></a></li>
+                            <li class="list-group-item<%if (type =="EmailTPL_checkcode"){ %> active<%} %>"><a href="?type=EmailTPL_checkcode"><i class="ti-file"></i> <%=Tag("验证码")%></a></li>
+                            <li class="list-group-item<%if (type =="EmailTPL_sendfriend"){ %> active<%} %>"><a href="?type=EmailTPL_sendfriend"><i class="ti-file"></i> <%=Tag("邮件分享")%></a></li>
+                            <li class="list-group-item<%if (type =="EmailTPL_reserveok"){ %> active<%} %>"><a href="?type=EmailTPL_reserveok"><i class="ti-file"></i> <%=Tag("预定到货提醒")%></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title"><%=Tag("管理员模板")%></h4>
+                <div>
+                    <hr>
+                </div>
+                <div class="row">
+                    <div class="card-body inbox-panel p-t-0 p-b-0">
+                        <ul class="list-group list-group-full">
+                            <li class="list-group-item<%if (type =="EmailTPL_Admin_newuser"){ %> active<%} %>"><a href="?type=EmailTPL_Admin_newuser"><i class="ti-file"></i> <%=Tag("新用户注册")%></a></li>
+                            <li class="list-group-item<%if (type =="EmailTPL_Admin_ordersubmit"){ %> active<%} %>"><a href="?type=EmailTPL_Admin_ordersubmit"><i class="ti-file"></i> <%=Tag("订单提交")%></a></li>
+                            <li class="list-group-item<%if (type =="EmailTPL_Admin_orderpaid"){ %> active<%} %>"><a href="?type=EmailTPL_Admin_orderpaid"><i class="ti-file"></i> <%=Tag("订单付款")%></a></li>
+                            <li class="list-group-item<%if (type =="EmailTPL_Admin_ordercomment"){ %> active<%} %>"><a href="?type=EmailTPL_Admin_ordercomment"><i class="ti-file"></i> <%=Tag("订单留言")%></a></li>
+                            <li class="list-group-item<%if (type =="EmailTPL_Admin_inquiry"){ %> active<%} %>"><a href="?type=EmailTPL_Admin_inquiry"><i class="ti-file"></i> <%=Tag("留言反馈")%></a></li>
+                            <li class="list-group-item<%if (type =="EmailTPL_Admin_comment"){ %> active<%} %>"><a href="?type=EmailTPL_Admin_comment"><i class="ti-file"></i> <%=Tag("商品评论")%></a></li>
+                            <li class="list-group-item<%if (type =="EmailTPL_Admin_ask"){ %> active<%} %>"><a href="?type=EmailTPL_Admin_ask"><i class="ti-file"></i> <%=Tag("商品咨询")%></a></li>
+                            <li class="list-group-item<%if (type =="EmailTPL_Admin_message"){ %> active<%} %>"><a href="?type=EmailTPL_Admin_message"><i class="ti-file"></i> <%=Tag("站内信")%></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xlg-10 col-lg-9 col-md-9">
+        <div class="card">
+            <form action="javascript:SaveObj();" novalidate>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <ul class="nav nav-tabs customtab m-t-15" role="tablist">
+                        <%
+                        List<DB.LebiShop.Lebi_Language_Code> tablangs = Shop.Bussiness.Language.Languages();foreach (DB.LebiShop.Lebi_Language_Code lang in langs){
+                        %>
+                        <li class="nav-item"> <a class="nav-link <%if (tablangs.FirstOrDefault().Code == lang.Code){%>active show<%}%>" data-toggle="tab" href="#lang_<%=lang.Code %>" role="tab" aria-selected="true"><%=lang.Name %></a> </li>
+                        <%}%>
+                    </ul>
+                    <div class="tab-content m-t-20">
+                        <%
+                        foreach (DB.LebiShop.Lebi_Language_Code lang in tablangs)
+                        {%>
+                        <div class="tab-pane <%if (tablangs.FirstOrDefault().Code == lang.Code){%>active show<%}%>" id="lang_<%=lang.Code %>" role="tabpanel">
+                            <div class="form-group">
+                                <label for="Title<%=lang.Code %>"><%=Tag("标题")%>：</label>
+                                <input type="text" id="Title<%=lang.Code %>" name="Title<%=lang.Code %>" value="<%=Shop.Bussiness.Language.Content(title, lang.Code)%>" class="form-control" shop="true">
+                            </div>
+                            <div class="form-group">
+                                <label for="Content<%=lang.Code %>"><%=Tag("内容")%>：</label>
+                                <textarea id="Content<%=lang.Code %>" name="Content<%=lang.Code %>" class="form-control" style="height: 400px;" shop="true">
+                                    <%=Shop.Bussiness.Language.Content(content, lang.Code)%>
+                                </textarea>
+                            </div>
+                        </div>
+                        <%} %>
+                    </div>
+                </div>
+                <%if (PageReturnMsg == ""){%>
+                <div class="col-md-12 col-sm-12 col-xs-12 m-b-20">
+                    <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                </div>
+                <%}%>
+            </form>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title"><%=Tag("标签规则")%></h4>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <%if (type == "EmailTPL_getpwd" || type == "EmailTPL_newuser" || type == "EmailTPL_Admin_newuser" || type == "EmailTPL_ordershipping" || type == "EmailTPL_ordersubmit" || type == "EmailTPL_Admin_ordersubmit")
+                        { %>
+                        <%=Tag("用户名")%>：{$UserName}<br />
+                        <%=Tag("用户ID")%>：{$UserID}<br />
+                        <%} %>
+                        <%=Tag("客服电话")%>：{$Phone}<br />
+                        <%=Tag("客服传真")%>：{$Fax}<br />
+                        <%=Tag("客服邮箱")%>：{$Email}<br />
+                        <%=Tag("客服QQ")%>：{$QQ}<br />
+                        <%=Tag("域名")%>：{$Domain}<br />
+                        <%=Tag("站点名称")%>：{$SiteName}<br />
+                        <%if (type == "EmailTPL_getpwd")
+                        { %>
+                        <%=Tag("修改密码地址")%>：{$UserPWDURL}<br />
+                        <%} %>
+                        <%if (type == "EmailTPL_ordershipping" || type == "EmailTPL_ordersubmit" || type == "EmailTPL_Admin_ordersubmit")
+                        { %>
+                        <%=Tag("订单编号")%>：{$OrderNO}<br />
+                        <%=Tag("订单详情")%>：{$Order}<br />
+                        <%} %>
+                        <%if (type == "EmailTPL_Admin_ordercomment" || type == "EmailTPL_reserveok")
+                        { %>
+                        <%=Tag("订单编号")%>：{$OrderNO}<br />
+                        <%} %>
+                        <%if (type == "EmailTPL_inquiry" || type == "EmailTPL_Admin_inquiry" || type == "EmailTPL_Admin_message")
+                        { %>
+                        <%=Tag("标题")%>：{$Title}<br />
+                        <%=Tag("内容")%>：{$Content}<br />
+                        <%} %>
+                        <%if (type == "EmailTPL_Admin_ordercomment" || type == "EmailTPL_Admin_comment" || type == "EmailTPL_Admin_ask")
+                        { %>
+                        <%=Tag("内容")%>：{$Content}<br />
+                        <%} %>
+                        <%if (type == "EmailTPL_changgouqingdan")
+                        { %>
+                        <%=Tag("商品名称")%>：{$ProductName}<br />
+                        <%=Tag("数量")%>：{$Count}<br />
+                        <%=Tag("预购时间")%>：{$Time}<br />
+                        <%} %>
+                        <%if (type == "EmailTPL_reserveok")
+                        { %>
+                        <%=Tag("商品名称")%>：{$ProductName}<br />
+                        <%=Tag("数量")%>：{$Count}<br />
+                        <%} %>
+                        <%if (type == "EmailTPL_sendfriend")
+                        { %>
+                        <%=Tag("商品名称")%>：{$ProductName}<br />
+                        <%=Tag("商品URL")%>：{$ProductURL}<br />
+                        <%=Tag("发件人姓名")%>：{$UserName}<br />
+                        <%=Tag("发件人Email")%>：{$Email}<br />
+                        <%=Tag("收件人姓名")%>：{$ToUserName}<br />
+                        <%=Tag("收件人Email")%>：{$ToEmail}<br />
+                        <%=Tag("内容")%>：{$Content}<br />
+                        <%} %>
+                        <%=Tag("验证码")%>：{$CheckCode}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script src="<%=site.WebPath %>/Editor/ckeditor/ckeditor.js"></script>
+    <script src="<%=site.WebPath %>/Editor/ckfinder/ckfinder.js"></script>
+    <script>
+        var langs = "<%=Shop.Bussiness.Language.LanguageCodes()%>"
+        var Arrlangs = langs.split(",");
+        for (var i = 0; i < Arrlangs.length; i++){
+            CKEDITOR.replace('Content'+ Arrlangs[i] +'', {
+                height: '400',
+                toolbar: 'Basic',
+                language: '<%=Tag("CKEditor语言")%>'
+            });
+        }
+        function SaveObj() {
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=EmailTPL_Edit&type=<%=type %>";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+    </script>
+</lbscripts>

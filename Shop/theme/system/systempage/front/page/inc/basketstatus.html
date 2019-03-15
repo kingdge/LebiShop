@@ -1,0 +1,7 @@
+﻿{layout:simple}
+{class:Shop.inc.basketstatus}
+<lbbody>
+<a href="<%=URL("P_Basket", "") %>" title="<%=Tag("查看购物车/结账")%>"><%=Tag("数量")%> <span id="shoppingcartline_count"><%=Basket_Product_Count() %></span> <%=Tag("件")%>&nbsp;
+<span id="shoppingcartline_amount"><%=FormatMoney(Basket_Product_Price()) %></span></a>&nbsp;&nbsp;<a href="<%=URL("P_UserLike", "") %>" target="_blank"><%=Tag("收藏夹")%> 
+<span><%=Like_Product_Count() %></span> <%=Tag("件")%></a>&nbsp;&nbsp;<a href="<%=URL("P_Basket", "") %>"><%=Tag("购物车")%></a>
+</lbbody>

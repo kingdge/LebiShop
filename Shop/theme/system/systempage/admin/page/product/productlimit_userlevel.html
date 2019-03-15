@@ -1,0 +1,122 @@
+﻿{layout:default} {class:Shop.Admin.product.productlimit_userlevel}
+<lbhead>
+    <title><%=Tag("商品权限")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <script type="text/javascript">
+        $(document).ready(function(){$("li.menu ul").hide();$("li.menu").bind("mouseover",function(){$(this).find("ul").slideDown("fast")});$("li.menu ul").bind("mouseleave",function(){$(this).slideUp("fast")})});
+    </script>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/multiselect/js/jquery.multiselect2side.js"></script>
+    <link rel="stylesheet" href="<%=site.AdminJsPath %>/multiselect/css/jquery.multiselect2side.css" type="text/css" media="screen" />
+</lbfile>
+<lbpath>
+    <div class="tools">
+    <ul>
+  
+    <li class="add"><a href="javascript:void(0);" onclick="model_Add();"><b></b><span><%=Tag("添加")%></span></a></li>
+    <li class="del"><a href="javascript:void(0);" onclick="model_Del();"><b></b><span><%=Tag("删除")%></span></a></li>
+    <li class="reset"><a href="javascript:void(0);" onclick="model_Save();"><b></b><span><%=Tag("保存")%></span></a></li>
+
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="<%=site.AdminPath %>/product/"><%=Tag("商品权限")%></a> > <%=ename%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox">
+       
+    </div>
+    <table id="list" class="datalist">
+        <tr class="title">
+            <th class="selectAll" style="width: 40px">
+                <a href="javascript:void(0);" onclick="$('input[name=\'limitid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("编号")%>
+            </th>
+            <th style="width: 150px">
+                <%=Tag("商品名称")%>
+            </th>
+            <th style="width: 150px">
+                <%=Tag("会员分组")%>
+            </th>
+            <th style="width: 60px">
+                <a href="javascript:void(0);" onclick="$('input[cname=\'IsShow\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));">
+                    <%=Tag("禁止浏览")%>
+                </a>
+            </th>
+            <th style="width: 60px">
+                <a href="javascript:void(0);" onclick="$('input[cname=\'IsPriceShow\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));">
+                    <%=Tag("禁止看价")%>
+                </a>
+            </th>
+            <th>
+                <a href="javascript:void(0);" onclick="$('input[cname=\'IsBuy\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));">
+                    <%=Tag("禁止购买")%>
+                </a>
+            </th>
+        </tr>
+        <%foreach (var pro in models)
+          {
+        DB.LebiShop.Lebi_Product model=GetPro(pro.Product_id);
+        var user=GetUserLevel(pro.UserLevel_id);
+        %>
+            <tr class="list">
+                <td style="text-align:center">
+                    <input type="checkbox" ShopKeyID="true" name="limitid" value="<%=pro.id %>" />
+                </td>
+                
+                <td>
+                    <%=model.Number%>
+                </td>
+                <td><%=Lang(model.Name)%></td>
+                <td><%=Lang(user.Name)%></td>
+                <td>
+                    <input type="checkbox" name="IsShow<%=pro.id%>" cname="IsShow" value="1" limit="true" <%=pro.IsShow==1?"checked":""%> />
+                </td>
+                <td>
+                    <input type="checkbox" name="IsPriceShow<%=pro.id%>" cname="IsPriceShow" value="1" limit="true" <%=pro.IsPriceShow==1?"checked":""%> />
+                </td>
+                <td>
+                    <input type="checkbox" name="IsBuy<%=pro.id%>" cname="IsBuy" value="1" limit="true" <%=pro.IsBuy==1?"checked":""%> />
+                    <input type="hidden" name="limituserid" value="<%=pro.id%>" limit="true" />
+                </td>
+            </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+       
+        function model_Del() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = GetFormJsonData("ShopKeyID");
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=ProductLimit_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function model_Save() {
+            var postData=GetFormJsonData("limit");
+            var url="<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=ProductLimit_mutiEdit";
+            RequestAjax(url,postData,function(){MsgBox(1,"<%=Tag("操作成功")%>","?")});
+        }
+       
+       
+        function model_Add(){
+       
+            var title_ = "<%=Tag("商品权限")%>-<%=ename%>";
+            <%if(proid>0){%>
+            var url_ = "<%=site.AdminPath %>/user/productlimit_window.aspx?productid=<%=proid%>";
+                <%}%>
+             <%if(userlevelid>0){%>
+                var url_ = "<%=site.AdminPath %>/product/productlimit_window.aspx?userlevelid=<%=userlevelid%>";
+            <%}%>
+            var width_ = 900;
+            var height_ = 750;
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_, 'selectproduct');
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

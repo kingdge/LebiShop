@@ -1,0 +1,44 @@
+﻿<!--
+Name:店铺Banner
+Page:All
+-->
+<%if (Getindeximages(5).Count>0){ %>
+<link rel="stylesheet" type="text/css" href="{/css}royalslider.css" />
+<div id="indexfocus" class="royalSlider rsDefault">
+    <%foreach(shopindeximage img in Getindeximages(5)){ %>
+    <div class="focusitem">
+        <div class="pic"><a href="<%=img.url %>"><img src="<%=img.image %>" /></a></div>
+        <h3><a href="<%=img.url %>"><%=img.title %></a></h3>
+    </div>
+    <%} %>
+</div>
+<script src="{/js}jquery.royalslider.min.js"></script>
+<script>
+    jQuery(document).ready(function ($) {
+        $('#indexfocus').royalSlider({
+            fullscreen: {
+                enabled: false,
+                nativeFS: false
+            },
+            controlNavigation: 'none',
+            autoHeight: true,
+            loop: true,
+            imageScaleMode: 'fit-if-smaller',
+            navigateByClick: true,
+            numImagesToPreload: 2,
+            arrowsNav: true,
+            arrowsNavAutoHide: false,
+            arrowsNavHideOnTouch: false,
+            keyboardNavEnabled: true,
+            fadeinLoadedSlide: true,
+            globalCaption: false,
+            globalCaptionInside: true,
+            thumbs: {
+                appendSpan: true,
+                firstMargin: true,
+                paddingBottom: 4
+            }
+        });
+    });
+</script>
+<%} %>

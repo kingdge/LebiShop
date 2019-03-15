@@ -1,0 +1,97 @@
+﻿{layout:default} {class:Shop.Admin.product.product_price}
+<lbhead>
+    <title><%=Tag("会员价格")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <script type="text/javascript">
+        $(document).ready(function(){$("li.menu ul").hide();$("li.menu").bind("mouseover",function(){$(this).find("ul").slideDown("fast")});$("li.menu ul").bind("mouseleave",function(){$(this).slideUp("fast")})});
+    </script>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/multiselect/js/jquery.multiselect2side.js"></script>
+    <link rel="stylesheet" href="<%=site.AdminJsPath %>/multiselect/css/jquery.multiselect2side.css" type="text/css" media="screen" />
+</lbfile>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <li class="add"><a href="javascript:void(0);" onclick="model_Add();"><b></b><span><%=Tag("添加")%></span></a></li>
+    <li class="del"><a href="javascript:void(0);" onclick="model_Del();"><b></b><span><%=Tag("删除")%></span></a></li>
+    <li class="submit"><a href="javascript:void(0);" onclick="model_Save();"><b></b><span><%=Tag("保存")%></span></a></li>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="<%=site.AdminPath %>/product/"><%=Tag("会员价格")%></a>  > <%=ename%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox">
+    </div>
+    <table id="list" class="datalist">
+        <tr class="title">
+            <th class="selectAll" style="width: 40px">
+                <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <!--<th style="width: 100px">
+                <%=Tag("编号")%>
+            </th>
+            <th>
+                <%=Tag("商品名称")%>
+            </th>-->
+            <th style="width: 150px">
+                <%=Tag("昵称")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("姓名")%>
+            </th>
+            <th>
+                <%=Tag("价格")%>
+            </th>
+        </tr>
+        <%foreach (var pro in models)
+          {
+        DB.LebiShop.Lebi_Product model=GetPro(pro.Product_id);
+        DB.LebiShop.Lebi_User user=GetUser(pro.User_id);
+        %>
+            <tr class="list">
+                <td style="text-align:center">
+                    <input type="checkbox" ShopKeyID="true" name="id" value="<%=pro.id %>" />
+                </td>
+                <!--<td>
+                    <%=model.Number%>
+                </td>
+                <td><%=Lang(model.Name)%></td>-->
+                <td><%=user.NickName%></td>
+                <td><%=user.RealName%></td>
+                <td>
+                    <input type="text" class="input" id="Price<%=pro.id%>" shop="true" min="notnull" name="Price<%=pro.id%>" style="width: 70px;" value="<%=FormatMoney(pro.Price,"Number") %>" onkeyup="value=value.replace(/[^.\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^.\d]/g,''))" />
+                    <input type="hidden" name="id" value="<%=pro.id%>" shop="true" />
+                </td>
+            </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function model_Del() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = GetFormJsonData("ShopKeyID");
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Product_Price_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function model_Save() {
+            var postData=GetFormJsonData("shop");
+            var url="<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Product_Price_Update";
+            RequestAjax(url,postData,function(){MsgBox(1,"<%=Tag("操作成功")%>","?")});
+        }
+        function model_Add(){
+            var title_ = "<%=Tag("会员价格")%>-<%=ename%>";
+            <%if(id>0){%>
+            var url_ = "<%=site.AdminPath %>/product/product_price_window.aspx?productid=<%=id%>";
+            <%}%>
+            var width_ = 700;
+            var height_ = 750;
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_, 'selectproduct');
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

@@ -1,0 +1,138 @@
+﻿{Layout:3r2c}
+<lbleft>
+<div class="mbox clearfix">
+    <div class="viewhistory">
+        <div class="mt">
+            <h2>
+                {Tag:商品信息}</h2>
+        </div>
+        <div class="mc clearfix">
+            <ul class="image">
+                <li>
+                    <div class="image">
+                        <p>
+                            <a href="<%=URL("P_Product",product.id) %>">
+                                <img src="<%=ProImg(product.ImageOriginal,"small") %>" title="<%=Lang(product.Name) %>" /></a></p>
+                    </div>
+                    <div class="name">
+                        <a href="<%=URL("P_Product",product.id) %>">
+                            <%=Lang(product.Name) %></a>
+                    </div>
+                    <div class="price">
+                        <%=FormatMoney(ProductPrice(product)) %>
+                    </div>
+                    <div class="addbasket">
+                        <a href="javascript:void(0);" onclick="UserProduct_Edit(<%=product.id %>,142,1);">{tag:加入购物车}</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="mbox clearfix">
+    <div class="mt">
+        <h2>{tag:其它}</h2>
+    </div>
+    <ul class="related_reviewLast">
+        <%foreach(Lebi_Comment pc in productcomments){ %>
+        <li>
+            <p class="gray related_titel pb5 f14">
+                <%=pc.User_UserName %></p>
+            <p>
+            </p>
+            <p><a href="<%=URL("P_ProductCommentDetails",pc.id) %>"><%=pc.Content %></a></p>
+        </li>
+        <%} %>
+                   
+    </ul>
+    <p class="related_bottom">
+        <a class="gray" href="<%=URL("P_Product",product.id) %>">{tag:更多} &gt;&gt;</a>
+    </p>
+</div>
+</lbleft>
+<lbright>
+<%if(DefaultImage!=""){ %>
+<div class="mbox">
+    <div class="mt">
+        <h2><%=Lang(product.Name) %></h2>
+    </div>
+    <div style="width: 570px;" class="mediaShow" id="mediaShow">
+        <a href="javascript:void(0);">
+            <img style="width: 570px;" alt="" src="<%=DefaultImage %>"></a></div>
+    <div class="mediaChoice">
+        <ul id="review_thumbImg" class="review_thumbImg">
+            <%for(int imgi=1;imgi<smalls.Count();imgi++){ %>
+            <li class=""><a data-url="<%=bigs[imgi] %>" data-type="1" href="javascript:void(0);">
+                <img width="140" src="<%=smalls[imgi] %>">
+            </a></li>
+            <%} %>
+        </ul>
+    </div>
+    <div class="clear">
+    </div>
+</div>
+<%} %>
+<div class="nbbox">
+    <div class="img_user_info">
+        <strong>
+            <%=comment.User_UserName %></strong>
+        <p>
+            <%=comment.Content %></p>
+    </div>
+</div>
+<div class="mbox">
+    <div class="mt">
+        <h2>{tag:评论}</h2>
+    </div>
+    <div class="replyBox">
+        <textarea placeholder="{tag:评论内容}..." id="comment" name="comment" shop="true" min="notnull"></textarea>
+        <div>
+            <a class="msgPost" href="javascript:void(0);" onclick="Comment();">{tag:提交}</a>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="review_replyList">
+        <ul>
+            <%foreach(Lebi_Comment com in comments){ %>
+            <li>
+                <div class="item">
+                    <h5>
+                        <%=com.User_UserName %></h5>
+                    <p class="gray">
+                        <%=com.Time_Add %></p>
+                    <p>
+                        <%=com.Content %></p>
+                </div>
+            </li>
+            <%} %>
+        </ul>
+    </div>
+</div>
+</lbright>
+<lbheadfile>
+<script type="text/javascript">
+    $(function () {
+        $("#review_thumbImg").find("a").click(function () {
+            var url = $(this).data("url");
+            var type = $(this).data("type");
+            enlarge(url);
+            $("#review_thumbImg").find("li").removeClass("cur");
+            $(this).parent("li").addClass('cur');
+
+        });
+        $("#review_thumbImg").find("a").eq(0).trigger("click");
+    })
+    //显示大图
+    function enlarge(url) {
+        $("#mediaShow").html("<a href='javascript:void(0);'><img src=\"" + url + "\" alt=\"\"  style=\"width:570px;\" /></a>");
+    }
+    function Comment() { 
+        if (!CheckForm("shop"))
+            return false;
+        var postData = {"comment":$('#comment').val()};
+        var url = path+"/Ajax/Ajax_userin.aspx?__Action=Comment_reply&id=<%=comment.id %>";
+        RequestAjax(url, postData, function () { MsgBox(1, "<%=Tag("操作成功")%>", "?") });
+    }
+</script>
+</lbheadfile>

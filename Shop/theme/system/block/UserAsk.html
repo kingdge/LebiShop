@@ -1,0 +1,65 @@
+﻿<!--
+Name:用户中心-咨询
+Page:All
+-->
+<div class="nbbox clearfix">
+<div class="user">
+    <div class="searchbox clearfix">
+        <select id="status">
+            <option value="">┌ {tag:状态}</option>
+            <option value="0" <%if (status == 0){%>selected<%} %>>{tag:全部}</option>
+            <%foreach (DB.LebiShop.Lebi_Type ctype in types){%>
+            <option value="<%=ctype.id %>" <%if (status == ctype.id){%>selected<%} %>><%=Tag(ctype.Name)%></option>
+            <%} %>
+        </select>
+        <input type="text" name="dateFrom" id="dateFrom" size="12" class="input-calendar" value="<%=dateFrom %>" /> - <input type="text" name="dateTo" id="dateTo" size="12" class="input-calendar" value="<%=dateTo %>" />
+        <input type="text" id="key" name="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" />
+        <a href="javascript:void(0)" onclick="search_();" class="btn btn-12"><s></s>{tag:查询}</a>
+    </div>
+    <table cellpadding="0" cellspacing="0" width="100%" class="tablemenu">
+        <tr>
+            <th style="width:40px;">
+                {tag:图片}
+            </th>
+            <th>
+                {tag:商品名称}
+            </th>
+            <th style="width:100px;">
+                {tag:状态}
+            </th>
+            <th style="width:120px;">
+                {tag:时间}
+            </th>
+        </tr>
+    </table>
+    <%foreach (DB.LebiShop.Lebi_Comment c in comments)
+    {%>
+    <table cellpadding="0" cellspacing="0" width="100%" class="tablelist box">
+    <tr>
+        <th style="width:40px;height:40px;"><% if (GetProduct(c.Keyid).ImageOriginal == ""){ %>&nbsp;<%}else{ %><a href="<%=URL("P_Product",c.Keyid) %>" target="_blank"><img style="height: 30px;width: 30px;vertical-align:middle" src="<%=Image(GetProduct(c.Keyid).ImageOriginal,50,50) %>" /></a><%} %></th>
+        <th><a href="<%=URL("P_Product",c.Keyid) %>" target="_blank"><%=Lang(GetProduct(c.Keyid).Name)%></a></th>
+        <th style="width:100px;"><%=TypeName(c.Status) %></th>
+        <th style="width:120px;"><%=FormatTime(c.Time_Add)%></th>
+    </tr>
+    <tr><td colspan="5">{tag:内容}：<%=c.Content.Replace("\r\n", "<br/>")%></td></tr>
+    <%
+    List<DB.LebiShop.Lebi_Comment> cr = DB.LebiShop.B_Lebi_Comment.GetList("Parentid = "+ c.id +"", "id desc");
+    foreach (DB.LebiShop.Lebi_Comment creply in cr)
+    {
+    %>
+    <tr><td colspan="5">{tag:客服回复}：<%=creply.Content.Replace("\r\n", "<br/>")%><em><%=FormatTime(creply.Time_Add)%></em></td></tr>
+    <%} %>
+    </table>
+    <%} %>
+    <div class="bottom clearfix"><div class="left"></div><div class="right"><%=PageString%></div></div>
+</div>
+</div>
+<script type="text/javascript">
+    function search_() {
+        var key = $("#key").val();
+        var dateFrom = $("#dateFrom").val();
+        var dateTo = $("#dateTo").val();
+        var status = $("#status").val();
+        window.location = "?key=" + escape(key) + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&status=" + status;
+    }
+</script>

@@ -1,0 +1,165 @@
+﻿<!--
+Name:用户中心-修改资料
+Page:ALL
+-->
+<div class="nbbox clearfix">
+<div class="userbox">
+    <div class="mt">
+        <h2>{tag:资料管理}</h2>
+    </div>
+    <div class="mc clearfix">
+    <div class="dl-table clearfix">
+    <dl>
+        <dt>{tag:登录帐号}：</dt>
+        <dd><%=CurrentUser.UserName %>&nbsp;<em>{tag:此项不可修改}</em></dd>
+    </dl>
+    <dl>
+        <dt>{tag:真实姓名}：</dt>
+        <dd><input type="text" name="RealName" id="RealName" size="30" value="<%=CurrentUser.RealName %>" class="input" shop="true" /></dd>
+    </dl>
+    <dl>
+        <dt>{tag:昵称}：</dt>
+        <dd><input type="text" name="NickName" id="NickName" size="30" value="<%=CurrentUser.NickName %>" class="input" shop="true" /></dd>
+    </dl>
+    <dl>
+        <dt>{tag:出生日期}：</dt>
+        <dd><input type="text" name="Birthday" size="30" value="<%=FormatDate(CurrentUser.Birthday) %>" id="Birthday" class="input" shop="true" /></dd>
+    </dl>
+    <dl>
+        <dt>{tag:性别}：</dt>
+        <dd><lable><input type="radio" name="Sex" value="男" class="input" shop="true" <%=CurrentUser.Sex=="男"?"checked":"" %>/><%=Tag("男") %></lable>
+        <lable><input type="radio" name="Sex" value="女" class="input" shop="true" <%=CurrentUser.Sex=="女"?"checked":"" %>/><%=Tag("女") %></lable></dd>
+    </dl>
+    <dl>
+        <dt>{tag:手机号码}：</dt>
+        <dd><input type="text" name="MobilePhone" id="MobilePhone" size="30" value="<%=CurrentUser.MobilePhone %>" class="input" shop="true" />
+            <%if(Checkmobilephone){ %>
+            &nbsp;{tag:验证码}：
+            <input type="text" shop="true" min="notnull" maxlength="6" name="MobilePhone_checkcode" id="MobilePhone_checkcode" style="width: 60px;" class="input" />
+            <input id="btn_phone" type="button" value="{tag:获取验证码}" style="width: 80px; height:25px" onclick="getcheckcode('phone');" />
+            <span id="msg_phone"></span>
+            <%} %>
+        </dd>
+    </dl>
+    <dl>
+        <dt>{tag:电话号码}：</dt>
+        <dd><input type="text" name="Phone" size="30" id="Phone" value="<%=CurrentUser.Phone %>" class="input" shop="true" /></dd>
+    </dl>
+    <dl>
+        <dt>{tag:传真号码}：</dt>
+        <dd><input type="text" name="fax" id="fax" size="30" value="<%=CurrentUser.Fax %>" class="input" shop="true" /></dd>
+    </dl>
+    <dl>
+        <dt>{tag:Email地址}：</dt>
+        <dd><input type="text" name="Email" id="Email" size="30" value="<%=CurrentUser.Email %>" class="input" shop="true" />
+            <%if(Checkemail){ %>
+            &nbsp;{tag:验证码}：
+            <input type="text" shop="true" min="notnull" maxlength="6" name="Email_checkcode" id="Email_checkcode" style="width: 60px;" class="input" />
+            <input id="btn_email" type="button" value="{tag:获取验证码}" style="height:25px" onclick="getcheckcode('email');" />
+            <span id="msg_email"></span>
+            <%} %>
+        </dd>
+    </dl>
+    <dl>
+        <dt>{tag:QQ号码}：</dt>
+        <dd><input type="text" name="QQ" id="QQ" size="30" value="<%=CurrentUser.QQ %>" class="input" shop="true" /></dd>
+    </dl>
+    <dl>
+        <dt>{tag:邮编}：</dt>
+        <dd><input type="text" name="Postalcode" id="Postalcode" size="30" value="<%=CurrentUser.Postalcode %>" class="input" shop="true" /></dd>
+    </dl>
+    <dl>
+        <dt>{tag:地址}：</dt>
+        <dd><input type="text" name="Address" id="Address" size="30" value="<%=CurrentUser.Address %>" class="input" shop="true" /></dd>
+    </dl>
+    <dl>
+        <dt>{tag:地区}：</dt>
+        <dd><div id="Area_id_div"></div></dd>
+    </dl>
+    <dl class="dl-btn">
+        <dt></dt>
+        <dd><a href="javascript:void(0)" onclick="update();" class="btn btn-11"><s></s>{tag:提交}</a></dd>
+    </dl>
+    </div>
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function ($) { 
+        $("#Birthday").datepicker({dateFormat:"yy-mm-dd"});
+    });
+    GetAreaList(<%=SYS.TopAreaid %>, <%=CurrentUser.Area_id %>); //加载地区下拉框
+    function update() {
+        var postData = GetFormJsonData("shop");
+        var Area_id = $("#Area_id").val();
+        var url = path+"/ajax/Ajax_userin.aspx?__Action=User_Info&Area_id="+Area_id;
+        RequestAjax(url, postData, function () { MsgBox(1, "{tag:操作成功}", "") });
+    }
+    var djs_phone = 60;
+    var djs_email = 60;
+    function getcheckcode(t) {
+        var email = '';
+        var postData = '';
+        var url = '';
+        if (t == 'phone') {
+            phone = $("#MobilePhone").val();
+            postData = { "phone": phone };
+            url = path + "/ajax/ajax.aspx?__Action=GetPhoneCheckCode&m=<%=mcode%>";
+        } else {
+            email = $("#Email").val();
+            postData = { "email": email };
+            url = path + "/ajax/ajax.aspx?__Action=GetEmailCheckCode&m=<%=mcode%>";
+            if (!IsEmail(email)) {
+                $("#msg_" + t).html("{tag:请填写邮箱}");
+                return false;
+            }
+        }
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: postData,
+            dataType: 'json',
+            beforeSend: function () {
+                $("#btn_" + t).hide();
+                $("#msg_" + t).html("{tag:正在发送...}");
+            },
+            success: function (res) {
+                if (res.msg == "OK") {
+                    if (t == 'phone') {
+                        djs_phone = 60;
+                        daojishi_phone();
+                        setInterval(daojishi_phone, 1000);
+                    } else {
+                        djs_email = 60;
+                        daojishi_email();
+                        setInterval(daojishi_email, 1000);
+                    }
+                    return false;
+                }
+                else {
+                    $("#btn_" + t).show();
+                    $("#msg_" + t).html(res.msg);
+                    return false;
+                }
+            }
+        });
+    }
+    function daojishi_email() {
+        djs_email = djs_email - 1;
+        if (djs_email > 0)
+            $("#msg_email").html(djs_email + "{tag:秒后重新发送}");
+        else {
+            $("#msg_email").html("");
+            $("#btn_email").show();
+        }
+    }
+    function daojishi_phone() {
+        djs_phone = djs_phone - 1;
+        if (djs_phone > 0)
+            $("#msg_phone").html(djs_phone + "{tag:秒后重新发送}");
+        else {
+            $("#msg_phone").html("");
+            $("#btn_phone").show();
+        }
+    }
+</script>

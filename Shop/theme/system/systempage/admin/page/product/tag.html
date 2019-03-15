@@ -1,0 +1,97 @@
+﻿{layout:default} {class:Shop.Admin.product.Tag}
+<lbhead>
+    <title><%=Tag("商品标签")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="add"><a href="javascript:void(0);" onclick="Edit(0);"><b></b><span><%=Tag("添加")%></span></a></li>
+    <li class="del"><a href="javascript:void(0);" onclick="Del(0);"><b></b><span><%=Tag("删除")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("商品标签")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox">
+        <select id="lang">
+            <option value="">┌<%=Tag("语言")%></option>
+            <%=Shop.Bussiness.Language.LanguageOption(lang) %>
+        </select>
+        <input type="text" id="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" />
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th style="width: 24px">
+                <%=Tag("ID")%>
+            </th>
+            <th style="width: 200px">
+                <%=Tag("标签名称")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("排序")%>
+            </th>
+            <th>
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_Pro_Tag model in models)
+          { %>
+        <tr class="list" ondblclick="Edit(<%=model.id %>);" >
+            <td style="text-align:center">
+                <input type="checkbox" name="id" value="<%=model.id %>" del="true" name="check_" />
+            </td>
+            <td>
+                <%=model.id%>
+            </td>
+            <td>
+                <%=Lang(model.Name)%>&nbsp;<a href="<%=Shop.Bussiness.ThemeUrl.GetURL("P_ProductCategory", "$,$,$,$,$,"+model.id+"", "", CurrentLanguage.Code)%>" target="_blank"><i class="ti-new-window"></i></a>
+            </td>
+            <td>
+                <%=model.Sort%>
+            </td>
+            <td>
+                <a href="javascript:" onclick="Edit(<%=model.id %>)"><%=Tag("编辑")%></a> | <a href="javascript:"
+                    onclick="Del(<%=model.id %>)"><%=Tag("删除")%></a>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function search_() {
+            var lang = $("#lang").val();
+            var key = $("#key").val();
+            window.location = "?key=" + escape(key) + "&lang=" + lang;
+        }
+        function Edit(id) {
+            var title_ = "<%=Tag("编辑标签")%>";
+            if (id == 0)
+                var title_ = "<%=Tag("添加标签")%>";
+            var url_ = "tag_edit_window.aspx?id=" + id;
+            var width_ = 450;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function Del(id) {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData;
+            if (id == 0)
+                postData = GetFormJsonData("del");
+            else
+                postData = { "id": id };
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Tag_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

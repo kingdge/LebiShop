@@ -1,0 +1,22 @@
+﻿<%
+if(!IsAPP()){
+%>
+<div id="header" class="clearfix">
+    <div class="logo">{MOD:Logo}</div>
+    <ul class="toplink">
+		<li>
+		<%if(CurrentUser.id>0){ %>
+			<a href="<%=URL("P_UserCenter", "")%>"><%=CurrentUser.NickName %></a> <a href="javascript:void(0);" onclick="LoginOut();">{Tag:退出登录}</a>
+		<%}else{ %>
+			<a href="<%=URL("P_Login", "")%>">{Tag:登录}</a>
+		<%} %>
+		</li>
+        <!--<li><a href="<%=URL("P_UserMessage","0")%>" class="btnAccount"><em id="message_items"><%=Count_NewMessage() %></em></a></li>
+        <li><a href="<%=URL("P_UserAsk", "")%>" class="btnAsk"><em id="ask_items"><%=Count_NewProductAsk() %></em></a></li>-->
+        <li><a href="<%=URL("P_Basket", "")%>" class="btnCart"><em id="cart_items"><%=Basket_Product_Count() %></em></a></li>
+    </ul>
+</div>
+<%}%>
+<div class="search">
+	{MOD:SearchFormLine}
+</div>

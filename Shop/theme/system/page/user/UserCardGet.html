@@ -1,0 +1,49 @@
+﻿<!--
+Name:用户中心-首页
+Page:P_UserCardGet
+-->
+<div class="nbbox clearfix">
+<div class="userbox">
+    <div class="mt">
+        <h2><%=Lang(model.Name)%></h2>
+    </div>
+    <div class="mc default-info">
+        <div class="dl-table clearfix">
+        <dl>
+            <dt>{tag:面值}：</dt>
+            <dd><%=FormatMoney(model.Money) %></dd>
+        </dl>
+        <dl>
+            <dt>{tag:最低消费}：</dt>
+            <dd><%=FormatMoney(model.Money_Buy) %></dd>
+        </dl>
+        <%if (Shop.Bussiness.EX_Product.TypeNames(model.Pro_Type_ids,CurrentLanguage.Code)!=""){ %>
+        <dl>
+            <dt>{tag:限制分类}：</dt>
+            <dd><%=Shop.Bussiness.EX_Product.TypeNames(model.Pro_Type_ids,CurrentLanguage.Code) %></dd>
+        </dl>
+        <%} %>
+        <dl>
+            <dt>{tag:有效期}：</dt>
+            <dd><%=FormatDate(model.Time_Begin) %> - <%=FormatDate(model.Time_End) %></dd>
+        </dl>
+        <dl>
+            <dt>{tag:验证码}：</dt>
+            <dd><input name="verifycode" type="text" shop="true" id="verifycode" shop="true" size="6"
+class="input" /> <img class="img_c" align="absmiddle" style="width: 80px; height: 25px;" title="{tag:点击重新获取验证码}" id="img1" src="<%=WebPath%>/code.aspx" language="javascript" onclick="this.src=this.src+'?'"></dd>
+        </dl>
+        <dl class="dl-btn">
+            <dt></dt>
+            <dd><a href="javascript:void(0)" onclick="submit();" class="btn btn-11"><s></s>{tag:领取}</a></dd>
+        </dl>
+        </div>
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+    function submit() {
+        var postData = GetFormJsonData("shop");
+        var url = path+"/Ajax/Ajax_userin.aspx?__Action=CardGet&id=<%=id %>";
+        RequestAjax(url, postData, function () { MsgBox(1, "{tag:操作成功}", "<%=URL("P_UserCard","","")%>") });
+    }
+</script>

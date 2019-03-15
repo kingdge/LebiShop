@@ -1,0 +1,26 @@
+﻿<!--
+Name:商品搜索框
+Page:All
+-->
+<script type="text/javascript">
+    $(function () {
+        blurInput('#keyword', '<%if (Rstring("Keyword")!=""){ %><%=Rstring("Keyword")%><%}else{%>${#table:Lebi_Searchkey;#where:Type=1;#order:Sort desc,id desc;#top:1;<%=Lang({Name})%>}$<%} %>');
+    })
+</script>
+<div class="mbox clearfix">
+<div class="searchform">
+<div class="mt">
+    <h2>{tag:商品搜索}</h2>
+</div>
+<div class="mc">
+    <input id="keyword" value="" type="text" name="keyword" onkeydown="if(event.keyCode==13){search();}" />
+    <input type="button" value="{Tag:搜索}" class="button" onclick="search();" />
+</div>
+</div>
+</div>
+<script type="text/javascript" >
+    function search() {
+        var url = "<%=URL("P_Search","[key]") %>";
+        location.href = url.replace("[key]",escape($("#keyword").val()));
+    }
+</script>

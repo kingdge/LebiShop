@@ -1,0 +1,61 @@
+﻿<!--
+Name:用户中心-推广佣金-推广列表
+Page:P_UserAgentList
+-->
+<div class="nbbox clearfix">
+<div class="user">
+    <div class="searchbox">
+        <input type="text" id="key" name="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" />
+        <a href="javascript:void(0)" onclick="search_();" class="btn btn-12"><s></s>{tag:查询}</a>
+    </div>
+    <div class="table-list loadlist">
+        <%foreach (DB.LebiShop.Lebi_User model in models){%>
+        <div class="loadli">
+        <table cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <th><%=model.UserName.Substring(0,3)+"***"%></th>
+            <th style="width:140px"><%=FormatTime(model.Time_Reg) %></th>
+        </tr>
+        <tr>
+            <td colspan="2"><%if (model.User_id_parent>0){%><%=Tag("上级用户")%>：<a href="?id=<%=model.User_id_parent %>"><%=Shop.Bussiness.EX_User.GetUser(model.User_id_parent).UserName%></a>&nbsp;&nbsp;<%}%><%=Tag("推广人数")%>：<a href="?id=<%=model.id %>"><%=DB.LebiShop.B_Lebi_User.Counts("user_id_parent="+model.id+"") %></a></td>
+        </tr>
+        </table>
+        </div>
+        <%} %>
+    </div>
+    <%if (CurrentSite.IsMobile==0){ %>
+        <div class="bottom clearfix"><div class="right"><%=PageString%></div></div>
+    <%}else{%>
+    <div class="loadpage">
+        <a data-next="<%=NextPage%>"></a>
+    </div>
+    <script>
+        $(document).ready(function () {
+            var container = document.querySelector('.loadlist');
+            var ias = $.ias({
+                container: ".loadlist",
+                item: ".loadli",
+                pagination: ".loadpage",
+                next: ".loadpage a"
+            });
+            ias.on('render', function (items) {
+                //$(items).css({ opacity: 0 });
+            });
+            ias.on("rendered", function (items) {
+            });
+            ias.extension(new IASSpinnerExtension({ html: "<div class=\"loadinginfo\"><img src=\"{src}\" />&nbsp;{Tag:加载中}</div>" }));
+            ias.extension(new IASTriggerExtension({ text: '{Tag:加载更多}', offset: 100, html: "<div class=\"loadinginfo more\"><p>{text}</p></div>" }));
+            ias.extension(new IASNoneLeftExtension({
+                text: '', html: ""
+            }));
+        });
+    </script>
+    <%}%>
+</div>
+</div>
+<script type="text/javascript">
+    function search_(scurl) {
+        var key = $("#key").val();
+        window.location = "?key=" + escape(key);
+    }
+</script>

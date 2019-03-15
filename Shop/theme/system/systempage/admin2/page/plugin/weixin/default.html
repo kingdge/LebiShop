@@ -1,0 +1,110 @@
+﻿{layout:default} {class:Shop.admin.plugin.weinxin._default}
+<lbhead>
+    <title><%=Tag("微信管理") %>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("微信管理")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("微信管理")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 m-b-10">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-info" onclick="Edit(0,0);"><i class="ti-plus"></i> <%=Tag("添加")%></button>
+                        <button class="btn btn-default" onclick="down()"><i class="ti-download"></i> <%=Tag("从微信下载")%></button>
+                        <button class="btn btn-default" onclick="publish()"><i class="ti-upload"></i> <%=Tag("提交至微信")%></button>
+                        <%}%>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <%=Tag("名称")%>
+                                </th>
+                                <th>
+                                    <%=Tag("链接")%>
+                                </th>
+                                <th>
+                                    <%=Tag("排序")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_weixin_menu pm in GetwxMenus(0)){ %>
+                            <tr ondblclick="Edit(<%=pm.parentid %>,<%=pm.id %>);">
+                                <td><i class="ti-plus"></i> <%=pm.name %></td>
+                                <td><%=pm.url %></td>
+                                <td><%=pm.Sort %></td>
+                                <td>
+                                    <a href="javascript:void(0)" onclick="Edit(<%=pm.parentid %>,<%=pm.id %>);"><%=Tag("编辑")%></a>
+                                    | <a href="javascript:void(0)" onclick="Edit(<%=pm.id %>,0);"><%=Tag("添加下级")%></a>
+                                    | <a href="javascript:void(0)" onclick="DeleteConfirm(<%=pm.id %>);"><%=Tag("删除")%></a>
+                                </td>
+                            </tr>
+                            <%foreach (DB.LebiShop.Lebi_weixin_menu m in GetwxMenus(pm.id))
+                            { %>
+                            <tr ondblclick="Edit(<%=m.parentid %>,<%=m.id %>);">
+                                <td><i class="ti-minus"></i> <%=m.name %></td>
+                                <td><%=m.url %></td>
+                                <td><%=m.Sort %></td>
+                                <td>
+                                    <a href="javascript:void(0)" onclick="Edit(<%=m.parentid %>,<%=m.id %>);"><%=Tag("编辑")%></a>
+                                    | <a href="javascript:void(0)" onclick="DeleteConfirm(<%=m.id %>);"><%=Tag("删除")%></a>
+                                </td>
+                            </tr>
+                            <%} %>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        function DeleteConfirm(id) {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要删除吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "DeleteObj(" + id +");");
+        }
+        function DeleteObj(id) {
+            $("#Modal-Confirm").modal("hide");
+            var postData = { "id": id };
+            var url = "ajax.aspx?__Action=Menu_Del";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function Edit(pid, id) {
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "menu_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {pid: pid,id: id},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function publish()
+        {
+            var url = "ajax.aspx?__Action=Menu_publish";
+            RequestAjax(url,'',function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function down()
+        {
+            var url = "ajax.aspx?__Action=Menu_download";
+            RequestAjax(url,'',function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbscripts>

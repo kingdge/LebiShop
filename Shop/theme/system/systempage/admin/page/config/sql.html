@@ -1,0 +1,69 @@
+﻿{layout:default} {class:Shop.Admin.storeConfig.SQL}
+<lbhead>
+    <title><%=Tag("命令执行")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <style>
+        .bottom{height: 0;overflow: hidden;display: none;}
+         .data{background-color:#808080;margin:10px;}
+         .data td{background-color:#ffffff;}
+    </style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("提交")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("命令执行")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <style type="text/css">.bottom{display:none;height:0;overflow:hidden}</style>
+    <table class="table">
+        <tr>
+            <th><%=Tag("SQL语句")%>：</th>
+            <td><input id="txt_sql" type="text" shop="true" min="notnull" class="input" style="width:65%" onkeydown="if(event.keyCode==13){SaveObj();}" /> <span id="C_txt_sql"></span></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="classfaq">
+                    <div class="faq_main">
+                        <p class="faq_title"><%=Tag("使用答疑：")%></p>
+                        <%=Tag("本操作仅限高级、对SQL编程比较熟悉的用户，您可以直接输入sql执行语句；")%><br />
+                        <%=Tag("在操作前请慎重考虑您的执行语句是否正确和完整，执行后不可恢复；")%><br />
+                        <%=Tag("在操作前请先备份系统数据库，以防操作失误造成数据损坏。")%>
+                    </div>
+                </td>
+            </tr>
+    </table>
+    <table cellspacing="1" width="100%" cellpadding="1" >
+        
+        <tr>
+            <td id="sqldata"></td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+        function SaveObj() {
+            var sql = $("#txt_sql").val();
+            if (!CheckForm("shop", "span"))
+                return false;
+            var postData = { "sql": sql };
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=SQL_Edit";
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: 'html',
+                data: postData,
+                success: function (data) {
+                    $('#sqldata').html(data);
+                }
+            });
+        }
+    </script>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+    </div>
+</lbbottom>

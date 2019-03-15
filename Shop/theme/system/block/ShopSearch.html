@@ -1,0 +1,20 @@
+﻿<!--
+Name:商家店内搜索
+Page:All
+-->
+<div class="mbox clearfix">
+<div class="brandsearch">
+<div class="mt">
+    <h2>{tag:店内搜索}</h2>
+</div>
+<div class="mc">
+    <input id="shop_keyword" value="" type="text" name="shop_keyword" onkeydown="if(event.keyCode==13){shopsearch();}" /><input type="button" value="{Tag:搜索}" class="button" onclick="shopsearch();" />
+</div>
+</div>
+</div>
+<script type="text/javascript" >
+    function shopsearch() {
+        var url = "<%=URL("P_ShopProductCategory",""+ id +",0,1,1,1,[key]")%>";
+        location.href = url.replace("[key]",escape($("#shop_keyword").val()));
+    }
+</script>

@@ -1,0 +1,128 @@
+﻿{layout:simple} {class:Shop.Admin.product.Class_MAdd_window}
+<lbbody>
+<%=Shop.Bussiness.Language.AdminLanguageTab("") %>
+<table
+    class="table">
+    <%foreach (DB.LebiShop.Lebi_Language_Code lang in Shop.Bussiness.Language.Languages())
+      {%>
+    <tbody id="lang_<%=lang.Code %>" class="lang_table" style="display: none">
+        <tr>
+            <th valign="top" style="width:20%">
+                <%=Tag("分类名称")%>：
+            </th>
+            <td >
+                <textarea id="Name<%=lang.Code %>" name="Name<%=lang.Code %>" class="input" style="height: 150px; width: 400px;" shop="true" min="notnull"></textarea>
+                <div class="tools clear">
+                    <ul>
+                        <li class="plus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Name<%=lang.Code %>',100);"><b></b><span><%=Tag("展开")%></span></a></li>
+                        <li class="minus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Name<%=lang.Code %>',-100)"><b></b><span><%=Tag("收缩")%></span></a></li>
+                        <li class="tips"><span><em><%=Tag("每行输入一个类别，用回车换行。")%></em></span></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+    <%} %>
+    </table>
+    <ul id="tablistmain"><li class="selected"><a><span><%=Tag("通用信息")%></span></a></li></ul>
+    <table class="table">
+    <tr>
+        <th style="width: 20%">
+            <%=Tag("上级分类")%>：
+        </th>
+        <td>
+            <select name="Parentid" shop="true">
+                <option value="0">┌<%=Tag("顶级分类")%></option>
+                <%=Shop.Bussiness.EX_Product.TypeOption(0, 0, 0, CurrentLanguage.Code, Shop.Bussiness.EX_Admin.Project().Pro_Type_ids)%>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("是否显示")%>：
+        </th>
+        <td>
+            <label>
+                <input type="radio" name="IsShow" shop="true" value="1" checked /><%=Tag("是")%></label>
+            <label>
+                <input type="radio" name="IsShow" shop="true" value="0" /><%=Tag("否")%></label>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("首页显示")%>：
+        </th>
+        <td>
+            <label>
+                <input type="radio" name="IsIndexShow" shop="true" value="1" checked /><%=Tag("是")%></label>
+            <label>
+                <input type="radio" name="IsIndexShow" shop="true" value="0" /><%=Tag("否")%></label>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("商品属性")%>：
+        </th>
+        <td>
+            <%=Property("",132)%>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("商品规格")%>：
+        </th>
+        <td>
+            <%=Property("",131)%>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("文字属性")%>：
+        </th>
+        <td>
+            <%=Property("",133)%>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("订购表单")%>：
+        </th>
+        <td>
+            <%=Property("",134)%>
+        </td>
+    </tr>
+    <tr>
+        <th >
+            <%=Tag("站点")%>：
+        </th>
+        <td>
+            <%=site.SiteCheckbox("Site_ids","",CurrentLanguage.Code)%>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+            <div class="tools tools-m clear">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    LanguageTab_EditPage('<%=CurrentLanguage.Code %>'); //加载默认语言
+    function SaveObj() {
+        var postData = GetFormJsonData("shop");
+//        if (!CheckForm("shop", "span"))
+//            return false;
+        <%foreach (DB.LebiShop.Lebi_Language_Code lang in Shop.Bussiness.Language.Languages()){%>
+        if ($("#Name<%=lang.Code %>").val() == "") {
+            MsgBox(2, "<%=Tag("请填写分类名称")%>(<%=lang.Name%>)", "");
+            return;
+        }
+        <%} %>
+        var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Class_MAdd";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+</script>
+</lbbody>

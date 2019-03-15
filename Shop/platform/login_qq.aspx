@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="login_qq.aspx.cs" Inherits="Shop.platform.login_qq" %>

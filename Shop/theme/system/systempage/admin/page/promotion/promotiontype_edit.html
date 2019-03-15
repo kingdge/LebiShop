@@ -1,0 +1,186 @@
+﻿{layout:default} {class:Shop.Admin.promotion.PromotionType_Edit}
+<lbhead>
+    <title>
+        <%if (model.id != 0)
+          { %>
+        <%=Tag("编辑促销")%>
+        <%}
+          else
+          { %><%=Tag("添加促销")%>
+        <%}%>-<%=Tag("优惠促销")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <script type="text/javascript" src="<%=site.WebPath %>/Editor/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript" src="<%=site.WebPath %>/Editor/ckfinder/ckfinder.js"></script>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/jquery-ui/timepicker-addon.js"></script>
+    <%if (CurrentLanguage.Code=="CN"){%><script type="text/javascript" src="<%=site.AdminJsPath %>/jquery-ui/timepicker-zh-CN.js"></script><%}%>
+    <link rel="stylesheet" type="text/css" href="<%=site.AdminJsPath %>/jquery-ui/timepicker-addon.css" />
+    <script type="text/javascript">
+        $(function () {
+            $(".input-calendar").datetimepicker({dateFormat:"yy-mm-dd",showSecond:true,timeFormat:"HH:mm:ss",stepHour:1,stepMinute:1,tepSecond:1});
+        });
+    </script>
+</lbfile>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <%if (PageReturnMsg == ""){%>
+            <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+            <li class="submit"><a href="javascript:void(0);" onclick="PromotionEdit(<%=model.id %>);"><b></b><span><%=Tag("编辑规则")%></span></a></li>
+            <%}%>
+            <li class="name"><span id="navIgation">
+                <%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> >
+                <%=Tag("营销")%>
+                > <a href="<%=site.AdminPath %>/Promotion/default.aspx">
+                    <%=Tag("优惠促销")%></a> >
+                <%=model.id == 0 ? Tag("添加促销") : Tag("编辑促销")%></span></li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <%=Shop.Bussiness.Language.AdminLanguageTab("") %>
+    <table
+        id="lang" class="table">
+        <%foreach (DB.LebiShop.Lebi_Language_Code lang in Shop.Bussiness.Language.Languages())
+          {%>
+        <tbody id="lang_<%=lang.Code %>" class="lang_table" style="display: none">
+            <tr>
+                <th>
+                    <%=Tag("名称")%>：
+                </th>
+                <td>
+                    <input type="text" id="Name<%=lang.Code %>" name="Name<%=lang.Code %>" class="input"
+                        style="width: 550px;" value="<%=Shop.Bussiness.Language.Content(model.Name, lang.Code)%>"
+                        shop="true" />
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("介绍")%>：
+                </th>
+                <td>
+                    <textarea id="Content<%=lang.Code %>" cols="80" rows="5" class="textarea" style="height: 60px;
+                        width: 550px;" name="Content<%=lang.Code %>" shop="true"><%=Shop.Bussiness.Language.Content(model.Content, lang.Code)%></textarea>
+                    <script type="text/javascript">
+                        CKEDITOR.replace('Content<%=lang.Code %>', {
+                                height: '150',
+                                toolbar: 'Basic',
+                                language: '<%=Tag("CKEditor语言")%>'
+		                });
+                    </script>
+                </td>
+            </tr>
+        </tbody>
+        <%} %>
+    </table>
+    <ul id="tablistmain">
+        <li class="selected"><a><span><%=Tag("通用信息")%></span></a></li></ul>
+    <table
+        id="common" class="table">
+        <tbody>
+            <tr>
+                <th style="width:200px;">
+                    <%=Tag("会员分组")%>：
+                </th>
+                <td>
+                    <%foreach (DB.LebiShop.Lebi_UserLevel l in userlevels)
+                      { %>
+                      <label><input type="checkbox" name="UserLevel_ids" value="<%=l.id %>" <%=CheckStatus(model.UserLevel_ids,l.id) %> shop="true" /><%=Lang(l.Name) %></label>
+                    <%} %>
+                </td>
+            </tr>
+            <tr>
+                <th style="width:200px;">
+                    <%=Tag("时间")%>：
+                </th>
+                <td>
+                    <input type="text" value="<%=FormatTime(model.Time_Start) %>" class="input-calendar" id="Time_Start" name="Time_Start" shop="true" style="width: 150px" />
+                    -
+                    <input type="text" value="<%=FormatTime(model.Time_End) %>" class="input-calendar" name="Time_End" shop="true" style="width: 150px" />
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <%=Tag("类型")%>：
+                </th>
+                <td>
+                    <%=Shop.Bussiness.EX_Type.TypeRadio("PromotionType", "Type_id_PromotionType", model.Type_id_PromotionType, "shop=\"true\" onclick=\"ChangeType();\"")%>
+
+                    <select style="display:none;" shop="true" id="Supplier_id" name="Supplier_id"><%=GetShops(model.Supplier_id)%></select>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <%=Tag("状态")%>：
+                </th>
+                <td>
+                    <%=Shop.Bussiness.EX_Type.TypeRadio("PromotionStatus", "Type_id_PromotionStatus", model.Type_id_PromotionStatus, "shop=\"true\"")%>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <%=Tag("排斥其它")%>：
+                </th>
+                <td>
+                    <label><input type="radio" name="IsRefuseOther" shop="true" value="1" <%=model.IsRefuseOther==1?"checked":"" %> /><%=Tag("是")%></label>
+                    <label><input type="radio" name="IsRefuseOther" shop="true" value="0" <%=model.IsRefuseOther==0?"checked":"" %>><%=Tag("否")%></label>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <%=Tag("优先级")%>：
+                </th>
+                <td>
+                    <input type="text" id="Sort" name="Sort" style="width: 70px" shop="true" class="input"
+                        value="<%=model.Sort %>" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="4" />
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("内部备注")%>：<br>
+                    <em>≤ <span id="remLen">255</span></em>
+                </th>
+                <td>
+                    <textarea name="Remark" id="Remark" shop="true" rows="3" cols="60" class="textarea" onkeydown="checkMaxInput(this.form)" onkeyup="checkMaxInput(this.form)" style="height: 60px; width: 550px;"><%=model.Remark%></textarea>
+                    <div class="tools clear">
+                        <ul>
+                            <li class="plus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Remark',100);"><b></b><span><%=Tag("展开")%></span></a></li>
+                            <li class="minus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Remark',-100)"><b></b><span><%=Tag("收缩")%></span></a></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <script type="text/javascript">
+        function SaveObj() {
+          var editor
+            <%foreach (DB.LebiShop.Lebi_Language_Code lang in Shop.Bussiness.Language.Languages())
+          {%>
+            editor = CKEDITOR.instances.Content<%=lang.Code %>;
+            $("#Content<%=lang.Code %>").val(editor.getData());
+          <%} %>
+            var postData = GetFormJsonData("shop");
+            var url="<%=site.AdminPath %>/ajax/ajax_sale.aspx?__Action=PromotionType_Edit&id=<%=model.id %>";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?id="+res.id)});
+        }
+        function PromotionEdit(id)
+        {
+            window.location="promotion.aspx?tid="+id;
+        }
+        function ChangeType()
+        {
+            var t=$("input[name='Type_id_PromotionType']:checked").val();
+            if(t==422)
+                $('#Supplier_id').show();
+            else
+                $('#Supplier_id').hide();
+                
+        }
+        LanguageTab_EditPage('<%=CurrentLanguage.Code %>'); //加载默认语言
+        ChangeType();
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom"></div>
+</lbbottom>

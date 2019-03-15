@@ -1,0 +1,127 @@
+﻿{layout:default} {class:Shop.Admin.agent.areaagent}
+<lbhead>
+    <title>
+        <%=Tag("代理资格")%>-<%=Tag("区域代理")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <li class="add"><a href="javascript:void(0);" onclick="Edit(0);"><b></b><span>
+                <%=Tag("添加")%></span></a></li>
+            <li class="add"><a href="javascript:void(0);" onclick="MutiAdd();"><b></b><span>
+                <%=Tag("批量添加")%></span></a></li>
+            <li class="del"><a href="javascript:void(0);" onclick="DEL();"><b></b><span>
+                <%=Tag("删除")%></span></a></li>
+            <li class="name"><span id="navIgation">
+                <%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a>
+                >
+                <%=Tag("区域代理")%>
+                >
+                <%=Tag("代理资格")%></span></li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox clear">
+        
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'sid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));">
+                    <%=Tag("全选")%></a>
+            </th>
+            <th style="width: 250px">
+                <%=Tag("区域")%>
+            </th>
+            <th style="width: 150px">
+                <%=Tag("会员")%>
+            </th>
+            <th style="width: 120px">
+                <%=Tag("价格")%>(<%=Tag("年") %>)
+            </th>
+            <th style="width: 120px">
+                <%=Tag("佣金比例")%>(按收货)
+            </th>
+            <th style="width: 120px">
+                <%=Tag("佣金比例")%>(按籍贯)
+            </th>
+            <th style="width: 130px">
+                <%=Tag("赠送代金券")%>
+            </th>
+            <th style="width: 130px">
+                <%=Tag("添加时间")%>
+            </th>
+            <th style="width: 130px">
+                <%=Tag("过期时间")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("状态")%>
+            </th>
+            <th>
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%=GetAreas(TopAreaid,1)%>
+    </table>
+    <script type="text/javascript">
+        function search_() {
+            var key = $("#key").val();
+            var status=$("#status").val();
+            window.location.href = "?key=" + escape(key)+"&status="+status;
+        }
+        function Edit(id) {
+            if (id == 0) { var title_ = "<%=Tag("添加代理区域")%>"; } else { var title_ = "<%=Tag("编辑代理区域")%>"; }
+            var url_ = "areaagent_edit_window.aspx?id=" + id;
+            var width_ = 600;
+            var height_ = 400;
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function MutiAdd()
+        {
+            var title_ = "<%=Tag("批量添加代理区域")%>"; 
+            var url_ = "areaagent_mutiadd_window.aspx";
+            var width_ = 600;
+            var height_ = 400;
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function AreaAgentUser_Edit(id) {
+            var title_ = "<%=Tag("绑定区域代理")%>";
+            var url_ = "areaagent_user_edit_window.aspx?id=" + id;
+            var width_ = 600;
+            var height_ = 400;
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function DEL() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var ids = GetChkCheckedValues("sid");
+            var postData = { "ids": ids };
+            var url = "<%=site.AdminPath %>/ajax/ajax_agent.aspx?__Action=AreaAgent_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function ShowChild(id) {
+            var src = $("#img" + id + "").attr("src");
+            if (src.indexOf("plus.gif") == -1) {
+                $("#img" + id + "").attr("src", "<%=AdminImage("plus.gif") %>");
+                var chks = $("[t"+id+"]");
+                for (var index = 0; index < chks.length; index++) {
+                    $("#img" + id + "").attr("src", "<%=AdminImage("plus.gif") %>");
+                    $(chks[index]).hide();
+                }
+            }
+            else {
+                $("#img" + id + "").attr("src", "<%=AdminImage("minus.gif") %>");
+                var chks = $("[t"+id+"]");
+                for (var index = 0; index < chks.length; index++) {
+                    $("#img" + id + "").attr("src", "<%=AdminImage("minus.gif") %>");
+                    $(chks[index]).show();
+                }
+                
+            }
+        }
+    </script>
+</lbbody>

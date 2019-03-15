@@ -1,0 +1,233 @@
+﻿{layout:default} {class:Shop.Admin.user.UserLevel_Edit}
+<lbhead>
+    <title><%=Shop.Bussiness.Language.Content(model.Name, CurrentLanguage.Code) %>-<%=Tag("会员分组")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+    <style>
+        .bottom{height: 0;overflow: hidden;display: none;}
+    </style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+    <%}%>
+    <li class="rotate"><a href="javascript:void(0);" onclick="history.back();"><b></b><span><%=Tag("返回")%></span></a></li>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="<%=site.AdminPath %>/user/default.aspx"><%=Tag("会员管理")%></a> > <a href="<%=site.AdminPath %>/user/UserLevel.aspx"><%=Tag("会员分组")%></a> > <%=Shop.Bussiness.Language.Content(model.Name, CurrentLanguage.Code) %></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <%=Shop.Bussiness.Language.AdminLanguageTab("") %>
+    <table class="table">
+        <%foreach (DB.LebiShop.Lebi_Language_Code lang in Shop.Bussiness.Language.Languages())
+          {%>
+        <tbody id="lang_<%=lang.Code %>" class="lang_table" style="display: none">
+            <tr>
+                <th>
+                    <%=Tag("分组名称")%>：
+                </th>
+                <td>
+                    <input type="text" id="Name<%=lang.Code %>" shop="true"  style="width: 400px;" name="Name<%=lang.Code %>"
+                        value="<%=Shop.Bussiness.Language.Content(model.Name, lang.Code) %>" class="input" />
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <%=Tag("价格文字")%>：
+                </th>
+                <td>
+                    <input type="text" id="PriceName<%=lang.Code %>" shop="true" style="width: 400px;"
+                        name="PriceName<%=lang.Code %>" value="<%=Shop.Bussiness.Language.Content(model.PriceName, lang.Code) %>"
+                        class="input" />
+                </td>
+            </tr>
+        </tbody>
+        <%} %>
+        </table>
+        <ul id="tablistmain"><li class="selected"><a><span><%=Tag("通用信息")%></span></a></li></ul>
+        <table class="table">
+        <tr>
+            <th>
+                <%=Tag("等级ID")%>：
+            </th>
+            <td>
+                <input type="text" id="Grade" name="Grade" onkeyup="value=value.replace(/[^\d]/g,'')" value="<%=model.Grade %>" class="input" style="width: 70px;" shop="true" min="notnull" />
+                &nbsp;<span id="Span1"><em><%=Tag("填0表示未登录的访客")%></em></span>
+            </td>
+        </tr>
+        <!--tr>
+            <th>
+                <%=Tag("看价权限")%>：
+            </th>
+            <td>
+                <%=Shop.Bussiness.EX_Type.TypeCheckbox("PriceType", "Type_id_PriceType", model.Type_id_PriceType, "shop=\"true\"") %>
+            </td>
+        </tr-->
+        <tr>
+            <th>
+                <%=Tag("升级积分")%>：
+            </th>
+            <td>
+                <input type="text" id="Lpoint" name="Lpoint" value="<%=model.Lpoint %>" class="input" style="width: 70px;" onkeyup="value=value.replace(/[^\d]/g,'')" shop="true" min="notnull" />&nbsp;<span id="sp_fen"><em><%=Tag("升级会员等级所需积分")%></em></span>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("会员价格")%>：
+            </th>
+            <td>
+                <%=Tag("销售价")%>× <input type="text" id="Price" name="Price" value="<%=model.Price %>" class="input" shop="true" min="notnull" onkeyup="value=value.replace(/[^\d.]/g,'')" maxlength="20"/>
+                %&nbsp;<span id="sp_price"><em><%=Tag("1~100的数字")%></em></span>
+            </td>
+        </tr>
+        <tr>
+            <th style="vertical-align:top">
+                <%=Tag("等级图标")%>：
+            </th>
+            <td>
+            <div id="image_ImageUrl">
+                <%if (model.ImageUrl != "")
+                    {%>
+                <img src="<%=site.WebPath + model.ImageUrl%>" style="max-height:30px" />
+                <%} %>
+            </div>
+            <input type="text" shop="true" id="ImageUrl" name="ImageUrl" class="input" style="width: 200px;" value="<%=model.ImageUrl%>" />
+            <input id="file_ImageUrl" name="file_ImageUrl" type="file" class="input" onchange="uploadImage('ImageUrl')" />
+            <!--<input type="button" value="<%=Tag("上传")%>" class="button" onclick="uploadImage('ImageUrl')" />-->
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("积分比率")%>：
+            </th>
+            <td>
+                <%=Tag("消费1元可获得积分")%> <input type="text" id="MoneyToPoint" name="MoneyToPoint" onkeyup="value=value.replace(/[^\d\.]/g,'')" value="<%=model.MoneyToPoint %>" class="input" style="width: 70px;" shop="true" min="notnull" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("积分兑换规则")%>：
+            </th>
+            <td>
+                <input type="text" id="PointToMoney" name="PointToMoney"  style="width: 400px;" value="<%=model.PointToMoney %>" class="input" shop="true" min="notnull" /> <span class="FormALT">100:1,200:2,500:5,1000:10</span>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("会员注册")%>：
+            </th>
+            <td>
+                <label><input type="radio" name="RegisterType" value="1" shop="true" <%=model.RegisterType==1?"checked":"" %>/><%=Tag("开启")%></label>
+                <label><input type="radio" name="RegisterType" value="0" shop="true" <%=model.RegisterType==0?"checked":"" %>/><%=Tag("关闭")%></label>
+                <label><input type="radio" name="RegisterType" value="2" shop="true" <%=model.RegisterType==2?"checked":"" %>/><%=Tag("邀请")%></label>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("推广佣金")%>：
+            </th>
+            <td>
+                <label><input type="radio" name="IsUsedAgent" value="1" shop="true" <%=model.IsUsedAgent==1?"checked":"" %>/><%=Tag("开启")%></label>
+                <label><input type="radio" name="IsUsedAgent" value="0" shop="true" <%=model.IsUsedAgent==0?"checked":"" %>/><%=Tag("关闭")%></label>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("隐藏价格")%>：
+            </th>
+            <td>
+                <label><input type="radio" name="IsHidePrice" value="1" shop="true" <%=model.IsHidePrice==1?"checked":"" %>/><%=Tag("开启")%></label>
+                <label><input type="radio" name="IsHidePrice" value="0" shop="true" <%=model.IsHidePrice==0?"checked":"" %>/><%=Tag("关闭")%></label>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("购买权限")%>：
+            </th>
+            <td>
+                <label><input type="radio" id="rdo_buyright_open" name="BuyRight"  value="1" shop="true" <%=model.BuyRight==1?"checked":"" %>/><%=Tag("开启")%></label>
+                <label><input type="radio" id="rdo_buyright_close" name="BuyRight" value="0" shop="true" <%=model.BuyRight==0?"checked":"" %>/><%=Tag("关闭")%></label>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("评论审核")%>：
+            </th>
+            <td>
+                <label><input type="radio" id="Radio1" name="Comment" checked value="1" shop="true" <%=model.Comment==1?"checked":"" %>/><%=Tag("开启")%></label>
+                <label><input type="radio" id="Radio2" name="Comment" value="0" shop="true" <%=model.Comment==0?"checked":"" %>/><%=Tag("关闭")%></label>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("订单提交")%>：
+            </th>
+            <td>
+                <%=Tag("金额大于")%> <input type="text" id="OrderSubmit" name="OrderSubmit" value="<%=model.OrderSubmit %>" onkeyup="value=value.replace(/[^\d\.]/g,'')" class="input" style="width: 70px;" shop="true" min="notnull" />&nbsp;&nbsp;
+                <%=Tag("数量大于")%> <input type="text" id="OrderSubmitCount" name="OrderSubmitCount" value="<%=model.OrderSubmitCount %>" onkeyup="value=value.replace(/[^\d\.]/g,'')" class="input" style="width: 70px;" shop="true" min="notnull" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("登录积分")%>：
+            </th>
+            <td>
+                <%=Tag("增加")%>：<input type="text" id="LoginPointCut" name="LoginPointCut" shop="true" min="notnull" value="<%=model.LoginPointCut %>" class="input" style="width: 70px;" onkeyup="value=value.replace(/[^\d]/g,'')" />&nbsp;&nbsp;
+                <%=Tag("减少")%>：<input type="text" id="LoginPointAdd" name="LoginPointAdd" shop="true" min="notnull" value="<%=model.LoginPointAdd %>" class="input" style="width: 70px;" onkeyup="value=value.replace(/[^\d]/g,'')" />
+            </td>
+        </tr>
+        <tr>
+            <th style="vertical-align:top">
+                <%=Tag("内部备注")%>：
+            </th>
+            <td>
+                <textarea id="remark" name="remark" class="textarea" shop="true" cols="40" rows="5" style="height: 60px;width: 550px;"><%=model.remark%></textarea>
+                <div class="tools clear">
+                    <ul>
+                        <li class="plus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('remark',100);"><b></b><span><%=Tag("展开")%></span></a></li>
+                        <li class="minus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('remark',-100)"><b></b><span><%=Tag("收缩")%></span></a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+        function uploadImage(id) {
+            $.ajaxFileUpload
+        (
+	        {
+	            url: WebPath + '/ajax/imageuploadone.aspx?path=config',
+	            secureuri: false,
+	            fileElementId: 'file_' + id,
+	            dataType: 'json',
+	            success: function (data, status) {
+	                if (data.msg != 'OK') {
+	                    MsgBox(2, data.msg, "");
+	                }
+	                else {
+	                    var imageUrl = data.ImageUrl;
+	                    if (imageUrl.length > 0) {
+	                        $("#image_" + id + "").html('<img src="' + WebPath + imageUrl + '" style="max-height:30px">');
+	                        $("#" + id + "").val(imageUrl);
+	                    }
+	                }
+	            },
+	            error: function (data, status, e) {
+	                MsgBox(2, data.error, "");
+	            }
+	        }
+        )
+        }
+        LanguageTab_EditPage('<%=CurrentLanguage.Code %>'); //加载默认语言
+        function SaveObj() {
+            var postData = GetFormJsonData("shop");
+            if (!CheckForm("shop", "span"))
+                return false;
+            var url= "<%=site.AdminPath %>/ajax/ajax_user.aspx?__Action=UserLevel_Edit&id=<%=model.id %>";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "userLevel.aspx");});
+        }
+    </script>
+</lbbody>

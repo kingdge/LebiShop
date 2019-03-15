@@ -1,0 +1,181 @@
+﻿{layout:default} {class:Shop.Admin.agent.agentmoney}
+<lbhead>
+    <title><%=Tag("佣金查询")%>-<%=Tag("分销")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <link href="<%=site.AdminAssetsPath %>/plugins/daterangepicker/daterangepicker.css" rel="stylesheet">
+</lbfile>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("佣金查询")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><%=Tag("分销")%></li>
+        <li class="breadcrumb-item active"><%=Tag("佣金查询")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 m-b-10">
+                        <button class="btn btn-default" data-toggle="modal" data-target="#SearchModal"><i class="ti-search"></i> <%=Tag("搜索")%></button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <%=Tag("时间")%>
+                                </th>
+                                <th>
+                                    <%=Tag("金额")%>
+                                </th>
+                                <th>
+                                    <%=Tag("会员")%>
+                                </th>
+                                <th>
+                                    <%=Tag("类型")%>
+                                </th>
+                                <th>
+                                    <%=Tag("状态")%>
+                                </th>
+                                <th>
+                                    <%=Tag("订单编号")%>
+                                </th>
+                                <th>
+                                    <%=Tag("下级用户")%>
+                                </th>
+                                <%if (Shop.LebiAPI.Service.Instanse.Check("plugin_gongyingshang")){ %>
+                                <th>
+                                    <%=Tag("商家")%>
+                                </th>
+                                <%} %>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%decimal total = 0;foreach (DB.LebiShop.Lebi_Agent_Money model in models){%>
+                            <tr>
+                                <td>
+                                    <%=FormatTime(model.Time_add)%>
+                                </td>
+                                <td>
+                                    <%=FormatMoney(model.Money)%>
+                                </td>
+                                <td>
+                                    <a href="?user_id=<%=model.User_id%>"><%=model.User_UserName%></a>
+                                </td>
+                                <td>
+                                    <%=Shop.Bussiness.EX_Type.TypeName(model.Type_id_AgentMoneyType,CurrentLanguage.Code)%>
+                                </td>
+                                <td>
+                                    <%=Shop.Bussiness.EX_Type.TypeName(model.Type_id_AgentMoneyStatus,CurrentLanguage.Code)%>
+                                </td>
+                                <td>
+                                    <%=model.Order_Code%>
+                                    <a target="_blank" href="../order/order_view.aspx?id=<%=model.Order_id %>"><i class="ti-new-window"></i></a>
+                                </td>
+                                <td>
+                                    <a href="?user_id=<%=Shop.Bussiness.Order.GetOrder(model.Order_id).User_id%>"></a><%=Shop.Bussiness.Order.GetOrder(model.Order_id).User_UserName%>
+                                </td>
+                                <%if (Shop.LebiAPI.Service.Instanse.Check("plugin_gongyingshang")){ %>
+                                <td>
+                                    <%if (model.Supplier_id > 0){ %>
+                                    <a href="?supplier_id=<%=model.Supplier_id %>"><%=Shop.Bussiness.EX_Supplier.GetSupplier(model.Supplier_id).Company%></a><%} %>
+                                </td>
+                                <%} %>
+                            </tr>
+                            <%total+=model.Money;} %>
+                        </tbody>
+                        <tfoot>
+                            <tr><td><%=Tag("合计")%></td><td colspan="7" style="font-weight:bold"><%=FormatMoney(total)%></td></tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation">
+                            <%=PageString%>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="SearchModal" tabindex="-1" role="dialog" aria-labelledby="SearchModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"><%=Tag("搜索")%></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <select name="type" id="type" class="form-control">
+                                <option value="0"><%=Tag("类型")%></option>
+                                <%=Shop.Bussiness.EX_Type.TypeOption("AgentMoneyType", status)%>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select name="status" id="status" class="form-control">
+                                <option value="0"><%=Tag("状态")%></option>
+                                <%=Shop.Bussiness.EX_Type.TypeOption("AgentMoneyStatus", status)%>
+                            </select>
+                        </div>
+                        <%if (Shop.LebiAPI.Service.Instanse.Check("plugin_gongyingshang")){ %>
+                        <div class="form-group">
+                            <select id="supplier_id" name="supplier_id" class="form-control">
+                                <option value="0"><%=Tag("商家")%></option>
+                                <%=Shop.Bussiness.EX_Supplier.SupplierOption(supplier_id, CurrentLanguage.Code)%>
+                            </select>
+                        </div>
+                        <%}else{ %>
+                        <input type="hidden" name="Supplier_id" value="0">
+                        <%} %>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text" name="daterange" id="daterange" class="form-control">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        <span class="ti-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input name="key" type="text" id="key" class="form-control" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="user_id" value="<%=user_id %>" />
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="ti-close"></i> <%=Tag("关闭")%></button>
+                    <button type="button" class="btn btn-success" onclick="search_();"><i class="ti-search"></i> <%=Tag("搜索")%></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    {MOD:DateRangePicker}
+    <script>
+        function search_(scurl) {
+            $('#SearchModal').modal("hide");
+            var key = $("#key").val();
+            var supplier_id = $("#supplier_id").val();
+            var user_id = $("#user_id").val();
+            var type = $("#type").val();
+            var status = $("#status").val();
+            var dateFrom = "";
+            var dateTo = "";
+            var daterange = $("#daterange").val();
+            if (daterange.indexOf(" - ") > -1) {
+                dateFrom = daterange.split(" - ")[0];
+                dateTo = daterange.split(" - ")[1];
+            }
+            window.location = "?key=" + escape(key) + "&supplier_id=" + supplier_id + "&type=" + type + "&status=" + status + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&user_id=" + user_id;
+        }
+    </script>
+</lbscripts>

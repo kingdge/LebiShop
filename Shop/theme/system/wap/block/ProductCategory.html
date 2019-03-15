@@ -1,0 +1,22 @@
+﻿<!--
+Name:商品分类竖版
+Page:All
+-->
+<div class="mbox clearfix">
+<div class="productcategory">
+<div class="mt">
+    <h2>{tag:商品类别}</h2>
+</div>
+<div class="mc clearfix">
+<%
+foreach(Lebi_Pro_Type c0 in EX_Product.ShowTypes(0,CurrentSite.id))
+{
+%>
+   <div class="item">
+        <span class="itemname"><h3><a href="<%=URL("P_ProductCategory",""+c0.id+"",Lang(c0.Url)) %>"><%=Lang(c0.Name) %></a></h3><s></s></span>
+    </div>
+<%
+} %>
+</div>
+</div>
+</div>

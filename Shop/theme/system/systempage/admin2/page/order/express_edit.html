@@ -1,0 +1,89 @@
+﻿{layout:default} {class:Shop.Admin.order.Express_Edit}
+<lbhead>
+    <title><%=Tag("单据编辑")%>-<%=Tag("快递单模板")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("单据编辑")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/order/Express.aspx"><%=Tag("快递单模板")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("单据编辑")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form action="javascript:SaveObj();" novalidate>
+                    <div class="form-group">
+                        <label for="SkinContent"><%=Tag("添加项目")%>：</label>
+                        <select id="items" name="items" class="form-control" onchange="add_item()">
+                            <option value=""><%=Tag("添加打印项")%></option>
+                            <option value="收货人-地区"><%=Tag("收货人-地区")%></option>
+                            <option value="收货人-姓名"><%=Tag("收货人-姓名")%></option>
+                            <option value="收货人-地址"><%=Tag("收货人-地址")%></option>
+                            <option value="收货人-邮编"><%=Tag("收货人-邮编")%></option>
+                            <option value="收货人-手机"><%=Tag("收货人-手机")%></option>
+                            <option value="收货人-电话"><%=Tag("收货人-电话")%></option>
+                            <option value="收货人-备注"><%=Tag("收货人-备注")%></option>
+                            <option value="发货人-地区（一级）"><%=Tag("发货人-地区（一级）")%></option>
+                            <option value="发货人-地区（二级）"><%=Tag("发货人-地区（二级）")%></option>
+                            <option value="发货人-地区（三级）"><%=Tag("发货人-地区（三级）")%></option>
+                            <option value="发货人-地区（四级）"><%=Tag("发货人-地区（四级）")%></option>
+                            <option value="发货人-姓名"><%=Tag("发货人-姓名")%></option>
+                            <option value="发货人-地址"><%=Tag("发货人-地址")%></option>
+                            <option value="发货人-邮编"><%=Tag("发货人-邮编")%></option>
+                            <option value="发货人-手机"><%=Tag("发货人-手机")%></option>
+                            <option value="发货人-电话"><%=Tag("发货人-电话")%></option>
+                            <option value="订单-订单编号"><%=Tag("订单-订单编号")%></option>
+                            <option value="订单-商品明细"><%=Tag("订单-商品明细")%></option>
+                            <option value="订单-总金额"><%=Tag("订单-总金额")%></option>
+                            <option value="订单-总重量"><%=Tag("订单-总重量")%></option>
+                            <option value="订单-备注"><%=Tag("订单-备注")%></option>
+                            <option value="网店名称"><%=Tag("网店名称")%></option>
+                            <option value="√"><%=Tag("对号-√")%></option>
+                            <option value="自定义内容"><%=Tag("自定义内容")%></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <div id="template_lb_print" style="height:600px; width:970px; margin-top:10px; border:1px #ccc solid;"><embed id="lb_print" width="100%" height="100%" flashvars="config=<%=site.AdminPath %>/Ajax/Ajax_express.aspx?str=<%=id %>|<%=random %>" allowscriptaccess="sameDomain" quality="high" bgcolor="#ffffff" name="lb_print" src="swf/print.swf" type="application/x-shockwave-flash"></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title"><%=Tag("使用答疑")%></h4>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <%=Tag("单击添加项目的右下角可以编辑项目的宽度；双击添加项目删除此项目。")%>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function add_item() {
+            var f = thisMovie('lb_print');
+            f.add_item($("#items").val(), $("#items").val());
+        }
+        function thisMovie(movieName) {
+            if (document[movieName]) {
+                return document[movieName];
+            } else if (window[movieName]) {
+                return window[movieName];
+            } else if (document.embeds && document.embeds[movieName]) {
+                return document.embeds[movieName];
+            } else {
+                return document.getElementById(movieName);
+            }
+        }
+        function nansewer() {
+            alert('error');
+        }
+        function saveok() {
+            window.location = "express.aspx";
+            //            MsgBox(1, "", '#');
+        }
+    </script>
+</lbbody>

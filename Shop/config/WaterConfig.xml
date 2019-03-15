@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<WaterConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <OnAndOff>0</OnAndOff>
+  <PicAndText>text</PicAndText>
+  <WM_PicPath />
+  <WM_Text>lebi.cn</WM_Text>
+  <WM_Transparence>100</WM_Transparence>
+  <WM_Font>Aharoni</WM_Font>
+  <WM_FontSize>12</WM_FontSize>
+  <WM_FontColor>AliceBlue</WM_FontColor>
+  <WM_FontForm>None</WM_FontForm>
+  <WM_PlaceX>80</WM_PlaceX>
+  <WM_PlaceY>50</WM_PlaceY>
+  <WM_Width>80</WM_Width>
+  <WM_Height>50</WM_Height>
+  <WM_Location>RightBottom</WM_Location>
+</WaterConfig>

@@ -1,0 +1,154 @@
+﻿{layout:default} {class:Shop.Admin.agent.agentuser}
+<lbhead>
+    <title><%=Tag("推广列表")%>-<%=Tag("分销")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <link href="<%=site.AdminAssetsPath %>/plugins/daterangepicker/daterangepicker.css" rel="stylesheet">
+</lbfile>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("推广列表")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><%=Tag("分销")%></li>
+        <li class="breadcrumb-item active"><%=Tag("推广列表")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 m-b-10">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-info" onclick="Update();"><i class="ti-plus"></i> <%=Tag("批量设置")%></button>
+                        <%}%>
+                        <button class="btn btn-default" data-toggle="modal" data-target="#SearchModal"><i class="ti-search"></i> <%=Tag("搜索")%></button>
+                        <button class="btn btn-default" onclick="SearchWindow();"><i class="ti-search"></i> <%=Tag("高级搜索")%></button>
+                    </div>
+                </div>
+                <div class="table-responsive sorttable">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th onclick="OrderBy('<%=OrderByName(OrderBy,"UserNameDesc")%>');">
+                                    <div class="th-inner sort <%=OrderByName(OrderBy,"UserNameDesc","icon")%>"><%=Tag("会员帐号")%></div>
+                                </th>
+                                <th onclick="OrderBy('<%=OrderByName(OrderBy,"RealNameDesc")%>');">
+                                    <div class="th-inner sort <%=OrderByName(OrderBy,"RealNameDesc","icon")%>"><%=Tag("姓名")%></div>
+                                </th>
+                                <th onclick="OrderBy('<%=OrderByName(OrderBy,"UserLevelDesc")%>');">
+                                    <div class="th-inner sort <%=OrderByName(OrderBy,"UserLevelDesc","icon")%>"><%=Tag("等级")%></div>
+                                </th>
+                                <th onclick="OrderBy('<%=OrderByName(OrderBy,"MoneyDesc")%>');">
+                                    <div class="th-inner sort <%=OrderByName(OrderBy,"MoneyDesc","icon")%>"><%=Tag("余额")%>(<%=DefaultCurrency.Msige%>)</div>
+                                </th>
+                                <th onclick="OrderBy('<%=OrderByName(OrderBy,"PointDesc")%>');">
+                                    <div class="th-inner sort <%=OrderByName(OrderBy,"PointDesc","icon")%>"><%=Tag("积分")%></div>
+                                </th>
+                                <th onclick="OrderBy('<%=OrderByName(OrderBy,"Time_LastDesc")%>');">
+                                    <div class="th-inner sort <%=OrderByName(OrderBy,"Time_LastDesc","icon")%>"><%=Tag("最后登陆")%></div>
+                                </th>
+                                <th onclick="OrderBy('<%=OrderByName(OrderBy,"CountSonDesc")%>');">
+                                    <div class="th-inner sort <%=OrderByName(OrderBy,"CountSonDesc","icon")%>"><%=Tag("推广人数")%></div>
+                                </th>
+                                <th>
+                                    <%=Tag("上级用户")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_User model in models){%>
+                            <tr>
+                                <td>
+                                    <%=model.UserName %>
+                                </td>
+                                <td>
+                                    <%=model.RealName %>
+                                </td>
+                                <td>
+                                    <%=Shop.Bussiness.EX_User.TypeName(model.UserLevel_id, CurrentLanguage.Code)%>
+                                </td>
+                                <td>
+                                    <%=model.Money %>
+                                </td>
+                                <td>
+                                    <%=model.Point %>
+                                </td>
+                                <td>
+                                    <%=FormatTime(model.Time_Last) %>
+                                </td>
+                                <td>
+                                    <a href="?id=<%=model.id %>"><%=DB.LebiShop.B_Lebi_User.Counts("user_id_parent="+model.id+"") %></a>
+                                </td>
+                                <td>
+                                    <a href="?parent_id=<%=model.User_id_parent %>"><%=Shop.Bussiness.EX_User.GetUser(model.User_id_parent).UserName%></a>
+                                </td>
+                                <td>
+                                    <a href="agentmoney.aspx?key=<%=model.UserName %>"><%=Tag("佣金")%></a>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation">
+                            <%=PageString%>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="SearchModal" tabindex="-1" role="dialog" aria-labelledby="SearchModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"><%=Tag("搜索")%></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <input name="key" type="text" id="key" class="form-control" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="ti-close"></i> <%=Tag("关闭")%></button>
+                    <button type="button" class="btn btn-success" onclick="search_();"><i class="ti-search"></i> <%=Tag("搜索")%></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {MOD:Modal_Edit}
+</lbbody>
+<lbscripts>
+    <script src="<%=site.AdminAssetsPath %>/plugins/moment/moment.js"></script>
+    <script src="<%=site.AdminAssetsPath %>/plugins/daterangepicker/daterangepicker.js"></script>
+    <script>
+        function search_(scurl) {
+            var key = $("#key").val();
+            if(scurl==undefined || scurl=='')
+                scurl='<%=su.URL %>';
+            window.location = "?key=" + escape(key) + "&OrderBy=<%=OrderBy%>&"+scurl;
+        }
+        function OrderBy(url) {
+            MsgBox(4, "<%=Tag("正在排序，请稍后")%> ……", url+"&<%=su.URL %>");
+        }
+        function SearchWindow() {
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "../user/user_search_window.aspx?callback=search_&<%=su.URL %>",
+                type: "GET",
+                cache: false,
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+    </script>
+</lbscripts>

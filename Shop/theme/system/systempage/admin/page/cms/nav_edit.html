@@ -1,0 +1,138 @@
+﻿{layout:default} {class:Shop.Admin.cms.Nav_Edit}
+<lbhead>
+    <title><%=node.Name%>-<%=pnode.Name%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <link rel="stylesheet" type="text/css" href="<%=site.AdminJsPath %>/bigcolorpicker/jquery.bigcolorpicker.css" /> 
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/bigcolorpicker/jquery.bigcolorpicker.min.js"></script>  
+    <script type="text/javascript">
+        $(function () {
+            $("#NameColor").bigColorpicker("NameColor");
+            $("#s_NameColor").bigColorpicker(function (el, color) { $(el).css("background-color", color); $("#NameColor").val(color); $("#Name").css("color", color); });
+        });
+    </script>
+    <style>
+        .bottom{height: 0;overflow: hidden;display: none;}
+    </style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+    <%}%>
+    <li class="rotate"><a href="javascript:void(0);" onclick="history.go(-1);"><b></b><span><%=Tag("返回")%></span></a></li>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="<%=Shop.Bussiness.NodePage.AdminIndexPage(node) %>"><%=node.Name%></a><%if (page.Name !="") {%> > <%=page.Name%><%} %></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse;" class="table">
+        
+        <tr>
+            <th>
+                <%=Tag("标题")%>：
+            </th>
+            <td>
+                <input type="text" id="Name" name="Name" class="input" shop="true" min="notnull" style="width: 500px;color:<%=page.NameColor %>" value="<%=page.Name %>" />
+                <input id="NameColor" name="NameColor" type="hidden" shop="true" value="<%=page.NameColor %>"><img id="s_NameColor" border="0" src="<%=AdminImage("rect.gif")%>" width="18" align="absmiddle" style="cursor: pointer;background-Color:<%=page.NameColor %>">
+            </td>
+        </tr>
+
+        <tr>
+            <th>
+                <%=Tag("跳转页面")%>：
+            </th>
+            <td>
+                <select name="Jump" id="Jump" shop="true" onchange="ChangeJump()">
+                    <%=GetMenu(page.url)%>
+                   
+                </select>
+            </td>
+        </tr>
+        <tr id="urltr" style="display:none;">
+            <th>
+                URL：
+            </th>
+            <td>
+                <input type="text" id="url" name="url" class="input" style="width: 500px;" shop="true" value="<%=page.url %>" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("打开方式")%>：
+            </th>
+            <td>
+                <select name="target" id="target" shop="true">
+                    <option value="_self" <%=page.target=="_self"?"selected":"" %>>
+                        <%=Tag("当前窗口")%></option>
+                    <option value="_blank" <%=page.target=="_blank"?"selected":"" %>>
+                        <%=Tag("新窗口")%></option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th style="vertical-align:top">
+                <%=Tag("语言")%>：
+            </th>
+            <td>
+                <%= Shop.Bussiness.Language.SiteLanguageCheckbox("Language_ids", page.Language_ids, CurrentLanguage.Code)%>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("排序序号")%>：
+            </th>
+            <td>
+                <input type="text" id="Sort" name="Sort" shop="true" class="input" style="width: 70px" maxlength="4"  value="<%=page.Sort %>" onkeyup="value=value.replace(/[^\d]/g,'')" />
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+        function SaveObj() {
+            var postData = GetFormJsonData("shop");
+            var Node_id = <%=node.id %>;
+            if (!CheckForm("shop", "span"))
+                return false;
+            var url = "<%=site.AdminPath %>/ajax/ajax_node.aspx?__Action=Page_Edit&id=<%=page.id %>&Node_id="+Node_id;
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "PageList.aspx?Node_id="+Node_id)});
+        }
+        function ChangeJump()
+        {
+            var obj=$("#Jump option:selected");
+            var code=obj.attr('code');
+            var id=obj.attr('value')
+            if($("#Jump").val()=="0")
+            {
+                $("#urltr").show();
+                $("#url").val('');
+            }
+            else
+            {
+                $("#urltr").hide();
+                $("#url").val(code+':'+id);
+            }
+        }
+         function SetJump()
+        {
+            var obj=$("#Jump option:selected");
+            var code=obj.attr('code');
+            var id=obj.attr('value')
+            if($("#Jump").val()=="0")
+            {
+                $("#urltr").show();
+            }
+            else
+            {
+                $("#urltr").hide();
+            }
+        }
+       
+         SetJump();
+       
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+</div>
+</lbbottom>

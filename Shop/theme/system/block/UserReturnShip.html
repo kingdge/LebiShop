@@ -1,0 +1,54 @@
+﻿<!--
+Name:用户中心-退货单发货
+Page:P_UserReturnShip
+-->
+<div class="nbbox clearfix">
+<div class="user">
+    <table cellpadding="0" cellspacing="0" width="100%" class="tablelist box">
+        <tr>
+            <th style="width: 120px;">{tag:商品编号}</th>
+            <th>{tag:商品名称}</th>
+            <th style="width: 80px;">{tag:数量}</th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_Order_Product o_p in order_products){%>
+        <tr>
+            <td><%=o_p.Product_Number%></td>
+            <td><a href="<%=URL("P_Product",o_p.Product_id) %>" target="_blank"><%=Lang(o_p.Product_Name) %></a></td>
+            <td><%=o_p.Count%></td>
+        </tr>
+        <%} %>
+    </table>
+</div>
+</div>
+<div class="nbbox clearfix">
+<div class="userbox">
+    <div class="mt">
+        <h2>{tag:配送方式}</h2>
+    </div>
+    <div class="mc clearfix">
+    <div class="dl-table clearfix">
+    <dl>
+        <dt>{tag:快递公司}：</dt>
+        <dd><input name="Transport_Name" id="Transport_Name" type="text" class="input" shop="true" /></dd>
+    </dl>
+    <dl>
+        <dt>{tag:快递单号}：</dt>
+        <dd><input name="Code" id="Code" type="text" class="input" shop="true" /></dd>
+    </dl>
+    <dl class="dl-btn">
+        <dt></dt>
+        <dd><a href="javascript:void(0)" onclick="submit();" class="btn btn-12"><s></s>{tag:提交}</a></dd>
+    </dl>
+    </div>
+    </div>
+</div>
+</div>
+<script type="text/javascript" >
+    function submit() {
+        if (!CheckForm("shop", "span"))
+            return false;
+        var postData = GetFormJsonData("shop");
+        var url = path+"/ajax/ajax_order.aspx?__Action=torder_shipping&order_id=<%=order.id %>";
+        RequestAjax(url, postData, function () { MsgBox(1, "{tag:操作成功}", "<%=URL("P_UserReturn","") %>") });
+    }
+</script>

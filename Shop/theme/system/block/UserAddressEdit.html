@@ -1,0 +1,62 @@
+﻿<!--
+Name:用户中心-编辑地址
+Page:All
+-->
+<div class="nbbox clearfix">
+<div class="userbox">
+    <div class="mt clearfix">
+        <h2>{tag:收货地址}</h2>
+    </div>
+    <div class="mc clearfix">
+    <div class="dl-table clearfix">
+    <dl>
+        <dt>{tag:姓名}：</dt>
+        <dd><input type="text" name="Name" id="Name" size="30" value="<%=user_address.Name %>" min="notnull" class="input" shop="true" /></dd>
+    </dl>
+    <dl>
+        <dt>{tag:手机号码}：</dt>
+        <dd><input type="text" name="MobilePhone" id="MobilePhone" size="30" value="<%=user_address.MobilePhone %>" min="notnull" class="input" shop="true" /></dd>
+    </dl>
+    <dl>
+        <dt>{tag:电话号码}：</dt>
+        <dd><input type="text" name="Phone" id="Phone" size="30" value="<%=user_address.Phone %>" min="notnull" class="input" shop="true" /></dd>
+    </dl>
+    <dl>
+        <dt>{tag:Email}：</dt>
+        <dd><input type="text" name="Email" id="Email" size="30" value="<%=user_address.Email %>" min="email" class="input" shop="true" /></dd>
+    </dl>
+    <dl>
+        <dt>{tag:邮政编码}：</dt>
+        <dd><input type="text" name="Postalcode" id="Postalcode" size="10" value="<%=user_address.Postalcode %>" min="notnull" class="input" shop="true" /></dd>
+    </dl>
+    <dl>
+        <dt>{tag:地区}：</dt>
+        <dd><div id="Area_id_div"></div></dd>
+    </dl>
+    <dl>
+        <dt>{tag:详细地址}：</dt>
+        <dd><input type="text" name="Address" id="Address" size="30" value="<%=user_address.Address %>" min="notnull" class="input" shop="true" /></dd>
+    </dl>
+    <dl class="dl-btn">
+        <dt></dt>
+        <dd><a href="javascript:void(0)" onclick="submit();" class="btn btn-11"><s></s>{tag:提交}</a></dd>
+    </dl>
+    </div>
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+    GetAreaList(<%=SYS.TopAreaid %>, <%=user_address.Area_id %>); //加载地区下拉框
+    function submit() {
+        var Area_id = $("#Area_id").val();
+        if (Area_id == 0) {
+            CheckNO('Area_id','','span');
+            return false;
+        }
+        var postData = GetFormJsonData("shop"); 
+        if (!CheckForm("shop", "span"))
+            return false;
+        var url = path+"/ajax/ajax_order.aspx?__Action=Address_Edit&id=<%=user_address.id %>&Area_id="+ Area_id;
+        RequestAjax(url, postData, function () { MsgBox(1, "{tag:操作成功}", "<%=URL("P_UserAddress","") %>") });
+    }
+</script>

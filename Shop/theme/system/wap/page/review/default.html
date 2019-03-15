@@ -1,0 +1,51 @@
+﻿{Layout:page}
+<lbbody>
+        <div class="ordershare" id="ordershare">
+            
+        </div>
+        <div class="clear"></div>
+        <div id="load">
+            <div id="status"></div>
+            <a href="javascript:void(0)" onclick="LoadMore();" class="btn btn-11"><s></s>{tag:加载更多}</a>
+        </div>
+</lbbody>
+<lbheadfile>
+<script src="{/js}jquery.masonry.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function () {
+        $('#ordershare').masonry({
+            itemSelector: '.item',
+            columnWidth: 235
+        });
+        LoadMore();
+    });
+    var page = 1;
+    function LoadMore() {
+        var url = path + "/ajax/ajax.aspx?__Action=OrderShare"
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: { "page": page,"wap":1 },
+            dataType: 'html',
+            beforeSend: function () {
+                $("#status").html('<img width="25" height="25" src="' + path + '/theme/system/images/load.gif"/>');
+            },
+            success: function (res) {
+                if (res == '')
+                    $('#load').hide();
+                else {
+                    $("#ordershare").append(res);
+
+                    $("#status").html('');
+                    $('.item').removeAttr("style");
+                    $('#ordershare').removeClass("masonry");
+                    $('#ordershare').removeAttr("style");
+
+                    $('#ordershare').masonry('reload');
+                    page++;
+                }
+            }
+        });
+    }
+</script>
+</lbheadfile>

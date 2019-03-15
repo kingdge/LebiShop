@@ -1,0 +1,185 @@
+﻿{layout:default} 
+{class:Shop.Admin.admin.Admin_Group_power}
+<lbhead>
+    <title><%=Tag("编辑权限")%>-<%=Tag("权限组")%>-<%=Tag("管理权限")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+</lbfile>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("编辑菜单")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><a href="Admin_Group.aspx"><%=Tag("权限组")%></a></li>
+        <li class="breadcrumb-item"><%=Lang(group.Name) %></li>
+        <li class="breadcrumb-item active"><%=Tag("编辑权限")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-info" onclick="EditObj(0);"><i class="ti-plus"></i> <%=Tag("添加")%></button>
+                        <button class="btn btn-primary" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><i class="ti-check-box"></i> <%=Tag("全选")%></button>
+                        <button class="btn btn-success" onclick="SavePower();"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                        <%}%>
+                    </div>
+                    <div class="col-12 m-t-20">
+                        <%foreach (DB.LebiShop.Lebi_Admin_Limit pl in models){
+                        %>
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title"><a href="javascript:EditObj(<%=pl.id %>)"><%=Tag(pl.Name)%></a></h4>
+                                <div class="limit-list row">
+                                    <%
+                                    int i = 0;
+                                    foreach (DB.LebiShop.Lebi_Admin_Limit l in GetLimit(pl.id))
+                                    {
+                                    i++;
+                                    %>
+                                    <div class="col-sm-6 col-md-4 col-lg-3">
+                                        <div class="input-group">
+                                            <label class="custom-control custom-checkbox">
+                                                <input type="checkbox" id="checkbox<%=l.id%>" name="id" value="<%=l.id %>" class="custom-control-input" power="true" <%=Check(l.id)?"checked":"" %>>
+                                                <span class="custom-control-label"></span>
+                                            </label>
+                                            <span onclick="javascript:EditObj(<%=l.id %>)"><%=Tag(l.Name)%><br /><em><%=l.Code%></em></span>
+                                        </div>
+                                    </div>
+                                    <%} %>
+                                </div>
+                            </div>
+                        </div>
+                        <%} %>
+                        <%if (count > 0){
+                        %>
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title"><%=Tag("未分组")%></h4>
+                                <div class="limit-list row">
+                                    <%
+                                    int i = 0;
+                                    foreach (DB.LebiShop.Lebi_Admin_Limit l in GetLimit(222))
+                                    {
+                                    i++;
+                                    %>
+                                    <div class="col-sm-6 col-md-4 col-lg-3">
+                                        <div class="input-group">
+                                            <label class="custom-control custom-checkbox">
+                                                <input type="checkbox" id="checkbox<%=l.id%>" name="id" value="<%=l.id %>" class="custom-control-input" power="true" <%=Check(l.id)?"checked":"" %>>
+                                                <span class="custom-control-label"></span>
+                                            </label>
+                                            <span onclick="javascript:EditObj(<%=l.id %>)"><%=Tag(l.Name)%><br /><em><%=l.Code%></em></span>
+                                        </div>
+                                    </div>
+                                    <%} %>
+                                </div>
+                            </div>
+                        </div>
+                        <%} %>
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title"><%=Tag("过滤页面")%></h4>
+                                <div class="table-responsive">
+                                    <table class="table m-t-20 table-hover no-wrap">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 40px" class="selectAll">
+                                                    <a href="javascript:void(0);" onclick="$('input[name=\'uid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+                                                </th>
+                                                <th>
+                                                    <%=Tag("URL")%>
+                                                </th>
+                                                <th>
+                                                    <%=Tag("操作")%>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <%foreach (DB.LebiShop.Lebi_Admin_Power model in purls)
+                                            {%>
+                                            <tr ondblclick="EditURL(<%=model.id %>);">
+                                                <td style="text-align:center">
+                                                    <label class="custom-control custom-checkbox">
+                                                        <input type="checkbox" id="url_<%=model.id %>" name="uid" value="<%=model.id %>" class="custom-control-input" delurl="true">
+                                                        <span class="custom-control-label"></span>
+                                                    </label>
+                                                </td>
+                                                <td>
+                                                    <%=model.Url%>
+                                                </td>
+                                                <td>
+                                                    <a href="javascript:void(0)" onclick="EditURL(<%=model.id %>);">
+                                                        <%=Tag("编辑")%>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <%}%>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="3">
+                                                    <button class="btn btn-info" onclick="EditURL(0);"><i class="ti-plus"></i> <%=Tag("添加")%></button>
+                                                    <button class="btn btn-danger" onclick="DeleteURL()"><i class="ti-trash"></i> <%=Tag("删除")%></button>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        function EditObj(id) {
+            $("#EditModal").modal("show");
+            var title_ = "<%=Tag("编辑分组")%>";
+            if (id == 0){
+                var title_ = "<%=Tag("添加分组")%>";
+            }
+            $.ajax({
+                url: "admin_limit_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {id: id,title: title_},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function EditURL(id) {
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "Admin_url_Edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {id: id,gid: '<%=group.id %>'},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function DeleteURL() {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要删除吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "DeleteURLObj();");
+        }
+        function DeleteURLObj() {
+            $("#EditModal").modal("hide");
+            $("#Modal-Confirm").modal("hide");
+            var postData = GetFormJsonData("delurl");
+            var url = "<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=Admin_url_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function SavePower() {
+            var postData = GetFormJsonData("power");
+            var url = "<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=SavePower&gid=<%=group.id %>";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "javascript:window.close()")});
+        }
+    </script>
+</lbscripts>

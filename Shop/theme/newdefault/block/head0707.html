@@ -1,0 +1,37 @@
+﻿<div class="head">
+    <div class="top">
+        <div class="center clearfix">
+            <ul class="sns">
+            	<!--<li><a href="#" class="rss"></a></li>-->
+                <li><a href="https://www.youtube.com/channel/UCuP7zVB_1u94BzaLCcMXYZA?view_as=subscriber" class="youtube"></a></li>
+                <!--<li><a href="#" class="pinterest"></a></li>-->
+                <li><a href="https://plus.google.com/u/0/107335425411617972609/posts/p/pub" class="google"></a></li>
+                <li><a href="https://twitter.com/crw_bathrooms" class="twitter"></a></li>
+                <li><a href="https://www.facebook.com/profile.php?id=100009518509235&pnref=story" class="facebook"></a></li>
+                <span class="userstatus" id="userstatus"><a href="/theme_es01/Register.aspx">免费注册</a> ┊ <a href="/theme_es01/Login.aspx">登录</a></span>
+            </ul>
+            <ul>
+                <li>{MOD:ShoppingCartLine}</li>
+                <li>{MOD:LanguageLine}</li>
+                <li>{MOD:CurrencyLine}</li>
+            </ul>
+        </div>
+    </div>
+    <script type="text/javascript">        LoadPage(path + '/inc/userstatus.aspx', 'userstatus');</script>
+    <div class="head-main">
+    	<div class="callphones"> No.13 Store of South JinJu Road, FuYong Street, BaoAn District<br>
+tel. +86 13715176555</div>
+        <h1 class="logo">
+           {MOD:Logo}</h1>
+        <div class="search">
+            {MOD:SearchFormLine}
+            {MOD:SearchKeywordLine}
+        </div>
+        <div class="toplink">
+            <a href="<%=URL("P_UserCenter","") %>">
+                <img src="{image}topIco1.png">{tag:我的账号}</a> <a href="<%=URL("P_Basket","") %>">
+                    <img src="{image}topIco2.png">{tag:购物车}</a>
+        </div>
+    </div>
+</div>
+ 

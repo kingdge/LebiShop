@@ -1,0 +1,114 @@
+﻿{layout:default} {class:Shop.Admin.promotion.EmailTask_Edit}
+<lbhead>
+    <title><%=Tag("邮件模板") %>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <script type="text/javascript" src="<%=site.WebPath %>/Editor/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript" src="<%=site.WebPath %>/Editor/ckfinder/ckfinder.js"></script>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/jquery-ui/timepicker-addon.js"></script>
+    <%if (CurrentLanguage.Code=="CN"){%><script type="text/javascript" src="<%=site.AdminJsPath %>/jquery-ui/timepicker-zh-CN.js"></script><%}%>
+    <link rel="stylesheet" type="text/css" href="<%=site.AdminJsPath %>/jquery-ui/timepicker-addon.css" />
+    <script type="text/javascript">
+        $(function () {
+            $(".input-calendar").datetimepicker({dateFormat:"yy-mm-dd",showSecond:true,timeFormat:"HH:mm:ss",stepHour:1,stepMinute:1,tepSecond:1});
+        });
+    </script>
+</lbfile>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <%if (PageReturnMsg == ""){%>
+            <%if (model.IsSubmit != 1)
+              { %>
+             <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();">
+                <b></b><span><%=Tag("保存")%></span></a></li>
+            
+            <%if (model.id > 0)
+              { %>
+            <li class="submit"><a href="javascript:void(0);" onclick="CreateObj();">
+                <b></b><span><%=Tag("提交")%></span></a></li>
+            <%}
+              }%>
+            <%}%>
+            <li class="rotate"><a href="javascript:void(0);" onclick="location.href='emailtask.aspx'"><b></b><span><%=Tag("返回")%></span></a></li>
+            <li class="name"><span id="navIgation">
+                <%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> >
+                <%=Tag("营销") %>
+                >
+                <%=Tag("群发邮件") %>
+            </span></li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <%=Shop.Bussiness.Language.AdminLanguageTab("") %>
+    <table
+        id="lang" class="table">
+        <%foreach (DB.LebiShop.Lebi_Language_Code lang in Shop.Bussiness.Language.Languages())
+          {%>
+        <tbody id="lang_<%=lang.Code %>" class="lang_table" style="display: none">
+            <tr>
+                <th>
+                    <%=Tag("标题") %>：
+                </th>
+                <td>
+                    <input id="EmailTitle" class="input" style="width: 550px;" name="EmailTitle<%=lang.Code %>"
+                        value="<%=Shop.Bussiness.Language.Content(model.EmailTitle, lang.Code)%>" shop="true" />
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("内容") %>：
+                </th>
+                <td>
+                    <textarea id="EmailContent<%=lang.Code %>" class="textarea" style="height: 300px; width: 550px;"
+                        name="EmailContent<%=lang.Code %>" shop="true"><%=Shop.Bussiness.Language.Content(model.EmailContent, lang.Code)%></textarea>
+                    <script type="text/javascript">
+                        CKEDITOR.replace('EmailContent<%=lang.Code %>', {
+                            height: '300',
+                            language: '<%=Tag("CKEditor语言")%>'
+                        });
+                    </script>
+                </td>
+            </tr>
+        </tbody>
+        <%} %>
+        <tr id="showuserlevel">
+            <th>
+                <%=Tag("会员分组")%>：
+            </th>
+            <td>
+                <%=Shop.Bussiness.EX_User.TypeCheckbox("grade > 0", "UserLevel_ids", model.UserLevel_ids,"shop=\"true\"", CurrentLanguage.Code)%>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("发送时间")%>：
+            </th>
+            <td>
+                <input id="Time_task" class="calendar" style="width: 150px;" name="Time_task" value="<%=FormatTime(model.Time_task)%>" shop="true" />
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+         LanguageTab_EditPage('<%=CurrentLanguage.Code %>'); //加载默认语言
+        function SaveObj() {
+           var editor
+            <%foreach (DB.LebiShop.Lebi_Language_Code lang in Shop.Bussiness.Language.Languages())
+          {%>
+            editor = CKEDITOR.instances.EmailContent<%=lang.Code %>;
+            $("#EmailContent<%=lang.Code %>").val(editor.getData());
+          <%} %>
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_sale.aspx?__Action=EmailTask_Edit&id=<%=model.id %>";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?id="+res.id)});
+        }
+        function CreateObj() {
+           if (!confirm("<%=Tag("确认提交吗？")%>"))
+                return false;
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_sale.aspx?__Action=EmailTask_Create&id=<%=model.id %>";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>

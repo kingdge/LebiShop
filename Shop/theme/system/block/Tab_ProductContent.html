@@ -1,0 +1,110 @@
+﻿<!--
+Name:商品TAB菜单
+Page:P_Product
+-->
+<script type="text/javascript">
+    $(document).ready(function () {
+        <%if (CurrentLanguage.IsLazyLoad==1){ %>$("img.contentlazy").lazyload({ placeholder: "{/image}lazy.gif", effect: "fadeIn" });<%} %>
+        var ul = $("div.product-tab ul");
+        var li = $("div.product-tab ul li");
+        var divShow = $("div.product-cont");
+        $(li).each(function (i) {
+            var _this = this;
+            $(_this).click(function () {
+                ul.find("li").removeClass("selected");
+                $(_this).addClass("selected");
+                divShow.find("div.cont").hide();
+                var divindex = divShow.find("div.cont")[i];
+                $(divindex).show();
+                SetCookie("Product-<%=product.id %>", i, 1);
+                if (i == 1) { getcommentlist(); }
+                if (i == 2) { getasklist(); }
+                if (i == 3) { getrelatedlist(); }
+            });
+        });
+        var i = GetCookie("Product-<%=product.id %>");
+        if (i == "" || i == null)
+            i = 0;
+        if (i != "") {
+            $(li).each(function () {
+                ul.find("li").removeClass("selected");
+                divShow.find("div.cont").hide();
+                var divindex = divShow.find("div.cont")[i];
+                $(li[i]).addClass("selected");
+                $(divindex).show();
+            });
+            if (i == 1) { getcommentlist(); }
+            if (i == 2) { getasklist(); }
+            if (i == 3) { getrelatedlist(); }
+        }
+    });
+    function ask() {
+        var postData = GetFormJsonData("shop");
+        var url = path + "/ajax/Ajax_userin.aspx?__Action=Ask_Write&id=<%=product.id %>";
+        RequestAjax(url, postData, function () { MsgBox(1, "{Tag:发送成功}", "?"); $("#Content").val(""); getasklist(); });
+    }
+    function getasklist() {
+        var url = path + "/inc/product_ask.aspx?id=<%=product.id %>&product_id=<%=product.Product_id %>&page=<%=LB.Tools.RequestTool.RequestInt("page", 1) %>";
+        LoadPage(url, 'asklist');
+    }
+    function getcommentlist() {
+        var url = path + "/inc/product_comment.aspx?id=<%=product.id %>&product_id=<%=product.Product_id %>&page=<%=LB.Tools.RequestTool.RequestInt("page", 1) %>";
+        LoadPage(url, 'commentlist');
+    }
+    function getrelatedlist() {
+        var url = path + "/inc/product_related.aspx?id=<%=product.id %>&tag=<%=Uri.EscapeDataString(product.Tags) %>&Count=20";
+        LoadPage(url, 'relatedlist');
+    }
+</script>
+<div class="product-tab clearfix">
+    <ul class="tablist">
+        <li class="selected"><a href="javascript:void(0);"><span>
+            {tag:详细介绍}</span></a></li>
+        <li><a href="javascript:void(0);"><span>
+            {tag:商品评价}</span></a></li>
+        <li><a href="javascript:void(0);"><span>
+            {tag:商品咨询}</span></a></li>
+        <li><a href="javascript:void(0);"><span>
+            {tag:相关商品}</span></a></li>
+    </ul>
+</div>
+<div class="product-cont">
+    <div style="display: block" class="cont">
+        <%if (CurrentSite.IsMobile==0){ %>
+            <%=ImgSrc(Lang(product.Description),CurrentLanguage.IsLazyLoad) %>
+        <%}else{ %>
+            <%=ImgSrc(Lang(product.MobileDescription),CurrentLanguage.IsLazyLoad) %>
+            <%if (Lang(product.MobileDescription)==""){ %><%=ImgSrc(Lang(product.Description),CurrentLanguage.IsLazyLoad) %><%} %>
+        <%} %>
+    </div>
+    <div style="display: none" class="cont clearfix">
+        <div id="commentlist">
+        </div>
+    </div>
+    <div style="display: none" class="cont clearfix">
+        <%if (CurrentUser.id > 0){%>
+        <table class="tableform">
+            <tbody>
+                <tr>
+                    <td>
+                        <textarea id="Content" name="Content" cols="80" rows="3" class="textarea" shop="true"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="javascript:void(0)" onclick="ask();" class="btn btn-11"><s></s>{Tag:发送}</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <%}else{%>
+        <div class="mes">{tag:您还没有登录，请登录后咨询。}</div>
+        <%} %>
+        <div id="asklist">
+        </div>
+    </div>
+    <div style="display: none" class="cont clearfix">
+        <div id="relatedlist">
+        </div>
+    </div>
+</div>

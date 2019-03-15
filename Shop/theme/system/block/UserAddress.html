@@ -1,0 +1,53 @@
+﻿<!--
+Name:用户中心-收货地址
+Page:All
+-->
+<div class="nbbox clearfix">
+<div class="user">
+    <div class="searchbox clearfix">
+        <input type="text" id="key" name="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" />
+        <a href="javascript:void(0)" onclick="search_();" class="btn btn-12"><s></s>{tag:查询}</a>
+    </div>
+    <table cellpadding="0" cellspacing="0" width="100%" class="tablelist box">
+        <tr>
+            <th style="width:30px;" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));">{tag:全选}</a>
+            </th>
+            <th style="width:100px;">{tag:姓名}</th>
+            <th style="width:100px;">{tag:手机号码}</th>
+            <th style="width:100px;">{tag:电话号码}</th>
+            <th>{tag:详细地址}</th>
+            <th style="width:60px;">{tag:状态}</th>
+            <th style="width:60px;">{tag:操作}</th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_User_Address ua in user_addresss)
+        {%>
+        <tr>
+            <td style="text-align:center"><input type="checkbox" value="<%=ua.id%>" name="id" /></td>
+            <td><%=ua.Name%></td>
+            <td><%=ua.MobilePhone%></td>
+            <td><%=ua.Phone%></td>
+            <td><%=Shop.Bussiness.EX_Area.GetAreaName(ua.Area_id,2) %> <%=ua.Address%></td>
+            <td><%if (CurrentUser.User_Address_id == ua.id){ %>{tag:默认}<%}else{ %>&nbsp;<%} %></td>
+            <td><a href="<%=URL("P_UserAddressEdit",ua.id,"")%>">{tag:编辑}</a>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <div class="bottom clearfix"><div class="left"><a href="javascript:void(0)" onclick="Delete();" class="btn btn-11"><s></s>{tag:删除}</a><a href="<%=URL("P_UserAddressEdit","0","")%>" class="btn btn-7"><s></s>{tag:添加}</a></div><div class="right"><%=PageString%></div></div>
+</div>
+</div>
+<script type="text/javascript">
+    function search_() {
+        var key = $("#key").val();
+        window.location = "?key=" + escape(key);
+    }
+    function Delete() {
+        if (!confirm("{tag:确认要删除吗？}"))
+            return false;
+        var ids = GetChkCheckedValues("id");
+        var postData = { "id": ids };
+        var url = path+"/ajax/ajax_order.aspx?__Action=Address_Del";
+        RequestAjax(url, postData, function () { MsgBox(1, "{tag:操作成功}", "?") });
+    }
+</script>

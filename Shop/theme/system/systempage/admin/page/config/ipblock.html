@@ -1,0 +1,57 @@
+﻿{layout:default} {class:Shop.Admin.storeConfig.Ipblock}
+<lbhead>
+    <title><%=Tag("IP锁定")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <style>
+        .bottom{height: 0;overflow: hidden;display: none;}
+    </style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("IP锁定")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table class="table">
+        <tr>
+            <td>
+                <textarea name="Ncontent" id="Ncontent" rows="20" cols="88" style="height: 300px" class="input"><%=ips %></textarea>
+                <div class="tools clear">
+                    <ul>
+                        <li class="plus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Ncontent',100);"><b></b><span><%=Tag("展开")%></span></a></li>
+                        <li class="minus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Ncontent',-100)"><b></b><span><%=Tag("收缩")%></span></a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="classfaq">
+                <div class="faq_main">
+                    <p class="faq_title">
+                        <%=Tag("使用答疑：")%></p>
+                    <%=Tag("清空不填写即允许所有IP访问网站；")%><br />
+                    <%=Tag("多个IP用回车分隔，如填写202.152.12.1则禁止了202.152.12.1这个IP的访问，如202.152.12.*则禁止了以202.152.12开头的IP访问；")%><br />
+                    <%=Tag("在添加多个IP的时候，请注意最后一个IP的后面不要加回车。")%>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+        function SaveObj() {
+            var ip = $("#Ncontent").val();
+            var postData = { 'ip': ip};
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=IpBlock_Edit";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+    </div>
+</lbbottom>

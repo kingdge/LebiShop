@@ -1,0 +1,18 @@
+﻿<!--
+Name:商城动态
+Page:All
+-->
+<div class="mbox clearfix">
+<div class="newstop">
+<div class="mt">
+    <h2>{tag:商城动态}</h2>
+</div>
+<div class="mc clearfix">
+    <ul class="text">
+        ${#table:Lebi_Page;#where:Node_id="+Node("News").id+" and ','+Language_ids+',' like '%," + CurrentLanguage.id + ",%';#order:Time_Add desc,id desc;#top:5;
+        <li><a href="<%if ({url} == ""){Response.Write(URL("P_NewsDetails",{id}));}else{Response.Write({url});} %>" title="{%Name%}"><em><%={Time_Add}.ToString("MM-dd") %></em><span style="color:{%NameColor%}">{%Name%}</span></a></li>
+        }$
+    </ul>
+</div>
+</div>
+</div>

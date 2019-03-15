@@ -1,0 +1,26 @@
+﻿{layout:page} {class:Shop.Admin.order.Express_Print}
+<lbhead>
+    <title><%=model.Name %>-<%=Tag("单据打印")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+<style>body{background:#fff;margin:0;padding:0;font-size:12px;text-align:left;overflow:scroll}input{font-size:12px}.box{margin:0;POSITION: relative;width:<%=model.Width %>px;height:<%=model.Height %>px;background:url(<%=WebPath + model.Background %>) no-repeat;overflow:hidden}</style>
+<style media=print>.box{POSITION: relative;width:<%=model.Width %>px;height:<%=model.Height %>px;background:none;overflow:hidden}.print-btn{display:none;}</style>
+</lbfile>
+<lbbody>
+<div class="print-btn">
+    <div class="tools">
+        <ul>
+            <li class="print"><a href="javascript:void(0);" onclick="Print('<%=id %>',<%=Tid %>,<%=Eid %>);"><b></b><span><%=Tag("打印")%></span></a></li>
+            <li class="close"><a href="javascript:void(0);" onclick="window.close();"><b></b><span><%=Tag("关闭")%></span></a></li>
+        </ul>
+    </div>
+</div>
+<% PrintTable(); %>
+<script type="text/javascript">
+function Print(id, Tid, Eid) {
+    var postData = "";
+    var url = "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=Express_Print&id="+id+"&Tid="+Tid+"&Eid="+Eid;
+    RequestAjax(url, postData, function () { $("#div_error").dialog('close'); setTimeout(function () { window.print(); }, 1000); });
+}
+</script>
+</lbbody>

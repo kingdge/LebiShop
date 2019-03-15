@@ -1,0 +1,88 @@
+﻿{layout:default} {class:Shop.Admin.theme.ThemeOnline}
+<lbhead>
+    <title><%=Tag("在线模板")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("在线模板") %></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/theme/default.aspx"><%=Tag("主题管理")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("在线模板") %></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr class="no-wrap">
+                                <th>
+                                    <%=Tag("缩略图")%>
+                                </th>
+                                <th>
+                                    <%=Tag("名称")%>
+                                </th>
+                                <th>
+                                    <%=Tag("支持语言")%>
+                                </th>
+                                <th>
+                                    <%=Tag("作者")%>
+                                </th>
+                                <th>
+                                    <%=Tag("状态")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (Shop.Model.LBAPI_ThemeOnline model in models){%>
+                            <tr ondblclick="Theme(<%=model.id %>);">
+                                <td>
+                                    <div class="piclist<%=model.id %>"><a href="<%=model.ImageUrl %>" data-lightbox="image<%=model.id %>"><img src="<%=model.ImageSmallUrl %>" /></a></div>
+                                </td>
+                                <td>
+                                    <%=model.Name %>
+                                </td>
+                                <td>
+                                    <%=model.Language %>
+                                </td>
+                                <td>
+                                    <%=model.LebiUser %>
+                                </td>
+                                <td>
+                                    <%=Ishave(model.Code)?Tag("已安装"):"-" %>
+                                </td>
+                                <td>
+                                    <%if (!Ishave(model.Code)){ %>
+                                    <a href="javascript:void(0)" onclick="DownLoad(<%=model.id %>);"><%=Tag("下载")%></a>
+                                    <%} %>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation">
+                            <%=PageString%>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        function DownLoad(id) {
+            var postData = { "id": id };
+            var url="<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=Theme_DownLoad";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbscripts>

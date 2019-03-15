@@ -1,0 +1,77 @@
+﻿{layout:simple} {class:Shop.Admin.storeConfig.SearchKey_Edit_window}
+<lbbody>
+<%=Shop.Bussiness.Language.AdminLanguageTab("") %>
+<script type="text/javascript" language="javascript" src="<%=site.AdminJsPath %>/main.js"></script>
+<table
+    class="table">
+    <%foreach (DB.LebiShop.Lebi_Language_Code lang in Shop.Bussiness.Language.Languages())
+      {%>
+    <tbody id="lang_<%=lang.Code %>" class="lang_table" style="display: none">
+        <tr>
+            <th style="width: 20%;">
+                <%=Tag("名称")%>：
+            </th>
+            <td style="width: 80%">
+                <input type="text" id="Name<%=lang.Code %>" name="Name<%=lang.Code %>" shop="true"  class="input" style="width: 200px;" value="<%=Shop.Bussiness.Language.Content(model.Name,lang.Code) %>" />
+            </td>
+        </tr>
+    </tbody>
+    <%} %>
+    </table>
+    <ul id="tablistmain"><li class="selected"><a><span><%=Tag("通用信息")%></span></a></li></ul>
+    <table class="table">
+    <tr>
+        <th style="width: 20%;">
+            <%=Tag("属性")%>：
+        </th>
+        <td style="width: 80%">
+            <label><input type="radio" name="Type" value="1" <%=model.Type==1?"checked":"" %> shop="true" onclick="SetStatus();" /><%=Tag("内链")%></label>
+            <label><input type="radio" name="Type" value="2" <%=model.Type==2?"checked":"" %> shop="true" onclick="SetStatus();" /><%=Tag("外链")%></label>
+        </td>
+    </tr>
+    <tr id="urltr">
+        <th>
+            <%=Tag("网址")%>：
+        </th>
+        <td>
+            <input type="text" id="URL" name="URL" size="40" shop="true" class="input" style="width: 300px;" value="<%=model.URL %>" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("排序序号")%>：
+        </th>
+        <td style="text-align: left;">
+            <input type="text" class="input" name="Sort" shop="true" id="Sort" style="width: 70px;" value="<%=model.Sort %>" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+            <div class="tools tools-m clear">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    LanguageTab_EditPage('<%=CurrentLanguage.Code %>'); //加载默认语言
+    function SaveObj() {
+        var postData = GetFormJsonData("shop");
+        if (!CheckForm("shop", "span"))
+            return false;
+        var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=SearchKey_Edit&id=<%=model.id %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+    function SetStatus()
+    {
+        var Type=$("input[name='Type']:checked").val();
+        if(Type=="1")
+            $("#urltr").hide();
+        else
+            $("#urltr").show();   
+    }
+    SetStatus();
+</script>
+</lbbody>

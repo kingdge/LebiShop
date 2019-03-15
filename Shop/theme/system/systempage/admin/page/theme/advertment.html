@@ -1,0 +1,110 @@
+﻿{layout:default} {class:Shop.Admin.theme.advertment}
+<lbhead>
+    <title>
+        <%=Tag("广告位")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <li class="name"><span id="navIgation">
+                <%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a>
+                > <a>
+                <%=Tag("广告位") %></span></a></li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox">
+        <input name="key" type="text" id="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" align="absmiddle" />
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 150px;">
+                <%=Tag("代码")%>
+            </th>
+            <th style="width: 150px;">
+                <%=Tag("说明")%>
+            </th>
+            <th style="width: 150px;">
+                <%=Tag("模板")%>
+            </th>
+            <th style="width: 100px;">
+                <%=Tag("尺寸")%>
+            </th>
+            <th style="width: 70px;">
+                <%=Tag("图片数")%>
+            </th>
+            <th style="width: 70px;">
+                <%=Tag("排序")%>
+            </th>
+            <th>
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%
+            foreach (DB.LebiShop.Lebi_Theme_Advert model in models)
+                {%>
+        <tr class="list" ondblclick="window.location='AdvertList.aspx?id=<%=model.id %>&tid=<%=model.Theme_id %>';">
+            <td>
+                {AD:<%=model.Code%>}
+            </td>
+            <td>
+                <%=model.Description%>
+            </td>
+            <td>
+                <%=GetThemeName(model.Theme_id)%>
+            </td>
+            <td>
+                <%=model.Width + " * " + model.Height%>
+            </td>
+            <td>
+                <a href="AdvertList.aspx?id=<%=model.id %>&tid=<%=model.Theme_id %>"><%=DB.LebiShop.B_Lebi_Advert.Counts("Theme_Advert_id=" + model.id)%></a>
+            </td>
+            <td>
+                <%=model.Sort%>
+            </td>
+            <td>
+                <a href="javascript:void(0)" onclick="Editobj(<%=model.Theme_id %>,<%=model.id %>);"><%=Tag("编辑")%></a> | <a href="AdvertList.aspx?id=<%=model.id %>&tid=<%=model.Theme_id %>"><%=Tag("图片列表")%></a> | <a href="javascript:void(0)" onclick="AdvertImage(<%=model.id %>,0);"><%=Tag("添加图片")%></a>
+            </td>
+        </tr>
+        <%}%>
+    </table>
+    <script type="text/javascript">
+        function search_() {
+            var key = $("#key").val();
+            window.location = "?id=<%=id%>&key=" + escape(key);
+        }
+        function Editobj(tid, id) {
+            var title_ = "<%=Tag("编辑")%>";
+            if (id == 0)
+                var title_ = "<%=Tag("添加")%>";
+            var url_ = "advert_edit_window.aspx?id=" + id+"&tid="+tid;
+            var width_ = 650;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function AdvertImage(aid,id) {
+            var title_ = "<%=Tag("编辑")%>";
+            if (id == 0)
+                var title_ = "<%=Tag("添加")%>";
+            var url_ = "advertimage_edit_window.aspx?id=" + id+"&aid="+aid;
+            var width_ = 500;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function Advert_Del(id) {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = { "id": id };
+            var url="<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=Advert_Del";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+        <%=PageString%>
+    </div>
+</lbbottom>

@@ -1,0 +1,44 @@
+﻿<!--
+Name:用户中心-站内信-内容
+Page:P_UserMessageDetails
+-->
+<div class="nbbox clearfix">
+<div class="user">
+    <ul class="tablist">
+        <li <%if (message.User_id_From == 0){Response.Write("class=\"selected\"");} %>><a href="<%=URL("P_UserMessage","0","")%>"><span>{tag:收件箱}<em>(<%=Count_Message(0) %>)</em></span></a></li>
+        <li <%if (message.User_id_To == 0){Response.Write("class=\"selected\"");} %>><a href="<%=URL("P_UserMessage","1","")%>"><span>{tag:发件箱}</span></a></li>
+        <li><a href="<%=URL("P_UserMessageWrite","","")%>"><span>{tag:发信息}</span></a></li>
+    </ul>
+    <div class="mt">
+        <h2><%=message.Title %></h2>
+    </div>
+    <div class="mc">
+        <div class="content"><%=message.Content.Replace("\r\n", "<br/>")%></div>
+    </div>
+    <%if (message.User_id_From == 0){ %>
+    <div class="mc clearfix">
+    <div class="dl-table clearfix">
+    <dl>
+        <dt>{tag:标题}：</dt>
+        <dd><input type="text" id="Title" name="Title" class="input" style="width: 80%;" value="Re <%=message.Title %>" shop="true" /></dd>
+    </dl>
+    <dl>
+        <dt>{tag:内容}：</dt>
+        <dd><textarea id="Content" name="Content" cols="80" rows="3" class="textarea" style="height:150px;width: 80%;" shop="true"></textarea></dd>
+    </dl>
+    <dl class="dl-btn">
+        <dt></dt>
+        <dd><a href="javascript:void(0)" onclick="submit();" class="btn btn-11"><s></s>{tag:回复}</a></dd>
+    </dl>
+    </div>
+    </div>
+    <%} %>
+</div>
+</div>
+<script type="text/javascript">
+    function submit() {
+        var postData = GetFormJsonData("shop");
+        var url = path+"/Ajax/Ajax_userin.aspx?__Action=Message_Write&id=<%=id%>";
+        RequestAjax(url, postData, function () { MsgBox(1, "{tag:操作成功}", "#") });
+    }
+</script>

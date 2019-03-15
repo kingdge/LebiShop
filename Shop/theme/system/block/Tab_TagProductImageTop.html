@@ -1,0 +1,59 @@
+﻿<!--
+Name:TAB循环属性商品
+Page:P_All
+-->
+<script type="text/javascript">
+    $(document).ready(function () {
+        var ul = $("div.tag-tab ul");
+        var li = $("div.tag-tab ul li");
+        var divShow = $("div.tag-cont");
+        $(li).each(function (i) {
+            var _this = this;
+            $(_this).hover(function () {
+                ul.find("li").removeClass("selected");
+                $(_this).addClass("selected");
+                divShow.find("div.cont").hide();
+                var divindex = divShow.find("div.cont")[i];
+                $(divindex).show();
+                <%if (CurrentLanguage.IsLazyLoad==1){ %>
+                $("img.lazy" + (i + 1) + "").lazyload({
+                    threshold: 300,
+                    effect: "fadeIn"
+                });
+                <%} %>
+            });
+        });
+        <%if (CurrentLanguage.IsLazyLoad==1){ %>
+        $("img.lazy1").lazyload({
+            threshold: 300,
+            effect: "fadeIn"
+        });
+       <%} %>
+    });
+</script>
+<div class="nbbox clearfix">
+<div class="tab_productimagetop">
+<div class="tag-tab">
+    <ul class="tablist">
+    ${#table:Lebi_Pro_Tag;#where:1=1;#order:Sort desc;#top:4;
+        <li <%={i}==1?" class=\"selected\"":"" %>><a href="<%=URL("P_ProductCategory","$,$,$,$,$,"+{id}+"")%>" target="_blank"><span><%=Lang({Name}) %></span></a></li>
+    }$
+    </ul>
+</div>
+<div class="tag-cont clearfix">
+    ${#table:Lebi_Pro_Tag;#where:1=1;#order:Sort desc;#top:4;#model:tab_tag;
+    <div style="display: <%={i}==1?"block":"none" %>" class="cont">
+        <div class="productshow"><ul class="image">
+        ${#table:Lebi_Product;#where:"+ProductWhere+" and Type_id_ProductType = 320 and "+ TagWhere(tab_tag.id) +";#top:10;#order:Sort desc,id desc;#model:tab_tag_pro;
+        <li>
+            <div class="proimg"><p><a href="<%=URL("P_Product",{id}) %>"><img <%if (CurrentLanguage.IsLazyLoad==1){ %>class="lazy<%=tab_tag_index%>" src="{/image}lazy.gif" data-original<%}else{ %>src<%} %>="<%=Image({ImageOriginal},"medium") %>" alt="<%=Lang({Name}) %>" title="<%=Lang({Name}) %>" /></a></p></div>
+            <div class="proname"><a href="<%=URL("P_Product",{id}) %>" title="<%=Lang({Name}) %>"><%=Lang({Name}) %></a></div>
+            <div class="proprice"><%if ({Price_Market}>0){ %><div class="marketprice"><i>{Tag:市场价}：</i><strong><%=FormatMoney({Price_Market}) %></strong></div><%} %><div class="buyprice"><i><%=Lang(CurrentUserLevel.PriceName) %>：</i><strong><%=FormatMoney(ProductPrice(tab_tag_pro)) %></strong></div></div>                    
+        </li>
+        }$
+        </ul></div>
+    </div>
+    }$
+</div>
+</div>
+</div>

@@ -1,0 +1,32 @@
+﻿{Layout:shop}
+<lbheadfile>
+<script type="text/javascript">
+    function AddFavorite(sURL, sTitle) {
+        try {
+            window.external.addFavorite(sURL, sTitle);
+        }
+        catch (e) {
+            try {
+                window.sidebar.addPanel(sTitle, sURL, "");
+            }
+            catch (e) {
+                alert("{Tag:加入收藏失败，请使用Ctrl+D进行添加}");
+            }
+        }
+    }
+</script>
+</lbheadfile>
+<lbbanner>
+<div class="mainbanner clearfix">{MOD:ShopBanner}</div>
+</lbbanner>
+<lbleft>
+{MOD:ShopSearch}
+{MOD:ShopProductCategory}
+{MOD:ShopService}
+{MOD:ShopInfo}
+<div class="banner"><a href="javascript:void(0);" onclick="AddFavorite(window.location,document.title)"><img src="{/image}shopcollect.jpg" /></a></div>
+</lbleft>
+<lbright>
+<div class="shopdetails"><%=Lang(supplier.Description) %></div>
+{MOD:ShopCategoryProductImageTop}
+</lbright>

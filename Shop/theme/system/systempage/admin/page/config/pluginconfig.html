@@ -1,0 +1,116 @@
+﻿{layout:default} {class:Shop.Admin.storeConfig.pluginconfig}
+<lbhead>
+    <title>
+        <%=Tag("插件管理")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <style>
+        .bottom{height: 0;overflow: hidden;display: none;}
+    </style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+        <ul>
+           <%if (PageReturnMsg == ""){%>
+            <li class="add"><a href="javascript:void(0);" onclick="updatepage();"><b></b><span>
+                <%=Tag("刷新插件")%></span></a></li>
+            <%}%>
+            <li class="mes"><span id="Span1"><font id="mes"></font></span></li>
+            <li class="name"><span id="navIgation">
+                <%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a>
+                >
+                <%=Tag("插件管理")%></span></li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table class="datalist">
+        <tbody>
+            <tr class="title">
+                <%
+                if (!Shop.LebiAPI.Service.Instanse.Check("managelicenese")){
+                %>
+                <th style="width: 200px;">
+                    <%=Tag("程序集")%>
+                </th>
+                <%}%>
+                <th style="width: 200px;">
+                    <%=Tag("名称")%>
+                </th>
+                <th style="width: 100px;">
+                    <%=Tag("版本")%>
+                </th>
+                <th style="width: 200px;">
+                    <%=Tag("开发商")%>
+                </th>
+                <th style="width: 100px;">
+                    <%=Tag("状态")%>
+                </th>
+                <th>
+                    <%=Tag("操作")%>
+                </th>
+            </tr>
+            <%foreach (Shop.Model.PluginConfig model in models)
+              { %>
+            <tr class="list">
+                <%
+                if (!Shop.LebiAPI.Service.Instanse.Check("managelicenese")){
+                %>
+                <td>
+                    <%=model.Assembly%>
+                </td>
+                <%}%>
+                <td>
+                    <%=model.Name%>
+                </td>
+                <td>
+                    <%=model.Version%>
+                </td>
+                <td>
+                    <%=model.Company%>
+                </td>
+                <td>
+                    <%=GetStatus(model.Assembly)?Tag("启用"):Tag("禁用")%>
+                </td>
+                <td>
+                    <a href="javascript:updatestatus('<%=model.Assembly%>');"><%=GetStatus(model.Assembly) ? Tag("禁用") : Tag("启用")%></a>
+                    <%if (IsNew(model.Assembly))
+                      { %>
+                    | <a href="javascript:updatemenu('<%=model.Assembly%>');">刷新菜单</a>
+                    <%} %>
+                    <%if (!IsTableOK(model.Assembly))
+                      { %>
+                    | <a href="javascript:updatetable('<%=model.Assembly%>');">更新数据库结构</a>
+                    <%} %>
+                </td>
+            </tr>
+            <%} %>
+        </tbody>
+    </table>
+    <script type="text/javascript">
+        function updatemenu(id) {
+            var postData={"id":id};
+            var url="<%=site.AdminPath %>/ajax/Ajax_plugin.aspx?__Action=Plugin_updatemenu";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function updatetable(id) {
+            var postData={"id":id};
+            var url="<%=site.AdminPath %>/ajax/Ajax_plugin.aspx?__Action=Plugin_updatetable";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function updatestatus(id) {
+            var postData={"id":id};
+            var url="<%=site.AdminPath %>/ajax/Ajax_plugin.aspx?__Action=Plugin_updatestatus";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function updatepage(){
+            var postData="";
+            var url="<%=site.AdminPath %>/ajax/Ajax_plugin.aspx?__Action=Plugin_updatepage";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+    </div>
+</lbbottom>

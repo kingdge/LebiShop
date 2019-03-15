@@ -1,0 +1,145 @@
+﻿{layout:default} {class:Shop.Admin.cms.UserNodeList}
+<lbhead>
+    <title><%=Tag(UserNode.Name)%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("权限组")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag(UserNode.Name)%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-info" onclick="Node_Edit(<%=UserNode.id %>,0);"><i class="ti-plus"></i> <%=Tag("添加")%></button>
+                        <button class="btn btn-danger" onclick="DeleteConfirm();"><i class="ti-trash"></i> <%=Tag("删除")%></button>
+                        <button class="btn btn-success" onclick="Update('<%=code %>',0,'Node');"><i class="ti-settings"></i> <%=Tag("设置语言")%></button>
+                        <button class="btn btn-default" data-toggle="modal" data-target="#SearchModal"><i class="ti-search"></i> <%=Tag("搜索")%></button>
+                        <%}%>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table m-t-10 table-hover no-wrap">
+                        <thead>
+                            <tr class="no-wrap">
+                                <th style="class="selectAll">
+                                    <a href="javascript:void(0);" onclick="$('input[name=\'ids\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));">
+                                        <%=Tag("全选")%>
+                                    </a>
+                                </th>
+                                <th>
+                                    <%=Tag("ID")%>
+                                </th>
+                                <th>
+                                    <%=Tag("语言")%>
+                                </th>
+                                <th>
+                                    <%=Tag("分类名称")%>
+                                </th>
+                                <th>
+                                    <%=Tag("内容")%>
+                                </th>
+                                <th>
+                                    <%=Tag("展示形式")%>
+                                </th>
+                                <th>
+                                    <%=Tag("排序")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%=GetTreeString(UserNode.id, 0)%>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="SearchModal" tabindex="-1" role="dialog" aria-labelledby="SearchModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"><%=Tag("搜索")%></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <select name="lang" id="lang" class="form-control">
+                                <option value=""><%=Tag("语言")%></option>
+                                <%=Shop.Bussiness.Language.LanguageOption(lang)%>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input name="key" type="text" id="key" class="form-control" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="ti-close"></i> <%=Tag("关闭")%></button>
+                    <button type="button" class="btn btn-success" onclick="search_();"><i class="ti-search"></i> <%=Tag("搜索")%></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        function Node_Edit(pid, id) {
+            $("#EditModal").modal("show");
+            var title_ = "<%=Tag("编辑")%>";
+            if (id == 0) title_ = "<%=Tag("添加")%>";
+            $.ajax({
+                url: "usernode_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {id: id,pid: pid,title: title_},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function DeleteConfirm() {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要删除吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "Node_Del();");
+        }
+        function Node_Del(id) {
+            $('#Modal-Confirm').modal('hide');
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_node.aspx?__Action=UserNode_Del&PageCode=<%=PageCode %>";
+            RequestAjax(url,postData,function(){MsgBox(1, '<%=Tag("操作成功") %>','?')});
+        }
+        function Page_List(id) {
+            window.location = "pagelist.aspx?Node_id=" + id;
+        }
+        function Page_Edit(nodeid, id) {
+            window.location = "page_edit.aspx?Node_id=" + nodeid + "&Page_id=" + id;
+        }
+        function search_() {
+            var lang = $("#lang").val();
+            var key = $("#key").val();
+            window.location = "?Node_id=<%=UserNode.id%>&key=" + escape(key) + "&lang=" + lang;
+        }
+        function Update(id,ids,table) {
+            $("#EditModal").modal("show");
+            if (ids == 0)
+                ids = GetChkCheckedValues("ids");
+            $.ajax({
+                url: "<%=site.AdminPath %>/config/setlanguage_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {id: id,ids: ids,table: table},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+    </script>
+</lbscripts>

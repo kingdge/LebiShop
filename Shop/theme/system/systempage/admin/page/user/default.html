@@ -1,0 +1,320 @@
+﻿{layout:default} {class:Shop.Admin.user.Default}
+<lbhead>
+    <title><%=Tag("会员管理")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="add"><a href="javascript:void(0);" onclick="Edit(0);"><b></b><span><%=Tag("添加")%></span></a></li>
+    <li class="del"><a href="javascript:void(0);" onclick="Del();"><b></b><span><%=Tag("删除")%></span></a></li>
+    <li class="email"><a href="javascript:void(0);" onclick="Write('');"><b></b><span><%=Tag("发信息")%></span></a></li>
+    <li class="sms"><a href="javascript:void(0);" onclick="WriteSMS('');"><b></b><span><%=Tag("手机短信")%></span></a></li>
+    <li class="bonus"><a href="javascript:void(0);" onclick="EditMoney('');"><b></b><span><%=Tag("调资金")%></span></a></li>
+    <li class="point"><a href="javascript:void(0);" onclick="EditPoint('');"><b></b><span><%=Tag("调积分")%></span></a></li>
+    <li class="moneycard"><a href="javascript:void(0);" onclick="SendCard(311,'<%=Tag("购物卡")%>','');"><b></b><span><%=Tag("购物卡")%></span></a></li>
+    <li class="coupon"><a href="javascript:void(0);" onclick="SendCard(312,'<%=Tag("代金券")%>','');"><b></b><span><%=Tag("代金券")%></span></a></li>
+<%
+    if (Shop.LebiAPI.Service.Instanse.Check("plugin_usercsv")){ 
+        Response.Write("<li class=\"import\"><a href=\"javascript:void(0);\" onclick=\"Export();\"><b></b><span>"+ Tag("导出") +"</span></a></li>");
+    }
+ %>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("会员列表")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox">
+        <%--<select id="lang">
+            <option value="">┌<%=Tag("语言")%></option>
+            <%=Shop.Bussiness.Language.LanguageOption(lang)%>
+        </select>
+        <select name="level" id="level">
+            <option value="0">┌ <%=Tag("会员分组")%></option>
+            <%=Shop.Bussiness.EX_User.TypeOption("grade > 0", level, CurrentLanguage.Code)%>
+        </select>
+        <select name="datetype" id="datetype">
+            <option value="">┌ <%=Tag("日期类型")%></option>
+            <option value="1">┌ <%=Tag("注册日期")%></option>
+            <option value="2">┌ <%=Tag("最后登录日期")%></option>
+            <option value="3">┌ <%=Tag("会员生日")%></option>
+        </select>
+        <input type="text" name="dateFrom" id="dateFrom" size="12" class="input-calendar" value="<%=dateFrom %>" /> - <input type="text" name="dateTo" id="dateTo" size="12" class="input-calendar" value="<%=dateTo %>" />--%>
+        <input name="key" type="text" id="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" align="absmiddle" />
+        <div style="margin-top:5px;">
+        <a href="javascript:void(0);" onclick="SearchWindow();"><%=Tag("高级搜索")%></a>
+        <%=su.Description%>
+        </div>
+        
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'sid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th style="width: 40px">
+                <%=Tag("ID")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("会员编号")%>
+            </th>
+            <th style="width: 160px">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "UserNameDesc"){Response.Write("UserNameAsc");}else{Response.Write("UserNameDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("会员帐号")%><%if (OrderBy == "UserNameDesc") { Response.Write("↓"); } else if (OrderBy == "UserNameAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th style="width: 100px">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "RealNameDesc"){Response.Write("RealNameAsc");}else{Response.Write("RealNameDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("姓名")%><%if (OrderBy == "RealNameDesc") { Response.Write("↓"); } else if (OrderBy == "RealNameAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th style="width: 30px">
+                <%=Tag("短信")%>
+            </th>
+            <th style="width: 80px">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "UserLevelDesc"){Response.Write("UserLevelAsc");}else{Response.Write("UserLevelDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("等级")%><%if (OrderBy == "UserLevelDesc") { Response.Write("↓"); } else if (OrderBy == "UserLevelAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th style="width: 60px">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "MoneyDesc"){Response.Write("MoneyAsc");}else{Response.Write("MoneyDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("余额")%>(<%=DefaultCurrency.Msige%>)<%if (OrderBy == "MoneyDesc") { Response.Write("↓"); } else if (OrderBy == "MoneyAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th style="width: 60px">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "PointDesc"){Response.Write("PointAsc");}else{Response.Write("PointDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("积分")%><%if (OrderBy == "PointDesc") { Response.Write("↓"); } else if (OrderBy == "PointAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <%if (domain3admin)
+              { %>
+            <th style="width: 70px">
+               <%=Tag("站点") %> 
+            </th>
+            <%} %>
+            <th style="width: 80px">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "Time_RegDesc"){Response.Write("Time_RegAsc");}else{Response.Write("Time_RegDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("注册日期")%><%if (OrderBy == "Time_RegDesc") { Response.Write("↓"); } else if (OrderBy == "Time_RegAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th style="width: 130px">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "Time_LastDesc"){Response.Write("Time_LastAsc");}else{Response.Write("Time_LastDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("最后登陆")%><%if (OrderBy == "Time_LastDesc") { Response.Write("↓"); } else if (OrderBy == "Time_LastAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th>
+                <%=Tag("IP地址")%>
+            </th>
+            <th>
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_User model in models)
+          {%>
+        <tr class="list" ondblclick="Edit(<%=model.id %>);">
+            <td style="text-align:center">
+                <input type="checkbox" name="sid" value="<%=model.id %>" />
+            </td>
+            <td>
+                <%=model.id%>
+            </td>
+            <td>
+                <%=model.UserNumber %>&nbsp;
+            </td>
+            <td title="<%=Tag("昵称")%>：<%=model.NickName %>">
+                <%=model.UserName %>
+            </td>
+            <td>
+                <%=model.RealName %>&nbsp;
+            </td>
+            <td>
+            <a href="javascript:void(0);" onclick="Write('<%=model.UserName %>');"><img src="<%=PageImage("icon/Email.png")%>" title="<%=Tag("发信息")%>" /></a>
+            </td>
+            <td><%=Shop.Bussiness.EX_User.TypeName(model.UserLevel_id, CurrentLanguage.Code)%>
+            </td>
+            
+            <td>
+                <%=FormatMoney(model.Money) %>
+            </td>
+            <td>
+                <%=model.Point %>
+            </td>
+            <%if (domain3admin){ %>
+            <td><%if (site.SiteCount > 1){ %><%=SiteName(model.Site_id,model.DT_id, CurrentLanguage.Code)%><%} %></td>
+            <%} %>
+            <td>
+                <%=FormatDate(model.Time_Reg) %>
+            </td>
+            <td>
+                <%=FormatTime(model.Time_Last) %>
+            </td>
+            <td>
+                <a href="http://www.ip138.com/ips138.asp?ip=<%=model.IP_This%>&action=2" target="_blank"><%=model.IP_This%></a>
+            </td>
+            <td>
+                <div class="menu">
+                <a href="user_edit.aspx?id=<%=model.id %>" target="_blank"><%=Tag("编辑")%></a> 
+                | <a href="javascript:void(0)" onclick="EditPassword(<%=model.id %>);"><%=Tag("改密")%></a> 
+                | <a href="../order/?user_id=<%=model.id %>" target="_blank"><%=Tag("订单")%></a> 
+                | <a href="login.aspx?id=<%=model.id %>" target="_blank"><%=Tag("管理")%></a>
+                    <a class="showmenu" href="javascript:void(0)"><s></s></a> 
+	                <div class="submenu">
+                    <a href="UserMoney.aspx?user_id=<%=model.id %>" target="_blank"><%=Tag("资金")%></a> 
+                    <a href="UserPoint.aspx?user_id=<%=model.id %>" target="_blank"><%=Tag("积分")%></a> 
+                    <a href="../promotion/cardlist.aspx?user_id=<%=model.id %>&type=312" target="_blank"><%=Tag("代金券")%></a>
+                    <a href="Message.aspx?user_id=<%=model.id %>" target="_blank"><%=Tag("站内信")%></a>
+                    <a href="OftenBuy.aspx?user_id=<%=model.id %>" target="_blank"><%=Tag("常购清单")%></a>
+                    <a href="javascript:void(0)" onclick="AddOrder(<%=model.id %>);"><%=Tag("下单")%></a>
+                    <%if (Shop.LebiAPI.Service.Instanse.Check("plugin_agent")){ %><a href="../agent/agentmoney.aspx?user_id=<%=model.id %>" target="_blank"><%=Tag("佣金")%></a><%} %>
+                    <%if (Shop.LebiAPI.Service.Instanse.Check("plugin_productlimit")){%><a href="javascript:void(0)" onclick="ProductLimit(<%=model.id %>,'<%=model.UserName%>');"><%=Tag("商品权限")%></a><%} %>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var li = $(".datalist .menu");
+        $(li).each(function (i) {
+            var _this = this;
+            $(_this).find(".showmenu").mouseover(function () {
+                $(".datalist .menu .submenu").hide();
+                var divindex = $(".datalist .menu").find(".submenu")[i];
+                $(divindex).show();
+                $(divindex).mouseleave(function () {
+                    $(divindex).hide();
+                });
+            });
+        });
+    });
+    function search_(scurl) {
+        var key = $("#key").val();
+        if(scurl==undefined || scurl=='')
+            scurl='<%=su.URL %>';
+        window.location = "?key=" + escape(key) + "&OrderBy=<%=OrderBy%>&"+scurl;
+    }
+    function OrderBy(url) {
+        MsgBox(4, "<%=Tag("正在排序，请稍后")%> ……", url+"&<%=su.URL %>");
+    }
+    function Edit(id) {
+        window.location = "user_edit.aspx?id=" + id;
+    }
+    function Del() {
+        if (!confirm("<%=Tag("确认要删除吗？")%>"))
+            return false;
+        var ids = GetChkCheckedValues("sid");
+        var postData = { "ids": ids };
+        var url = "<%=site.AdminPath %>/ajax/ajax_user.aspx?__Action=User_Del";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+    function Write(User_Name) {
+        var title_ = "<%=Tag("发信息")%>";
+        var ids = GetChkCheckedValues("sid");
+        if (User_Name !=""){
+        var url_ = "message_write_window.aspx?User_Name="+User_Name+"&<%=su.URL %>";
+        }else{
+        var url_ = "message_write_window.aspx?ids="+ids+"&<%=su.URL %>";
+        }
+        var width_ = 600;
+        var height_ = "auto";
+        var modal_ = true;
+        EditWindow(title_, url_, width_, height_, modal_);
+    }
+    function WriteSMS(User_Name) {
+        var title_ = "<%=Tag("手机短信")%>";
+        var ids = GetChkCheckedValues("sid");
+        if (User_Name !=""){
+        var url_ = "sms_write_window.aspx?User_Name="+User_Name+"&<%=su.URL %>";
+        }else{
+        var url_ = "sms_write_window.aspx?ids="+ids+"&<%=su.URL %>";
+        }
+        var width_ = 600;
+        var height_ = "auto";
+        var modal_ = true;
+        EditWindow(title_, url_, width_, height_, modal_);
+    }
+    function EditPassword(id) {
+        var title_ = "<%=Tag("改密")%>";
+        var url_ = "userpassword_edit_window.aspx?id="+id;
+        var width_ = 500;
+        var height_ = "auto";
+        var modal_ = true;
+        EditWindow(title_, url_, width_, height_, modal_);
+    }
+    function EditMoney(User_Name) {
+        var title_ = "<%=Tag("添加资金")%>";
+        var ids = GetChkCheckedValues("sid");
+        if (User_Name !=""){
+        var url_ = "usermoney_edit_window.aspx?User_Name="+User_Name+"&<%=su.URL %>";
+        }else{
+        var url_ = "usermoney_edit_window.aspx?ids="+ids+"&<%=su.URL %>";
+        }
+        var width_ = 600;
+        var height_ = "auto";
+        var modal_ = true;
+        EditWindow(title_, url_, width_, height_, modal_);
+    }
+    function EditPoint(User_Name) {
+        var title_ = "<%=Tag("添加积分")%>";
+        var ids = GetChkCheckedValues("sid");
+        if (User_Name !=""){
+        var url_ = "UserPoint_Edit_window.aspx?User_Name="+User_Name+"&<%=su.URL %>";
+        }else{
+        var url_ = "UserPoint_Edit_window.aspx?ids="+ids+"&<%=su.URL %>";
+        }
+        var width_ = 600;
+        var height_ = "auto";
+        var modal_ = true;
+        EditWindow(title_, url_, width_, height_, modal_);
+    }
+    function SendCard(id,title_,User_Name) {
+        //var title_ = "<%=Tag("")%>";
+        var ids = GetChkCheckedValues("sid");
+        if (User_Name !=""){
+        var url_ = "usercard_edit_window.aspx?cardtype="+id+"&User_Name="+User_Name+"&<%=su.URL %>";
+        }else{
+        var url_ = "usercard_edit_window.aspx?cardtype="+id+"&ids="+ids+"&<%=su.URL %>";
+        }
+        var width_ = 600;
+        var height_ = "auto";
+        var modal_ = true;
+        EditWindow(title_, url_, width_, height_, modal_);
+    }
+    function SearchWindow() {
+        var title_ = "<%=Tag("会员查询")%>";
+        var url_ = "user_search_window.aspx?callback=search_&<%=su.URL %>";
+        var width_ = 500;
+        var height_ = 500;
+        var modal_ = true;
+        EditWindow(title_, url_, width_, height_, modal_);
+    }
+    function AddOrder(id)
+    {
+        var title_ = "添加订单";
+        var url_ = "<%=site.AdminPath %>/order/order_add_window.aspx?userid="+id;
+        var width_ = 300;
+        var height_ = "auto";
+        var modal_ = true;
+        EditWindow(title_, url_, width_, height_, modal_);
+    }
+    <%if (Shop.LebiAPI.Service.Instanse.Check("plugin_usercsv")){  %>
+    function Export(){
+        var ids = GetChkCheckedValues("sid");
+        if (ids == ""){
+            MsgBox(2, "<%=Tag("请先选择")%>", "");
+            return;
+        }
+        var title_ = "<%=Tag("批量导出")%>";
+        var url_ = "<%=site.AdminPath %>/plugin/Lebi.UserCsv/export_window.aspx?ids="+ids+"";
+        var width_ = 400;
+        var height_ = "auto";
+        var modal_ = true;
+        EditWindow(title_, url_, width_, height_, modal_);
+    }
+    <%} %>
+
+     function ProductLimit(id,name){
+         window.open("<%=site.AdminPath %>/product/productlimit_user.aspx?userid="+id);
+         return;
+         var title_ = "<%=Tag("商品权限")%>-"+name;
+         var url_ = "<%=site.AdminPath %>/product/productlimit_window.aspx?userid="+id;
+         var width_ = 900;
+         var height_ = 750;
+         var modal_ = true;
+         EditWindow(title_, url_, width_, height_, modal_, 'selectproduct');
+     }
+</script>
+</lbbottom>

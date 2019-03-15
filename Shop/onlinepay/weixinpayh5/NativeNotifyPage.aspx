@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="NativeNotifyPage.aspx.cs" Inherits="weixinpayh5.NativeNotifyPage" %>

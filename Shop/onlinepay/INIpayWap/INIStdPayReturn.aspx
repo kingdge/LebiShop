@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="INIStdPayReturn.aspx.cs" Inherits="INIpayWap.INIStdPayReturn" %>

@@ -1,0 +1,63 @@
+﻿{layout:default} {class:Shop.Admin.storeConfig.SQL}
+<lbhead>
+    <title><%=Tag("命令执行")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("命令执行")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("命令执行")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form action="javascript:SaveObj();" novalidate>
+                    <div class="form-group">
+                        <label for="txt_sql"><%=Tag("SQL语句")%>：</label>
+                        <input type="text" id="txt_sql" name="txt_sql" class="form-control" shop="true" onkeydown="if(event.keyCode==13){SaveObj();}" required>
+                        <small id="sqldata"></small>
+                    </div>
+                    <%if (PageReturnMsg == ""){%>
+                    <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("提交")%></button>
+                    <%}%>
+                </form>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title"><%=Tag("使用答疑：")%></h4>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <%=Tag("本操作仅限高级、对SQL编程比较熟悉的用户，您可以直接输入sql执行语句；")%><br />
+                        <%=Tag("在操作前请慎重考虑您的执行语句是否正确和完整，执行后不可恢复；")%><br />
+                        <%=Tag("在操作前请先备份系统数据库，以防操作失误造成数据损坏。")%>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        ! function (window, document, $) {
+            "use strict";
+            $("input,select,textarea").not("[type=submit]").jqBootstrapValidation()
+        }(window, document, jQuery);
+        function SaveObj() {
+            var sql = $("#txt_sql").val();
+            var postData = { "sql": sql };
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=SQL_Edit";
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: 'html',
+                data: postData,
+                success: function (data) {
+                    $('#sqldata').html(data);
+                }
+            });
+        }
+    </script>
+</lbscripts>

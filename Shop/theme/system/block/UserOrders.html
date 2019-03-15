@@ -1,0 +1,83 @@
+﻿<!--
+Name:用户中心-订单
+Page:P_UserOrder 
+-->
+<div class="nbbox clearfix">
+<div class="user">
+    <ul class="tablist">
+        <li <%if (status == ""){Response.Write("class=\"selected\"");} %>><a href="?status="><span>{tag:全部订单}</span></a></li>
+        <li <%if (status == "1"){Response.Write("class=\"selected\"");} %>><a href="?status=1"><span>{tag:等待付款}</span></a></li>
+        <li <%if (status == "2"){Response.Write("class=\"selected\"");} %>><a href="?status=2"><span>{tag:等待收货}</span></a></li>
+        <li <%if (status == "3"){Response.Write("class=\"selected\"");} %>><a href="?status=3"><span>{tag:已收货}</span></a></li>
+        <li <%if (status == "4"){Response.Write("class=\"selected\"");} %>><a href="?status=4"><span>{tag:已完成}</span></a></li>
+        <li <%if (status == "5"){Response.Write("class=\"selected\"");} %>><a href="?status=5"><span>{tag:已取消}</span></a></li>
+    </ul>
+    <div class="searchbox clearfix">
+        <select id="status">
+            <option value="">┌ {tag:状态}</option>
+            <option value="1" <%if (status == "1"){Response.Write("class=\"selected\"");} %>>{tag:等待付款}</option>
+            <option value="2" <%if (status == "2"){Response.Write("class=\"selected\"");} %>>{tag:等待收货}</option>
+            <option value="3" <%if (status == "3"){Response.Write("class=\"selected\"");} %>>{tag:已收货}</option>
+            <option value="4" <%if (status == "4"){Response.Write("class=\"selected\"");} %>>{tag:已完成}</option>
+            <option value="5" <%if (status == "5"){Response.Write("class=\"selected\"");} %>>{tag:已取消}</option>
+        </select>
+        <input type="text" name="dateFrom" id="dateFrom" size="12" class="input-calendar" value="<%=dateFrom %>" /> - <input type="text" name="dateTo" id="dateTo" size="12" class="input-calendar" value="<%=dateTo %>" />
+        <input type="text" id="key" name="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" />
+        <a href="javascript:void(0)" onclick="search_();" class="btn btn-12"><s></s>{tag:查询}</a>
+    </div>
+    <table cellpadding="0" cellspacing="0" width="100%" class="tablelist box">
+        <tr>
+            <th style="width:120px;">{tag:订单编号}</th>
+            <th>{tag:订单商品}</th>
+            <th style="width:80px;">{tag:订单金额}</th>
+            <th style="width:120px;">{tag:时间}</th>
+            <th style="width:100px;">{tag:状态}</th>
+            <th style="width:80px;">{tag:操作}</th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_Order o in orders){%>
+        <tr>
+            <td><a href="<%=URL("P_UserOrderDetails",o.id,"")%>" target="_blank"><%=o.Code %></a></td>
+            <td>
+                <%
+                List<DB.LebiShop.Lebi_Order_Product> order_products = DB.LebiShop.B_Lebi_Order_Product.GetList("Order_id = "+ o.id +"", "id desc");
+                foreach (DB.LebiShop.Lebi_Order_Product o_p in order_products)
+                {
+                %>
+                <a href="<%=URL("P_Product",o_p.Product_id,"")%>" target="_blank"><img title="<%=Lang(o_p.Product_Name) %>" src="<%=Image(o_p.ImageOriginal,50,50) %>" style="width: 50px; height: 50px;" /></a>
+                <%} %>
+            </td>
+            <td><%=FormatMoney(o.Money_Order) %></td>
+            <td><%=FormatTime(o.Time_Add) %></td>
+            <td><%=Shop.Bussiness.Order.OrderStatus(o, CurrentLanguage.Code) %></td>
+            <td>
+                <a href="<%=URL("P_UserOrderDetails",o.id)%>" target="_blank">{tag:查看}</a><%if(Shop.Bussiness.Order.CancelOrder(o)){ %>
+                <br /><a href="javascript:void(0);" onclick="OrderCancel(<%=o.id %>);">{tag:取消}</a><%} %>
+                <%if(o.IsInvalid == 0 && o.IsReceived==1 && SYS.IsClosetuihuo=="0"){ %>
+                <br /><a href="<%=URL("P_UserReturnApply",o.id)%>" target="_blank">{tag:退货}</a>
+                <%} %>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <div class="bottom clearfix"><div class="right"><%=PageString%></div></div>
+</div>
+</div>
+<script type="text/javascript">
+    function search_() {
+        var key = $("#key").val();
+        var dateFrom = $("#dateFrom").val();
+        var dateTo = $("#dateTo").val();
+        var status = $("#status").val();
+        window.location = "?key=" + escape(key) + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&status=" + status;
+    }
+    function OrderCancel(id) {
+        var url = "<%=URL("P_UserOrderCancel","[id]") %>";
+        var title_ = Tag("取消订单");
+        var url_ = url.replace("[id]",id);
+        var width_ = 400;
+        var height_ = 200;
+        var modal_ = true;
+        var div_ = "div_window";
+        EditWindow(title_, url_, width_, height_, modal_, div_);
+    }
+</script>

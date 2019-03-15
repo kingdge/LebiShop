@@ -1,0 +1,50 @@
+﻿{layout:default} {class:Shop.Admin.product.Description}
+<lbhead>
+    <title><%=Tag("通用描述")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("通用描述")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <%=Shop.Bussiness.Language.AdminLanguageTab("") %>
+    <table cellspacing="0" border="0" id="list" style="width: 100%; border-collapse: collapse;" class="table">
+    <%foreach (DB.LebiShop.Lebi_Language_Code lang in Shop.Bussiness.Language.Languages())
+      {%>
+    <tbody id="lang_<%=lang.Code %>" class="lang_table" style="display: none">
+        <tr>
+            <td>
+                <textarea shop="true" class="textarea" style="width:400px;height:60px;" id="Description<%=lang.Code %>" name="Description<%=lang.Code %>"><%=Shop.Bussiness.Language.Content(model.Description, lang.Code)%></textarea>
+                <script type="text/javascript">
+                    CKEDITOR.replace('Description<%=lang.Code %>', {
+                        height: '500',
+                        width: '98%',
+                        language: '<%=Tag("CKEditor语言")%>'
+                    });
+                </script>
+            </td>
+        </tr>
+    </tbody>
+    <%} %>
+    </table>
+    <script type="text/javascript">
+        LanguageTab_EditPage('<%=CurrentLanguage.Code %>'); //加载默认语言
+        function SaveObj() {
+            LanguageTab_EditPage('<%=CurrentLanguage.Code %>'); //加载默认语言
+            <%foreach (DB.LebiShop.Lebi_Language_Code lang in Shop.Bussiness.Language.Languages()){%>
+            var editor<%=lang.Code %> = CKEDITOR.instances.Description<%=lang.Code %>;
+            $("#Description<%=lang.Code %>").val(editor<%=lang.Code %>.getData())
+            <%} %>
+            var postData = GetFormJsonData("shop");
+            var nodeid = $("#Node_id").val();
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=ProDescription_Edit&id=<%=model.id %>";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+    </script>
+</lbbody>

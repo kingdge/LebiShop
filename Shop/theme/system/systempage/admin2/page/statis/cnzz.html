@@ -1,0 +1,45 @@
+﻿{layout:default} {class:Shop.Admin.storeConfig.Cnzz}
+<lbhead>
+    <title><%=Tag("CNZZ统计")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("CNZZ统计") %></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("CNZZ统计")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-9 m-b-10">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-info" onclick="CnzzConfig();"><i class="ti-settings"></i> <%=Tag("配置")%></button>
+                        <%}%>
+                    </div>
+                </div>
+                <div class="row m-b-20">
+                    <iframe id="iframe1" frameborder="0" scrolling="yes" style=" width:100%; height:1300px;" src="<%=cnzzurl %>"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    {MOD:Modal_Edit}
+</lbbody>
+<lbscripts>
+    <script type="text/javascript">
+        function CnzzConfig() {
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "cnzzconfig.aspx",
+                type: "GET",
+                cache: false,
+                data: {},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+    </script>
+</lbscripts>

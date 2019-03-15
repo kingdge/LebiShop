@@ -1,0 +1,530 @@
+﻿{layout:default} {class:Shop.statis.money}
+<lbhead>
+    <title><%=Tag("资金统计")%>-<%=site.title%></title>
+    <style>#body_bottom{height:0;overflow:hidden;display:none}</style>
+</lbhead>
+<lbfile>
+   <script language="javascript" type="text/javascript" src="<%=site.AdminJsPath %>/highcharts/highcharts.js"></script>
+   <script language="javascript" type="text/javascript" src="<%=site.AdminJsPath %>/highcharts/exporting.js"></script>
+   <script language="javascript" type="text/javascript" src="<%=site.AdminJsPath %>/highcharts/themes/grid.js"></script>
+    <style>#body_bottom{height:0;overflow:hidden;display:none}</style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="export"><a href="javascript:void(0);" onclick="Export();"><b></b><span><%=Tag("导出")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="<%=site.AdminPath %>/statis/money.aspx"><%=Tag("资金统计")%></a></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox clear">
+        <ul class="tabmenus">
+            <li<%if (type == 0){ %> class="current"<%} %>><a href="money.aspx?time=<%=time %>"><span><%=Tag("金额")%></span></a></li>
+            <li<%if (type == 1){ %> class="current"<%} %>><a href="money.aspx?type=1&time=<%=time %>"><span><%=Tag("笔数")%></span></a></li>
+        </ul>
+    </div>
+    <div class="mod-tab">
+    <ul class="tablist">
+        <li <%if (time==0){Response.Write("class=\"selected\"");} %>><a href="?time=0&type=<%=type %>"><span><%=Tag("今日")%></span></a></li>
+        <li <%if (time==1){Response.Write("class=\"selected\"");} %>><a href="?time=1&type=<%=type %>"><span><%=Tag("昨日")%></span></a></li>
+        <li <%if (time==2){Response.Write("class=\"selected\"");} %>><a href="?time=2&type=<%=type %>"><span><%=Tag("最近7日")%></span></a></li>
+        <li <%if (time==3){Response.Write("class=\"selected\"");} %>><a href="?time=3&type=<%=type %>"><span><%=Tag("最近30日")%></span></a></li>
+    </ul>
+    </div>
+    <%if (type == 0){ %>
+    <%if (time == 0){ %>
+    <script type="text/javascript">
+    var chart;
+    $(document).ready(function() {
+    chart = new Highcharts.Chart({
+    chart: {type: 'spline',renderTo: 'container',reflow:false,borderColor:'#C4D8ED',borderRadius:'3',borderWidth:'1'},
+    title: {text: '<%=Tag("资金统计") %>',align: 'left',x: 5,style:{font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'}},
+    subtitle: {text: ''},
+    xAxis: {categories: [<%var i = 1;for(i=1; i<=24; i++){%>'<%=(i-1)%>:00'<%if (i <24){Response.Write(", ");} %><%} %>],lineWidth:1},
+    yAxis: {min: 0,title: {text: ''},lineWidth:1},
+    tooltip: {crosshairs: true,shared: true},
+    plotOptions: {column: {pointPadding: 1,borderWidth: 0}},
+    series: [
+<%
+    int types = 1;foreach (DB.LebiShop.Lebi_Type model in Shop.Bussiness.EX_Type.GetTypes("MoneyType"))
+    {
+    %>
+    {name: '<%=model.Name%>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.EX_User.GetMoney_UserMoney(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]}<%if(types<Shop.Bussiness.EX_Type.GetTypes("MoneyType").Count){ %>,<%} %>
+    <%
+    types+=1;}
+ %>
+    ]
+    });});
+    </script>
+    <%} %>
+    <%if (time == 1){ %>
+    <script type="text/javascript">
+    var chart;
+    $(document).ready(function() {
+    chart = new Highcharts.Chart({
+    chart: {type: 'spline',renderTo: 'container',reflow:false,borderColor:'#C4D8ED',borderRadius:'3',borderWidth:'1'},
+    title: {text: '<%=Tag("资金统计") %>',align: 'left',x: 5,style:{font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'}},
+    subtitle: {text: ''},
+    xAxis: {categories: [<%var i = 1;for(i=1; i<=24; i++){%>'<%=(i-1)%>:00'<%if (i <24){Response.Write(", ");} %><%} %>],lineWidth:1},
+    yAxis: {min: 0,title: {text: ''},lineWidth:1},
+    tooltip: {crosshairs: true,shared: true},
+    plotOptions: {column: {pointPadding: 1,borderWidth: 0}},
+    series: [
+<%
+    int types = 1;foreach (DB.LebiShop.Lebi_Type model in Shop.Bussiness.EX_Type.GetTypes("MoneyType"))
+    {
+    %>
+    {name: '<%=model.Name%>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.EX_User.GetMoney_UserMoney(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]}<%if(types<Shop.Bussiness.EX_Type.GetTypes("MoneyType").Count){ %>,<%} %>
+    <%
+    types+=1;}
+ %>
+    ]
+    });});
+    </script>
+    <%} %>
+    <%if (time == 2){ %>
+    <script type="text/javascript">
+    var chart;
+    $(document).ready(function() {
+    chart = new Highcharts.Chart({
+    chart: {type: 'spline',renderTo: 'container',reflow:false,borderColor:'#C4D8ED',borderRadius:'3',borderWidth:'1'},
+    title: {text: '<%=Tag("资金统计") %>',align: 'left',x: 5,style:{font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'}},
+    subtitle: {text: ''},
+    xAxis: {categories: [<%var i = 1;for(i=1; i<=7; i++){%>'<%=System.DateTime.Now.AddDays(-7+i).Month.ToString()%>-<%=System.DateTime.Now.AddDays(-7+i).Day.ToString()%>'<%if (i <7){Response.Write(", ");} %><%} %>],lineWidth:1},
+    yAxis: {min: 0,title: {text: ''},lineWidth:1},
+    //legend: {align: 'center',x:0,y:-179,floating: true,shadow: true,verticalAlign: 'middle',borderWidth:0},
+    tooltip: {crosshairs: true,shared: true},
+    plotOptions: {column: {pointPadding: 1,borderWidth: 0}},
+    series: [
+<%
+    int types = 1;foreach (DB.LebiShop.Lebi_Type model in Shop.Bussiness.EX_Type.GetTypes("MoneyType"))
+    {
+    %>
+    {name: '<%=model.Name%>',data: [<%for(i=1; i<=7; i++){%><%=Shop.Bussiness.EX_User.GetMoney_UserMoney(System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181") %><%if (i <7){Response.Write(", ");} %><%} %>]}<%if(types<Shop.Bussiness.EX_Type.GetTypes("MoneyType").Count){ %>,<%} %>
+    <%
+    types+=1;}
+ %>
+    ]
+    });});
+    </script>
+    <%} %>
+    <%if (time == 3){ %>
+    <script type="text/javascript">
+    var chart;
+    $(document).ready(function() {
+    chart = new Highcharts.Chart({
+    chart: {type: 'spline',renderTo: 'container',reflow:false,borderColor:'#C4D8ED',borderRadius:'3',borderWidth:'1'},
+    title: {text: '<%=Tag("资金统计") %>',align: 'left',x: 5,style:{font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'}},
+    subtitle: {text: ''},
+    xAxis: {categories: [<%var i = 1;var m = 1;for(i=1; i<=30; i++){%>'<%if (System.DateTime.Now.AddDays(-30+i).Month.ToString()==System.DateTime.Now.Month.ToString()){%><%if (m == 1){ %><%=System.DateTime.Now.Month.ToString() %>m<%}else{ %><%=System.DateTime.Now.AddDays(-30+i).Day.ToString()%><%} %><%m=m+1; %><%}else{%><%=System.DateTime.Now.AddDays(-30+i).Day.ToString()%><%} %>'<%if (i <30){Response.Write(", ");} %><%} %>],lineWidth:1},
+    yAxis: {min: 0,title: {text: ''},lineWidth:1},
+    //legend: {align: 'center',x:0,y:-179,floating: true,shadow: true,verticalAlign: 'middle',borderWidth:0},
+    tooltip: {crosshairs: true,shared: true},
+    plotOptions: {column: {pointPadding: 1,borderWidth: 0}},
+    series: [
+<%
+    int types = 1;foreach (DB.LebiShop.Lebi_Type model in Shop.Bussiness.EX_Type.GetTypes("MoneyType"))
+    {
+    %>
+    {name: '<%=model.Name%>',data: [<%for(i=1; i<=30; i++){%><%=Shop.Bussiness.EX_User.GetMoney_UserMoney(System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181") %><%if (i <30){Response.Write(", ");} %><%} %>]}<%if(types<Shop.Bussiness.EX_Type.GetTypes("MoneyType").Count){ %>,<%} %>
+    <%
+    types+=1;}
+ %>
+    ]
+    });});
+    </script>
+    <%} %>
+    <%} %>
+    <%if (type == 1){ %>
+    <%if (time == 0){ %>
+    <script type="text/javascript">
+    var chart;
+    $(document).ready(function() {
+    chart = new Highcharts.Chart({
+    chart: {type: 'spline',renderTo: 'container',reflow:false,borderColor:'#C4D8ED',borderRadius:'3',borderWidth:'1'},
+    title: {text: '<%=Tag("资金统计") %>',align: 'left',x: 5,style:{font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'}},
+    subtitle: {text: ''},
+    xAxis: {categories: [<%var i = 1;for(i=1; i<=24; i++){%>'<%=(i-1)%>:00'<%if (i <24){Response.Write(", ");} %><%} %>],lineWidth:1},
+    yAxis: {min: 0,title: {text: ''},lineWidth:1},
+    tooltip: {crosshairs: true,shared: true},
+    plotOptions: {column: {pointPadding: 1,borderWidth: 0}},
+    series: [
+<%
+    int types = 1;foreach (DB.LebiShop.Lebi_Type model in Shop.Bussiness.EX_Type.GetTypes("MoneyType"))
+    {
+    %>
+    {name: '<%=model.Name%>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.EX_User.GetCount_UserMoney(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]}<%if(types<Shop.Bussiness.EX_Type.GetTypes("MoneyType").Count){ %>,<%} %>
+    <%
+    types+=1;}
+ %>
+    ]
+    });});
+    </script>
+    <%} %>
+    <%if (time == 1){ %>
+    <script type="text/javascript">
+    var chart;
+    $(document).ready(function() {
+    chart = new Highcharts.Chart({
+    chart: {type: 'spline',renderTo: 'container',reflow:false,borderColor:'#C4D8ED',borderRadius:'3',borderWidth:'1'},
+    title: {text: '<%=Tag("资金统计") %>',align: 'left',x: 5,style:{font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'}},
+    subtitle: {text: ''},
+    xAxis: {categories: [<%var i = 1;for(i=1; i<=24; i++){%>'<%=(i-1)%>:00'<%if (i <24){Response.Write(", ");} %><%} %>],lineWidth:1},
+    yAxis: {min: 0,title: {text: ''},lineWidth:1},
+    tooltip: {crosshairs: true,shared: true},
+    plotOptions: {column: {pointPadding: 1,borderWidth: 0}},
+    series: [
+<%
+    int types = 1;foreach (DB.LebiShop.Lebi_Type model in Shop.Bussiness.EX_Type.GetTypes("MoneyType"))
+    {
+    %>
+    {name: '<%=model.Name%>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.EX_User.GetCount_UserMoney(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]}<%if(types<Shop.Bussiness.EX_Type.GetTypes("MoneyType").Count){ %>,<%} %>
+    <%
+    types+=1;}
+ %>
+    ]
+    });});
+    </script>
+    <%} %>
+    <%if (time == 2){ %>
+    <script type="text/javascript">
+    var chart;
+    $(document).ready(function() {
+    chart = new Highcharts.Chart({
+    chart: {type: 'spline',renderTo: 'container',reflow:false,borderColor:'#C4D8ED',borderRadius:'3',borderWidth:'1'},
+    title: {text: '<%=Tag("资金统计") %>',align: 'left',x: 5,style:{font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'}},
+    subtitle: {text: ''},
+    xAxis: {categories: [<%var i = 1;for(i=1; i<=7; i++){%>'<%=System.DateTime.Now.AddDays(-7+i).Month.ToString()%>-<%=System.DateTime.Now.AddDays(-7+i).Day.ToString()%>'<%if (i <7){Response.Write(", ");} %><%} %>],lineWidth:1},
+    yAxis: {min: 0,title: {text: ''},lineWidth:1},
+    //legend: {align: 'center',x:0,y:-179,floating: true,shadow: true,verticalAlign: 'middle',borderWidth:0},
+    tooltip: {crosshairs: true,shared: true},
+    plotOptions: {column: {pointPadding: 1,borderWidth: 0}},
+    series: [
+<%
+    int types = 1;foreach (DB.LebiShop.Lebi_Type model in Shop.Bussiness.EX_Type.GetTypes("MoneyType"))
+    {
+    %>
+    {name: '<%=model.Name%>',data: [<%for(i=1; i<=7; i++){%><%=Shop.Bussiness.EX_User.GetCount_UserMoney(System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181") %><%if (i <7){Response.Write(", ");} %><%} %>]}<%if(types<Shop.Bussiness.EX_Type.GetTypes("MoneyType").Count){ %>,<%} %>
+    <%
+    types+=1;}
+ %>
+    ]
+    });});
+    </script>
+    <%} %>
+    <%if (time == 3){ %>
+    <script type="text/javascript">
+    var chart;
+    $(document).ready(function() {
+    chart = new Highcharts.Chart({
+    chart: {type: 'spline',renderTo: 'container',reflow:false,borderColor:'#C4D8ED',borderRadius:'3',borderWidth:'1'},
+    title: {text: '<%=Tag("资金统计") %>',align: 'left',x: 5,style:{font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'}},
+    subtitle: {text: ''},
+    xAxis: {categories: [<%var i = 1;var m = 1;for(i=1; i<=30; i++){%>'<%if (System.DateTime.Now.AddDays(-30+i).Month.ToString()==System.DateTime.Now.Month.ToString()){%><%if (m == 1){ %><%=System.DateTime.Now.Month.ToString() %>m<%}else{ %><%=System.DateTime.Now.AddDays(-30+i).Day.ToString()%><%} %><%m=m+1; %><%}else{%><%=System.DateTime.Now.AddDays(-30+i).Day.ToString()%><%} %>'<%if (i <30){Response.Write(", ");} %><%} %>]},
+    yAxis: {min: 0,title: {text: ''}},
+    tooltip: {crosshairs: true,shared: true},
+    plotOptions: {column: {pointPadding: 1,borderWidth: 0}},
+    series: [
+<%
+    int types = 1;foreach (DB.LebiShop.Lebi_Type model in Shop.Bussiness.EX_Type.GetTypes("MoneyType"))
+    {
+    %>
+    {name: '<%=model.Name%>',data: [<%for(i=1; i<=30; i++){%><%=Shop.Bussiness.EX_User.GetCount_UserMoney(System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181") %><%if (i <30){Response.Write(", ");} %><%} %>]}<%if(types<Shop.Bussiness.EX_Type.GetTypes("MoneyType").Count){ %>,<%} %>
+    <%
+    types+=1;}
+ %>
+    ]
+    });});
+    </script>
+    <%} %>
+    <%} %>
+    <div id="container" style="margin:0 auto;width: 98%;"></div>
+    <table class="datalist">
+        <tr class="title">
+            <th>
+            <%
+            switch(time) {
+                case 0:
+                    Response.Write(Tag("时间"));
+                    break;
+                case 1:
+                    Response.Write(Tag("时间"));
+                    break;
+                case 2:
+                    Response.Write(Tag("日期"));
+                    break;
+                case 3:
+                    Response.Write(Tag("日期"));
+                    break;
+            } 
+            %></th>
+<%
+    foreach (DB.LebiShop.Lebi_Type model in Shop.Bussiness.EX_Type.GetTypes("MoneyType"))
+    {
+    %>
+    <th style="width:<%=Convert.ToInt16(100/(Shop.Bussiness.EX_Type.GetTypes("MoneyType").Count+2))%>%"><%=model.Name%></th>
+    <%
+    }
+ %>
+             <th><%=Tag("合计")%></th>
+        </tr>
+    <%if (type == 0)
+      { %>
+    <%if (time == 0)
+      { %>
+      <%var i = 1;for(i=1; i<=24; i++){%>
+        <tr class="list">
+            <td><%=i-1 %>:00</td>
+<%
+    decimal total = 0;foreach (DB.LebiShop.Lebi_Type model in Shop.Bussiness.EX_Type.GetTypes("MoneyType"))
+    {
+    %>
+    <td><%=Shop.Bussiness.EX_User.GetMoney_UserMoney(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181",i-1) %></td>
+    <%
+    total+=Shop.Bussiness.EX_User.GetMoney_UserMoney(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181",i-1);
+    }
+ %>
+        <td style="font-weight:bold"><%=total%></td>
+        </tr>
+      <%} %>
+        <tr class="list">
+            <td style="font-weight:bold"><%=Tag("合计") %></td>
+<%
+    foreach (DB.LebiShop.Lebi_Type model in Shop.Bussiness.EX_Type.GetTypes("MoneyType"))
+    {
+    %>
+    <td style="font-weight:bold"><%=Shop.Bussiness.EX_User.GetMoney_UserMoney(System.DateTime.Now.AddDays(-29).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181") %></td>
+    <%
+    }
+ %>
+         <td style="font-weight:bold"><%=Shop.Bussiness.EX_User.GetMoney_UserMoney(System.DateTime.Now.AddDays(-29).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_MoneyStatus = 181") %></td>
+        </tr>
+      <%} %>
+    <%if (time == 1)
+      { %>
+      <%var i = 1;for(i=1; i<=24; i++){%>
+        <tr class="list">
+            <td><%=i-1 %>:00</td>
+<%
+    decimal total = 0;foreach (DB.LebiShop.Lebi_Type model in Shop.Bussiness.EX_Type.GetTypes("MoneyType"))
+    {
+    %>
+    <td><%=Shop.Bussiness.EX_User.GetMoney_UserMoney(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181",i-1) %></td>
+    <%
+    total+=Shop.Bussiness.EX_User.GetMoney_UserMoney(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181",i-1);
+    }
+ %>
+         <td style="font-weight:bold"><%=total%></td>
+        </tr>
+      <%} %>
+        <tr class="list">
+            <td style="font-weight:bold"><%=Tag("合计") %></td>
+<%
+    foreach (DB.LebiShop.Lebi_Type model in Shop.Bussiness.EX_Type.GetTypes("MoneyType"))
+    {
+    %>
+    <td style="font-weight:bold"><%=Shop.Bussiness.EX_User.GetMoney_UserMoney(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181") %></td>
+    <%
+    }
+ %>
+          <td style="font-weight:bold"><%=Shop.Bussiness.EX_User.GetMoney_UserMoney(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),"Type_id_MoneyStatus = 181") %></td>
+        </tr>
+      <%} %>
+    <%if (time == 2)
+      { %>
+      <%var i = 1;for(i=1; i<=7; i++){%>
+        <tr class="list">
+            <td><%=System.DateTime.Now.AddDays(-7+i).Month.ToString()%>-<%=System.DateTime.Now.AddDays(-7 + i).Day.ToString()%></td>
+<%
+    decimal total = 0;foreach (DB.LebiShop.Lebi_Type model in Shop.Bussiness.EX_Type.GetTypes("MoneyType"))
+    {
+    %>
+    <td><%=Shop.Bussiness.EX_User.GetMoney_UserMoney(System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181") %></td>
+    <%
+    total+=Shop.Bussiness.EX_User.GetMoney_UserMoney(System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181");
+    }
+ %>
+          <td style="font-weight:bold"><%=total%></td>
+        </tr>
+      <%} %>
+        <tr class="list">
+            <td style="font-weight:bold"><%=Tag("合计") %></td>
+<%
+    foreach (DB.LebiShop.Lebi_Type model in Shop.Bussiness.EX_Type.GetTypes("MoneyType"))
+    {
+    %>
+    <td style="font-weight:bold"><%=Shop.Bussiness.EX_User.GetMoney_UserMoney(System.DateTime.Now.AddDays(-6).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181") %></td>
+    <%
+    }
+ %>
+          <td style="font-weight:bold"><%=Shop.Bussiness.EX_User.GetMoney_UserMoney(System.DateTime.Now.AddDays(-6).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_MoneyStatus = 181") %></td>
+        </tr>
+      <%} %>
+    <%if (time == 3)
+      { %>
+      <%var i = 1;for(i=1; i<=30; i++){%>
+        <tr class="list">
+            <td><%=System.DateTime.Now.AddDays(-30+i).Month.ToString()%>-<%=System.DateTime.Now.AddDays(-30 + i).Day.ToString()%></td>
+<%
+    decimal total = 0;foreach (DB.LebiShop.Lebi_Type model in Shop.Bussiness.EX_Type.GetTypes("MoneyType"))
+    {
+    %>
+    <td><%=Shop.Bussiness.EX_User.GetMoney_UserMoney(System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181") %></td>
+    <%
+    total+=Shop.Bussiness.EX_User.GetMoney_UserMoney(System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181");
+    }
+ %>
+           <td style="font-weight:bold"><%=total%></td>
+        </tr>
+      <%} %>
+        <tr class="list">
+            <td style="font-weight:bold"><%=Tag("合计") %></td>
+<%
+    foreach (DB.LebiShop.Lebi_Type model in Shop.Bussiness.EX_Type.GetTypes("MoneyType"))
+    {
+    %>
+    <td style="font-weight:bold"><%=Shop.Bussiness.EX_User.GetMoney_UserMoney(System.DateTime.Now.AddDays(-29).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181") %></td>
+    <%
+    }
+ %>
+          <td style="font-weight:bold"><%=Shop.Bussiness.EX_User.GetMoney_UserMoney(System.DateTime.Now.AddDays(-29).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_MoneyStatus = 181") %></td>
+        </tr>
+      <%} %>
+      <%} %>
+    <%if (type == 1)
+      { %>
+    <%if (time == 0)
+      { %>
+      <%var i = 1;for(i=1; i<=24; i++){%>
+        <tr class="list">
+            <td><%=i-1 %>:00</td>
+<%
+    int total = 0;foreach (DB.LebiShop.Lebi_Type model in Shop.Bussiness.EX_Type.GetTypes("MoneyType"))
+    {
+    %>
+    <td><%=Shop.Bussiness.EX_User.GetCount_UserMoney(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181",i-1) %></td>
+    <%
+    total+=Shop.Bussiness.EX_User.GetCount_UserMoney(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181");
+    }
+ %>
+           <td style="font-weight:bold"><%=total%></td>
+        </tr>
+      <%} %>
+        <tr class="list">
+            <td style="font-weight:bold"><%=Tag("合计") %></td>
+<%
+    foreach (DB.LebiShop.Lebi_Type model in Shop.Bussiness.EX_Type.GetTypes("MoneyType"))
+    {
+    %>
+    <td style="font-weight:bold"><%=Shop.Bussiness.EX_User.GetCount_UserMoney(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181") %></td>
+    <%
+    }
+ %>
+          <td style="font-weight:bold"><%=Shop.Bussiness.EX_User.GetCount_UserMoney(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_MoneyStatus = 181") %></td>
+        </tr>
+      <%} %>
+    <%if (time == 1)
+      { %>
+      <%var i = 1;for(i=1; i<=24; i++){%>
+        <tr class="list">
+            <td><%=i-1 %>:00</td>
+<%
+    int total = 0;foreach (DB.LebiShop.Lebi_Type model in Shop.Bussiness.EX_Type.GetTypes("MoneyType"))
+    {
+    %>
+    <td><%=Shop.Bussiness.EX_User.GetCount_UserMoney(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181",i-1) %></td>
+    <%
+    total+=Shop.Bussiness.EX_User.GetCount_UserMoney(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181");
+    }
+ %>
+             <td style="font-weight:bold"><%=Tag("合计") %></td>
+        </tr>
+      <%} %>
+        <tr class="list">
+            <td style="font-weight:bold"><%=Tag("合计") %></td>
+<%
+    foreach (DB.LebiShop.Lebi_Type model in Shop.Bussiness.EX_Type.GetTypes("MoneyType"))
+    {
+    %>
+    <td style="font-weight:bold"><%=Shop.Bussiness.EX_User.GetCount_UserMoney(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181") %></td>
+    <%
+    }
+ %>
+          <td style="font-weight:bold"><%=Shop.Bussiness.EX_User.GetCount_UserMoney(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),"Type_id_MoneyStatus = 181") %></td>
+        </tr>
+      <%} %>
+    <%if (time == 2)
+      { %>
+      <%var i = 1;for(i=1; i<=7; i++){%>
+        <tr class="list">
+            <td><%=System.DateTime.Now.AddDays(-7+i).Month.ToString()%>-<%=System.DateTime.Now.AddDays(-7+i).Day.ToString()%></td>
+<%
+    int total = 0;foreach (DB.LebiShop.Lebi_Type model in Shop.Bussiness.EX_Type.GetTypes("MoneyType"))
+    {
+    %>
+    <td><%=Shop.Bussiness.EX_User.GetCount_UserMoney(System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181") %></td>
+    <%
+    total+=Shop.Bussiness.EX_User.GetCount_UserMoney(System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181");
+    }
+ %>
+              <td style="font-weight:bold"><%=Tag("合计") %></td>
+        </tr>
+      <%} %>
+        <tr class="list">
+            <td style="font-weight:bold"><%=Tag("合计") %></td>
+<%
+    foreach (DB.LebiShop.Lebi_Type model in Shop.Bussiness.EX_Type.GetTypes("MoneyType"))
+    {
+    %>
+    <td style="font-weight:bold"><%=Shop.Bussiness.EX_User.GetCount_UserMoney(System.DateTime.Now.AddDays(-6).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181") %></td>
+    <%
+    }
+ %>
+          <td style="font-weight:bold"><%=Shop.Bussiness.EX_User.GetCount_UserMoney(System.DateTime.Now.AddDays(-6).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_MoneyStatus = 181") %></td>
+        </tr>
+      <%} %>
+    <%if (time == 3)
+      { %>
+      <%var i = 1;for(i=1; i<=30; i++){%>
+        <tr class="list">
+            <td><%=System.DateTime.Now.AddDays(-30+i).Month.ToString()%>-<%=System.DateTime.Now.AddDays(-30 + i).Day.ToString()%></td>
+<%
+    int total = 0;foreach (DB.LebiShop.Lebi_Type model in Shop.Bussiness.EX_Type.GetTypes("MoneyType"))
+    {
+    %>
+    <td><%=Shop.Bussiness.EX_User.GetCount_UserMoney(System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181") %></td>
+    <%
+    total+=Shop.Bussiness.EX_User.GetCount_UserMoney(System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181");
+    }
+ %>
+              <td style="font-weight:bold"><%=Tag("合计") %></td>
+        </tr>
+      <%} %>
+        <tr class="list">
+            <td style="font-weight:bold"><%=Tag("合计") %></td>
+<%
+    foreach (DB.LebiShop.Lebi_Type model in Shop.Bussiness.EX_Type.GetTypes("MoneyType"))
+    {
+    %>
+    <td style="font-weight:bold"><%=Shop.Bussiness.EX_User.GetCount_UserMoney(System.DateTime.Now.AddDays(-29).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_MoneyType = " + model.id + " and Type_id_MoneyStatus = 181") %></td>
+    <%
+    }
+ %>
+          <td style="font-weight:bold"><%=Shop.Bussiness.EX_User.GetCount_UserMoney(System.DateTime.Now.AddDays(-29).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_MoneyStatus = 181") %></td>
+        </tr>
+      <%} %>
+      <%} %>
+    </table> 
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+<script>
+    function Export(){
+        MsgBox(1, "<%=Tag("正在处理，请等待")%>", "<%=site.AdminPath %>/ajax/export.aspx?__Action=Statis_Money&time=<%=time %>&type=<%=type %>")
+    }
+</script>
+</div>
+</lbbottom>

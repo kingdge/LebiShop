@@ -1,0 +1,55 @@
+﻿<!--
+Name:邮件分享
+Page:P_SendFriend
+-->
+<div class="nbbox clearfix">
+<div class="userbox">
+    <div class="mt clearfix">
+        <h2>{tag:发件人}</h2>
+    </div>
+    <div class="mc clearfix">
+    <div class="dl-table clearfix">
+    <dl>
+        <dt>{tag:姓名}：</dt>
+        <dd><input type="text" name="UserName" id="UserName" value="<%=CurrentUser.UserName %>" size="30" class="input" shop="true" min="notnull"/></dd>
+    </dl>
+    <dl>
+        <dt>{tag:EMAIL}：</dt>
+        <dd><input type="text" name="Email" id="Email" value="<%=CurrentUser.Email %>" size="30" class="input" shop="true" min="email"/></dd>
+    </dl>
+    <dl>
+        <dt>{tag:内容}：</dt>
+        <dd><textarea name="Content" id="Content" cols="80" rows="3" class="textarea" min="notnull" shop="true" style="height:150px;width:80%;"></textarea></dd>
+    </dl>
+    </div>
+    </div>
+    <div class="mt clearfix">
+        <h2>{tag:收件人}</h2>
+    </div>
+    <div class="mc clearfix">
+    <div class="dl-table clearfix">
+    <dl>
+        <dt>{tag:姓名}：</dt>
+        <dd><input type="text" name="ToUserName" id="ToUserName" value="" size="30" class="input" shop="true" min="notnull"/></dd>
+    </dl>
+    <dl>
+        <dt>{tag:EMAIL}：</dt>
+        <dd><input type="text" name="ToEmail" id="ToEmail" value="" size="30" class="input" shop="true" min="email"/></dd>
+    </dl>
+    <dl class="dl-btn">
+        <dt></dt>
+        <dd><a href="javascript:void(0)" onclick="submit();" class="btn btn-11"><s></s>{tag:提交}</a></dd>
+    </dl>
+    </div>
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+    function submit() {
+        var postData = GetFormJsonData("shop");
+        if (!CheckForm("shop", "span"))
+            return false;
+        var url = path+"/Ajax/Ajax_user.aspx?__Action=SendFriend&id=<%=id%>";
+        RequestAjax(url, postData, function () { MsgBox(1, "{tag:发送成功}", "<%=URL("P_Product",id) %>");});
+    }
+</script>

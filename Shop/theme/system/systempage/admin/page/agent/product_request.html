@@ -1,0 +1,154 @@
+﻿{layout:default} {class:Shop.Admin.agent.product_request}
+<lbhead>
+    <title>
+        <%=Tag("商品列表")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <li class="del"><a href="javascript:void(0);" onclick="ProductRequest_Del();"><b></b>
+                <span>
+                    <%=Tag("删除")%></span></a></li>
+            <li class="name"><span id="navIgation">
+                <%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a>
+                > <a href="<%=site.AdminPath %>/product/">
+                    <%=Tag("商品代理")%></a> > <a>
+                        <%=Tag("商品申请")%></a> </span></li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <link rel="stylesheet" type="text/css" href="<%=site.AdminJsPath %>/prettyphoto/css/prettyPhoto.css" />
+    <script language="javascript" type="text/javascript" src="<%=site.AdminJsPath %>/prettyphoto/jquery.prettyphoto.js"></script>
+    <table id="list" class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'sonproductid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));">
+                    <%=Tag("全选")%></a>
+            </th>
+            <th style="width: 40px">
+                <%=Tag("图片")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("编号")%>
+            </th>
+            <th>
+                <%=Tag("商品名称")%>
+            </th>
+            <th style="width: 120px">
+                <%=Tag("替换商品")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("销售价")%>
+            </th>
+            <th style="width: 60px">
+                <%=Tag("库存")%>
+            </th>
+            <th style="width: 60px">
+                <%=Tag("冻结库存")%>
+            </th>
+            <th style="width: 60px">
+                <%=Tag("销量")%>
+            </th>
+            <th style="width: 60px">
+                <%=Tag("浏览量")%>
+            </th>
+            <th style="width: 60px">
+                <%=Tag("状态")%>
+            </th>
+            <th style="width: 120px">
+                <%=Tag("会员")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_Agent_Product_request amodel in models)
+          {
+              DB.LebiShop.Lebi_Product model = Shop.Bussiness.EX_Product.GetProduct(amodel.Product_id);
+        %>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("area[rel^='prettyPhoto<%=model.id %>']").prettyPhoto();
+                $(".piclist<%=model.id %>:first a[rel^='prettyPhoto<%=model.id %>']").prettyPhoto({ animation_speed: 'fast', slideshow: 10000, hideflash: true });
+            })
+        </script>
+        <tr class="list">
+            <td style="text-align:center">
+                <input type="checkbox" shopkeyid="true" name="productid" id="<%=amodel.id %>" value="<%=amodel.id %>" />
+            </td>
+            <td>
+                <div class="piclist<%=model.id %>">
+                    <a href="<%=site.WebPath + model.ImageOriginal %>" rel="prettyPhoto<%=model.id %>[]"
+                        target="_blank">
+                        <img style="height: 30px; width: 30px; vertical-align: middle" src="<%=site.WebPath + model.ImageSmall %>" /></a>
+                </div>
+            </td>
+            <td>
+                <%=model.Number%>
+            </td>
+            <td>
+                <%=Lang(model.Name)%>&nbsp;<a target="_blank" href="<%=Shop.Bussiness.ThemeUrl.GetURL("P_Product",model.id.ToString(),"",CurrentLanguage.Code)%>"><img
+                    src="<%=PageImage("icon/newWindow.png")%>" /></a>
+            </td>
+            <td>
+                <%
+                    DB.LebiShop.Lebi_Product oldmodel = Shop.Bussiness.EX_Product.GetProduct(amodel.Product_id_old);%>
+                <a target="_blank" href="<%=Shop.Bussiness.ThemeUrl.GetURL("P_Product",oldmodel.id.ToString(),"",CurrentLanguage.Code)%>"><%=oldmodel.Number %></a>
+            </td>
+            <td>
+                <%=FormatMoney(model.Price)%>
+            </td>
+            <td>
+                <%=model.Count_Stock%>
+            </td>
+            <td>
+                <%=model.Count_Freeze%>
+            </td>
+            <td>
+                <%=model.Count_Sales_Show %>
+            </td>
+            <td>
+                <%=model.Count_Views_Show%>
+            </td>
+            <td>
+                <%=Shop.Bussiness.EX_Type.TypeName(model.Type_id_ProductStatus) %>
+            </td>
+            <td>
+                <%=amodel.User_UserName%>
+            </td>
+            <td>
+                <%if (amodel.Type_id_AgentProductRequestStatus == 370)
+                  { %>
+                <a href="javascript:void(0);" onclick="ProductRequest_Manage(<%=amodel.id %>,1)">
+                    <%=Tag("同意")%></a> <a href="javascript:void(0);" onclick="ProductRequest_Manage(<%=amodel.id %>,0)">
+                        <%=Tag("拒绝")%></a>
+                <%}
+                  else { Response.Write(Shop.Bussiness.EX_Type.TypeName(amodel.Type_id_AgentProductRequestStatus,CurrentLanguage.Code)); } %>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+
+        function ProductRequest_Del() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = GetFormJsonData("shopkeyid");
+            var url = "<%=site.AdminPath %>/ajax/ajax_agent.aspx?__Action=ProductRequest_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function ProductRequest_Manage(id,t) {
+            if (!confirm("<%=Tag("确认操作吗？")%>"))
+                return false;
+            var postData = {"id":id,"t":t};
+            var url = "<%=site.AdminPath %>/ajax/ajax_agent.aspx?__Action=ProductRequest_Manage";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+        <%=PageString%>
+    </div>
+</lbbottom>

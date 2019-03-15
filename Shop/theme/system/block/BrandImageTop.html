@@ -1,0 +1,18 @@
+﻿<!--
+Name:品牌推荐图片模式
+Page:All
+-->
+<div class="mbox clearfix">
+<div class="brandtop">
+<div class="mt">
+    <h2>{tag:品牌推荐}</h2>
+</div>
+<div class="mc clearfix">
+<ul class="image">
+    ${#table:Lebi_Brand;#where:Type_id_BrandStatus = 452 and IsRecommend=1;#order:Sort desc,id desc;#top:10;
+    <li><p><a href="<%=URL("P_Brand",{id})%>"><img <%if (CurrentLanguage.IsLazyLoad==1){ %>class="lazy" src="{/image}lazy.gif" data-original<%}else{ %>src<%} %>="<%=Image({ImageUrl}) %>" alt="<%=Lang({Name}) %>" title="<%=Lang({Name}) %>" /></a></p><h2><a href="<%=URL("P_Brand",{id})%>" title="<%=Lang({Name}) %>"><%=Lang({Name}) %></a></h2></li>
+    }$
+</ul>
+</div>
+</div>
+</div>

@@ -1,0 +1,172 @@
+﻿{layout:default} {class:Shop.Admin.storeConfig.ServicePanel}
+<lbhead>
+    <title><%=Tag("客服面板")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("客服面板")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("客服面板")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-xlg-2 col-lg-3 col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="card-body inbox-panel p-t-0 p-b-0">
+                        <ul class="list-group list-group-full">
+                            <li class="list-group-item active"><a href="ServicePanel.aspx"><i class="ti-user"></i> <%=Tag("客服管理")%></a></li>
+                            <li class="list-group-item"><a href="ServicePanel_Group.aspx"><i class="ti-support"></i> <%=Tag("部门管理")%></a></li>
+                            <li class="list-group-item"><a href="ServicePanel_Type.aspx"><i class="ti-headphone-alt"></i> <%=Tag("软件管理")%></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xlg-10 col-lg-9 col-md-9">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-9 m-b-10">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-info" onclick="Edit(0);"><i class="ti-plus"></i> <%=Tag("添加")%></button>
+                        <button class="btn btn-success" onclick="Update();"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                        <button class="btn btn-danger" onclick="DeleteConfirm()"><i class="ti-trash"></i> <%=Tag("删除")%></button>
+                        <button class="btn btn-default" onclick="Config()"><i class="ti-settings"></i> <%=Tag("配置")%></button>
+                        <%}%>
+                    </div>
+                    <div class="col-md-3 m-b-10 input-group">
+                        <input type="text" id="key" name="key" value="<%=key %>" class="form-control" onkeydown="if(event.keyCode==13){search_();}">
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-primary" onclick="search_();"><i class="ti-search"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th class="selectAll" style="width:40px">
+                                    <a href="javascript:void(0);" onclick="$('input[name=\'sid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+                                </th>
+                                <th style="width: 15%">
+                                    <%=Tag("客服名称")%>
+                                </th>
+                                <th style="width: 15%">
+                                    <%=Tag("软件帐号")%>
+                                </th>
+                                <th>
+                                    <%=Tag("部门名称")%>
+                                </th>
+                                <th>
+                                    <%=Tag("软件名称")%>
+                                </th>
+                                <th>
+                                    <%=Tag("显示语言")%>
+                                </th>
+                                <th style="width: 7%">
+                                    <%=Tag("排序")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_ServicePanel model in models){%>
+                            <tr ondblclick="Edit(<%=model.id %>)">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox<%=model.id %>" name="sid" value="<%=model.id %>" class="custom-control-input">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                    <input type="hidden" name="Uid" shop="true" value="<%=model.id %>" />
+                                </td>
+                                <td>
+                                    <input type="text" id="Name<%=model.id %>" name="Name<%=model.id %>" value="<%=model.Name %>" class="form-control form-control-sm" shop="true">
+                                </td>
+                                <td>
+                                    <input type="text" id="Account<%=model.id %>" name="Account<%=model.id %>" value="<%=model.Account %>" class="form-control form-control-sm" shop="true">
+                                </td>
+                                <td>
+                                    <%=GetGroup(model.ServicePanel_Group_id).Name%>
+                                </td>
+                                <td>
+                                    <%=GetType(model.ServicePanel_Type_id).Name%>
+                                </td>
+                                <td>
+                                    <%=LanguageName(model.Language_ids)%>
+                                </td>
+                                <td>
+                                    <input type="text" id="Sort<%=model.id %>" name="Sort<%=model.id %>" shop="true" value="<%=model.Sort %>" class="form-control form-control-sm" onkeyup="value=value.replace(/[^\d]/g,'')">
+                                </td>
+                                <td>
+                                    <a href="javascript:void(0)" onclick="Edit(<%=model.id %>)"><%=Tag("编辑")%></a>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation ">
+                            <%=PageString%>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        function search_() {
+            var key = $("#key").val();
+            window.location = "?key=" + escape(key);
+        }
+        function Config() {
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "servicepanel_config_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function Edit(id) {
+            var title_ = "<%=Tag("添加客服")%>";
+            if (id > 0) { title_ = "<%=Tag("编辑客服")%>"; }
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "servicepanel_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {id: id,title: title_},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function Update() {
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=ServicePanel_Update";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function DeleteConfirm() {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要删除吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "DeleteObj();");
+        }
+        function DeleteObj() {
+            $("#Modal-Confirm").modal("hide");
+            var ids = GetChkCheckedValues("sid");
+            var postData = { "ids": ids };
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=ServicePanel_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbscripts>

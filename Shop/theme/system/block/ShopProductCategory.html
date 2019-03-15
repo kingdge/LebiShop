@@ -1,0 +1,26 @@
+﻿<!--
+Name:商家商品分类竖版
+Page:All
+-->
+<div id="shopcategory">
+<h4>{Tag:商品分类}</h4>
+<div class="categories">
+    ${#table:Lebi_Supplier_ProductType;#where:parentid = 0 and Supplier_id = "+id+";#order:Sort desc,id desc;#pageindex:1;
+    <dl <%if ((parentcid == 0 && {i} == 1) || parentcid == {id}){ %>class="current" <%} %>>
+    <dt class="double">
+        <label class="pic"></label>
+        <a href="<%=URL("P_ShopProductCategory",""+id+","+{id}+"") %>"><%=Lang({Name}) %></a>
+    </dt>
+    <dd>
+        <ul>
+            ${#table:Lebi_Supplier_ProductType;#where:parentid = "+{id}+" and Supplier_id = "+id+";#order:Sort desc,id desc;#pageindex:1;
+            <li class="<%=cid=={id}?"currentlink":"" %>"><a href="<%=URL("P_ShopProductCategory",""+id+","+{id}+"") %>">
+                <%=Lang({Name}) %></a></li>
+            }$
+        </ul>
+    </dd>
+    </dl>
+    }$
+</div>
+</div>
+<script type="text/javascript" src="{/js}shoplist.js"></script>

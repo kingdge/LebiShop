@@ -1,0 +1,129 @@
+﻿<!--
+Name:用户中心-评论
+Page:All
+-->
+<link rel="stylesheet" type="text/css" href="<%=PageJS("lightbox/lightbox.min.css")%>" />
+<div class="nbbox clearfix">
+<div class="user">
+    <ul class="tablist">
+        <li <%if (type == 0){Response.Write("class=\"selected\"");} %>><a href="<%=URL("P_UserComment","0","")%>"><span>{tag:已评价商品}</span></a></li>
+        <li <%if (type == 1){Response.Write("class=\"selected\"");} %>><a href="<%=URL("P_UserComment","1","")%>"><span>{tag:待评价商品}<em>(<%=Count_Comment(0) %>)</em></span></a></li>
+    </ul>
+    <div class="searchbox clearfix">
+        <select id="status">
+            <option value="">┌ {tag:状态}</option>
+            <option value="0" <%if (status == 0){%>selected<%} %>>{tag:全部}</option>
+            <%foreach (DB.LebiShop.Lebi_Type t in types){%>
+            <option value="<%=t.id %>" <%if (status == t.id){%>selected<%} %>><%=Tag(t.Name)%></option>
+            <%} %>
+        </select>
+        <input type="text" id="key" name="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" />
+        <a href="javascript:void(0)" onclick="search_();" class="btn btn-12"><s></s>{tag:查询}</a>
+    </div>
+    <%if (type == 0){ %>
+    <div class="table-list loadlist">
+    <%foreach (DB.LebiShop.Lebi_Comment c in comments)
+    {%>
+    <div class="loadli">
+    <table cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <th style="width:50px" valign="top" rowspan="2"><% if (GetProduct(c.Keyid).ImageOriginal == ""){ %>&nbsp;<%}else{ %><a href="<%=URL("P_Product",c.Keyid) %>"><img style="height: 50px;width: 50px;vertical-align:middle" src="<%=Image(GetProduct(c.Keyid).ImageOriginal,50,50) %>" /></a><%} %></th>
+        <th style="text-align:left" valign="top"><a href="<%=URL("P_Product",c.Keyid) %>"><%=Lang(GetProduct(c.Keyid).Name)%></a></th>
+        <th style="width:70px" valign="top"><%=TypeName(c.Status) %></th>
+    </tr>
+    <tr>
+        <td colspan="2"><ul class="comment_star"><li><em class="comments_bg stars_<%=c.Star%>"></em></li></ul></td>
+    </tr>
+    <tr><td colspan="3">
+    <%=c.Content.Replace("\r\n", "<br/>")%><br /><%=FormatTime(c.Time_Add) %>
+    <ul class="piclist<%=c.id %>">
+        <%
+            string[] images = c.ImagesSmall.Split('@');
+            string[] bigs = c.Images.Split('@');
+            for (int i = 0; i < images.Count();i++)
+            {
+                if (images[i] == "")
+                    continue;
+        %>
+        <li class="imagespreviewlist">
+            <span class="image"><a href="<%=WebPath+bigs[i] %>" data-lightbox="image<%=c.id %>"><img src="<%=WebPath+images[i] %>" /></a></span>
+        </li>
+            <%} %>
+    </ul>
+    </td></tr>
+    <%
+    List<DB.LebiShop.Lebi_Comment> cr = DB.LebiShop.B_Lebi_Comment.GetList("Parentid = "+ c.id +"", "id desc");
+    foreach (DB.LebiShop.Lebi_Comment creply in cr)
+    {
+    %>
+    <tr><td colspan="3">{tag:客服回复}：<%=creply.Content%><em><%=creply.Time_Add%></em></td></tr>
+    <%} %>
+    </table>
+    </div>
+    <%} %>
+    </div>
+    <%}else{ %>
+    <div class="table-list loadlist">
+        <%foreach (DB.LebiShop.Lebi_Order_Product op in order_products)
+        {%>
+        <div class="loadli">
+        <table cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <th style="width:50px" valign="top" rowspan="2"><% if (op.ImageSmall == ""){ %>&nbsp;<%}else{ %><a href="<%=URL("P_Product",op.Product_id) %>"><img style="height: 50px;width: 50px;vertical-align:middle" src="<%=Image(op.ImageSmall) %>" /></a><%} %></th>
+            <th style="text-align:left" valign="top"><a href="<%=URL("P_Product",op.Product_id) %>"><%=Lang(op.Product_Name)%></a></th>
+            <th style="width:70px" valign="top"><a href="<%=URL("P_UserCommentWrite",op.id) %>">{tag:发表评价}</a></th>
+        </tr>
+        <tr>
+            <td colspan="2"><%=op.Time_Add %></td>
+        </tr>
+        </table>
+        </div>
+        <%} %>
+    </div>
+    <%} %>
+    <%if (CurrentSite.IsMobile==0){ %>
+        <div class="bottom clearfix"><div class="right"><%=PageString%></div></div>
+    <%}else{%>
+    <div class="loadpage">
+        <a data-next="<%=NextPage%>"></a>
+    </div>
+    <script>
+        $(document).ready(function () {
+            var container = document.querySelector('.loadlist');
+            var ias = $.ias({
+                container: ".loadlist",
+                item: ".loadli",
+                pagination: ".loadpage",
+                next: ".loadpage a"
+            });
+            ias.on('render', function (items) {
+                //$(items).css({ opacity: 0 });
+            });
+            ias.on("rendered", function (items) {
+            });
+            ias.extension(new IASSpinnerExtension({ html: "<div class=\"loadinginfo\"><img src=\"{src}\" />&nbsp;{Tag:加载中}</div>" }));
+            ias.extension(new IASTriggerExtension({ text: '{Tag:加载更多}', offset: 100, html: "<div class=\"loadinginfo more\"><p>{text}</p></div>" }));
+            ias.extension(new IASNoneLeftExtension({
+                text: '', html: ""
+            }));
+        });
+    </script>
+    <%}%>
+</div>
+</div>
+<script type="text/javascript" src="<%=PageJS("lightbox/lightbox.min.js")%>"></script>
+<script type="text/javascript">
+    function search_() {
+        var key = $("#key").val();
+        var status = $("#status").val();
+        window.location = "?type=<%=type %>&key=" + escape(key) + "&status=" + status;
+    }
+    function Delete() {
+        if (!confirm("{tag:确认要删除吗？}}"))
+            return false;
+        var ids = GetChkCheckedValues("id");
+        var postData = { "ids": ids };
+        var url = path+"/ajax/ajax_user.aspx?__Action=Comment_Delete";
+        RequestAjax(url, postData, function () { MsgBox(1, "{tag:操作成功}", "?") });
+    }
+</script>

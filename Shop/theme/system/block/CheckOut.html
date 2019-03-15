@@ -1,0 +1,470 @@
+﻿<!--
+Name:收银台
+Page:P_CheckOut
+-->
+<script type="text/javascript">
+    var BillFlag=<%=SYS.BillFlag %>;
+    <%
+    if(basket.Products.Count==0){ %>
+    MsgBox(2, "{tag:购物车为空，请将您要购买的商品放入购物车}", "<%=LanguagePath%>");
+    <%
+    } %>
+</script>
+<script src="<%=WebPath %>/theme/system/js/order.js" type="text/javascript"></script>
+<div id="checkout">
+    <div class="checkout">
+        <div class="mt">
+            <h2>
+                {tag:收货人信息}</h2>
+        </div>
+        <div class="mc">
+            <div id="checkout_address">
+            </div>
+        </div>
+        <div class="mt">
+            <h2>
+                {tag:配送方式}</h2>
+        </div>
+        <div class="mc">
+            <div id="checkout_transport">
+            </div>
+        </div>
+        <div class="mt">
+            <h2>
+                {tag:支付方式}</h2>
+        </div>
+        <div class="mc">
+            <div id="checkout_pay">
+            </div>
+        </div>
+        <%if (SYS.BillFlag == "1")
+      { %>
+        <div class="mt">
+            <h2>
+                {tag:发票信息}</h2>
+        </div>
+        <div class="mc">
+            <div id="checkout_bill">
+            </div>
+        </div>
+        <%} %>
+        <div class="clear">
+        </div>
+    </div>
+    <div id="orderinfo">
+        <div class="mt">
+            <strong>
+                {tag:订单信息}</strong></div>
+        <div class="mc">
+            <%if (basket.Products.Count > 0)
+          {%>
+            <dl style="border-top: 0px solid #EDEDED;">
+                <dt>
+                    {tag:订单清单}</dt>
+                <dd class="p-list">
+                    <table width="100%" cellspacing="0" cellpadding="0">
+                        <tbody>
+                            <tr>
+                                <th style="width: 100px">
+                                    {tag:商品编号}
+                                </th>
+                                <th>
+                                    {tag:商品名称}
+                                </th>
+                                <th style="width: 100px">
+                                    {tag:价格}
+                                </th>
+                                <th style="width: 100px">
+                                    {tag:折扣}
+                                </th>
+                                <th style="width: 100px">
+                                    {tag:数量}
+                                </th>
+                                <th style="width: 100px">
+                                    {tag:小计}
+                                </th>
+                            </tr>
+                            <% 
+            foreach (DB.LebiShop.Lebi_User_Product p in basket.Products)
+            {
+                DB.LebiShop.Lebi_Product model = GetProduct(p.Product_id);
+
+                            %>
+                            <tr>
+                                <td>
+                                    <%=model.Number%>
+                                </td>
+                                <td style="text-align: left">
+                                    <a href="<%=URL("P_Product",model.id) %>" target="_blank">
+                                        <%=Lang(model.Name)%></a> <span>
+                                            <%=Shop.Bussiness.EX_Product.ProPertyNameStr(model, CurrentLanguage.Code)%>
+                                            <%if (p.ProPerty134 !=""){ %><br /><%=p.ProPerty134 %><%} %></span>
+                                </td>
+                                <td>
+                                    <span class="ftx04">
+                                        <%
+                                        if(model.Type_id_ProductType==323 && model.Time_Expired > System.DateTime.Now)
+                                            Response.Write(Tag("积分")+":"+model.Price_Sale);
+                                        else
+                                            Response.Write(FormatMoney(p.Product_Price));
+                                        %>
+                                    </span>
+                                </td>
+                                <td>
+                                    <%=p.Discount==100?"-":p.Discount+"%" %>
+                                </td>
+                                <td>
+                                    <%=p.count%>
+                                </td>
+                                <td>
+                                    <%
+                                        if(model.Type_id_ProductType==323 && model.Time_Expired > System.DateTime.Now)
+                                            Response.Write(Tag("积分")+":"+model.Price_Sale* p.count);
+                                        else
+                                            Response.Write(FormatMoney(p.Product_Price * p.count * p.Discount / 100));
+                                    %>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </dd>
+            </dl>
+            <%} %>
+            <%if (basket.FreeProducts.Count > 0)
+          {%>
+            <dl style="border-top: 0px solid #EDEDED;">
+                <dt>
+                    {tag:赠品清单}</dt>
+                <dd class="p-list">
+                    <table width="100%" cellspacing="0" cellpadding="0">
+                        <tbody>
+                            <tr>
+                                <th style="width: 100px">
+                                    {tag:商品编号}
+                                </th>
+                                <th>
+                                    {tag:商品名称}
+                                </th>
+                                <th style="width: 100px">
+                                    {tag:数量}
+                                </th>
+                            </tr>
+                            <% 
+            foreach (DB.LebiShop.Lebi_User_Product p in basket.FreeProducts)
+            {
+                DB.LebiShop.Lebi_Product model = GetProduct(p.Product_id);
+                            %>
+                            <tr>
+                                <td>
+                                    <%=model.Number%>
+                                </td>
+                                <td style="text-align: left">
+                                    <a href="<%=URL("P_Product",model.id) %>" target="_blank">
+                                        <%=Lang(model.Name)%></a>
+                                </td>
+                                <td>
+                                    <%=p.count%>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </dd>
+            </dl>
+            <%} %>
+        </div>
+        <div class="ordertips">
+            <div class="ordertotal">
+                <%if (basket.Money_Market >0){ %>{tag:市场价}：<font color="#ff3333"><%=FormatMoney(basket.Money_Market)%></font><%} %>
+                <%if(basket.Point_Buy>0){ %>
+                &nbsp;&nbsp;&nbsp;&nbsp;{tag:所需积分}：<font color="#ff3333"><%=basket.Point_Buy%></font>
+                <%} %>
+                <%if(basket.Point>0){ %>
+                &nbsp;&nbsp;&nbsp;&nbsp;{tag:获得积分}：<font color="#ff3333"><%=basket.Point%></font>
+                <%} %>
+                <%if(basket.Weight>0){ %>
+                &nbsp;&nbsp;&nbsp;&nbsp;{tag:总重量}：<font color="#ff3333"><%=basket.Weight%></font> {tag:KG}
+                <%} %>
+                <%if(basket.Volume>0){ %>
+                &nbsp;&nbsp;&nbsp;&nbsp;{tag:体积}：<font color="#ff3333"><%=(basket.Volume/1000000).ToString("0.00")%></font> m&sup3;
+                <%} %>
+            </div>
+            <%if (basket.PromotionTypes.Count > 0)
+              { %>
+            <div class="orderdiscount">
+                {tag:优惠促销}：
+                <%
+                foreach(BasketShop shop in basket.Shops){ 
+                foreach(Lebi_Promotion_Type pt in shop.PromotionTypes){ %>
+                <%=shop.Shop.id>0?"["+shop.Shop.Company+"]":"" %><%=Lang(pt.Name) %>&nbsp;&nbsp;
+                <%}} %>
+            </div>
+            <%} %>
+        </div>
+<div class="otherpay">
+    <%if (cards.Count > 0)
+      { %>
+    <div class="item">
+        <input type="text" id="money_card312" value="" style="display:none"/>
+        <div class="title"><input type="checkbox" name="usermoneytype" value="1" order="true"/>{tag:使用代金券}</div>
+        <div class="content">
+            <div class="tablebox">
+            <table class="cardlist" width="100%" cellspacing="0" cellpadding="0" id="card312list">
+                <tr>
+                    <th style="width: 100px">
+                        {tag:编号}
+                    </th>
+                    <th style="width: 100px">
+                        {tag:名称}
+                    </th>
+                    <th style="width: 100px">
+                        {tag:金额}
+                    </th>
+                    <th>
+                        {tag:使用条件}
+                    </th>
+                    <th style="width: 100px">
+                        {tag:有效期}
+                    </th>
+                </tr>
+                <%foreach (DB.LebiShop.Lebi_Card c in cards)
+                  { %>
+                <tr>
+                    <td class="code"><input type="checkbox" value="<%=c.id %>" <%=Shop.Bussiness.Basket.CheckCard(basket, c)?"":"disabled" %> money="<%=c.Money %>" name="pay312" id="pay312_<%=c.id %>" class="check" order="true" rflag="<%=c.IsCanOtherUse %>" onclick="select312(<%=c.id %>);"/><%=c.Code %></td>
+                    <td class="code"><%=cardname(c.CardOrder_id) %></td>
+                    <td class="money"><%=FormatMoney(c.Money) %></td>
+                    <td class="des"><%=cardinfo(c)%><input type="hidden" name="cardmoney" value="<%=c.Money_Last %>" /></td>
+                    <td class="time"><%=c.Time_End.ToString("yyyy-MM-dd")%></td>
+                </tr>
+                <%} %>
+            </table>
+            </div>
+        </div>
+    </div>
+    <%} %>
+    <div class="item">
+        <input type="text" id="money_card311" value="" style="display:none"/>
+        <div class="title"><input type="checkbox" name="usermoneytype" value="2" order="true"/>{tag:使用礼品卡}</div>
+        <div class="content">
+            {tag:编号}：<input type="text" id="moneycardcode" name="moneycardcode" order="true" value="" maxlength="20" size="15" class="input" /> 
+            {tag:密码}：<input type="text" id="moneycardpwd" name="moneycardpwd" order="true" value="" maxlength="20" size="10" class="input" />
+            <a href="javascript:void(0)" onclick="checkmoneycard();" class="btn btn-11"><s></s>{tag:查询}</a>
+            <span id="moneycardstatus"></span>
+            <div class="moneycardresult" >
+                <div class="tablebox">
+                <table class="cardlist" cellspacing="0" cellpadding="0" id="card311list">
+                    <tr>
+                        <th style="width: 100px">
+                            {tag:编号}
+                        </th>
+                        <th style="width: 100px">
+                            {tag:名称}
+                        </th>
+                        <th style="width: 100px">
+                            {tag:金额}
+                        </th>
+                        <th style="width: 100px">
+                            {tag:余额}
+                        </th>
+                        <th style="width: 100px">
+                            {tag:使用}
+                        </th>
+                        <th style="width: 100px">
+                            {tag:有效期}
+                        </th>
+                    </tr>
+                    <%foreach (DB.LebiShop.Lebi_Card c in moneycards)
+                    { %>
+                    <tr>
+                    <td class="code"><input type="checkbox" id="pay311_<%=c.id %>" value="<%=c.id %>" money="<%=c.Money_Last %>" order="true" name="pay311" class="check" onclick="select311();"/><%=c.Code %></td>
+                    <td class="name"><%=cardname(c.CardOrder_id) %></td>
+                    <td class="money"><%=FormatMoney(c.Money) %></td>
+                    <td class="money_last"><%=FormatMoney(c.Money_Last) %></td>
+                    <td class="use">
+                        <span class="show_moneyuse"></span>
+                        <!--可用金额-->
+                        <input type="hidden" name="cardmoney" value="<%=c.Money_Last %>" /> 
+                        <!--扣除金额-->
+                        <input type="hidden" name="Money_Card311" order="true" value="0" />
+                    </td>
+                    <td class="time"><%=c.Time_End.ToString("yyyy-MM-dd")%></td>
+                    </tr>
+                   <%} %>
+                   <tr id="moneycardresult" style="display:none;" >
+                    <td class="code"></td>
+                    <td class="name"></td>
+                    <td class="money"></td>
+                    <td class="money_last"></td>
+                    <td class="use">
+                        <span class="show_moneyuse"></span>
+                        <!--可用金额-->
+                        <input type="hidden" name="cardmoney" value="" /> 
+                        <!--扣除金额-->
+                        <input type="hidden" name="Money_Card311" order="true" value="0" />
+                     </td>
+                    <td class="time"></td>
+                    </tr>
+                </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%if (CurrentUser.Money > 0){ %>
+    <div class="item">
+        <div class="title"><input type="checkbox" value="3" id="payusermoney" name="usermoneytype" onclick="selectusermongy();" order="true"/>{tag:使用余额}</div>
+        <div class="content">
+            <table class="cardlist" cellspacing="0" cellpadding="0" id="usermoneyitem">
+                <tr>
+                    <td class="usermoney">
+                    {tag:余额}：<%=FormatMoney(CurrentUser.Money) %>&nbsp;&nbsp;{tag:使用}：<!--可用金额--><input type="hidden" id="Money_canused" name="Money_canused" value="<%=CurrentUser.Money%>" /><input type="hidden" id="CurrentExchangeRate" name="CurrentExchangeRate" value="<%=CurrentCurrency.ExchangeRate %>" /><span class="show_moneyuse"><%=FormatMoney(0) %></span><!--扣除金额--><input type="hidden" name="Money_UserCut" order="true" value="0" />&nbsp;&nbsp;&nbsp;&nbsp;{tag:支付密码}：<%if (CurrentUser.Pay_Password!=""){ %><input type="password" id="Pay_Password" name="Pay_Password" size="20" value="" order="true" class="input" /> <a href="<%=URL("P_UserQuestion","1")%>" target="_blank">{tag:忘记密码}</a><%}else{%><a href="<%=URL("P_UserChangePassword","")%>" target="_blank">{tag:设置支付密码}</a><%}%>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <%} %>
+</div>
+        <div class="mt">
+            <h2>{tag:订单留言}</h2>
+        </div>
+        <div class="mc">
+            <input type="text" id="remark" name="remark" order="true" value="" maxlength="200" style="width:100%" class="input" />
+        </div>
+        <div class="total" id="orderform">
+        </div>
+    </div>
+    <%if (ProPerty135.Count > 0){ %>
+    <div class="checkout orderproperty">
+    <div class="mt">
+        <h2>{tag:订单调查}</h2>
+    </div>
+    <div class="mc">
+        <table width="100%" cellspacing="0" cellpadding="0">
+        <%foreach (Lebi_ProPerty p in ProPerty135){%>
+         <tr>
+            <th><%=Lang(p.Name) %><input type="hidden" name="Propertyid" value="<%=p.id%>" order="true" /></th>
+         </tr>
+         <tr>
+            <td>
+            <%
+            List<Lebi_ProPerty> ProPerty135list = B_Lebi_ProPerty.GetList("parentid = "+ p.id +"", "Sort desc");
+            if (ProPerty135list.Count > 0){
+            foreach (Lebi_ProPerty pl in ProPerty135list)
+            {
+                %>
+                <label><input type="radio" name="Property135<%=p.id%>" value="<%=pl.id%>" order="true" /><%=Lang(pl.Name) %></label>&nbsp;&nbsp;
+                <%}}else{ %>
+                <input type="text" name="Property135<%=p.id%>" value="" class="input" order="true" />
+            <%
+            }
+            %>
+            </td>
+        </tr>
+        <%
+        }
+        %>
+        </table>
+    </div>
+    </div>
+    <%} %>
+    <div class="ordersubmit">
+        <a href="<%=URL("P_Basket","") %>" class="btn btn-10"><s></s>
+            {tag:返回修改}</a><a href="javascript:void(0);" onclick="OrderSubmit();" class="btn btn-6"><s></s>{tag:立即提交}</a>
+    </div>
+    <div id="overlay" class="overlay"></div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        LoadPage("<%=WebPath%>/inc/CheckOut_Address.aspx?sid=<%=sid %>", "checkout_address");
+        if (BillFlag == 1)
+            LoadPage("<%=WebPath %>/inc/CheckOut_Bill.aspx?sid=<%=sid %>", "checkout_bill");
+    });
+    function OrderSubmit() {
+        //if (!confirm("{tag:确认提交吗？}"))
+        //    return false;
+        //$("#overlay").show();
+        var postData = GetFormJsonData("order");
+        var url = path+"/ajax/ajax_order.aspx?__Action=order_save&sid=<%=sid %>";
+        RequestAjax(url, postData, function (res) { MsgBox(1, "{tag:正在提交……}", "<%=URL("P_Cashier","")%>?order_id=" + res.id +"") });
+    }
+    $(function () {
+        $(".otherpay .item .title").each(function (i) {
+            $(this).click(function () {
+                var che = $(this).children("input");
+                var t=che.val();
+                if (che.is(":checked")) {
+                    $(this).next().show();
+                } else {
+                    $(this).next().hide();
+                    if(t==1){
+                        $("input[type='checkbox'][name='pay312']").attr("checked",false);
+                        select312();
+                    }
+                    if(t==2){
+                        $("input[type='checkbox'][name='pay311']").attr("checked",false);
+                        select311();
+                    }
+                    if(t==3){
+                        selectusermongy();
+                    }
+                }
+            });
+        });
+    });
+    function select312(id) {
+         
+         if(id!=undefined)
+         {
+            var flag=$("#pay312_"+id).attr('rflag');
+            var check=$("#pay312_"+id).is(":checked");
+            if(flag==1)
+            {
+                $("input[type='checkbox'][name='pay312'][rflag='0']").attr("checked",false);
+            }else{
+                $("input[type='checkbox'][name='pay312']").attr("checked",false);
+                if(check)
+                    $("#pay312_"+id).attr("checked",true);
+            }
+         }
+         SetMoneyCardAndUserMoney();
+    }
+    function select311() {
+        SetMoneyCardAndUserMoney();
+    }
+    function selectusermongy() {
+        SetMoneyCardAndUserMoney();
+    }
+    function checkmoneycard()
+    {
+        var moneycardcode=$("#moneycardcode").val();
+        var moneycardpwd=$("#moneycardpwd").val();
+        var postdata={"moneycardcode":moneycardcode,"moneycardpwd":moneycardpwd};
+        var url=path+"/ajax/ajax_order.aspx?__Action=MoneyCardCheack&sid=<%=sid %>";
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: postdata,
+            dataType: 'json',
+            success: function (res) {
+                if (res.msg == "OK") {
+                    if ($("#pay311_"+res.id)[0] == undefined){
+                    $("#moneycardstatus").html('')
+                    $("#moneycardresult").show();
+                    $("#moneycardresult .name").html(res.name);
+                    $("#moneycardresult .code").html('<input type="checkbox" value="'+res.id+'" money="'+res.money_lastvalue+'" name="pay311" order="true" class="check" onclick="select311();"/>'+res.code);
+                    $("#moneycardresult .money").html(res.money);
+                    $("#moneycardresult .money_last").html(res.money_last);
+                    $("#moneycardresult .use input[name='cardmoney']").val(res.money_lastvalue);
+                    $("#moneycardresult .time").html(res.timeend);
+                    }
+                }
+                else {
+                    $("#moneycardstatus").html(res.msg);
+                    $("#moneycardresult").hide();
+                    return false;
+                }
+            }
+        });
+    }
+</script>

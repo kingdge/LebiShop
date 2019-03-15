@@ -1,0 +1,175 @@
+﻿{layout:default} {class:Shop.Admin.product.product_batch_price}
+<lbhead>
+    <title><%=Tag("批量调价")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("批量调价")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="proBox clear">
+    <ul class="btns clear">
+        <li class="submit" onclick="SaveObj(1);"><%=Tag("提交")%></li>
+    </ul>
+    <div class="iTabHead">
+        <table class="table">
+        <tr>
+            <th>
+                <%=Tag("上架日期")%>：
+            </th>
+            <td>
+                <input type="text" name="dateFrom" id="dateFrom" size="12" class="input-calendar" value="" shop1="true" /> - <input type="text" name="dateTo" id="dateTo" size="12" class="input-calendar" value="" shop1="true" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("商品分类")%>：
+            </th>
+            <td>
+                <select name="Pro_Type_id" shop1="true">
+                    <option value="">┌<%=Tag("全部")%></option>
+                    <%=Shop.Bussiness.EX_Product.TypeOption(0,0,0,CurrentLanguage.Code,Shop.Bussiness.EX_Admin.Project().Pro_Type_ids)%>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("商品品牌")%>：
+            </th>
+            <td>
+                <select name="brand" shop1="true">
+                    <option value="0">┌<%=Tag("全部")%></option>
+                    <%=Shop.Bussiness.EX_Product.BrandOption(0, CurrentLanguage.Code)%>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("商品标签")%>：
+            </th>
+            <td>
+                <select name="tag" shop1="true">
+                    <option value="0">┌<%=Tag("全部")%></option>
+                    <%=Shop.Bussiness.EX_Product.Pro_TagOption(0, CurrentLanguage.Code)%>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("市场价")%>：
+            </th>
+            <td>
+                <label><input type="radio" name="price_markettype" value="0" shop1="true" checked /><%=Tag("上浮")%></label>
+                <label><input type="radio" name="price_markettype" value="1" shop1="true" /><%=Tag("下调")%></label>
+                <input type="text" shop1="true" name="price_marketvalue" style="width: 80px" value="" class="input" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
+                <select name="price_marketadd" shop1="true"><option value="0"><%=Tag("百分比")%></option><option value="1"><%=Tag("数值")%></option></select>
+            </td>
+        </tr>
+        <%if (Shop.Bussiness.EX_Admin.CheckPower("product_price_cost")){ %>
+        <tr>
+            <th>
+                <%=Tag("成本价")%>：
+            </th>
+            <td>
+                <label><input type="radio" name="price_costtype" value="0" shop1="true" checked /><%=Tag("上浮")%></label>
+                <label><input type="radio" name="price_costtype" value="1" shop1="true" /><%=Tag("下调")%></label>
+                <input type="text" shop1="true" name="price_costvalue" style="width: 80px" value="" class="input" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
+                <select name="price_costadd" shop1="true"><option value="0"><%=Tag("百分比")%></option><option value="1"><%=Tag("数值")%></option></select>
+            </td>
+        </tr>
+        <%} %>
+        <tr>
+            <th>
+                <%=Tag("销售价")%>：
+            </th>
+            <td>
+                <label><input type="radio" name="pricetype" value="0" shop1="true" checked /><%=Tag("上浮")%></label>
+                <label><input type="radio" name="pricetype" value="1" shop1="true" /><%=Tag("下调")%></label>
+                <input type="text" shop1="true" name="pricevalue" style="width: 80px" value="" class="input" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
+                <select name="priceadd" shop1="true" /><option value="0"><%=Tag("百分比")%></option><option value="1"><%=Tag("数值")%></option></select>
+            </td>
+        </tr>
+    </table>
+    </div>
+    </div>
+        <div class="proBox clear">
+    <ul class="btns clear">
+        <li class="submit" onclick="SaveObj(2);"><%=Tag("提交")%></li>
+    </ul>
+    <div class="iTabHead">
+        <table class="table">
+        <tr>
+            <th>
+                <%=Tag("上架日期")%>：
+            </th>
+            <td>
+                <input type="text" name="dateFrom" size="12" class="input-calendar" value="" shop2="true" /> - <input type="text" name="dateTo" size="12" class="input-calendar" value="" shop2="true" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("商品分类")%>：
+            </th>
+            <td>
+                <select name="Pro_Type_id" shop2="true">
+                    <option value="">┌<%=Tag("全部")%></option>
+                    <%=Shop.Bussiness.EX_Product.TypeOption(0,0,0,CurrentLanguage.Code)%>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("商品品牌")%>：
+            </th>
+            <td>
+                <select name="brand" shop2="true">
+                    <option value="0">┌<%=Tag("全部")%></option>
+                    <%=Shop.Bussiness.EX_Product.BrandOption(0, CurrentLanguage.Code)%>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("商品标签")%>：
+            </th>
+            <td>
+                <select name="tag" shop2="true">
+                    <option value="0">┌<%=Tag("全部")%></option>
+                    <%=Shop.Bussiness.EX_Product.Pro_TagOption(0, CurrentLanguage.Code)%>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("销售价")%>：
+            </th>
+            <td>
+                = <%=Tag("成本价")%> <%=Tag("上浮")%>
+                <input type="text" shop2="true" name="addvalue" style="width: 80px" value="" class="input" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
+                <select name="addtype" shop2="true"><option value="0"><%=Tag("百分比")%></option><option value="1"><%=Tag("数值")%></option></select>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("销售价")%>：
+            </th>
+            <td>
+                = <%=Tag("市场价")%> <%=Tag("下调")%>
+                <input type="text" shop2="true" name="reducevalue" style="width: 80px" value="" class="input" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
+                <select name="reducetype" shop2="true"><option value="0"><%=Tag("百分比")%></option><option value="1"><%=Tag("数值")%></option></select>
+            </td>
+        </tr>
+    </table>
+    </div>
+    </div>
+    <script type="text/javascript">
+        function SaveObj(step) {
+            var postData = GetFormJsonData("shop"+step);
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Product_Batch_Price_Update&step="+step;
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>

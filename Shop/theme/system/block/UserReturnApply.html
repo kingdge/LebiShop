@@ -1,0 +1,77 @@
+﻿<!--
+Name:用户中心-退货单申请
+Page:P_UserReturnApply
+-->
+<div class="nbbox clearfix">
+<div class="user">
+    <table cellpadding="0" cellspacing="0" width="100%" class="tablelist box">
+        <tr>
+            <th style="width: 50px;text-align:center;">{tag:选择}</th>
+            <th style="width: 120px;">{tag:商品编号}</th>
+            <th>{tag:订单商品}</th>
+            <th style="width: 80px;">{tag:收货数量}</th>
+            <th style="width: 80px;">{tag:已退数量}</th>
+            <th style="width: 80px;">{tag:退货数量}</th>
+        </tr>
+        <%
+        foreach (DB.LebiShop.Lebi_Order_Product o_p in order_products){
+        if(o_p.Type_id_OrderProductType==252)
+        continue;
+        %>
+        <tr>
+            <td style="text-align:center;"><input type="checkbox" name="opid" shop="true" value="<%=o_p.id %>" /></td>
+            <td><%=o_p.Product_Number%></td>
+            <td><a href="<%=URL("P_Product",o_p.Product_id) %>" target="_blank"><%=Lang(o_p.Product_Name) %></a></td>
+            <td><%=o_p.Count_Received %></td>
+            <td><%=o_p.Count_Return %></td>
+            <td><input type="text" id="product_<%=o_p.Product_id %>" name="product_<%=o_p.id %>" shop="true" style="width: 50px;" value="<%=o_p.Count%>" /></td>
+        </tr>
+        <%} %>
+    </table>
+</div>
+</div>
+<div class="nbbox clearfix">
+<div class="userbox">
+    <div class="mt">
+        <h2>{tag:收货人信息}</h2>
+    </div>
+    <div class="mc clearfix">
+    <div class="dl-table clearfix">
+    <dl>
+        <dt>{tag:收货人}：</dt>
+        <dd><%=shouhuoren %></dd>
+    </dl>
+    <dl>
+        <dt>{tag:收货地址}：</dt>
+        <dd><%=shouhuodizhi %></dd>
+    </dl>
+    <dl>
+        <dt>{tag:电话}：</dt>
+        <dd><%=shouhuodianhua %></dd>
+    </dl>
+    <dl>
+        <dt>{tag:邮编}：</dt>
+        <dd><%=shouhuoyoubian %></dd>
+    </dl>
+    <dl>
+        <dt>{tag:退货原因}：</dt>
+        <dd><textarea class="textarea" style="width: 400px; height: 50px;" id="say" name="say" min="notnull" shop="true"></textarea>
+        <span id="Formsay"></span></dd>
+    </dl>
+    <dl class="dl-btn">
+        <dt></dt>
+        <dd><a href="javascript:void(0)" onclick="submit();" class="btn btn-12"><s></s>{tag:提交}</a></dd>
+    </dl>
+    </div>
+    </div>
+</div>
+</div>
+<script type="text/javascript" >
+    function submit() {
+        if (!CheckForm("shop", "span"))
+            return false;
+        var postData = GetFormJsonData("shop");
+        var url = path+"/ajax/Ajax_order.aspx?__Action=torder_save&order_id=<%=order.id %>";
+        RequestAjax(url, postData, function () { MsgBox(1, "{tag:操作成功}", "<%=URL("P_UserReturn","") %>") });
+    }
+</script>

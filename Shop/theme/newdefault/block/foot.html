@@ -1,0 +1,17 @@
+﻿<div class="footer">
+    <%=Lang(SYS.FootHtml) %>
+    <div class="copyright f11 footer_logos">
+        <div class="footer_logos-list">
+            ${#table:Lebi_FriendLink;#where:IsShow=1 and ','+Language_ids+',' like '%," + CurrentLanguage.id + ",%';#top:7;#order:Sort desc,id desc;
+            
+                <% if ({Logo} != "" && {IsPic} == 1){ %><a href="{%Url%}" target="_blank"><img src="<%=Image({Logo}) %>" alt="{%Name%}" /></a><%}else{%><a href="{%Url%}" target="_blank">{%Name%}</a><%} %>     
+           
+            }$
+         </div>
+    </div>
+</div>
+<div class="copyright">
+    {MOD:ServicePannel}
+    <%=Lang(SYS.Copyright) %>
+    <%=GetCNZZ() %>
+</div>

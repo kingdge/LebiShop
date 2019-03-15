@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="redirect_weixin.aspx.cs" Inherits="Shop.platform.redirect_weixin" %>

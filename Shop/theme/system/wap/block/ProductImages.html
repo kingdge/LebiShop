@@ -1,0 +1,51 @@
+﻿<!--
+Name:商品大图
+Page:P_Product
+-->
+<style>
+    .slider img {
+        max-height: 320px;
+        max-width: 320px;
+    }
+</style>
+<div id="lightBox" class="embed">
+	<div class="pagingArea">
+		<div id="slider" class="slider">
+			<ul>
+			</ul>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+<% 
+string ims="";
+foreach(LBimage image in images){
+string temp="{\"img_id\":\"\",\"img_url\":\""+Image(image.original,"big")+"\",\"thumb_url\":\""+Image(image.original,"big")+"\",\"img_original\":\""+Image(image.original)+"\",\"img_desc\":\"\"}";
+if(ims=="")
+    ims=temp;
+else
+    ims+=","+temp;
+} %>
+var myarr = [<%=ims %>];
+    var promoteItems=new Array();
+promoteItems[0]=new Array(); 
+promoteItems[0][0] = "<%=Image(product.ImageOriginal,"big") %>";
+promoteItems[0][1] = "<%=Image(product.ImageOriginal,"big") %>";
+                 
+for (i = 0; i < myarr.length; i++)
+{
+    promoteItems[i+1]=new Array(); 
+    promoteItems[i+1][0]=myarr[i]["img_url"];
+    promoteItems[i+1][1]=myarr[i]["img_original"];                   
+}
+				
+var noImg = 0;
+var slider = new Swipe($('#slider')[0],{
+	items:promoteItems,
+	gestureAllowed:true,//滑动
+	tapAllowed:true,	//点击
+	zoomingAllowed:true,//浮起 显示指定的大图
+    autoPlay:3000
+
+});
+</script>

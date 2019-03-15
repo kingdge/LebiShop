@@ -1,0 +1,91 @@
+﻿{layout:simple} {class:Shop.Admin.Config.Inquiry_Edit_window}
+<lbbody>
+<table class="table">
+    <tr>
+        <th style="width: 15%;">
+            <%=Tag("昵称")%>：
+        </th>
+        <td style="width: 35%;">
+            <%=model.UserName%>
+        </td>
+        <th style="width: 15%;">
+            <%=Tag("电子邮件")%>：
+        </th>
+        <td style="width: 35%;">
+            <a href="mailto:<%=model.Email %>?subject=RE:<%=model.Subject %>"><%=model.Email %></a>
+        </td>
+    </tr>
+    <tr>
+        <th >
+            <%=Tag("电话")%>：
+        </th>
+        <td>
+            <%=model.Phone%>
+        </td>
+        <th >
+            <%=Tag("时间")%>：
+        </th>
+        <td>
+            <%=FormatTime(model.Time_Add)%>
+        </td>
+    </tr>
+    <tr>
+        <th >
+            <%=Tag("状态")%>：
+        </th>
+        <td>
+            <%=Shop.Bussiness.EX_Type.TypeName(model.Type_id_InquiryStatus)%>
+        </td>
+        <th >
+            <%=Tag("更新时间")%>：
+        </th>
+        <td>
+            <%=FormatTime(model.Time_Update)%>
+        </td>
+    </tr>
+    <tr>
+        <th >
+            <%=Tag("标题")%>：
+        </th>
+        <td>
+            <%=model.Subject%>
+        </td>
+        <th >
+            <%=Tag("语言")%>：
+        </th>
+        <td>
+            <%=model.Language%>
+        </td>
+    </tr>
+    <tr>
+        <th >
+            <%=Tag("内容")%>：
+        </th>
+        <td colspan="3">
+            <%=model.Content%>
+        </td>
+    </tr>
+    <%if(model.Type_id_InquiryStatus==411){ %>
+    <tr>
+        <td colspan="4" class="action">
+            <div class="tools tools-m">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj(412);"><b></b><span><%=Tag("已回复")%></span></a></li>
+                    <li class="del"><a href="javascript:void(0);" onclick="SaveObj(413);"><b></b><span><%=Tag("无效")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+    <%} %>
+</table>
+<script type="text/javascript">
+    addtrbg(".table");
+    function SaveObj(t) {
+        var postData = GetFormJsonData("shop");
+        if (!CheckForm("shop", "span"))
+            return false;
+        var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=Inquiry_Edit&id=<%=model.id %>&t="+t;
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+</script>
+</lbbody>

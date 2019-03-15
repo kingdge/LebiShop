@@ -1,0 +1,77 @@
+﻿<!--
+Name:用户中心-咨询
+Page:All
+-->
+<div class="nbbox clearfix">
+<div class="user">
+    <div class="searchbox clearfix">
+        <select id="status">
+            <option value="">┌ {tag:状态}</option>
+            <option value="0" <%if (status == 0){%>selected<%} %>>{tag:全部}</option>
+            <%foreach (DB.LebiShop.Lebi_Type ctype in types){%>
+            <option value="<%=ctype.id %>" <%if (status == ctype.id){%>selected<%} %>><%=Tag(ctype.Name)%></option>
+            <%} %>
+        </select>
+        <input type="text" id="key" name="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" />
+        <a href="javascript:void(0)" onclick="search_();" class="btn btn-12"><s></s>{tag:查询}</a>
+    </div>
+    <div class="table-list loadlist">
+    <%foreach (DB.LebiShop.Lebi_Comment c in comments){%>
+    <div class="loadli">
+    <table cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <th style="width:50px" valign="top"><% if (GetProduct(c.Keyid).ImageOriginal == ""){ %>&nbsp;<%}else{ %><a href="<%=URL("P_Product",c.Keyid) %>"><img style="height: 50px;width: 50px;vertical-align:middle" src="<%=Image(GetProduct(c.Keyid).ImageOriginal,50,50) %>" /></a><%} %></th>
+        <th style="text-align:left" valign="top"><a href="<%=URL("P_Product",c.Keyid) %>"><%=Lang(GetProduct(c.Keyid).Name)%></a></th>
+        <th style="width:80px" valign="top"><%=TypeName(c.Status) %></th>
+    </tr>
+    <tr>
+        <td colspan="3"><%=c.Content.Replace("\r\n", "<br/>")%><br /><%=FormatTime(c.Time_Add) %></td>
+    </tr>
+    <%
+    List<DB.LebiShop.Lebi_Comment> cr = DB.LebiShop.B_Lebi_Comment.GetList("Parentid = "+ c.id +"", "id desc");
+    foreach (DB.LebiShop.Lebi_Comment creply in cr)
+    {
+    %>
+    <tr><td colspan="3">{tag:客服回复}：<%=creply.Content%> <em><%=FormatTime(creply.Time_Add)%></em></td></tr>
+    <%} %>
+    </table>
+    </div>
+    <%} %>
+    </div>
+    <%if (CurrentSite.IsMobile==0){ %>
+        <div class="bottom clearfix"><div class="left"></div><div class="right"><%=PageString%></div></div>
+    <%}else{%>
+    <div class="loadpage">
+        <a data-next="<%=NextPage%>"></a>
+    </div>
+    <script>
+        $(document).ready(function () {
+            var container = document.querySelector('.loadlist');
+            var ias = $.ias({
+                container: ".loadlist",
+                item: ".loadli",
+                pagination: ".loadpage",
+                next: ".loadpage a"
+            });
+            ias.on('render', function (items) {
+                //$(items).css({ opacity: 0 });
+            });
+            ias.on("rendered", function (items) {
+            });
+            ias.extension(new IASSpinnerExtension({ html: "<div class=\"loadinginfo\"><img src=\"{src}\" />&nbsp;{Tag:加载中}</div>" }));
+            ias.extension(new IASTriggerExtension({ text: '{Tag:加载更多}', offset: 100, html: "<div class=\"loadinginfo more\"><p>{text}</p></div>" }));
+            ias.extension(new IASNoneLeftExtension({
+                text: '', html: ""
+            }));
+        });
+    </script>
+    <%}%>
+</div>
+</div>
+<script type="text/javascript">
+    function search_() {
+        var key = $("#key").val();
+        var status = $("#status").val();
+        window.location = "?key=" + escape(key) + "&status=" + status;
+    }
+</script>

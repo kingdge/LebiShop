@@ -1,0 +1,165 @@
+﻿{layout:default} {class:Shop.Admin.product.Property}
+<lbhead>
+    <title><%=Tag("属性规格")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/multiselect/js/jquery.multiselect2side.js"></script>
+    <link rel="stylesheet" href="<%=site.AdminJsPath %>/multiselect/css/jquery.multiselect2side.css" type="text/css" media="screen" />
+</lbfile>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="add"><a href="javascript:void(0);" onclick="EditProPerty(0);"><b></b><span><%=Tag("添加")%></span></a></li>
+    <li class="del"><a href="javascript:void(0);" onclick="DelProPerty(0);"><b></b><span><%=Tag("删除")%></span></a></li>
+    <%if (tid == 131 || tid == 132 || tid == 133 || tid == 134){%>
+    <li class="reset"><a href="javascript:void(0);" onclick="EditCategory();"><b></b><span><%=Tag("关联分类")%></span></a></li>
+    <%}%>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="<%=site.AdminPath %>/product/"><%=Tag("商品管理")%></a> > <%=Tag(tmodel.Name)%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbtop>
+    <div class="mainbody_top">
+    <ul class="tablist">
+    <%foreach (DB.LebiShop.Lebi_Type t in types){ %>
+        <li <%if (t.id==tid){Response.Write("class=\"selected\"");} %>><a href="?tid=<%=t.id %>"><span><%=Tag(t.Name)%></span></a></li>
+    <%} %>
+    <li><a href="property_tag.aspx"><span><%=Tag("标签")%></span></a></li>
+    </ul>
+    </div>
+</lbtop>
+<lbbody>
+    <div class="searchbox">
+        <div class="searchbox-l">
+        <ul class="tabmenus">
+            <li <%if (tag=="none"){Response.Write("class=\"current\"");} %>><a href="?tid=<%=tid %>&tag=none"><span><%=Tag("无标签")%></span></a></li>
+            <%foreach (DB.LebiShop.Lebi_ProPerty_Tag t in tags)
+              { %>
+                <li <%if (t.Name==tag){Response.Write("class=\"current\"");} %>><a href="?tid=<%=tid %>&tag=<%=t.Name%>"><span><%=t.Name%></span></a></li>
+            <%} %>
+        </ul>
+        </div>
+        <div class="searchbox-r">
+        <input type="text" id="key" name="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" />
+        </div>
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th style="width: 40px">
+                <%=Tag("ID")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("代码")%>
+            </th>
+            <th style="width: 200px">
+                <%=Tag("属性名称")%>
+            </th>
+            <th>
+                <%=Tag("项目")%>
+            </th>
+
+            <th style="width: 100px">
+                <%=Tag("标签")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("备注")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("排序")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("商家")%>
+            </th>
+            <th style="width: 200px">
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_ProPerty model in models)
+          { %>
+        <tr class="list" ondblclick="EditProPerty(<%=model.id %>)">
+            <td style="text-align:center">
+                <input type="checkbox" name="id" del="true" value="<%=model.id %>" />
+            </td>
+            <td>
+                <%=model.id%>
+            </td>
+            <td>
+                <%=model.Code%>
+            </td>
+            <td>
+                <%=Shop.Bussiness.Language.Content(model.Name, CurrentLanguage.Code)%>
+            </td>
+            <td>
+                <%=GetProPerty(model.id,3)%>
+            </td>
+            <td>
+                <a href="?tid=<%=tid %>&tag=<%=model.Tag%>"><%=model.Tag%></a>
+            </td>
+            <td>
+                <%=model.Remark%>
+            </td>
+            <td>
+                <%=model.Sort%>
+            </td>
+            <td><%=model.Supplier_id > 0?Tag("是"):Tag("否")%></td>
+            <td>
+                <%if (model.Type_id_ProPertyType != 133)
+                  { %>
+                <a href="javascript:void(0);" onclick="Property(<%=model.id %>);"><%=Tag("编辑子项")%></a> | 
+                <%} %>
+                <a href="javascript:void(0);" onclick="EditProPerty(<%=model.id%>);"><%=Tag("编辑")%></a> | <a href="javascript:" onclick="DelProPerty(<%=model.id %>)"><%=Tag("删除")%></a>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function EditProPerty(id) {
+            var title_ = "<%=Tag("编辑属性规格")%>";
+            if (id == 0) title_ = "<%=Tag("添加属性规格")%>";
+            var url_ = "property_edit_window.aspx?tid=<%=tid%>&id=" + id;
+            var width_ = 600;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function Property(id) {
+            window.location = "property_value.aspx?pid="+id;
+        }
+        function DelProPerty(id) {
+            var postData;
+            if (id == 0)
+                postData = GetFormJsonData("del");
+            else
+                postData = { "id": id };
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Property_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function search_() {
+            var key = $("#key").val();
+            window.location = "?tid=<%=tid %>&tag=<%=tag %>&key=" + escape(key);
+        }
+        function EditCategory() {
+            var ids = GetChkCheckedValues("id");
+            if (ids == ""){
+                MsgBox(2, "<%=Tag("请先选择")%>", "");
+                return;
+            }
+            var title_ = "<%=Tag("关联分类")%>"; 
+            var height_ = "auto";
+            var url_ = "property_category_edit_window.aspx?tid=<%=tid %>&ids="+ids+"";
+            var width_ = 650;
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

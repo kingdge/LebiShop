@@ -1,0 +1,98 @@
+﻿{layout:simple} {class:Shop.Admin.promotion.card_edit_window}
+<lbbody>
+<table class="table">
+    <%if (card_ids == "")
+      { %>
+    <tr>
+        <th style="width: 20%;">
+            <%=Tag("范围")%>：
+        </th>
+        <td>
+            <%=su.Description == "" ? Tag("全部") : su.Description%>
+        </td>
+    </tr>
+    <%}
+      else
+      { %>
+    <tr id="showuser">
+        <th valign="top" style="width: 20%;">
+            <%=Tag("编号")%>：
+        </th>
+        <td>
+        <div class="proBox" id="proBox" style="width: 400px;overflow:hidden">
+            <ul class="btns clear">
+                <li class="delete" id="delInsurance" onclick="delitem();" style="margin-left:5px"><%=Tag("删除")%></li>
+                <li class="clean" id="clearInsurance" onclick="remove();"><%=Tag("清空")%></li>
+            </ul>
+			<div id="User_idsList" class="iTabBox" style="max-height: 75px;height:75px;_height: 75px;"><ul class="iTab"></ul></div>
+        </div>
+        <%foreach (DB.LebiShop.Lebi_Card u in models)
+          { %>
+        <script type="text/javascript">
+            var temp = '<li ondblclick="delitem();" title="<%=Tag("双击删除") %>" class="iName"><input type="hidden" name="card_ids" id="card_ids" value="<%=u.id %>" shop="true" /><input type="hidden" name="card_codes" id="card_codes" value="<%=u.Code %>" shop="true" /><span><%=u.Code %></span></li>';
+            $('#User_idsList ul').append(temp);
+            $('#User_idsList ul li').selectedElement({ css: 'on' });
+            $("#User_Name_To").attr("min", "");
+        </script>
+        <%}
+          %>
+              
+        </td>
+    </tr>
+    <%} %>
+    <tr>
+        <th style="width: 20%;">
+            <%=Tag("数量")%>：
+        </th>
+        <td>
+            <%=count%>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("状态")%>：
+        </th>
+        <td style="text-align: left;">
+            <select id="CardStatus" name="CardStatus" shop="true">
+                <option value="0"><%=Tag("请选择") %></option>
+                <%=Shop.Bussiness.EX_Type.TypeOption("CardStatus",0) %>
+            </select>
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan="2" class="action">
+            <div class="tools tools-m clear">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("提交")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+
+    function delitem() {
+        $("#User_idsList ul li[selectedElement]").remove();
+        if ($("#User_idsList ul li").length == 0)
+        {
+            $("#User_Name_To").show();
+            $("#User_Name_To").attr("min","notnull");
+            $("#proBox").hide();
+        }
+    }
+    function remove() {
+        $("#User_idsList ul li").remove();
+        $("#User_Name_To").show();
+        $("#User_Name_To").attr("min","notnull");
+        $("#proBox").hide();
+    }
+    function SaveObj() {
+        var postData = GetFormJsonData("shop");
+        if (!CheckForm("shop", "span"))
+            return false;
+        var url = "<%=site.AdminPath %>/ajax/ajax_sale.aspx?__Action=Cards_Edit&<%=su.URL %>";
+        RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", '?')});
+    }
+</script>
+</lbbody>

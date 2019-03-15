@@ -1,0 +1,104 @@
+﻿{layout:page} {class:Shop.Admin.Login}
+<lbhead>
+    <title><%=Tag("管理登陆")%>-<%=site.title%></title>
+</lbhead>
+<lbbody>
+    <section id="wrapper" class="login-register login-sidebar" style="background-image:url('<%=Shop.Bussiness.ShopCache.GetBaseConfig().system_login_background %>');">
+        <div class="login-box card">
+            <div class="card-body">
+                <form id="loginform" action="javascript:Login();" novalidate>
+                    <a href="javascript:void(0)" class="text-center db"><img src="<%=Shop.Bussiness.ShopCache.GetBaseConfig().system_login_logo %>" /></a>
+                    <div class="form-group m-t-40">
+                        <div class="col-xs-12">
+                            <input type="text" id="adminUserName" name="adminUserName" value="<%=LB.Tools.CookieTool.GetCookieString("AdminUserName") %>" class="form-control" required placeholder="<%=Tag("请输入用户名")%>" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <input type="password" id="adminPwd" name="adminPwd" class="form-control" required placeholder="<%=Tag("请输入密码")%>" />
+                        </div>
+                    </div>
+                    <%if (SYS.Verifycode_AdminLogin=="1"){ %>
+                    <div id="code" class="form-group" <%if (LoginError != true){ %>style="display:none"<%}else{ %>style="display:" <%} %>>
+                        <div class="col-xs-12">
+                            <div class="input-group">
+                                <input type="text" id="txt_yz" name="txt_yz" class="form-control" placeholder="<%=Tag("验证码")%>" />
+                                <div class="input-group-append">
+                                   <img class="verifycode" id="img1" src="../code.aspx" title="<%=Tag("点击刷新验证码")%>" onclick="refresh('img1')" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <%} %>
+                    <div class="form-group">
+                        <div class="d-flex no-block align-items-center">
+                            <div class="custom-control custom-checkbox p-t-0">
+                                <input type="checkbox" id="saveusername" name="saveusername" value="1" class="custom-control-input" checked />
+                                <span class="custom-control-label"><%=Tag("记住用户名")%></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group text-center m-t-20">
+                        <div class="col-xs-12">
+                            <button class="btn btn-info btn-lg btn-block text-uppercase waves-effect waves-light" type="submit"><%=Tag("登陆")%></button>
+                        </div>
+                    </div>
+                    <div class="form-group m-b-0">
+                        <div id="mes" class="col-sm-12 text-center">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</lbbody>
+<lbscripts>
+    <script src="<%=site.AdminJsPath %>/validation.js"></script>
+    <script>
+        ! function (window, document, $) {
+            "use strict";
+            $("input").not("[type=submit]").jqBootstrapValidation()
+        }(window, document, jQuery);
+        function Login() {
+            var userName = $("#adminUserName").val();
+            var userPwd = $("#adminPwd").val();
+            var code = $("#txt_yz").val();
+            var saveusername = $("#saveusername").val();
+            if (userName == "" || userName == "<%=Tag("请输入用户名")%>") {
+                $("#mes").html("<%=Tag("请输入用户名")%>");
+                return;
+            }
+            if (userPwd == "" || userPwd == "<%=Tag("请输入密码")%>") {
+                $("#mes").html("<%=Tag("请输入密码")%>");
+                return;
+            }
+            <%if (LoginError && SYS.Verifycode_AdminLogin == "1") { %>
+            if (code == "") {
+                $("#mes").html("<%=Tag("请输入验证码")%>");
+                return;
+            }
+            <%} %>
+            $.ajax({
+                type: "POST",
+                url: "<%=site.AdminPath%>/ajax/ajax_login.aspx?__Action=AdminLogin",
+                data: { UserName: userName, UserPWD: userPwd, code: code, saveusername: saveusername },
+                beforeSend: function () {
+                    $("#mes").html("<%=Tag("正在登录")%>……");
+                },
+                success: function (res) {
+                    if (res == "OK") {
+                        $("#mes").html("<%=Tag("登录成功，请稍后")%>……");
+                        location.href = "<%=url%>";
+                    }
+                    else {
+                        $("#mes").html(res);
+                        $("#code").show();
+                    }
+                }
+            });
+        }
+        function refresh(id) {
+            $("#" + id + "").attr("src", "../code.aspx?t=" + Math.random());
+        }
+    </script>
+</lbscripts>

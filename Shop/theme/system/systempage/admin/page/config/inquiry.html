@@ -1,0 +1,131 @@
+﻿{layout:default} {class:Shop.Admin.Config.Inquiry}
+<lbhead>
+    <title><%=Tag("留言反馈")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="submit"><a href="javascript:void(0);" onclick="Update();"><b></b><span><%=Tag("已回复")%></span></a></li>
+    <li class="del"><a href="javascript:void(0);" onclick="Del();"><b></b><span><%=Tag("删除")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("留言反馈")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox">
+        <select id="lang">
+            <option value="">┌<%=Tag("语言")%></option>
+            <%=Shop.Bussiness.Language.LanguageOption(lang)%>
+        </select>
+        <select name="status" id="status">
+            <option value="0">┌<%=Tag("状态")%></option>
+            <%=Shop.Bussiness.EX_Type.TypeOption("InquiryStatus", status, CurrentLanguage.Code)%>
+        </select>
+        <input type="text" name="dateFrom" id="dateFrom" size="12" class="input-calendar" value="<%=dateFrom %>" /> - <input type="text" name="dateTo" id="dateTo" size="12" class="input-calendar" value="<%=dateTo %>" />
+        <input type="text" id="key" name="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" />
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th style="width: 60px">
+                <%=Tag("语言")%>
+            </th>
+            <th width="130px">
+                <%=Tag("时间")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("昵称")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("电话")%>
+            </th>
+            <th style="width: 150px">
+                <%=Tag("电子邮件")%>
+            </th>
+            <th>
+                <%=Tag("标题")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("状态")%>
+            </th>
+            <th width="130px">
+                <%=Tag("操作时间")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_Inquiry model in models)
+          {%>
+        <tr class="list" ondblclick="Edit(<%=model.id %>);" >
+            <td style="text-align:center">
+                <input type="checkbox" name="id" del="true" value="<%=model.id %>" />
+            </td>
+            <td><%=model.Language%></td>
+            <td>
+                <%=FormatTime(model.Time_Add) %>
+            </td>
+            <td>
+                <%=model.UserName %>
+            </td>
+            <td>
+                <%=model.Phone %>
+            </td>
+            <td>
+                <a href="mailto:<%=model.Email %>?subject=RE:<%=model.Subject %>"><%=model.Email %></a>
+            </td>
+            <td>
+                <a href="javascript:void(0)" onclick="Edit(<%=model.id %>);"><%=model.Subject %></a>
+            </td>
+            <td>
+                <%=Shop.Bussiness.EX_Type.TypeName(model.Type_id_InquiryStatus)%>
+            </td>
+            <td>
+                <%=FormatTime(model.Time_Update)%>
+            </td>
+            <td>
+                <a href="javascript:void(0)" onclick="Edit(<%=model.id %>);"><%=Tag("编辑")%></a>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function search_() {
+            var status = $("#status").val();
+            var lang = $("#lang").val();
+            var key = $("#key").val();
+            var dateFrom = $("#dateFrom").val();
+            var dateTo = $("#dateTo").val();
+            window.location = "?key=" + escape(key) + "&lang=" + lang + "&status=" + status + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo;
+        }
+        function Edit(id) {
+            var title_ = "<%=Tag("编辑")%>";
+            var url_ = "inquiry_edit_window.aspx?id=" + id;
+            var width_ = 600;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function Del() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=Inquiry_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function Update() {
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=Inquiry_Update";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

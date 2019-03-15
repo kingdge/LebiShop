@@ -1,0 +1,85 @@
+﻿{layout:simple} {class:Shop.Admin.storeConfig.Tab_Edit_window}
+<lbbody>
+<%=Shop.Bussiness.Language.AdminLanguageTab("") %>
+<table cellspacing="0" border="0" style="width: 100%;" class="table">
+    <%foreach (DB.LebiShop.Lebi_Language_Code lang in Shop.Bussiness.Language.Languages())
+      {%>
+    <tbody id="lang_<%=lang.Code %>" style="display: none" class="lang_table">
+        <tr>
+            <th style="width:15%">
+                <%=Tag("名称")%>：
+            </th>
+            <td>
+                <input type="text" id="Tname<%=lang.Code %>" name="Tname<%=lang.Code %>" class="input" shop="true"  style="width: 200px;" value="<%=Shop.Bussiness.Language.Content(model.Tname,lang.Code) %>" />
+            </td>
+        </tr>
+        <tr id="showseohead<%=lang.Code %>" style="display:<%if (model.Mode == 262){ %>none<%}%>">
+            <td colspan="2" class="head">
+                <%=Tag("SEO优化")%>
+            </td>
+        </tr>
+        <tr id="showseotitle<%=lang.Code %>" style="display:<%if (model.Mode == 262){ %>none<%}%>">
+            <th>
+                <%=Tag("网页标题")%>：
+            </th>
+            <td>
+                <input type="text" id="Title<%=lang.Code %>" name="Title<%=lang.Code %>" class="input"
+                    shop="true" style="width: 400px;" value="<%=Shop.Bussiness.Language.Content(model.Title,lang.Code) %>" />
+            </td>
+        </tr>
+        <tr id="showseokey<%=lang.Code %>" style="display:<%if (model.Mode == 262){ %>none<%}%>">
+            <th>
+                <%=Tag("关键词")%>：
+            </th>
+            <td>
+                <input type="text" id="Tkey<%=lang.Code %>" name="Tkey<%=lang.Code %>" class="input"
+                    shop="true" style="width: 400px;" value="<%=Shop.Bussiness.Language.Content(model.Tkey,lang.Code) %>" />
+            </td>
+        </tr>
+        <tr id="showseodes<%=lang.Code %>" style="display:<%if (model.Mode == 262){ %>none<%}%>">
+            <th>
+                <%=Tag("网页描述")%>：
+            </th>
+            <td>
+                <input type="text" id="Tdes<%=lang.Code %>" name="Tdes<%=lang.Code %>" class="input"
+                    shop="true" style="width: 400px;" value="<%=Shop.Bussiness.Language.Content(model.Tdes,lang.Code) %>" />
+            </td>
+        </tr>
+    </tbody>
+    <%} %>
+    </table>
+    <ul id="tablistmain"><li class="selected"><a><span><%=Tag("通用信息")%></span></a></li></ul>
+    <table class="table">
+    
+    
+    
+    <tr>
+        <th>
+            <%=Tag("排序序号")%>：
+        </th>
+        <td>
+            <input type="text" id="Tsort" name="Tsort" style="width: 70px" shop="true" class="input" value="<%=model.Tsort %>" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" maxlength="4" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+            <div class="tools tools-m">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    LanguageTab_EditPage('<%=CurrentLanguage.Code %>'); //加载默认语言
+    function SaveObj() {
+        
+        var postData = GetFormJsonData("shop");
+        if (!CheckForm("shop", "span"))
+            return false;
+        var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=Tab_Edit&id=<%=model.id %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+</script>
+</lbbody>

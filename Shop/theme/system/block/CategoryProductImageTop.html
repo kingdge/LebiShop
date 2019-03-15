@@ -1,0 +1,30 @@
+﻿<!--
+Name:循环分类商品
+Page:All
+-->
+${#table:Lebi_Pro_Type;#where:"+ProductCategoryWhere+" and Parentid = 0 and IsShow = 1 and IsIndexShow = 1;#order:Sort desc,id desc;#model:category;#tag:cpt0;
+<div class="nbbox clearfix">
+<div class="categoryproducttop clearfix">
+    <div class="mt clearfix">
+        <div class="left">
+            <h2><%=Lang({Name}) %></h2>
+        </div>
+        <div class="right"><a href="<%=URL("P_ProductCategory",{id},Lang({Url}))%>"<%if (CurrentSite.IsMobile==0){ %> target="_blank"<%} %>>{tag:更多}</a></div>
+    </div>
+    <div class="mc clearfix">
+        <div class="productshow">
+            <ul class="image">
+                ${#table:Lebi_Product;#where:"+ProductWhere+" and Type_id_ProductType = 320 and "+ CategoryWhere(category.id) +";#top:10;#order:Sort desc,id desc;#model:pro;#tag:cpt1;
+                <li>
+                    <div class="proimg"><p><a href="<%=URL("P_Product",{id}) %>"><img <%if (CurrentLanguage.IsLazyLoad==1){ %>class="lazy" src="{/image}lazy.gif" data-original<%}else{ %>src<%} %>="<%=Image({ImageOriginal},"medium") %>" alt="<%=Lang({Name}) %>" title="<%=Lang({Name}) %>" /></a></p></div>
+                    <div class="proname"><a href="<%=URL("P_Product",{id}) %>" title="<%=Lang({Name}) %>"><%=Lang({Name}) %></a></div>
+                    <div class="proprice"><%if ({Price_Market}>0){ %><div class="marketprice"><i>{Tag:市场价}：</i><strong><%=FormatMoney(ProductPrice_Market(pro)) %></strong></div><%} %><div class="buyprice"><i><%=Lang(CurrentUserLevel.PriceName) %>：</i><strong><%=FormatMoney(ProductPrice(pro)) %></strong></div></div>                    
+                </li>
+                }$
+            </ul>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+</div>
+}$

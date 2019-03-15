@@ -1,0 +1,109 @@
+﻿{layout:default} {class:Shop.Admin.storeConfig.Layout}
+<lbhead>
+    <title><%=Tag("界面设置")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("界面设置")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("界面设置")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form action="javascript:SaveObj();" novalidate>
+                    <div class="form-group">
+                        <label for="system_layout_logo"><%=Tag("管理首页")%>：</label>
+                        <div class="row">
+                            <div class="form-group col-sm-12">
+                                <label for="system_layout_logo"><%=Tag("LOGO")%>：</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="image_system_layout_logo"><%if (model.system_layout_logo != ""){%><img src="<%=site.WebPath + model.system_layout_logo%>" height="20" /><%}else{ %><i class="ti-image"></i><%}%></span>
+                                    </div>
+                                    <input type="text" id="system_layout_logo" name="system_layout_logo" value="<%=model.system_layout_logo %>" class="form-control" shop="true">
+                                    <div class="input-group-append fileupload">
+                                        <span class="input-group-text"><i class="ti-upload"></i></span>
+                                        <input type="file" id="file_system_layout_logo" name="file_system_layout_logo" class="upload" onchange="uploadImage('system_layout_logo')">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="system_login_logo"><%=Tag("管理登录")%>：</label>
+                        <div class="row">
+                            <div class="form-group col-sm-12">
+                                <label for="system_login_logo"><%=Tag("LOGO")%>：</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="image_system_login_logo"><%if (model.system_login_logo != ""){%><img src="<%=site.WebPath + model.system_login_logo%>" height="20" /><%}else{ %><i class="ti-image"></i><%}%></span>
+                                    </div>
+                                    <input type="text" id="system_login_logo" name="system_login_logo" value="<%=model.system_login_logo %>" class="form-control" shop="true">
+                                    <div class="input-group-append fileupload">
+                                        <span class="input-group-text"><i class="ti-upload"></i></span>
+                                        <input type="file" id="file_system_login_logo" name="file_system_login_logo" class="upload" onchange="uploadImage('system_login_logo')">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label for="system_login_background"><%=Tag("背景图片")%>：</label>
+                                <div class="input-group">
+                                    <input type="text" id="system_login_background" name="system_login_background" value="<%=model.system_login_background %>" class="form-control" shop="true">
+                                    <div class="input-group-append fileupload">
+                                        <span class="input-group-text"><i class="ti-upload"></i></span>
+                                        <input type="file" id="file_system_login_background" name="file_system_login_background" class="upload" onchange="uploadImage('system_login_background')">
+                                    </div>
+                                </div>
+                                <div class="card m-t-10 m-b-0">
+                                    <img id="show_system_login_background" class="card-img-top img-responsive" src="<%=site.WebPath + model.system_login_background%>">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <%if (PageReturnMsg == ""){%>
+                    <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                    <%}%>
+                </form>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+    <script>
+        function SaveObj() {
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=Layout_Edit";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function uploadImage(id) {
+            $.ajaxFileUpload({
+	            url: WebPath + '/ajax/imageuploadone.aspx',
+	            secureuri: false,
+	            fileElementId: 'file_' + id,
+	            dataType: 'json',
+	            success: function (data, status) {
+	                if (data.msg != 'OK') {
+	                    MsgBox(2, data.msg, "");
+	                }
+	                else {
+	                    var imageUrl = data.ImageUrl;
+	                    if (imageUrl.length > 0) {
+                            $("#image_" + id + "").html('<img src="' + WebPath + imageUrl + '" height="20">');
+                            if (id == 'system_login_background') {
+                                $("#show_" + id + "").attr("src", WebPath + imageUrl);
+                            }
+	                        $("#" + id + "").val(imageUrl);
+	                    }
+	                }
+	            },
+	            error: function (data, status, e) {
+	                MsgBox(2, data.msg, "");
+	            }
+	        })
+        }
+    </script>
+</lbscripts>

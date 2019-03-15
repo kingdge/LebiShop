@@ -1,0 +1,1 @@
+G:\ASP.NET单用户商城\Shop2014\DB.shop\obj\Debug\DB.shop.csprojResolveAssemblyReference.cache

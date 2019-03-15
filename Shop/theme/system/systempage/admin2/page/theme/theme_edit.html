@@ -1,0 +1,194 @@
+﻿{layout:default} {class:Shop.Admin.theme.Theme_Edit}
+<lbhead>
+    <title><%=Tag("模板管理")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=model.Name %></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/theme/default.aspx"><%=Tag("模板管理")%></a></li>
+        <li class="breadcrumb-item active"><%if (model.id > 0){ %><%=model.Name%><%}else{ %><%=Tag("添加")%><%} %></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form action="javascript:SaveObj();" novalidate>
+                    <div class="row">
+                        <div class="col-md-12 m-b-10">
+                            <%if (PageReturnMsg == ""){%>
+                            <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                            <%}%>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for=""><%=Tag("作者")%>：</label>
+                        <%=model.LebiUser %>
+                    </div>
+                    <div class="form-group">
+                        <label for="Name"><%=Tag("名称")%>：</label>
+                        <%if (IsOwner){%>
+                        <input type="text" id="Name" name="Name" value="<%=model.Name %>" class="form-control" shop="true" required>
+                        <%}else{%>
+                        <%=model.Name %>
+                        <%}%>
+                    </div>
+                    <div class="form-group">
+                        <label for="Language"><%=Tag("支持语言")%>：</label>
+                        <%if (IsOwner){%>
+                        <div class="input-group">
+                        <%=Shop.Bussiness.Language.LanguageCheckbox("Language", model.Language)%>
+                        </div>
+                        <%}else{%>
+                        <%=model.Language %>
+                        <%}%>
+                    </div>
+                    <div class="form-group">
+                        <label for="Language_ids"><%=Tag("启用语言")%>：</label>
+                        <div class="input-group">
+                            <%=Shop.Bussiness.Language.SiteLanguageCheckbox("Language_ids", GetLanguageid(model), CurrentLanguage.Code)%>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="ImageUrl"><%=Tag("缩略图")%>：</label>
+                        <div class="input-group">
+                            <input type="text" id="ImageUrl" name="ImageUrl" value="<%=model.ImageUrl %>" class="form-control" shop="true">
+                            <div class="input-group-append fileupload">
+                                <span class="input-group-text"><i class="ti-upload"></i></span>
+                                <input type="file" id="file_ImageUrl" name="file_ImageUrl" class="upload" onchange="uploadImage('ImageUrl')">
+                            </div>
+                        </div>
+                        <%if (model.id > 0){ %>
+                        <div class="input-group">
+                            <div id="image_ImageUrl">
+                                <%if (model.ImageSmallUrl != ""){%>
+                                <img height="50" src="<%=Shop.Bussiness.ThemeUrl.CheckURL(WebPath + model.Path_Files+"/"+model.ImageSmallUrl)%>" />
+                                <%} %>
+                            </div>
+                        </div>
+                        <%} %>
+                    </div>
+                    <div class="form-group">
+                        <label for="Path_Files"><%=Tag("模板路径")%>：</label>
+                        <div class="input-group">
+                            <input type="text" id="Path_Files" name="Path_Files" value="<%=model.Path_Files %>" class="form-control" shop="true" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Path_JS"><%=Tag("JS文件路径")%>：</label>
+                        <div class="input-group">
+                            <input type="text" id="Path_JS" name="Path_JS" value="<%=model.Path_JS %>" class="form-control" shop="true" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Path_CSS"><%=Tag("CSS文件路径")%>：</label>
+                        <div class="input-group">
+                            <input type="text" id="Path_CSS" name="Path_CSS" value="<%=model.Path_CSS %>" class="form-control" shop="true" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Path_Image"><%=Tag("图片文件路径")%>：</label>
+                        <div class="input-group">
+                            <input type="text" id="Path_Image" name="Path_Image" value="<%=model.Path_Image %>" class="form-control" shop="true" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="ImageMedium_Width"><%=Tag("图片尺寸")%>：</label>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label for="ImageMedium_Width"><%=Tag("宽度")%>：</label>
+                                <div class="input-group">
+                                    <input type="text" id="ImageMedium_Width" name="ImageMedium_Width" value="<%=model.ImageMedium_Width%>" class="form-control" shop="true">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">px</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="ImageMedium_Height"><%=Tag("高度")%>：</label>
+                                <div class="input-group">
+                                    <input type="text" id="ImageMedium_Height" name="ImageMedium_Height" value="<%=model.ImageMedium_Height%>" class="form-control" shop="true">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">px</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Description"><%=Tag("描述")%>：</label>
+                        <textarea class="form-control" id="Description" name="Description" style="height: 55px;" shop="true"><%=model.Description%></textarea>
+                        <div class="button-group m-t-5">
+                            <button type="button" class="btn btn-default btn-xs btn-sm" onclick="javascript:resizeEditor('Description',100);"><%=Tag("展开")%></button>
+                            <button type="button" class="btn btn-default btn-xs btn-sm" onclick="javascript:resizeEditor('Description',-100);"><%=Tag("收缩")%></button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="IsUpdate_1"><%=Tag("升级")%>：</label>
+                        <div class="input-group">
+                            <label class="custom-control custom-radio m-r-20">
+                                <input type="radio" id="IsUpdate_1" name="IsUpdate" value="1" class="custom-control-input" shop="true" <%=model.IsUpdate==1?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("开启")%></span>
+                            </label>
+                            <label class="custom-control custom-radio">
+                                <input type="radio" id="IsUpdate_0" name="IsUpdate" value="0" class="custom-control-input" shop="true" <%=model.IsUpdate==0?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("关闭")%></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Sort"><%=Tag("排序序号")%>：</label>
+                        <input type="text" id="Sort" name="Sort" value="<%=model.Sort %>" class="form-control" shop="true">
+                    </div>
+                    <%if (PageReturnMsg == ""){%>
+                    <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                    <%}%>
+                </form>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+    <script>
+        ! function(window, document, $) {
+            "use strict";
+            $("input,select,textarea").not("[type=submit]").jqBootstrapValidation()
+        }(window, document, jQuery);
+        function SaveObj() {
+            var postData = GetFormJsonData("shop");
+            var url="<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=Theme_Edit&id=<%=model.id %>";
+            //        RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?id="+res.id)})
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "default.aspx")});
+        }
+        function Publish()
+        {
+            var postData = GetFormJsonData("shop");
+            var url="<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=Theme_publish&id=<%=model.id %>";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?id=<%=model.id %>")});
+        }
+        function uploadImage(id) {
+            var path = $("#Path_Files").val();
+            $.ajaxFileUpload({
+                url: WebPath + '/ajax/imageupload_theme.aspx?path=' + path,
+                secureuri: false,
+                fileElementId: 'file_' + id,
+                dataType: 'json',
+                success: function (data, status) {
+                    if (data.msg != 'OK') {
+                        MsgBox(2, data.msg, "");
+                    }
+                    else {
+                        var imageUrl = data.ImageUrl;
+                        var tpath = $("#Path_Files").val();
+                        if (imageUrl.length > 0) {
+                            $("#image_" + id + "").html('<img height="50" src=' + WebPath + tpath + "/" + imageUrl + '>');
+                            $("#" + id + "").val(imageUrl);
+                        }
+                    }
+                }
+            })
+        }
+    </script>
+</lbscripts>

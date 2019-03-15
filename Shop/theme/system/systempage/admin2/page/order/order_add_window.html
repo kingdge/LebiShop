@@ -1,0 +1,41 @@
+﻿{layout:simple} {class:Shop.Admin.order.order_add_window}
+<lbbody>
+    <form action="javascript:AddOrder();" novalidate>
+        <div class="modal-header">
+            <h4 class="modal-title"><%=Tag("添加订单")%></h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="userid">UserID：</label>
+                <input type="text" id="userid" name="userid" value="<%=user.id %>" class="form-control" shop="true" onkeyup="value=value.replace(/[^\d\.]/g,'')" required>
+            </div>
+            <div class="form-group">
+                <label for="Sort"><%=Tag("用户名")%>：</label>
+                <div class="form-control-label"><%=user.UserName %></div>
+            </div>
+            <div class="form-group">
+                <label for="Sort"><%=Tag("真实姓名")%>：</label>
+                <div class="form-control-label"><%=user.RealName %></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="ti-close"></i> <%=Tag("关闭")%></button>
+            <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("提交")%></button>
+        </div>
+    </form>
+    <script>
+        ! function(window, document, $) {
+            "use strict";
+            $("input,select,textarea").not("[type=submit]").jqBootstrapValidation()
+        }(window, document, jQuery);
+        function AddOrder()
+        {
+            $("#EditModal").modal("hide");
+            var userid=$('#userid').val();
+            var postData = { "userid": userid };
+            var url = "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=Order_Add";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "<%=site.AdminPath %>/order/order_view.aspx?id="+res.id)});
+        }
+    </script>
+</lbbody>

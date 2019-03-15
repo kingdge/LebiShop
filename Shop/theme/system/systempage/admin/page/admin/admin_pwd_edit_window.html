@@ -1,0 +1,53 @@
+﻿{layout:simple} 
+{class:Shop.Admin.admin.Admin_pwd_Edit_window}
+<lbbody>
+<table class="table">
+    <%if (!Shop.Bussiness.EX_Admin.Power("admin_pwd", "编辑系统用户密码")){%>
+    <tr>
+        <th style="width: 25%;">
+            <%=Tag("原始密码")%>：
+        </th>
+        <td>
+            <input type="password" pwd="true" min="notnull" id="PWD" name="PWD"
+                class="input" value="" style="width:200px" />
+        </td>
+    </tr>
+    <%}%>
+    <tr>
+        <th >
+            <%=Tag("新密码")%>：
+        </th>
+        <td>
+            <input type="password" pwd="true" min="notnull" id="PWD1" name="PWD1"
+                class="input" value="" style="width:200px" />
+        </td>
+    </tr>
+    <tr>
+        <th >
+            <%=Tag("再次输入")%>：
+        </th>
+        <td>
+            <input type="password" pwd="true" min="notnull" id="PWD2" name="PWD2"
+                class="input" value="" style="width:200px" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+            <div class="tools tools-m">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    function SaveObj() {
+        var postData = GetFormJsonData("pwd");
+        if (!CheckForm("pwd", "span"))
+            return false;
+        var url = "<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=Admin_PWD&id=<%=model.id %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+</script>
+</lbbody>

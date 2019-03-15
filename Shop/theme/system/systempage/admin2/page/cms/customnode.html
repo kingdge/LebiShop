@@ -1,0 +1,85 @@
+﻿{layout:default} {class:Shop.Admin.cms.customnode}
+<lbhead>
+    <title>
+        <%=Tag("结点配置")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("结点配置")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><%=Tag("结点配置")%></li>
+        <li class="breadcrumb-item active"><%=Topnode.Name%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-info" onclick="Node_Edit(<%=Topnode.id %>,0);"><i class="ti-plus"></i> <%=Tag("添加")%></button>
+                        <button class="btn btn-danger" onclick="DeleteConfirm()"><i class="ti-trash"></i> <%=Tag("删除")%></button>
+                        <%}%>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table m-t-10 table-hover no-wrap">
+                        <thead>
+                            <tr class="no-wrap">
+                                <th class="selectAll" style="width:40px">
+                                    <a href="javascript:void(0);" onclick="$('input[name=\'ids\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+                                </th>
+                                <th>
+                                    ID
+                                </th>
+                                <th>
+                                    <%=Tag("排序")%>
+                                </th>
+                                <th>
+                                    <%=Tag("名称")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%=GetTreeString(Topnode.id, 0)%>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script type="text/javascript">
+        function Node_Edit(pid, id) {
+            $("#EditModal").modal("show");
+            var title_ = "<%=Tag("编辑结点")%>";
+            if (id == 0)
+                var title_ = "<%=Tag("添加结点")%>";
+            $.ajax({
+                url: "customnode_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {id: id,pid: pid,code: '<%=Topnode.Code %>',title: title_},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function DeleteConfirm() {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要删除吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "Node_Del();");
+        }
+        function Node_Del() {
+            $('#Modal-Confirm').modal('hide');
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_node.aspx?__Action=UserNode_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+
+        }
+    </script>
+</lbscripts>

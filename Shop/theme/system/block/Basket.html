@@ -1,0 +1,250 @@
+﻿<!--
+Name:购物车
+Page:P_Basket
+-->
+<div id="basket">
+<%if (basket.Products.Count == 0 && basket.FreeProducts.Count == 0){%>
+    <table align="center" cellpadding="0" cellspacing="0">
+    <tr><td class="basketempty">{tag:购物车为空，请将您要购买的商品放入购物车}</td></tr>
+    </table>
+<%}else{ %>
+<%foreach(Shop.Model.BasketShop shop in basket.Shops){ %>
+<%if (shop.Shop.id==0 && basket.Shops.Count==1){%><%}else{ %>
+<div class="shop"><span><%if (shop.Shop.id==0){%>{tag:自营商品}<%}else {%><%=Lang(shop.Shop.Name) %><%} %></span></div>
+<%} %>
+    <div class="basketlist">
+        <table align="center" cellpadding="0" cellspacing="0">
+            <tr>
+                <th>
+                    {tag:商品名称}
+                </th>
+                <th style="width: 100px">
+                    {tag:市场价}
+                </th>
+                <th style="width: 100px">
+                    {tag:购买价}
+                </th>
+                <th style="width: 100px">
+                    {tag:折扣}
+                </th>
+                <th style="width: 100px">
+                    {tag:数量}
+                </th>
+                <th style="width: 100px">
+                    {tag:小计}
+                </th>
+                <th style="width: 100px">
+                    {tag:操作}
+                </th>
+            </tr>
+            <%
+            foreach (DB.LebiShop.Lebi_User_Product p in shop.Products)
+            {
+            DB.LebiShop.Lebi_Product model = GetProduct(p.Product_id);
+            int levelcount=ProductLevelCount(model);
+            %>
+            <tr valign="middle">
+                <td class="list">
+                    <table cellspacing="0" cellpadding="3">
+                        <tr>
+                            <td width="60" style="text-align:center">
+                                <img src="<%=Image(model.ImageOriginal,50,50) %>" width="50" height="50" class="picb">
+                            </td>
+                            <td>
+                                <a href="<%=URL(" P_Product",model.id) %>" target="_blank"><%=Lang(model.Name) %></a><br />
+                                {tag:商品编号}：<%=model.Number %>
+                                <%=Shop.Bussiness.EX_Product.ProPertyNameStr(model, CurrentLanguage.Code)%>
+                                <%if (p.ProPerty134 !=""){ %><br /><%=p.ProPerty134 %><%} %>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td class="list" style="text-align: center">
+                    <%=FormatMoney(Shop.Bussiness.EX_Product.ProductMarketPrice(model)) %>
+                </td>
+                <td class="list" style="text-align: center">
+                    <%
+                    if(model.Type_id_ProductType==323 && model.Time_Expired > System.DateTime.Now)
+                    Response.Write(Tag("积分")+":"+model.Price_Sale);
+                    else
+                    Response.Write(FormatMoney(p.Product_Price));
+                    %>
+                </td>
+                <td class="list" style="text-align: center">
+                    <%=p.Discount==100?"-":p.Discount+"%" %>
+                </td>
+                <td class="list" style="text-align: center">
+                    <%if ((model.Type_id_ProductType == 321 || model.Type_id_ProductType == 322) && (System.DateTime.Now > model.Time_Expired))
+                    {
+                    model.Count_Limit=0;
+                    }
+                    %>
+                    <input type="button" <%if (p.count > 1){ %>onclick="UserProduct_Edit(<%=model.id %>,142,$('#BasketCount<%=model.id %>').val()/1-1,'edit',<%=model.Count_Limit %>,<%=levelcount %>)" class="qty-reduce"<%}else{ %> class="qty-reduce-gray"<%} %> value="" /><input name="BasketCount<%=model.id %>" id="BasketCount<%=model.id %>" type="text" value="<%=p.count %>" onkeyup="value=value.replace(/[^\d]/g,'');" onchange="UserProduct_Edit(<%=model.id %>,142,this.value,'edit',<%=model.Count_Limit %>,<%=levelcount %>)" ; Basket="true" size="3" maxlength="5" class="qty-input" /><input type="button" onclick="UserProduct_Edit(<%=model.id %>,142,$('#BasketCount<%=model.id %>').val()/1+1,'edit',<%=model.Count_Limit %>,<%=levelcount %>)" value="" class="qty-add" />
+                </td>
+                <td class="list" style="text-align: center">
+                    <%=FormatMoney(p.Product_Price*p.count*p.Discount/100) %>
+                </td>
+                <td class="list" style="text-align: center">
+                    <a href="javascript:void(0)" onclick="UserProduct_Del(<%=p.Product_id %>,142);" class="btn btn-12"><s></s>{tag:移除购物车}</a>
+                </td>
+            </tr>
+            <%} %>
+        </table>
+        <%if(shop.FreeProducts.Count>0){ %>
+        <table align="center" cellpadding="0" cellspacing="0">
+            <tr>
+                <th>
+                    {tag:赠品}
+                </th>
+                <th style="width: 100px">
+                    {tag:市场价}
+                </th>
+                <th style="width: 100px">
+                    {tag:数量}
+                </th>
+                <th>
+                </th>
+            </tr>
+            <%
+            foreach(DB.LebiShop.Lebi_User_Product p in shop.FreeProducts){
+            DB.LebiShop.Lebi_Product model = GetProduct(p.Product_id);
+            %>
+            <tr valign="middle">
+                <td class="list">
+                    <table cellspacing="0" cellpadding="3">
+                        <tr>
+                            <td width="60" style="text-align:center">
+                                <img src="<%=Image(model.ImageOriginal,50,50) %>" width="50" height="50" class="picb">
+                            </td>
+                            <td>
+                                <a href="<%=URL(" P_Product",model.id) %>" target="_blank"><%=Lang(model.Name) %></a><br />
+                                {tag:商品编号}：<%=model.Number %>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td class="list" style="text-align: center">
+                    <%=FormatMoney(model.Price_Market) %>
+                </td>
+                <td class="list" style="text-align: center">
+                    <%=p.count %>
+                </td>
+                <td></td>
+            </tr>
+            <%} %>
+        </table>
+        <%} %>
+        <%if(shop.PromotionTypes.Count>0){ %>
+        <div class="promotion">
+            {tag:优惠促销}：<%
+            foreach(Lebi_Promotion_Type pt in shop.PromotionTypes){ %>
+            <%=shop.Shop.id>0?"["+Lang(shop.Shop.Name)+"]":"" %><%=Lang(pt.Name) %>&nbsp;&nbsp;
+            <%} %>
+        </div>
+        <%} %>
+        <%if (shop.Products.Count > 0 || shop.FreeProducts.Count > 0)
+        {%>
+        <div class="money">
+            <%if (shop.Money_Market > 0){ %>{tag:市场价}：<span><%=FormatMoney(shop.Money_Market)%></span>&nbsp;&nbsp;<%} %>
+            <%if (shop.Money_Cut>0){ %>{tag:减免}：<span><%=FormatMoney(shop.Money_Cut)%></span>&nbsp;&nbsp;<%} %>
+            {tag:购买价}：<span><%=FormatMoney(shop.Money_Product-shop.Money_Cut)%></span>&nbsp;&nbsp;
+            <%if(shop.Money_Property>0){ %>
+            {tag:其它费用}：<span><%=FormatMoney(shop.Money_Property)%></span>&nbsp;&nbsp;
+            <%} %>
+            <%if (shop.Money_Market - shop.Money_Product - shop.Money_Cut >0){ %>{tag:节省}：<s><span><%=FormatMoney(shop.Money_Market - shop.Money_Product-shop.Money_Cut)%></span></s>&nbsp;&nbsp;<%} %>
+            <%if(shop.Point_Buy>0){ %>
+            {tag:所需积分}：<span><%=shop.Point_Buy%></span>&nbsp;&nbsp;
+            <%} %>
+            <%if(shop.Point>0){ %>
+            {tag:获得积分}：<span><%=shop.Point%></span>&nbsp;&nbsp;
+            <%} %>
+            <%if (shop.Weight>0){ %>{tag:总重量}：<span><%=shop.Weight%> {tag:KG}</span><%} %>
+        </div>
+        <%} %>
+        <%if(IsMutiCash==true){ %>
+        <div class="basketbtn">
+            <a href="javascript:void(0)" onclick="location.href='<%=URL(" P_CheckOut",shop.Shop.id) %>'" class="btn btn-7"><s></s>{tag:去收银台}</a>
+        </div>
+        <%} %>
+    </div>
+<%} %>
+<%if(IsMutiCash==false){ %>
+<%if (basket.Shops.Count > 1){%>
+    <div class="money">
+        <%if (basket.Money_Market > 0){ %><p>{tag:市场价}：<span><%=FormatMoney(basket.Money_Market)%></span></p><%} %>
+        <%if (basket.Money_Cut>0){ %><p>{tag:减免}：<span><%=FormatMoney(basket.Money_Cut)%></span></p><%} %>
+        <p>{tag:购买价}：<span><%=FormatMoney(basket.Money_Product-basket.Money_Cut)%></span></p>
+        <%if(basket.Money_Property>0){ %>
+        <p>{tag:其它费用}：<span><%=FormatMoney(basket.Money_Property)%></span></p>
+        <%} %>
+        <%if (basket.Money_Market - basket.Money_Product - basket.Money_Cut >0){ %><p>{tag:节省}：<s><span><%=FormatMoney(basket.Money_Market - basket.Money_Product-basket.Money_Cut)%></span></s></p><%} %>
+        <%if(basket.Point_Buy>0){ %>
+        <p>{tag:所需积分}：<span><%=basket.Point_Buy%></span></p>
+        <%} %>
+        <%if(basket.Point>0){ %>
+        <p>{tag:获得积分}：<span><%=basket.Point%></span></p>
+        <%} %>
+        <%if (basket.Weight>0){ %><p>{tag:总重量}：<span><%=basket.Weight%> {tag:KG}</span></p><%} %>
+    </div>
+<%} %>
+<%} %>
+<%if(basket.Money_Refund_VAT>0){ %>
+    <div class="money">
+        <%if(basket.Money_Refund>0){ %>
+        <p>{tag:退税总额}：<span><%=FormatMoney(basket.Money_Refund)%></span></p>
+        <%} %>
+        <%if(basket.Money_Refund>basket.OtherSite_Money_Refund && basket.OtherSite_Money_Refund>0){ %>
+        <p>{tag:高街退税额}：<span><%=FormatMoney(basket.OtherSite_Money_Refund)%></span></p>
+        <%} %>
+        <%if(basket.Money_Refund - basket.OtherSite_Money_Refund>0){ %>
+        <p>{tag:预计本次购物您多得退税额}：<span><%=FormatMoney(basket.Money_Refund - basket.OtherSite_Money_Refund)%></span></p>
+        <%} %>
+    </div>
+<%} %>
+<%if(basket.Money_Tax>0){ %>
+    <div class="money">
+        <p>{tag:税金}：<span><%=FormatMoney(basket.Money_Tax)%></span></p>
+    </div>
+<%} %>
+<div class="basketbtn">
+    <a href="javascript:void(0)" onclick="javascript:history.back();" class="btn btn-11"><s></s>{tag:继续购物}</a>
+    <a href="javascript:void(0)" onclick="UserProduct_Del('all',142);" class="btn btn-11"><s></s>{tag:清空购物车}</a>
+    <%if(IsMutiCash==false){ %>
+    <a href="<%=URL("P_CheckOut","") %>" class="btn btn-7"><s></s>{tag:去收银台}</a>
+    <%} %>
+</div>
+<%} %>
+</div>
+<script type="text/javascript">
+    function UserBasket_Edit() {
+        var postData = GetFormJsonData("Basket");
+        var url = path+"/ajax/ajax_user.aspx?__Action=UserBasket_Edit";
+        RequestAjax(url, postData, function () { MsgBoxClose("?", ""); });
+    }
+    function UserProduct_Edit(id, type, num,action,limit,levelcount) {
+        limit=limit==undefined?0:limit;
+        num=num==undefined?0:num;
+        if(limit>0)
+        {
+            if(num>limit){
+                $("BasketCount"+id).val(limit);
+                return false;
+            }
+        }else{
+            if (num < levelcount){
+                $("BasketCount"+id).val(levelcount);
+                return false;
+            }
+        }
+        $("BasketCount"+id).val(num);
+        if (action == undefined){action = "add";}
+        var postData = { "pid": id, "type": type, "num": num };
+        var url = path+"/ajax/ajax_user.aspx?__Action=UserProduct_Edit";
+        RequestAjax(url, postData, function () { if (type == 142 && action == "add") { window.location = "BasketOK.aspx"; } else { MsgBoxClose("?", ""); } });
+    }
+    function UserProduct_Del(id, type) {
+        var postData = { "pid": id, "type": type };
+        var url = path+"/ajax/ajax_user.aspx?__Action=UserProduct_Del";
+        RequestAjax(url, postData, function () { MsgBoxClose("?", ""); });
+    }
+</script>

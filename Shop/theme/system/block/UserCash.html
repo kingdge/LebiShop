@@ -1,0 +1,137 @@
+﻿<!--
+Name:提现页面
+Page:All
+-->
+<div class="nbbox clearfix">
+<div class="user">
+    <div class="mt clearfix">
+        <h2>{tag:提现}</h2>
+    </div>
+    <div class="mc clearfix">
+    <div class="dl-table clearfix">
+    <dl>
+        <dt>{tag:收款方式}：</dt>
+        <dd>
+        <label><input type="radio" name="PayType" value="bank" shop="true" onclick="SetType();" checked />{tag:银行转账}</label>
+        <label><input type="radio" name="PayType" value="alipay" shop="true" onclick="SetType();" />{tag:支付宝}</label>
+        </dd>
+    </dl>
+    <dl>
+        <dt>{tag:姓名}：</dt>
+        <dd><input type="text" name="CashAccount_Name" id="CashAccount_Name" size="30" value="" shop="true" min="notnull" class="input" /></dd>
+    </dl>
+    <dl>
+        <dt>{tag:账号}：</dt>
+        <dd><input type="text" name="CashAccount_Code" id="CashAccount_Code" size="30" value="" shop="true" min="notnull" class="input" /></dd>
+    </dl>
+    <dl id="DIVCashAccount_Bank">
+        <dt>{tag:银行}：</dt>
+        <dd><input type="text" name="CashAccount_Bank" id="CashAccount_Bank" size="30" value="" shop="true" min="notnull" class="input" /></dd>
+    </dl>
+    <dl>
+        <dt>{tag:提现金额}(<%=DefaultCurrency.Msige %>)：</dt>
+        <dd><input type="text" name="RMoney" id="RMoney" onkeyup="value=value.replace(/[^\d\.]/g,'');" value="<%=CurrentUser.Money-CurrentUser.Money_fanxian %>" shop="true" min="notnull" class="input" />
+        <em>{tag:帐户余额}(<%=DefaultCurrency.Msige %>):<%=CurrentUser.Money-CurrentUser.Money_fanxian %> &nbsp;&nbsp;{tag:最低提现金额}(<%=DefaultCurrency.Msige %>):<%=SYS.TakeMoneyLimit %></em></dd>
+    </dl>
+    <dl>
+        <dt>{tag:支付密码}：</dt>
+        <dd><input name="Pay_Password" id="Pay_Password" size="30" type="password" shop="true" min="notnull" class="input" /> <a href="<%=URL("P_UserQuestion","1")%>" target="_blank">{tag:忘记密码}</a></dd>
+    </dl>
+    <%if(SubmitShow){ %>
+    <dl class="dl-btn">
+        <dt></dt>
+        <dd><a href="javascript:void(0)" onclick="submit();" class="btn btn-11"><s></s>{tag:提交}</a></dd>
+    </dl>
+    <%}else{ %>
+    <dl class="dl-btn">
+        <dt></dt>
+        <dd>{tag:最低提现金额}(<%=DefaultCurrency.Msige %>):<%=SYS.TakeMoneyLimit %></dd>
+    </dl>
+    <%} %>
+    </div>
+    </div>
+    <table cellpadding="0" cellspacing="0" width="100%" class="tablelist box">
+        <tr>
+            <th style="width:100px;">{tag:收款方式}</th>
+            <th style="width:100px;">{tag:姓名}</th>
+            <th style="width:200px;">{tag:账号}</th>
+            <th>{tag:银行}</th>
+            <th style="width:60px;">{tag:操作}</th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_User_Bank ub in user_bank)
+        {%>
+        <tr>
+            <td><%=ub.PayType == "alipay"?Tag("支付宝"):Tag("银行转账")%></td>
+            <td><%=ub.UserName%></td>
+            <td><%=ub.Code%></td>
+            <td><%=ub.Name%></td>
+            <td><a href="javascript:void(0)" onclick="SetBank('<%=ub.PayType %>','<%=ub.UserName %>','<%=ub.Code %>','<%=ub.Name %>');">{tag:选择}</a></td>
+        </tr>
+        <%} %>
+    </table>
+    <%
+    if(CashCount>0){ %>
+    <div>
+        <table cellpadding="0" cellspacing="0" width="100%" class="tablelist box">
+            <tr>
+                <th style="width:130px;">{tag:时间}</th>
+                <th style="width:120px;">{tag:金额}/{tag:手续费}</th>
+                <th style="width:150px;">{tag:账号}</th>
+                <th style="width:100px;">{tag:状态}</th>
+                <th>{tag:备注}</th>
+            </tr>
+            <%foreach (DB.LebiShop.Lebi_Cash o in cashs){%>
+            <tr>
+                <td><%=FormatTime(o.Time_add) %></td>
+                <td><%=FormatMoney(o.Money) %>/<%=FormatMoney(o.Fee) %></td>
+                <td><%=o.AccountCode %></td>
+                <td><%=TypeName(o.Type_id_CashStatus) %></td>
+                <td><%=o.Remark %></td>
+            </tr>
+            <%} %>
+        </table>
+        <div class="bottom clearfix"><div class="right"><%=PageString%></div></div>
+    </div>
+    <%} %>
+    </div>
+</div>
+<script type="text/javascript">
+    function submit() {
+        var RMoney = $("#RMoney").val();
+        if (RMoney == "" || RMoney<=0) {
+            CheckNO("RMoney", "{tag:金额必须大于0}");
+            return false;
+        }
+        var postData = GetFormJsonData("shop");;
+        var url = path+"/ajax/ajax_userin.aspx?__Action=TackMoney";
+        RequestAjax(url, postData, function (res) { MsgBox(1, "{tag:操作成功}", "?");$("#CashAccount_Name").val("");$("#CashAccount_Code").val("");$("#CashAccount_Bank").val("");$("#RMoney").val("<%=CurrentUser.Money %>"); });
+    }
+    function SetType() {
+        var Type = $("input[name='PayType']:checked").val();
+        if (Type == "alipay") {
+            $("#DIVCashAccount_Bank").hide();
+            $("#CashAccount_Bank").attr("min", "");
+        } else {
+            $("#DIVCashAccount_Bank").show();
+            $("#CashAccount_Bank").attr("min", "notnull");
+        }
+    }
+    SetType();
+    function SetBank(PayType,UserName,Code,Name) {
+        if (PayType == "alipay") {
+            $("input[name=PayType][value='alipay']").attr("checked", true);
+            $("#DIVCashAccount_Bank").hide();
+            $("#CashAccount_Bank").attr("min", "");
+            $("#CashAccount_Name").val(UserName);
+            $("#CashAccount_Code").val(Code);
+            $("#CashAccount_Bank").val("");
+        } else {
+            $("input[name=PayType][value='bank']").attr("checked", true);
+            $("#DIVCashAccount_Bank").show();
+            $("#CashAccount_Bank").attr("min", "notnull");
+            $("#CashAccount_Name").val(UserName);
+            $("#CashAccount_Code").val(Code);
+            $("#CashAccount_Bank").val(Name);
+        }
+    }
+</script>

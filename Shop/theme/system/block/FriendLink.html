@@ -1,0 +1,23 @@
+﻿<!--
+Name:友情链接
+Page:All
+-->
+<div class="nbbox clearfix">
+<div class="friendlink clearfix">
+    <div class="mt clearfix">
+        <div class="left">
+            <h2>{Tag:友情链接}</h2>
+        </div>
+        <div class="right"><a href="<%=URL("P_FriendLink","")%>" target="_blank">{Tag:更多}</a></div>
+    </div>
+    <div class="mc clearfix">
+        <ul class="image">
+            ${#table:Lebi_FriendLink;#where:IsShow=1 and ','+Language_ids+',' like '%," + CurrentLanguage.id + ",%';#top:20;#order:Sort desc,id desc;
+            <li>
+                <% if ({Logo} != "" && {IsPic} == 1){ %><p><a href="{%Url%}" target="_blank"><img src="<%=Image({Logo}) %>" alt="{%Name%}" /></a></p><%}else{%><a href="{%Url%}" target="_blank">{%Name%}</a><%} %>     
+            </li>
+            }$
+        </ul>
+    </div>
+</div>
+</div>

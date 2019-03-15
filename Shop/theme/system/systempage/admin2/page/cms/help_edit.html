@@ -1,0 +1,103 @@
+﻿{layout:default} {class:Shop.Admin.cms.Help_Edit}
+<lbhead>
+    <title><%=node.Name%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <link rel="stylesheet" type="text/css" href="<%=site.AdminAssetsPath %>/plugins/bigcolorpicker/jquery.bigcolorpicker.css" /> 
+</lbfile>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=node.Name%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><a href="UserNodeList.aspx?code=<%=pnode.Code %>"><%=pnode.Name%></a></li>
+        <li class="breadcrumb-item"><a href="<%=Shop.Bussiness.NodePage.AdminIndexPage(node) %>"><%=node.Name%></a></li>
+        <%if (page.Name !="") {%><li class="breadcrumb-item active"><%=page.Name%></li><%} %>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form action="javascript:SaveObj();" novalidate>
+                    <div class="form-group">
+                        <label for="Name"><%=Tag("标题")%>：</label>
+                        <div class="input-group">
+                            <input type="text" id="Name" name="Name" value="<%=page.Name %>" style="color:<%=page.NameColor %>" class="form-control" shop="true" required>
+                            <div class="input-group-append">
+                                <span class="input-group-text" id="s_NameColor" style="cursor: pointer;background-color:<%=page.NameColor %>">
+                                    <i class="ti-paint-bucket"></i>
+                                </span>
+                            </div>
+                            <input type="hidden" id="NameColor" name="NameColor" value="<%=page.NameColor %>" shop="true">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Description"><%=Tag("摘要")%>：</label>
+                        <textarea id="Description" name="Description" class="form-control" style="height: 60px;" shop="true"><%=page.Description%></textarea>
+                        <div class="button-group m-t-5">
+                            <button type="button" class="btn btn-default btn-xs btn-sm" onclick="javascript:resizeEditor('Description',100);"><%=Tag("展开")%></button>
+                            <button type="button" class="btn btn-default btn-xs btn-sm" onclick="javascript:resizeEditor('Description',-100);"><%=Tag("收缩")%></button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Content"><%=Tag("内容")%>：</label>
+                        <textarea name="Content" id="Content" class="form-control" style="height: 200px;" shop="true"><%=page.Content%></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="Node_id"><%=Tag("分类")%>：</label>
+                                <select name="Node_id" id="Node_id" class="form-control" shop="true">
+                                    <%=GetOptionTreeString(0, pnode.id, node.id, page.Language)%>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="Sort"><%=Tag("排序序号")%>：</label>
+                                <input type="text" id="Sort" name="Sort" value="<%=page.Sort %>" class="form-control" shop="true" onkeyup="value=value.replace(/[^\d]/g,'')">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Language"><%=Tag("语言")%>：</label>
+                        <%=page.Language %>
+                        <input type="hidden" id="Language" name="Language" value="<%=node.Language %>" shop="true">
+                        <input type="hidden" id="Language_ids" name="Language_ids" value="<%=node.Language_ids %>" shop="true">
+                    </div>
+                    <%if (PageReturnMsg == ""){%>
+                    <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                    <%}%>
+                </form>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script src="<%=site.WebPath %>/Editor/ckeditor/ckeditor.js"></script>
+    <script src="<%=site.WebPath %>/Editor/ckfinder/ckfinder.js"></script>
+    <script type="text/javascript" src="<%=site.AdminAssetsPath %>/plugins/bigcolorpicker/jquery.bigcolorpicker.min.js"></script>
+    <script>
+        $(function () {
+            $("#NameColor").bigColorpicker("NameColor");
+            $("#s_NameColor").bigColorpicker(function (el, color) { $(el).css("background-color", color); $("#NameColor").val(color); $("#Name").css("color", color); });
+        });
+        ! function(window, document, $) {
+            "use strict";
+            $("input,select,textarea").not("[type=submit]").jqBootstrapValidation()
+        }(window, document, jQuery);
+        CKEDITOR.replace('Content', {
+            height: '200',
+            width: '100%',
+            language: '<%=Tag("CKEditor语言")%>'
+		});
+        function SaveObj() {
+            editor = CKEDITOR.instances.Content;
+            $("#Content").val(editor.getData());
+            var postData = GetFormJsonData("shop");
+            var nodeid = $("#Node_id").val();
+            var url = "<%=site.AdminPath %>/ajax/ajax_node.aspx?__Action=Page_Edit&id=<%=page.id %>";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "pagelist.aspx?Node_id=<%=node.id %>")});
+        }
+    </script>
+</lbscripts>

@@ -1,0 +1,151 @@
+﻿{layout:default} {class:Shop.Admin.product.Brand}
+<lbhead>
+    <title><%=Tag("品牌管理")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+    <script type="text/javascript" src="<%=site.WebPath %>/Editor/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript" src="<%=site.WebPath %>/Editor/ckfinder/ckfinder.js"></script>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/multiselect/js/jquery.multiselect2side.js"></script>
+    <link rel="stylesheet" href="<%=site.AdminJsPath %>/multiselect/css/jquery.multiselect2side.css" type="text/css" media="screen" />
+</lbfile>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="add"><a href="brand_edit.aspx" target="_blank"><b></b><span><%=Tag("添加")%></span></a></li>
+    <li class="submit"><a href="javascript:void(0);" onclick="Edits();"><b></b><span><%=Tag("保存")%></span></a></li>
+    <li class="del"><a href="javascript:void(0);" onclick="Del();"><b></b><span><%=Tag("删除")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("品牌管理")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox">
+        <select name="type" id="type">
+            <option value="">┌<%=Tag("全部分类")%></option>
+            <%=Shop.Bussiness.EX_Product.TypeOption(0, type, 0, CurrentLanguage.Code, Shop.Bussiness.EX_Admin.Project().Pro_Type_ids)%>
+        </select>
+        <select name="status" id="status">
+            <option value="0">┌<%=Tag("状态")%></option>
+            <%=Shop.Bussiness.EX_Type.TypeOption("BrandStatus", status, CurrentLanguage.Code)%>
+        </select>
+        <input type="text" id="key" name="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" />
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'Delid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th style="width: 40px">
+                <%=Tag("ID")%>
+            </th>
+            <th style="width: 200px">
+                <%=Tag("品牌名称")%>
+            </th>
+            <th style="width: 150px">
+                <%=Tag("图片")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("首字母")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("推荐")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("排序")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("商品数量")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("状态")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("是否含税")%>
+            </th>
+            <th>
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_Brand model in models)
+          {%>
+        <tr class="list">
+            <td style="text-align:center">
+                <input type="checkbox" name="Delid" del="true" value="<%=model.id %>" />
+                <input type="hidden" name="IDS" shop="true" value="<%=model.id %>" />
+            </td>
+            <td>
+                <%=model.id%>
+            </td>
+            <td>
+                <%=Lang(model.Name)%>&nbsp;<%if (model.Supplier_id > 0){ %><img src="<%=AdminImage("icon/supplier.png")%>" title="<%=Tag("商家")%>：<%=Shop.Bussiness.EX_Supplier.GetSupplier(model.Supplier_id).Company%>" /><%} %>&nbsp;<a href="<%=Shop.Bussiness.ThemeUrl.GetURL("P_Brand", model.id.ToString(), "", CurrentLanguage.Code)%>" target="_blank"><img src="<%=AdminImage("icon/newWindow.png")%>" /></a>
+                
+            </td>
+            <td>
+                <% if (model.ImageUrl == "")
+                   { %>
+                &nbsp;
+                <%}
+                   else
+                   { %>
+                <img src="<%=site.WebPath + model.ImageUrl %>" style="height: 25px;vertical-align:middle" name="ImageUrl" />
+                <%} %>
+            </td>
+            <td>
+                <input type="text" name="FirstLetter<%=model.id %>" shop="true" value="<%=model.FirstLetter %>" class="input" style="width: 70px;" />
+            </td>
+            <td>
+                <input name="IsRecommend<%=model.id %>" shop="true" type="checkbox" value="1" <%=model.IsRecommend==1?"checked":"" %> />
+            </td>
+            <td>
+                <input type="text" class="input" shop="true" id="Sort<%=model.id %>" name="Sort<%=model.id %>" value="<%=model.Sort %>" style="width: 70px;" onblur='value=value.replace(/[^\d]/g,"");this.style.border="1px solid #e5e5e5"' onfocus="this.style.border='1px solid #66BBFF'" onkeyup='value=value.replace(/[^\d]/g,"")' onbeforepaste='clipboardData.setData("text",clipboardData.getData("text").replace(/[^\d]/g,""))' />
+            </td>
+            <td>
+                <a href="default.aspx?Brand_id=<%=model.id %>&Type_id_ProductType=320,321,322,323"><%=Shop.Bussiness.EX_Product.BrandProductCount(model.id)%></a>
+                
+            </td>
+            <td><%=Shop.Bussiness.EX_Type.TypeName(model.Type_id_BrandStatus) %></td>
+            <td><%=model.IsVAT == 1?Tag("是"):Tag("否")%></td>
+            <td>
+                <a href="brand_edit.aspx?id=<%=model.id %>" target="_blank"><%=Tag("编辑")%></a>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function search_() {
+            var status = $("#status").val();
+            var type = $("#type").val();
+            var key = $("#key").val();
+            window.location = "?key=" + escape(key) + "&status=" + status + "&type=" + type;
+        }
+        function Edit(id) {
+            var title_ = "<%=Tag("编辑品牌")%>";
+            if (id == 0) title_ = "<%=Tag("添加品牌")%>";
+            var url_ = "brand_edit_window.aspx?id=" + id;
+            var width_ = 750;
+            var height_ = 500;
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function Del() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Brand_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function Edits() {
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Brands_Edit";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

@@ -1,0 +1,25 @@
+﻿<script src="<%=site.AdminAssetsPath %>/plugins/moment/moment.js"></script>
+<script src="<%=site.AdminAssetsPath %>/plugins/daterangepicker/daterangepicker.js"></script>
+<script>
+    $('#daterange').daterangepicker({
+        startDate: '<%if (dateFrom !=""){%><%=dateFrom%><%}else{%><%=FormatDate(System.DateTime.Now)%><%}%>',
+        endDate: '<%if (dateTo !=""){%><%=dateTo%><%}else{%><%=FormatDate(System.DateTime.Now)%><%}%>',
+        ranges: {
+            '<%=Tag("今日")%>': [moment(), moment()],
+            '<%=Tag("昨日")%>': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            '<%=Tag("最近7日")%>': [moment().subtract(6, 'days'), moment()],
+            '<%=Tag("最近30日")%>': [moment().subtract(29, 'days'), moment()],
+            '<%=Tag("本月")%>': [moment().startOf('month'), moment().endOf('month')],
+            '<%=Tag("上个月")%>': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        },
+        locale: {
+            format: 'YYYY-MM-DD',
+            applyLabel: '<%=Tag("确定")%>',
+            cancelLabel: '<%=Tag("取消")%>',
+            startLabel: '<%=Tag("开始日期")%>',
+            endLabel: '<%=Tag("结束日期")%>',
+            customRangeLabel: '<%=Tag("自定义")%>',
+            firstDay: 1
+        }
+    });
+</script>

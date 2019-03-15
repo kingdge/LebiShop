@@ -1,0 +1,28 @@
+﻿<!--
+Name:文章详情
+Page:P_ArticleDetails
+-->
+<%if (CurrentLanguage.IsLazyLoad==1){ %>
+<script type="text/javascript">
+    $(document).ready(
+    function ($) {
+        $("img.contentlazy").lazyload({
+            placeholder: "{/image}lazy.gif",
+            effect: "fadeIn"
+        });
+    });
+</script>
+<%} %>
+<div class="nbbox clearfix">
+<div class="nodecontent">
+    <div class="mt">
+        <h2><font style="color:<%=page.NameColor%>"><%=page.Name%></font></h2>
+    </div>
+    <div class="mc clearfix">
+        <%if (page.Description != ""){ %><div class="tips"><%=page.Description%></div><%} %>
+        <div class="content">
+            <%=ImgSrc(page.Content,CurrentLanguage.IsLazyLoad) %>
+        </div>
+    </div>
+</div>
+</div>

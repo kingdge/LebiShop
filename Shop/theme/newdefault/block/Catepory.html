@@ -1,0 +1,21 @@
+﻿<!--
+Name:商品子分类
+Page:P_ProductCategory
+-->
+<div class="mbox clearfix">
+<div class="cateporys">
+<div class="mt">
+    <h2>{Tag:商品分类}</h2>
+</div>
+<div class="mc clearfix">
+<ul class="big">
+    ${#Source:Cateporys(id);
+    <%if ({IsIndexShow} == 1){ %>
+    <li><a href="<%=URL("P_ProductCategory",{id},Lang({Url})) %>" title="<%=Lang({Name}) %>"><%=Lang({Name}) %></a> <em>(<%=Shop.Bussiness.EX_Product.OnSaleTypeProductCount({id})%>)</em>
+    </li>
+    <%} %>
+    }$
+</ul>
+</div>
+</div>
+</div>

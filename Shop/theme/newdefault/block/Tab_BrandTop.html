@@ -1,0 +1,25 @@
+﻿<!--
+Name:品牌介绍选项卡
+Page:All
+-->
+<div class="ind-tabs">
+	<div class="hd">
+    	<ul>
+        ${#table:Lebi_Brand;#where:Type_id_BrandStatus = 452 and IsRecommend=1;#order:Sort desc,id desc;#top:10;
+        	<li><%=Lang({Name}) %></li>
+        }$
+        </ul>
+    </div>
+    <div class="bd">
+      ${#table:Lebi_Brand;#where:Type_id_BrandStatus = 452 and IsRecommend=1;#order:Sort desc,id desc;#top:10;
+   	  <div class="lh">
+        	<div class="pic"><a href="<%=URL("P_Brand",{id})%>"><img src="<%=Image({ImageUrl}) %>" alt="<%=Lang({Name}) %>" title="<%=Lang({Name}) %>" width="230" height="230" /></a></div>
+            <div class="info">
+            	<div class="desc"><%=Lang({Description})%></div>
+                <a href="<%=URL("P_Brand",{id})%>" class="read-more"><%=Lang({Name}) %> {tag:商品列表} >></a>
+            </div>
+      </div>
+      }$
+    </div>
+</div><!--tabs-->
+<script type="text/javascript">jQuery(".ind-tabs").slide({ delayTime: 0 });</script>

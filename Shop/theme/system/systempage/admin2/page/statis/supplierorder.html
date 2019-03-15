@@ -1,0 +1,153 @@
+﻿{layout:default} {class:Shop.Admin.statis.supplierorder}
+<lbhead>
+    <title><%=Tag("订单报表")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <link href="<%=site.AdminAssetsPath %>/plugins/daterangepicker/daterangepicker.css" rel="stylesheet">
+</lbfile>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("按供应商") %></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/statis/supplierorder.aspx"><%=Tag("订单报表")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("按供应商")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form action="javascript:SaveObj();" novalidate>
+                    <div class="row m-b-20">
+                        <div class="col-md-12">
+                            <%if (PageReturnMsg == ""){%>
+                            <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("提交")%></button>
+                            <button class="btn btn-info" onclick="exportorder();"><i class="ti-export"></i> <%=Tag("导出")%></button>
+                            <%}%>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="key"><%=Tag("关键词")%>：</label>
+                        <input type="text" id="key" name="key" value="<%=key %>" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="peisongdian"><%=Tag("配送点")%>：</label>
+                        <input type="text" id="peisongdian" name="peisongdian" value="<%=peisongdian %>" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="daterange"><%=Tag("订购日期")%>：</label>
+                        <div class="input-group">
+                            <input type="text" id="daterange" name="daterange" class="form-control">
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <span class="ti-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="IsPay"><%=Tag("支付状态")%>：</label>
+                        <select name="IsPay" id="IsPay" class="form-control">
+                            <option value="-1"><%=Tag("全部")%></option>
+                            <option value="0" <%=IsPay == 0?"selected":"" %>><%=Tag("未支付")%></option>
+                            <option value="1" <%=IsPay == 1?"selected":"" %>><%=Tag("已支付")%></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="Pay_id"><%=Tag("支付方式")%>：</label>
+                        <select id="Pay_id" name="Pay_id" class="form-control">
+                            <option value="0"><%=Tag("全部")%></option>
+                            <%foreach (DB.LebiShop.Lebi_Pay pay in pays){%>
+                            <option value="<%=pay.id %>" <%=Pay_id == pay.id?"selected":"" %>><%=Shop.Bussiness.Language.Content(pay.Name, CurrentLanguage.Code)%></option>
+                            <%} %>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="supplier_id"><%=Tag("供应商")%>：</label>
+                        <select id="supplier_id" name="supplier_id" class="form-control">
+                            <option value=""><%=Tag("全部")%></option>
+                            <option value="0"><%=Tag("商城")%></option>
+                            <%foreach (DB.LebiShop.Lebi_Supplier sup in suppliers){%>
+                            <option value="<%=sup.id %>" <%=supplier_id == sup.id.ToString()?"selected":"" %>><%=sup.SubName%></option>
+                            <%} %>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table m-t-10 table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th><%=Tag("序号")%></th>
+                                <th><%=Tag("供应商")%></th>
+                                <th><%=Tag("配送点")%></th>
+                                <th><%=Tag("发货日期")%></th>
+                                <th><%=Tag("单号")%></th>
+                                <th><%=Tag("订单金额")%></th>
+                                <th><%=Tag("应付金额")%></th>
+                                <th><%=Tag("支付方式")%></th>
+                                <th><%=Tag("在线支付")%></th>
+                                <th><%=Tag("订单状态")%></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%
+                            int i=0;
+                            foreach(DB.LebiShop.Lebi_Order order in orders){
+                            i++; %>
+                            <tr>
+                                <td><%=i%></td>
+                                <td><%=GetSupplier(order.Supplier_id).SubName%></td>
+                                <td><%=GetDelivery(order.Supplier_Delivery_id).Name%></td>
+                                <%if(order.IsShipped==1){ %>
+                                <td><%=order.Time_Shipped%></td>
+                                <%}else{ %>
+                                <td>-</td>
+                                <%} %>
+                                <td><%=order.Code%></td>
+                                <td><%=FormatMoney(order.Money_Order)%></td>
+                                <td><%=FormatMoney(order.Money_Pay)%></td>
+                                <td><%=Lang(order.Pay)%></td>
+                                <% if(Lang(order.Pay)=="在线支付"){ %>
+                                <td> <%=Lang(order.OnlinePay)%></td>
+                                <%}else{%>
+                                <td>-</td>
+                                <%}%>
+                                <td><%=Shop.Bussiness.Order.OrderStatus(order, CurrentLanguage.Code) %></td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    {MOD:DateRangePicker}
+    <script type="text/javascript">
+        function SaveObj() {
+            var key = $("#key").val();
+            var peisongdian = $("#peisongdian").val();
+            var dateFrom = "";
+            var dateTo = "";
+            var daterange = $("#daterange").val();
+            if (daterange.indexOf(" - ") > -1) {
+                dateFrom = daterange.split(" - ")[0];
+                dateTo = daterange.split(" - ")[1];
+            }
+            var IsPay = $("#IsPay").val();
+            var Pay_id = $("#Pay_id").val();
+            var Transport_id = $("#Transport_id").val();
+            var supplier_id = $("#supplier_id").val();
+            if (dateFrom == "" || dateTo == "") {
+                MsgBox(1, "<%=Tag("请选择订购日期")%>", "")
+            }
+            window.location = "?key=" + escape(key) + "&peisongdian=" + escape(peisongdian) + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&IsPay=" + IsPay + "&Pay_id=" + Pay_id + "&Transport_id=" + Transport_id + "&supplier_id=" + supplier_id;
+        }
+        function exportorder() {
+            window.location = "../ajax/export.aspx?__Action=SupplierOrder_Export&where=<%=where %>";
+        }
+    </script>
+</lbscripts>

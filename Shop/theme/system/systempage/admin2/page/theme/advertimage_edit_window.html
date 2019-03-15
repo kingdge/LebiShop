@@ -1,0 +1,89 @@
+﻿{layout:simple} {class:Shop.Admin.theme.AdvertImage_Edit_window}
+<lbbody>
+    <form action="javascript:SaveObj();" novalidate>
+        <div class="modal-header">
+            <h4 class="modal-title"><%=LB.Tools.RequestTool.RequestString("title")%></h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        </div>
+        <div class="modal-body" style="max-height:500px;overflow-y:auto;">
+            <div class="form-group">
+                <label for=""><%=Tag("位置")%>：</label>
+                <%=model.Theme_Advert_Code %>
+            </div>
+            <div class="form-group">
+                <label for="Language_ids"><%=Tag("语言")%>：</label>
+                <%= Shop.Bussiness.Language.SiteLanguageCheckbox("Language_ids", model.Language_ids, CurrentLanguage.Code)%>
+            </div>
+            <div class="form-group">
+                <label for="Title"><%=Tag("标题")%>：</label>
+                <input type="text" id="Title" name="Title" value="<%=model.Title %>" class="form-control" shop="true">
+            </div>
+            <div class="form-group">
+                <label for="Title"><%=Tag("跳转页面")%>：</label>
+                <input type="text" id="URL" name="URL" value="<%=model.URL %>" class="form-control" shop="true">
+            </div>
+            <div class="form-group">
+                <label for="Image"><%=Tag("图片地址")%>：</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="image_Image"><%if (model.ImageSmall != ""){%><a href="<%=WebPath + theme.Path_Advert + model.Image%>" data-lightbox="image-list"><img src="<%=WebPath + theme.Path_Advert + model.ImageSmall%>" height="20" /></a><%}else{ %><i class="ti-image"></i><%}%></span>
+                    </div>
+                    <input type="text" id="Image" name="Image" value="<%=model.Image %>" class="form-control">
+                    <input type="hidden" id="ImageSmall" name="ImageSmall" value="<%=model.ImageSmall %>">
+                    <div class="input-group-append fileupload">
+                        <span class="input-group-text"><i class="ti-upload"></i></span>
+                        <input type="file" id="file_Face" name="file_Face" class="upload" onchange="uploadImage('Image')">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="SkinContent"><%=Tag("文字描述")%>：</label>
+                <textarea class="form-control" id="Description" name="Description" style="height: 60px;" shop="true"><%=model.Description%></textarea>
+                <div class="button-group m-t-5">
+                    <button type="button" class="btn btn-default btn-xs btn-sm" onclick="javascript:resizeEditor('Description',100);"><%=Tag("展开")%></button>
+                    <button type="button" class="btn btn-default btn-xs btn-sm" onclick="javascript:resizeEditor('Description',-100);"><%=Tag("收缩")%></button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Sort"><%=Tag("排序序号")%>：</label>
+                <input type="text" id="Sort" name="Sort" value="<%=model.Sort %>" class="form-control" shop="true">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <input type="hidden" name="Theme_id" id="Theme_id" value="<%=theme.id %>" shop="true">
+            <input type="hidden" name="Theme_Advert_id" id="Theme_Advert_id" value="<%=model.Theme_Advert_id %>" shop="true">
+            <input type="hidden" name="Theme_Advert_Code" id="Theme_Advert_Code" value="<%=model.Theme_Advert_Code %>" shop="true">
+            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="ti-close"></i> <%=Tag("关闭")%></button>
+            <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+        </div>
+    </form>
+    <script>
+    function uploadImage(id) {
+        $.ajaxFileUpload({
+	        url: WebPath + '/ajax/imageupload_advert.aspx?theme_id=<%=theme.id %>',
+	        secureuri: false,
+	        fileElementId: 'file_' + id,
+	        dataType: 'json',
+	        success: function (data, status) {
+	                if (data.msg != "OK") {
+	                    MsgBox(2, data.msg, "");
+	                }
+	                else {
+	                    $("#image_" + id + "").html('<img src="' + WebPath + data.url + '" height="20">');
+	                    $("#Image").val(data.Image);
+                        $("#ImageSmall").val(data.ImageSmall);
+	                }
+	        },
+	        error: function (data, status, e) {
+	            MsgBox(2, data.error, "");
+	        }
+	    })
+    }
+    function SaveObj() {
+        $("#EditModal").modal("hide");
+        var postData = GetFormJsonData("shop");
+        var url = "<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=AdvertImage_Edit&id=<%=model.id %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+    </script>
+</lbbody>

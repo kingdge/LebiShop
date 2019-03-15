@@ -1,0 +1,432 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7DB4DEE2-E21D-44D9-A26B-FA4E5FDFB016}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DB.shop</RootNamespace>
+    <AssemblyName>DB.shop</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MySql.Data, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Shop\bin\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Bussiness\B_Lebi_Administrator.cs" />
+    <Compile Include="Bussiness\B_Lebi_AdminSkin.cs" />
+    <Compile Include="Bussiness\B_Lebi_Admin_Group.cs" />
+    <Compile Include="Bussiness\B_Lebi_Admin_Limit.cs" />
+    <Compile Include="Bussiness\B_Lebi_Admin_Power.cs" />
+    <Compile Include="Bussiness\B_Lebi_Advert.cs" />
+    <Compile Include="Bussiness\B_Lebi_Agent_Area.cs" />
+    <Compile Include="Bussiness\B_Lebi_Agent_Money.cs" />
+    <Compile Include="Bussiness\B_Lebi_Agent_Product.cs" />
+    <Compile Include="Bussiness\B_Lebi_Agent_Product_Level.cs" />
+    <Compile Include="Bussiness\B_Lebi_Agent_Product_request.cs" />
+    <Compile Include="Bussiness\B_Lebi_Agent_Product_User.cs" />
+    <Compile Include="Bussiness\B_Lebi_Agent_User.cs" />
+    <Compile Include="Bussiness\B_Lebi_Agent_UserLevel.cs" />
+    <Compile Include="Bussiness\B_Lebi_Area.cs" />
+    <Compile Include="Bussiness\B_Lebi_Bill.cs" />
+    <Compile Include="Bussiness\B_Lebi_BillType.cs" />
+    <Compile Include="Bussiness\B_Lebi_Brand.cs" />
+    <Compile Include="Bussiness\B_Lebi_Card.cs" />
+    <Compile Include="Bussiness\B_Lebi_CardOrder.cs" />
+    <Compile Include="Bussiness\B_Lebi_Cash.cs" />
+    <Compile Include="Bussiness\B_Lebi_Cash_alipay.cs" />
+    <Compile Include="Bussiness\B_Lebi_Cnzz.cs" />
+    <Compile Include="Bussiness\B_Lebi_Comment.cs" />
+    <Compile Include="Bussiness\B_Lebi_Config.cs" />
+    <Compile Include="Bussiness\B_Lebi_Currency.cs" />
+    <Compile Include="Bussiness\B_Lebi_DT.cs" />
+    <Compile Include="Bussiness\B_Lebi_DT_Agent.cs" />
+    <Compile Include="Bussiness\B_Lebi_DT_Config.cs" />
+    <Compile Include="Bussiness\B_Lebi_DT_Product.cs" />
+    <Compile Include="Bussiness\B_Lebi_Email.cs" />
+    <Compile Include="Bussiness\B_Lebi_EmailTask.cs" />
+    <Compile Include="Bussiness\B_Lebi_Express.cs" />
+    <Compile Include="Bussiness\B_Lebi_Express_Log.cs" />
+    <Compile Include="Bussiness\B_Lebi_Express_LogList.cs" />
+    <Compile Include="Bussiness\B_Lebi_Express_Shipper.cs" />
+    <Compile Include="Bussiness\B_Lebi_FriendLink.cs" />
+    <Compile Include="Bussiness\B_Lebi_Image.cs" />
+    <Compile Include="Bussiness\B_Lebi_ImageSize.cs" />
+    <Compile Include="Bussiness\B_Lebi_Inquiry.cs" />
+    <Compile Include="Bussiness\B_Lebi_Language.cs" />
+    <Compile Include="Bussiness\B_Lebi_Language_Code.cs" />
+    <Compile Include="Bussiness\B_Lebi_Language_Tag.cs" />
+    <Compile Include="Bussiness\B_Lebi_Language_Tag_Version.cs" />
+    <Compile Include="Bussiness\B_Lebi_Log.cs" />
+    <Compile Include="Bussiness\B_Lebi_Menu.cs" />
+    <Compile Include="Bussiness\B_Lebi_Message.cs" />
+    <Compile Include="Bussiness\B_Lebi_Message_Type.cs" />
+    <Compile Include="Bussiness\B_Lebi_Node.cs" />
+    <Compile Include="Bussiness\B_Lebi_Notice.cs" />
+    <Compile Include="Bussiness\B_Lebi_OnlinePay.cs" />
+    <Compile Include="Bussiness\B_Lebi_OnlinePay_Log.cs" />
+    <Compile Include="Bussiness\B_Lebi_Order.cs" />
+    <Compile Include="Bussiness\B_Lebi_Order_Log.cs" />
+    <Compile Include="Bussiness\B_Lebi_Order_Product.cs" />
+    <Compile Include="Bussiness\B_Lebi_Order_ProPerty.cs" />
+    <Compile Include="Bussiness\B_Lebi_Page.cs" />
+    <Compile Include="Bussiness\B_Lebi_Pay.cs" />
+    <Compile Include="Bussiness\B_Lebi_PickUp.cs" />
+    <Compile Include="Bussiness\B_Lebi_ProDesc.cs" />
+    <Compile Include="Bussiness\B_Lebi_Product.cs" />
+    <Compile Include="Bussiness\B_Lebi_Product_Combo.cs" />
+    <Compile Include="Bussiness\B_Lebi_Product_Limit.cs" />
+    <Compile Include="Bussiness\B_Lebi_Product_Price.cs" />
+    <Compile Include="Bussiness\B_Lebi_Product_Stock_Log.cs" />
+    <Compile Include="Bussiness\B_Lebi_Promotion.cs" />
+    <Compile Include="Bussiness\B_Lebi_Promotion_Type.cs" />
+    <Compile Include="Bussiness\B_Lebi_ProPerty.cs" />
+    <Compile Include="Bussiness\B_Lebi_ProPerty_Tag.cs" />
+    <Compile Include="Bussiness\B_Lebi_Pro_Tag.cs" />
+    <Compile Include="Bussiness\B_Lebi_Pro_Type.cs" />
+    <Compile Include="Bussiness\B_Lebi_Searchkey.cs" />
+    <Compile Include="Bussiness\B_Lebi_ServicePanel.cs" />
+    <Compile Include="Bussiness\B_Lebi_ServicePanel_Group.cs" />
+    <Compile Include="Bussiness\B_Lebi_ServicePanel_Type.cs" />
+    <Compile Include="Bussiness\B_Lebi_Site.cs" />
+    <Compile Include="Bussiness\B_Lebi_Supplier.cs" />
+    <Compile Include="Bussiness\B_Lebi_Supplier_Bank.cs" />
+    <Compile Include="Bussiness\B_Lebi_Supplier_BillType.cs" />
+    <Compile Include="Bussiness\B_Lebi_Supplier_Config.cs" />
+    <Compile Include="Bussiness\B_Lebi_Supplier_Delivery.cs" />
+    <Compile Include="Bussiness\B_Lebi_Supplier_Group.cs" />
+    <Compile Include="Bussiness\B_Lebi_Supplier_Limit.cs" />
+    <Compile Include="Bussiness\B_Lebi_Supplier_Menu.cs" />
+    <Compile Include="Bussiness\B_Lebi_Supplier_Money.cs" />
+    <Compile Include="Bussiness\B_Lebi_Supplier_Power.cs" />
+    <Compile Include="Bussiness\B_Lebi_Supplier_ProductType.cs" />
+    <Compile Include="Bussiness\B_Lebi_Supplier_ProPerty.cs" />
+    <Compile Include="Bussiness\B_Lebi_Supplier_Skin.cs" />
+    <Compile Include="Bussiness\B_Lebi_Supplier_User.cs" />
+    <Compile Include="Bussiness\B_Lebi_Supplier_UserGroup.cs" />
+    <Compile Include="Bussiness\B_Lebi_Supplier_Verified.cs" />
+    <Compile Include="Bussiness\B_Lebi_Supplier_Verified_Log.cs" />
+    <Compile Include="Bussiness\B_Lebi_Tab.cs" />
+    <Compile Include="Bussiness\B_Lebi_TabChild.cs" />
+    <Compile Include="Bussiness\B_Lebi_Table.cs" />
+    <Compile Include="Bussiness\B_Lebi_Theme.cs" />
+    <Compile Include="Bussiness\B_Lebi_Theme_Advert.cs" />
+    <Compile Include="Bussiness\B_Lebi_Theme_Page.cs" />
+    <Compile Include="Bussiness\B_Lebi_Theme_Skin.cs" />
+    <Compile Include="Bussiness\B_Lebi_Tips.cs" />
+    <Compile Include="Bussiness\B_Lebi_Transport.cs" />
+    <Compile Include="Bussiness\B_Lebi_Transport_Container.cs" />
+    <Compile Include="Bussiness\B_Lebi_Transport_Order.cs" />
+    <Compile Include="Bussiness\B_Lebi_Transport_Price.cs" />
+    <Compile Include="Bussiness\B_Lebi_Type.cs" />
+    <Compile Include="Bussiness\B_Lebi_Units.cs" />
+    <Compile Include="Bussiness\B_Lebi_User.cs" />
+    <Compile Include="Bussiness\B_Lebi_UserLevel.cs" />
+    <Compile Include="Bussiness\B_Lebi_User_Address.cs" />
+    <Compile Include="Bussiness\B_Lebi_User_Answer.cs" />
+    <Compile Include="Bussiness\B_Lebi_User_Bank.cs" />
+    <Compile Include="Bussiness\B_Lebi_User_BuyMoney.cs" />
+    <Compile Include="Bussiness\B_Lebi_User_Card.cs" />
+    <Compile Include="Bussiness\B_Lebi_User_Money.cs" />
+    <Compile Include="Bussiness\B_Lebi_User_Point.cs" />
+    <Compile Include="Bussiness\B_Lebi_User_Product.cs" />
+    <Compile Include="Bussiness\B_Lebi_User_Question.cs" />
+    <Compile Include="Bussiness\B_Lebi_Version.cs" />
+    <Compile Include="Bussiness\B_Lebi_weixin_menu.cs" />
+    <Compile Include="Bussiness\B_Lebi_weixin_qrcode.cs" />
+    <Compile Include="DAL\D_Lebi_Administrator.cs" />
+    <Compile Include="DAL\D_Lebi_AdminSkin.cs" />
+    <Compile Include="DAL\D_Lebi_Admin_Group.cs" />
+    <Compile Include="DAL\D_Lebi_Admin_Limit.cs" />
+    <Compile Include="DAL\D_Lebi_Admin_Power.cs" />
+    <Compile Include="DAL\D_Lebi_Advert.cs" />
+    <Compile Include="DAL\D_Lebi_Agent_Area.cs" />
+    <Compile Include="DAL\D_Lebi_Agent_Money.cs" />
+    <Compile Include="DAL\D_Lebi_Agent_Product.cs" />
+    <Compile Include="DAL\D_Lebi_Agent_Product_Level.cs" />
+    <Compile Include="DAL\D_Lebi_Agent_Product_request.cs" />
+    <Compile Include="DAL\D_Lebi_Agent_Product_User.cs" />
+    <Compile Include="DAL\D_Lebi_Agent_User.cs" />
+    <Compile Include="DAL\D_Lebi_Agent_UserLevel.cs" />
+    <Compile Include="DAL\D_Lebi_Area.cs" />
+    <Compile Include="DAL\D_Lebi_Bill.cs" />
+    <Compile Include="DAL\D_Lebi_BillType.cs" />
+    <Compile Include="DAL\D_Lebi_Brand.cs" />
+    <Compile Include="DAL\D_Lebi_Card.cs" />
+    <Compile Include="DAL\D_Lebi_CardOrder.cs" />
+    <Compile Include="DAL\D_Lebi_Cash.cs" />
+    <Compile Include="DAL\D_Lebi_Cash_alipay.cs" />
+    <Compile Include="DAL\D_Lebi_Cnzz.cs" />
+    <Compile Include="DAL\D_Lebi_Comment.cs" />
+    <Compile Include="DAL\D_Lebi_Config.cs" />
+    <Compile Include="DAL\D_Lebi_Currency.cs" />
+    <Compile Include="DAL\D_Lebi_DT.cs" />
+    <Compile Include="DAL\D_Lebi_DT_Agent.cs" />
+    <Compile Include="DAL\D_Lebi_DT_Config.cs" />
+    <Compile Include="DAL\D_Lebi_DT_Product.cs" />
+    <Compile Include="DAL\D_Lebi_Email.cs" />
+    <Compile Include="DAL\D_Lebi_EmailTask.cs" />
+    <Compile Include="DAL\D_Lebi_Express.cs" />
+    <Compile Include="DAL\D_Lebi_Express_Log.cs" />
+    <Compile Include="DAL\D_Lebi_Express_LogList.cs" />
+    <Compile Include="DAL\D_Lebi_Express_Shipper.cs" />
+    <Compile Include="DAL\D_Lebi_FriendLink.cs" />
+    <Compile Include="DAL\D_Lebi_Image.cs" />
+    <Compile Include="DAL\D_Lebi_ImageSize.cs" />
+    <Compile Include="DAL\D_Lebi_Inquiry.cs" />
+    <Compile Include="DAL\D_Lebi_Language.cs" />
+    <Compile Include="DAL\D_Lebi_Language_Code.cs" />
+    <Compile Include="DAL\D_Lebi_Language_Tag.cs" />
+    <Compile Include="DAL\D_Lebi_Language_Tag_Version.cs" />
+    <Compile Include="DAL\D_Lebi_Log.cs" />
+    <Compile Include="DAL\D_Lebi_Menu.cs" />
+    <Compile Include="DAL\D_Lebi_Message.cs" />
+    <Compile Include="DAL\D_Lebi_Message_Type.cs" />
+    <Compile Include="DAL\D_Lebi_Node.cs" />
+    <Compile Include="DAL\D_Lebi_Notice.cs" />
+    <Compile Include="DAL\D_Lebi_OnlinePay.cs" />
+    <Compile Include="DAL\D_Lebi_OnlinePay_Log.cs" />
+    <Compile Include="DAL\D_Lebi_Order.cs" />
+    <Compile Include="DAL\D_Lebi_Order_Log.cs" />
+    <Compile Include="DAL\D_Lebi_Order_Product.cs" />
+    <Compile Include="DAL\D_Lebi_Order_ProPerty.cs" />
+    <Compile Include="DAL\D_Lebi_Page.cs" />
+    <Compile Include="DAL\D_Lebi_Pay.cs" />
+    <Compile Include="DAL\D_Lebi_PickUp.cs" />
+    <Compile Include="DAL\D_Lebi_ProDesc.cs" />
+    <Compile Include="DAL\D_Lebi_Product.cs" />
+    <Compile Include="DAL\D_Lebi_Product_Combo.cs" />
+    <Compile Include="DAL\D_Lebi_Product_Limit.cs" />
+    <Compile Include="DAL\D_Lebi_Product_Price.cs" />
+    <Compile Include="DAL\D_Lebi_Product_Stock_Log.cs" />
+    <Compile Include="DAL\D_Lebi_Promotion.cs" />
+    <Compile Include="DAL\D_Lebi_Promotion_Type.cs" />
+    <Compile Include="DAL\D_Lebi_ProPerty.cs" />
+    <Compile Include="DAL\D_Lebi_ProPerty_Tag.cs" />
+    <Compile Include="DAL\D_Lebi_Pro_Tag.cs" />
+    <Compile Include="DAL\D_Lebi_Pro_Type.cs" />
+    <Compile Include="DAL\D_Lebi_Searchkey.cs" />
+    <Compile Include="DAL\D_Lebi_ServicePanel.cs" />
+    <Compile Include="DAL\D_Lebi_ServicePanel_Group.cs" />
+    <Compile Include="DAL\D_Lebi_ServicePanel_Type.cs" />
+    <Compile Include="DAL\D_Lebi_Site.cs" />
+    <Compile Include="DAL\D_Lebi_Supplier.cs" />
+    <Compile Include="DAL\D_Lebi_Supplier_Bank.cs" />
+    <Compile Include="DAL\D_Lebi_Supplier_BillType.cs" />
+    <Compile Include="DAL\D_Lebi_Supplier_Config.cs" />
+    <Compile Include="DAL\D_Lebi_Supplier_Delivery.cs" />
+    <Compile Include="DAL\D_Lebi_Supplier_Group.cs" />
+    <Compile Include="DAL\D_Lebi_Supplier_Limit.cs" />
+    <Compile Include="DAL\D_Lebi_Supplier_Menu.cs" />
+    <Compile Include="DAL\D_Lebi_Supplier_Money.cs" />
+    <Compile Include="DAL\D_Lebi_Supplier_Power.cs" />
+    <Compile Include="DAL\D_Lebi_Supplier_ProductType.cs" />
+    <Compile Include="DAL\D_Lebi_Supplier_ProPerty.cs" />
+    <Compile Include="DAL\D_Lebi_Supplier_Skin.cs" />
+    <Compile Include="DAL\D_Lebi_Supplier_User.cs" />
+    <Compile Include="DAL\D_Lebi_Supplier_UserGroup.cs" />
+    <Compile Include="DAL\D_Lebi_Supplier_Verified.cs" />
+    <Compile Include="DAL\D_Lebi_Supplier_Verified_Log.cs" />
+    <Compile Include="DAL\D_Lebi_Tab.cs" />
+    <Compile Include="DAL\D_Lebi_TabChild.cs" />
+    <Compile Include="DAL\D_Lebi_Table.cs" />
+    <Compile Include="DAL\D_Lebi_Theme.cs" />
+    <Compile Include="DAL\D_Lebi_Theme_Advert.cs" />
+    <Compile Include="DAL\D_Lebi_Theme_Page.cs" />
+    <Compile Include="DAL\D_Lebi_Theme_Skin.cs" />
+    <Compile Include="DAL\D_Lebi_Tips.cs" />
+    <Compile Include="DAL\D_Lebi_Transport.cs" />
+    <Compile Include="DAL\D_Lebi_Transport_Container.cs" />
+    <Compile Include="DAL\D_Lebi_Transport_Order.cs" />
+    <Compile Include="DAL\D_Lebi_Transport_Price.cs" />
+    <Compile Include="DAL\D_Lebi_Type.cs" />
+    <Compile Include="DAL\D_Lebi_Units.cs" />
+    <Compile Include="DAL\D_Lebi_User.cs" />
+    <Compile Include="DAL\D_Lebi_UserLevel.cs" />
+    <Compile Include="DAL\D_Lebi_User_Address.cs" />
+    <Compile Include="DAL\D_Lebi_User_Answer.cs" />
+    <Compile Include="DAL\D_Lebi_User_Bank.cs" />
+    <Compile Include="DAL\D_Lebi_User_BuyMoney.cs" />
+    <Compile Include="DAL\D_Lebi_User_Card.cs" />
+    <Compile Include="DAL\D_Lebi_User_Money.cs" />
+    <Compile Include="DAL\D_Lebi_User_Point.cs" />
+    <Compile Include="DAL\D_Lebi_User_Product.cs" />
+    <Compile Include="DAL\D_Lebi_User_Question.cs" />
+    <Compile Include="DAL\D_Lebi_Version.cs" />
+    <Compile Include="DAL\D_Lebi_weixin_menu.cs" />
+    <Compile Include="DAL\D_Lebi_weixin_qrcode.cs" />
+    <Compile Include="Model\Lebi_Administrator.cs" />
+    <Compile Include="Model\Lebi_AdminSkin.cs" />
+    <Compile Include="Model\Lebi_Admin_Group.cs" />
+    <Compile Include="Model\Lebi_Admin_Limit.cs" />
+    <Compile Include="Model\Lebi_Admin_Power.cs" />
+    <Compile Include="Model\Lebi_Advert.cs" />
+    <Compile Include="Model\Lebi_Agent_Area.cs" />
+    <Compile Include="Model\Lebi_Agent_Money.cs" />
+    <Compile Include="Model\Lebi_Agent_Product.cs" />
+    <Compile Include="Model\Lebi_Agent_Product_Level.cs" />
+    <Compile Include="Model\Lebi_Agent_Product_request.cs" />
+    <Compile Include="Model\Lebi_Agent_Product_User.cs" />
+    <Compile Include="Model\Lebi_Agent_User.cs" />
+    <Compile Include="Model\Lebi_Agent_UserLevel.cs" />
+    <Compile Include="Model\Lebi_Area.cs" />
+    <Compile Include="Model\Lebi_Bill.cs" />
+    <Compile Include="Model\Lebi_BillType.cs" />
+    <Compile Include="Model\Lebi_Brand.cs" />
+    <Compile Include="Model\Lebi_Card.cs" />
+    <Compile Include="Model\Lebi_CardOrder.cs" />
+    <Compile Include="Model\Lebi_Cash.cs" />
+    <Compile Include="Model\Lebi_Cash_alipay.cs" />
+    <Compile Include="Model\Lebi_Cnzz.cs" />
+    <Compile Include="Model\Lebi_Comment.cs" />
+    <Compile Include="Model\Lebi_Config.cs" />
+    <Compile Include="Model\Lebi_Currency.cs" />
+    <Compile Include="Model\Lebi_DT.cs" />
+    <Compile Include="Model\Lebi_DT_Agent.cs" />
+    <Compile Include="Model\Lebi_DT_Config.cs" />
+    <Compile Include="Model\Lebi_DT_Product.cs" />
+    <Compile Include="Model\Lebi_Email.cs" />
+    <Compile Include="Model\Lebi_EmailTask.cs" />
+    <Compile Include="Model\Lebi_Express.cs" />
+    <Compile Include="Model\Lebi_Express_Log.cs" />
+    <Compile Include="Model\Lebi_Express_LogList.cs" />
+    <Compile Include="Model\Lebi_Express_Shipper.cs" />
+    <Compile Include="Model\Lebi_FriendLink.cs" />
+    <Compile Include="Model\Lebi_Image.cs" />
+    <Compile Include="Model\Lebi_ImageSize.cs" />
+    <Compile Include="Model\Lebi_Inquiry.cs" />
+    <Compile Include="Model\Lebi_Language.cs" />
+    <Compile Include="Model\Lebi_Language_Code.cs" />
+    <Compile Include="Model\Lebi_Language_Tag.cs" />
+    <Compile Include="Model\Lebi_Language_Tag_Version.cs" />
+    <Compile Include="Model\Lebi_Log.cs" />
+    <Compile Include="Model\Lebi_Menu.cs" />
+    <Compile Include="Model\Lebi_Message.cs" />
+    <Compile Include="Model\Lebi_Message_Type.cs" />
+    <Compile Include="Model\Lebi_Node.cs" />
+    <Compile Include="Model\Lebi_Notice.cs" />
+    <Compile Include="Model\Lebi_OnlinePay.cs" />
+    <Compile Include="Model\Lebi_OnlinePay_Log.cs" />
+    <Compile Include="Model\Lebi_Order.cs" />
+    <Compile Include="Model\Lebi_Order_Log.cs" />
+    <Compile Include="Model\Lebi_Order_Product.cs" />
+    <Compile Include="Model\Lebi_Order_ProPerty.cs" />
+    <Compile Include="Model\Lebi_Page.cs" />
+    <Compile Include="Model\Lebi_Pay.cs" />
+    <Compile Include="Model\Lebi_PickUp.cs" />
+    <Compile Include="Model\Lebi_ProDesc.cs" />
+    <Compile Include="Model\Lebi_Product.cs" />
+    <Compile Include="Model\Lebi_Product_Combo.cs" />
+    <Compile Include="Model\Lebi_Product_Limit.cs" />
+    <Compile Include="Model\Lebi_Product_Price.cs" />
+    <Compile Include="Model\Lebi_Product_Stock_Log.cs" />
+    <Compile Include="Model\Lebi_Promotion.cs" />
+    <Compile Include="Model\Lebi_Promotion_Type.cs" />
+    <Compile Include="Model\Lebi_ProPerty.cs" />
+    <Compile Include="Model\Lebi_ProPerty_Tag.cs" />
+    <Compile Include="Model\Lebi_Pro_Tag.cs" />
+    <Compile Include="Model\Lebi_Pro_Type.cs" />
+    <Compile Include="Model\Lebi_Searchkey.cs" />
+    <Compile Include="Model\Lebi_ServicePanel.cs" />
+    <Compile Include="Model\Lebi_ServicePanel_Group.cs" />
+    <Compile Include="Model\Lebi_ServicePanel_Type.cs" />
+    <Compile Include="Model\Lebi_Site.cs" />
+    <Compile Include="Model\Lebi_Supplier.cs" />
+    <Compile Include="Model\Lebi_Supplier_Bank.cs" />
+    <Compile Include="Model\Lebi_Supplier_BillType.cs" />
+    <Compile Include="Model\Lebi_Supplier_Config.cs" />
+    <Compile Include="Model\Lebi_Supplier_Delivery.cs" />
+    <Compile Include="Model\Lebi_Supplier_Group.cs" />
+    <Compile Include="Model\Lebi_Supplier_Limit.cs" />
+    <Compile Include="Model\Lebi_Supplier_Menu.cs" />
+    <Compile Include="Model\Lebi_Supplier_Money.cs" />
+    <Compile Include="Model\Lebi_Supplier_Power.cs" />
+    <Compile Include="Model\Lebi_Supplier_ProductType.cs" />
+    <Compile Include="Model\Lebi_Supplier_ProPerty.cs" />
+    <Compile Include="Model\Lebi_Supplier_Skin.cs" />
+    <Compile Include="Model\Lebi_Supplier_User.cs" />
+    <Compile Include="Model\Lebi_Supplier_UserGroup.cs" />
+    <Compile Include="Model\Lebi_Supplier_Verified.cs" />
+    <Compile Include="Model\Lebi_Supplier_Verified_Log.cs" />
+    <Compile Include="Model\Lebi_Tab.cs" />
+    <Compile Include="Model\Lebi_TabChild.cs" />
+    <Compile Include="Model\Lebi_Table.cs" />
+    <Compile Include="Model\Lebi_Theme.cs" />
+    <Compile Include="Model\Lebi_Theme_Advert.cs" />
+    <Compile Include="Model\Lebi_Theme_Page.cs" />
+    <Compile Include="Model\Lebi_Theme_Skin.cs" />
+    <Compile Include="Model\Lebi_Tips.cs" />
+    <Compile Include="Model\Lebi_Transport.cs" />
+    <Compile Include="Model\Lebi_Transport_Container.cs" />
+    <Compile Include="Model\Lebi_Transport_Order.cs" />
+    <Compile Include="Model\Lebi_Transport_Price.cs" />
+    <Compile Include="Model\Lebi_Type.cs" />
+    <Compile Include="Model\Lebi_Units.cs" />
+    <Compile Include="Model\Lebi_User.cs" />
+    <Compile Include="Model\Lebi_UserLevel.cs" />
+    <Compile Include="Model\Lebi_User_Address.cs" />
+    <Compile Include="Model\Lebi_User_Answer.cs" />
+    <Compile Include="Model\Lebi_User_Bank.cs" />
+    <Compile Include="Model\Lebi_User_BuyMoney.cs" />
+    <Compile Include="Model\Lebi_User_Card.cs" />
+    <Compile Include="Model\Lebi_User_Money.cs" />
+    <Compile Include="Model\Lebi_User_Point.cs" />
+    <Compile Include="Model\Lebi_User_Product.cs" />
+    <Compile Include="Model\Lebi_User_Question.cs" />
+    <Compile Include="Model\Lebi_Version.cs" />
+    <Compile Include="Model\Lebi_weixin_menu.cs" />
+    <Compile Include="Model\Lebi_weixin_qrcode.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LB.DataAccess\LB.DataAccess.csproj">
+      <Project>{7e1f5b90-1f30-4e73-b934-3d3b21d30350}</Project>
+      <Name>LB.DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LB.Tools\LB.Tools.csproj">
+      <Project>{5bec2acf-9e97-4698-baa4-888f5d67518f}</Project>
+      <Name>LB.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\memcache\memcache.csproj">
+      <Project>{254937ed-4e8a-41d2-a147-bbc9b4f1774b}</Project>
+      <Name>memcache</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

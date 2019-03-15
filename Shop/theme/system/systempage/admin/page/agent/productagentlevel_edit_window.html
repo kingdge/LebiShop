@@ -1,0 +1,110 @@
+﻿{layout:simple} {class:Shop.Admin.agent.productagentlevel_edit_window}
+<lbbody>
+<table class="table">
+    <tr>
+        <th style="width: 20%">
+            <%=Tag("名称")%>：
+        </th>
+        <td style="text-align: left;">
+            <input type="text" id="Name" name="Name" value="<%=model.Name %>" class="input" shop="true" min="notnull" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("价格")%>：
+        </th>
+        <td>
+            <input type="text" id="Price" name="Price" value="<%=model.Price %>" class="input" onkeyup="value=value.replace(/[^\d\.]/g,'')" shop="true" min="notnull" />
+            <em>/<%=Tag("年") %></em>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("佣金比例")%>：
+        </th>
+        <td>
+            <input type="text" id="Commission" name="Commission" value="<%=model.Commission %>" class="input" onkeyup="value=value.replace(/[^\d\.]/g,'')" shop="true" min="notnull" />
+            <em>%</em>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("商品数量")%>：
+        </th>
+        <td>
+            <input type="text" id="Count_Product" name="Count_Product" value="<%=model.Count_Product %>" class="input" onkeyup="value=value.replace(/[^\d]/g,'')"  shop="true" min="notnull" />
+            <em></em>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("修改次数")%>：
+        </th>
+        <td>
+            <input type="text" id="Count_product_change" name="Count_product_change" value="<%=model.Count_product_change %>" class="input" onkeyup="value=value.replace(/[^\d]/g,'')"  shop="true" min="notnull" />
+            <em></em>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("赠送代金券")%>：
+        </th>
+        <td style="text-align: left;">
+            <select id="CardOrder_id" name="CardOrder_id" shop="true">
+                <option value="0"><%=Tag("不赠送") %></option>
+                <%foreach (DB.LebiShop.Lebi_CardOrder co in cos)
+                  { %>
+                  <option value="<%=co.id %>" <%=(co.id==model.CardOrder_id?"selected":"") %>><%=co.IndexCode %> - <%=Tag("面值") %>:<%=co.Money %>
+                  <%=Tag("数量") %>:<%=count_card(co.id)%>
+                  <%=Tag("剩余") %>:<%=count_card_no(co.id)%>
+                  </option>
+                <%} %>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <th style="vertical-align:top">
+            <%=Tag("描述")%>：<br>
+            <em>≤ <span id="remLen">255</span></em>
+        </th>
+        <td>
+            <textarea name="Content" id="Content" shop="true" rows="3" cols="60" class="input" onKeyDown="checkMaxInput(this.form)" onKeyUp="checkMaxInput(this.form)" style="height: 55px;width: 100%;"><%=model.Content%></textarea>
+            <div class="tools clear">
+                <ul>
+                    <li class="plus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Remark',100);"><b></b><span><%=Tag("展开")%></span></a></li>
+                    <li class="minus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Remark',-100)"><b></b><span><%=Tag("收缩")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("排序")%>：
+        </th>
+        <td>
+            <input type="text" id="Sort" name="Sort" value="<%=model.Sort %>" class="input" onkeyup="value=value.replace(/[^\d]/g,'')"  shop="true" min="notnull" />
+            <em></em>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+        <div class="tools tools-m clear">
+            <ul>
+                <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+            </ul>
+        </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    function SaveObj() {
+        var postData = GetFormJsonData("shop");
+        if (!CheckForm("shop", "span"))
+            return false;
+        var Area_id=$("#Area_id").val();
+        var PArea_id=$("#Area_id").prev().val();
+        var url = "<%=site.AdminPath %>/ajax/ajax_agent.aspx?__Action=ProductAgentLevel_Edit&id=<%=model.id %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+</script>
+<lbbody>

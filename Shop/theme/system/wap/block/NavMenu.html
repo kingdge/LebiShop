@@ -1,0 +1,11 @@
+﻿<!--
+Name:顶部栏目
+Page:All
+-->
+<div class="navmenu clearfix">
+<ul>
+${#table:Lebi_Page;#Where:Node_id="+Node("HeadMenu").id+" and ','+Language_ids+',' like '%," + CurrentLanguage.id + ",%';#order:Sort desc;#pageindex:1;#pagesize:10;
+	<li><a href="<%=URL("","",{url})%>"><span style="color:{%NameColor%}">{%Name%}</span></a><em>|</em></li>
+}$
+</ul>
+</div>

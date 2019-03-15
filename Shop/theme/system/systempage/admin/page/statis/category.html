@@ -1,0 +1,102 @@
+﻿{layout:default} {class:Shop.statis.category}
+<lbhead>
+   <title><%=Tag("类别统计")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+   <script language="javascript" type="text/javascript" src="<%=site.AdminJsPath %>/highcharts/highcharts.js"></script>
+   <script language="javascript" type="text/javascript" src="<%=site.AdminJsPath %>/highcharts/exporting.js"></script>
+   <script language="javascript" type="text/javascript" src="<%=site.AdminJsPath %>/highcharts/themes/grid.js"></script>
+    <style>#body_bottom{height:0;overflow:hidden;display:none}</style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="export"><a href="javascript:void(0);" onclick="Export();"><b></b><span><%=Tag("导出")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="<%=site.AdminPath %>/statis/category.aspx"><%=Tag("类别统计")%></a></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <script type="text/javascript">
+    var chart;
+    $(document).ready(function() {
+    chart = new Highcharts.Chart({
+    chart: {type: 'column',renderTo: 'container',reflow:false,borderColor:'#C4D8ED',borderRadius:'3',borderWidth:'1'},
+    title: {text: '<%=Tag("类别统计") %>',align: 'left',x: 5,style:{font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'}},
+    subtitle: {text: ''},
+    xAxis: {categories: [<%
+    List<DB.LebiShop.Lebi_Pro_Type> nodes = Shop.Bussiness.EX_Product.Types(0);
+    int i=1; 
+    int count=nodes.Count;
+    foreach (DB.LebiShop.Lebi_Pro_Type node in nodes)
+    {
+        Response.Write("'"+Shop.Bussiness.Language.Content(node.Name, CurrentLanguage.Code)+"'");
+        if(i<count){Response.Write(", ");}
+    i++;
+    }
+    %>],lineWidth:1},
+    yAxis: {min: 0,title: {text: ''},lineWidth:1},
+    tooltip: {crosshairs: true,shared: true},
+    plotOptions: {column: {pointPadding: 0.3,borderWidth: 0}},
+    series: [{name: '<%=Tag("商品数量") %>',data: [<%foreach (DB.LebiShop.Lebi_Pro_Type node in nodes){%><%=Shop.Bussiness.EX_Product.TypeProductCount(node.id)%>,<%} %>]},{name: '<%=Tag("收藏数量") %>',data: [<%foreach (DB.LebiShop.Lebi_Pro_Type node in nodes){%><%=Shop.Bussiness.EX_Product.LikeProductCount(node.id)%>,<%} %>]},{name: '<%=Tag("销量") %>',data: [<%foreach (DB.LebiShop.Lebi_Pro_Type node in nodes){%><%=Shop.Bussiness.EX_Product.SalesProductCount(node.id)%>,<%} %>]},{name: '<%=Tag("浏览量") %>',data: [<%foreach (DB.LebiShop.Lebi_Pro_Type node in nodes){%><%=Shop.Bussiness.EX_Product.ViewsProductCount(node.id)%>,<%} %>]}]
+    });});
+    </script>
+    <div id="container" style="margin:0 auto;width: 98%;"></div>
+    <table class="datalist">
+        <tr class="title">
+            <th><%=Tag("分类名称")%></th>
+            <th><%=Tag("商品数量")%></th>
+            <th><%=Tag("收藏数量")%></th>
+            <th><%=Tag("销量")%></th>
+            <th><%=Tag("浏览量")%></th>
+        </tr>
+        <div id="listinfo">
+            <%=List%>
+        </div>
+    </table> 
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+<script>
+    var showTypeids = GetCookie("showTypeids");
+    function ShowChild(ids, id, deep) {
+        if (showTypeids == '' || showTypeids == undefined)
+            showTypeids = ',';
+        if (showTypeids.indexOf(',' + id + ',') < 0) {
+            showTypeids = showTypeids + id + ',';
+            SetCookie("showTypeids", showTypeids, 1);
+        }
+        var src = $("#img" + id + "").attr("src");
+        if (src.indexOf("plus.gif") == -1) {
+            $("#img" + id + "").attr("src", AdminImagePath + "/plus.gif");
+            var arr = ids.split(',');
+            for (var i in arr) {
+                DoHide(arr[i]);
+            }
+            showTypeids = showTypeids.replace(',' + id + ',', ',');
+            SetCookie("showTypeids", showTypeids, 1);
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                url: AdminPath + '/ajax/ajax_statis.aspx?__Action=CreateTree',
+                data: { "pid": id, "deep": deep },
+                dataType: 'html',
+                success: function (res) {
+                    $("#tr" + id).after(res);
+                }
+            });
+            $("#img" + id + "").attr("src", AdminImagePath + "/minus.gif");
+            $("tr[name='tr" + id + "']").each(function () {
+                $(this).show();
+            })
+        }
+    }
+    function Export(){
+        MsgBox(1, "<%=Tag("正在处理，请等待")%>", "<%=site.AdminPath %>/ajax/export.aspx?__Action=Statis_Category")
+    }
+</script>
+</div>
+</lbbottom>

@@ -1,0 +1,194 @@
+﻿{layout:default} {class:Shop.Admin.theme.Skin_Edit}
+<lbhead>
+    <title><%=model.Name %>-<%=theme.Name %>-<%=Tag("主题管理")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=model.Name %></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/theme/default.aspx"><%=Tag("模板管理")%></a></li>
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/theme/skin.aspx?id=<%=theme.id %>"><%=theme.Name %></a></li>
+        <li class="breadcrumb-item active"><%=model.Name %></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form action="javascript:SaveObj();" novalidate>
+                    <div class="row">
+                        <div class="col-md-12 m-b-10">
+                            <%if (PageReturnMsg == ""){%>
+                            <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                            <button class="btn btn-success" onclick="CreateSkin();"><i class="ti-file"></i> <%=Tag("生成页面")%></button>
+                            <button class="btn btn-success" onclick="CreateTheme();"><i class="ti-files"></i> <%=Tag("生成主题")%></button>
+                            <%}%>
+                        </div>
+                    </div>
+                    <%if (model.id>0){ %>
+                    <div class="form-group">
+                        <label for=""><%=Tag("代码")%>：</label>
+                        <%=model.Code %>
+                        <%if (tpage.PageParameter != "")
+                        { %>
+                        <%=Tag("页面参数")%>：<%=tpage.PageParameter%>
+                        <%}if(tpage.StaticPageName!=""){ %>
+                        <%=Tag("静态页面名称")%>：<%=tpage.StaticPageName %>
+                        <%} %>
+                    </div>
+                    <%}%>
+                    <div class="form-group">
+                        <label for="Name"><%=Tag("名称")%>：</label>
+                        <input type="text" id="Name" name="Name" value="<%=model.Name %>" class="form-control" shop="true" required>
+                    </div>
+                    <%if (model.id>0){ %>
+                    <div class="form-group">
+                        <label for="PageSize"><%=Tag("分页大小")%>：</label>
+                        <input type="text" id="PageSize" name="PageSize" value="<%=model.PageSize %>" class="form-control" shop="true" required>
+                    </div>
+                    <%}%>
+                    <div class="form-group">
+                        <label for="IsPage_1"><%=Tag("类型")%>：</label>
+                        <div class="input-group">
+                            <label class="custom-control custom-radio m-r-20">
+                                <input type="radio" id="IsPage_1" name="IsPage" value="1" class="custom-control-input" shop="true" <%=model.IsPage==1?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("页面")%></span>
+                            </label>
+                            <label class="custom-control custom-radio m-r-20">
+                                <input type="radio" id="IsPage_0" name="IsPage" value="0" class="custom-control-input" shop="true" <%=model.IsPage==0?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("块")%></span>
+                            </label>
+                            <label class="custom-control custom-radio">
+                                <input type="radio" id="IsPage_2" name="IsPage" value="2" class="custom-control-input" shop="true" <%=model.IsPage==2?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("布局")%></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Path_Skin"><%=Tag("皮肤文件")%>：</label>
+                        <div class="input-group">
+                            <span class="col-form-label"><%=theme.Path_Files %>/</span><input type="text" id="Path_Skin" name="Path_Skin" value="<%=model.Path_Skin %>" class="form-control" shop="true">
+                            <div class="input-group-append" onclick="SelectPart();">
+                                <span class="input-group-text"><i class="ti-plus"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="DivPageName" class="form-group">
+                        <label for="PageName"><%=Tag("生成路径")%>：</label>
+                        <div class="input-group">
+                            <%=theme.Path_Create%><input type="text" id="PageName" name="PageName" value="<%=model.PageName %>" class="form-control" shop="true">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="SkinContent"><%=Tag("页面内容")%>：</label>
+                        <textarea class="form-control" id="SkinContent" name="SkinContent" style="height: 500px;" shop="true"><%=Server.HtmlEncode(SkinContent)%></textarea>
+                        <div class="button-group m-t-5">
+                            <button type="button" class="btn btn-default btn-xs btn-sm" onclick="javascript:resizeEditor('SkinContent',200);"><%=Tag("展开")%></button>
+                            <button type="button" class="btn btn-default btn-xs btn-sm" onclick="javascript:resizeEditor('SkinContent',-200);"><%=Tag("收缩")%></button>
+                        </div>
+                        <%if (model.Code!=""){ %>
+                        <small class="form-text text-muted">
+                            <label class="custom-control custom-checkbox">
+                                <input type="checkbox" id="IsLoadSystemPage" name="IsLoadSystemPage" value="1" class="custom-control-input" onclick="LoadCode();">
+                                <span class="custom-control-label"><%=Tag("加载系统页面内容")%></span>
+                            </label>
+                        </small>
+                        <%} %>
+                    </div>
+                    <%if (PageReturnMsg == ""){%>
+                    <input type="hidden" id="Theme_id" name="Theme_id" shop="true" value="<%=theme.id %>" />
+                    <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                    <%}%>
+                </form>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        ! function(window, document, $) {
+            "use strict";
+            $("input,select,textarea").not("[type=submit]").jqBootstrapValidation()
+        }(window, document, jQuery);
+        function SaveObj() {
+            var postData = GetFormJsonData("shop");
+            var nodeid = $("#Node_id").val();
+            var IsPage = $("input[name='IsPage']:checked").val();
+            var url = "<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=Skin_Edit&id=<%=model.id %>";
+            var returnurl = "skin.aspx?id=<%=theme.id %>&ispage="+IsPage;
+            if (IsPage ==0){
+                returnurl = "filelist.aspx?id=<%=theme.id %>&t=block";
+            }else if (IsPage ==2){
+                returnurl = "filelist.aspx?id=<%=theme.id %>&t=layout";
+            }
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", returnurl)});
+
+        }
+        function CreateSkin() {
+            var postData = GetFormJsonData("shop");
+            var nodeid = $("#Node_id").val();
+            var url = "<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=Skin_Edit&id=<%=model.id %>";
+            RequestAjax(url,postData,function(res){
+                url="<%=site.AdminPath %>/ajax/ajax_aspx.aspx?__Action=CreateSkin&id=<%=model.id %>";
+                RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+            });
+        }
+        function CreateTheme() {
+            var Theme_id = $("#Theme_id").val();
+            var postData = { "Theme_id": Theme_id };
+            var url="<%=site.AdminPath %>/ajax/ajax_aspx.aspx?__Action=CreateTheme";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+        function ChangeIsPage() {
+            var ispage = $("input[name='IsPage']:checked").val();
+            if (ispage == 1||ispage == 2) {
+                if (ispage == 1){
+                    $("#DivPageName").show();
+                    $("#Path_Skin").val("<%=model.Path_Skin %>");
+                }else if(ispage == 2){
+                    $("#DivPageName").hide();
+                    $("#Path_Skin").val("layout/<%=model.Path_Skin %>");
+                }
+            } else {
+                $("#DivPageName").hide();
+                $("#Path_Skin").val("inc/<%=model.Path_Skin %>");
+            }
+        }
+        function LoadCode(){
+            var IsLoadSystemPage = $("input[name='IsLoadSystemPage']:checked").val();
+            if (IsLoadSystemPage==1){
+                var url="<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=GetSkinContent&filename=page/<%=model.PageName %>";
+                LoadHtml(url,"",function(res){$("#SkinContent").val(res);});
+            }else{
+                $("#SkinContent").val("");
+            }
+        }
+        function LoadHtml(url, jsondata, callback) {
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: jsondata,
+                dataType: 'html',
+                success: function (res) {
+                    callback(res);
+                    return false;
+                }
+            });
+        }
+        function SelectPart() {
+            var ispage = $("input[name='IsPage']:checked").val();
+            $("#EditModal .modal-dialog").attr("class","modal-dialog modal-lg");
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "part_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {ispage: ispage},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        ChangeIsPage();
+        <%if (model.id>0 && model.IsPage==1){ %>$("#DivPageName").show();<%} %>
+    </script>
+</lbscripts>

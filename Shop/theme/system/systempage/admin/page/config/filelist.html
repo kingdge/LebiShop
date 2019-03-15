@@ -1,0 +1,76 @@
+﻿{layout:default} {class:Shop.Admin.config.filelist}
+<lbhead>
+    <title>
+        <%=Tag("系统块") %>-<%=Tag("主题管理")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <li class="rotate"><a href="javascript:void(0);" onclick="history.back();"><b></b><span>
+                <%=Tag("返回")%></span></a></li>
+            <li class="name"><span id="navIgation">
+                <%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a>
+                >  <%=Tag("文件编辑") %>
+                <%if (file.IndexOf("/") > -1)
+                  {
+                      string files = file;
+                      string[] filesArr;
+                      string filepath = "";
+                      filesArr = files.Split(new char[1] { '/' });
+                      int i = 0;
+                      foreach (string _file in filesArr)
+                      {
+                          for (int ii = 0; ii <= i; ii++)
+                          {
+                              filepath += filesArr[ii];
+                              if (ii < i)
+                                  filepath += "/";
+                          }
+                          if (filepath != "" && filepath != null)
+                          {
+                %>
+                > <a href="<%=site.AdminPath %>/config/filelist.aspx?file=<%=filepath%>"><%=filesArr[i]%></a><%
+}
+i++; filepath = "";
+          }
+      }
+                  else if (file != "")
+                  {
+                    %>
+                > <a href="<%=site.AdminPath %>/config/filelist.aspx?file=<%=file%>"><%=file%></a><%
+                                     }
+                    %>
+            </span></li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 250px;">
+                <%=Tag("名称")%>
+            </th>
+            <th style="width: 200px;">
+                <%=Tag("说明")%>
+            </th>
+            <th style="width: 200px;">
+                <%=Tag("限制")%>
+            </th>
+            <th style="width: 150px;">
+                <%=Tag("更新时间")%>
+            </th>
+            <th>
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%=GetList() %>
+    </table>
+    <script type="text/javascript">
+        function Edit(name) {
+            window.location = "file_edit.aspx?file=" + name;
+        }
+        function Load(name) {
+            window.location = "filelist.aspx?file=" + name;
+        }
+    </script>
+</lbbody>

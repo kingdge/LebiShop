@@ -1,0 +1,228 @@
+﻿{layout:default} {class:Shop.Admin.product.subproduct_Edit}
+<lbhead>
+    <title><%if (modelp.id > 0) { Response.Write(Shop.Bussiness.Language.Content(modelp.Name, CurrentLanguage.Code) + "-"); } %><%=Tag("商品管理")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+    <style>
+        .bottom{height: 0;overflow: hidden;display: none;}
+    </style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="add"><a href="javascript:void(0);" onclick="CreateProduct();"><b></b><span><%=Tag("生成")%></span></a></li>
+    <li class="submit"><a href="javascript:void(0);" onclick="Product_Edit_muti();"><b></b><span><%=Tag("保存")%></span></a></li>
+    <li class="del"><a href="javascript:void(0);" onclick="Product_Del();"><b></b><span><%=Tag("删除")%></span></a></li>
+    <li class="edit"><a href="javascript:void(0);" onclick="Product_Image_Edit();"><b></b><span><%=Tag("修改图片")%></span></a></li>
+    <li class="up"><a href="javascript:void(0);" onclick="Product_Status_Edit_muti(1);"><b></b><span><%=Tag("上架")%></span></a></li>
+    <li class="down"><a href="javascript:void(0);" onclick="Product_Status_Edit_muti(0);"><b></b><span><%=Tag("下架")%></span></a></li>
+    <%}%>
+    <li class="rotate"><a href="javascript:void(0);" onclick="javascript:history.back();"><b></b><span><%=Tag("返回")%></span></a></li>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="<%=site.AdminPath %>/product/default.aspx"><%=Tag("商品管理")%></a> > <%=Shop.Bussiness.Language.Content(modelp.Name, CurrentLanguage.Code) %></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table class="table">
+        <tr>
+            <th>
+                <%=Tag("主规格")%>：
+            </th>
+            <td>
+                <select id="ProPertyMain" name="ProPertyMain" shop="true" sonproduct="true">
+                    <option value="0"><%=Tag("不设置")%></option>
+                    <%
+                        foreach (DB.LebiShop.Lebi_ProPerty pro in ggs)
+                        {
+                    %>
+                    <option value="<%=pro.id %>" <%=modelp.ProPertyMain==pro.id?"selected":"" %> ><%=Lang(pro.Name)%></option>
+                    <%} %>
+                </select>
+            </td>
+        </tr>
+        <%
+            foreach (DB.LebiShop.Lebi_ProPerty pro in ggs)
+            {
+        %>
+        <tr>
+            <th>
+                <%=Lang(pro.Name)%>：
+            </th>
+            <td>
+                <%=Getpro131List(pro.id)%>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <table cellpadding="0" cellspacing="0" width="100%" class="datalist">
+        <tr class="title">
+            <th style="width: 40px;">
+                <a href="javascript:void(0);" onclick="$('input[name=\'sonproductid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));">
+                    <%=Tag("全选")%></a>
+            </th>
+            <th style="width: 40px">
+                <%=Tag("图片")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("编号")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("规格")%>
+            </th>
+            <th>
+                <%=Tag("商品名称")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("市场价")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("销售价")%>
+            </th>
+            <%if (modelp.Type_id_ProductType == 321)
+              { %>
+            <th style="width: 80px">
+                <%=Tag("抢购价")%>
+            </th>
+            <%}else if (modelp.Type_id_ProductType == 322)
+              { %>
+            <th style="width: 80px">
+                <%=Tag("团购价")%>
+            </th>
+            <%}else if (modelp.Type_id_ProductType == 323)
+              { %>
+            <th style="width: 80px">
+                <%=Tag("换购积分")%>
+            </th>
+            <%} %>
+            <%if (Shop.Bussiness.EX_Admin.CheckPower("product_price_cost")){ %>
+            <th style="width: 80px">
+                <%=Tag("成本价")%>
+            </th>
+            <%} %>
+            <th style="width: 80px">
+                <%=Tag("库存")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("冻结库存")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("销量")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("显示销量")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("状态")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <tbody id="subproducts"></tbody>
+    </table>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+     <input type="hidden" id="Pro_Type_id" name="Pro_Type_id" shop="true" sonproduct="true" value="<%=modelp.Pro_Type_id %>">
+    </div>
+    <script type="text/javascript">
+        function uploadImage(id) {
+            $.ajaxFileUpload
+        (
+	        {
+	            url: WebPath + '/ajax/imageupload.aspx',
+	            secureuri: false,
+	            fileElementId: 'file_' + id,
+	            dataType: 'json',
+	            success: function (data, status) {
+	                    if (data.msg != 'OK') {
+	                        MsgBox(2, data.msg, "");
+	                    }
+	                    else {
+	                        var imageUrl = data.img;
+	                        if (imageUrl.length > 0) {
+	                            $("#image_" + id + "").html('<img height="30" src="<%=webconfig.ImageURL%>'+ imageUrl + '">');
+	                            $("#" + id + "").val(imageUrl);
+                                //$("#ImageOriginal").val(data.ImageOriginal);
+                                //$("#ImageBig").val(data.ImageBig);
+                                //$("#ImageMedium").val(data.ImageMedium);
+	                        }
+	                    }
+	            }
+	        }
+        )
+        }
+        function CreateProduct(){
+            if (!confirm("<%=Tag("确认要生成同款的商品数据吗？")%>"))
+                return false;
+            var ggs=GetChkCheckedValues("Property131");
+            var pid=<%=id %>;
+            var tid=$("#Pro_Type_id").val();
+            var postData={ "ggs": ggs,"pid":pid,"tid":tid };
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=CreateProductGuiGe";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "");getsubproducts();});
+        }
+        function Product_Del() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = GetFormJsonData("ShopKeyID");
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Product_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "");getsubproducts();});
+        }
+        function Product_Edit_muti() {
+            var postData = GetFormJsonData("sonproduct");
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Product_Edit_muti_price_store&pid=<%=id %>";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "#")});
+        }
+        function Product_Status_Edit_muti(status) {
+            var postData = GetFormJsonData("ShopKeyID");
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Product_Status_Edit_muti&status="+status;
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "");getsubproducts();});
+        }
+        function Product_Name_Edit(id) {
+            var title_ = "<%=Tag("编辑商品名称")%>";
+            var url_ = "product_name_edit_window.aspx?pid=<%=id %>&subproduct=1&id=" + id;
+            var width_ = 560;
+            var height_ = 'auto';
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function Product_Remark_Edit(id) {
+            var title_ = "<%=Tag("内部备注")%>";
+            var url_ = "product_remark_edit_window.aspx?pid=<%=id %>&subproduct=1&id=" + id;
+            var width_ = 560;
+            var height_ = 'auto';
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function Product_Image_Edit() {
+            var ids = GetChkCheckedValues("sonproductid");
+            if (ids == "") {
+                MsgBox(2, "<%=Tag("请选择要修改的商品")%>", "");
+                return;
+            }
+            var title_ = "<%=Tag("批量编辑商品图片")%>";
+            var url_ = "product_image_edit_window.aspx?id=<%=id %>&subproduct=1&ids=" + ids;
+            var width_ = 600;
+            var height_ = 'auto';
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function getsubproducts() {
+            $.ajax({
+                type: "POST",
+                url: "subproduct_list.aspx?pid=<%=modelp.id %>",
+                data: '',
+                success: function (res) {
+                    $("#div_error").dialog('close'); 
+                    $("#subproducts").html(res);
+                }
+            });
+        }
+        $(function () {
+            getsubproducts();
+        });
+    </script>
+</lbbottom>

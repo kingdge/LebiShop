@@ -1,0 +1,85 @@
+﻿{layout:simple} {class:Shop.Admin.order.Order_Money_Edit_window}
+<lbbody>
+<table
+    class="table">
+    <tr>
+        <th style="width: 25%">
+            <%=Tag("商品金额")%>：
+        </th>
+        <td >
+            <input type="text" shop="true" min="notnull" id="Money_Product" name="Money_Product" class="input"
+                value="<%=FormatMoney(model.Money_Product,"Number") %>" style="width:100px;" onkeyup="value=value.replace(/[^\d\.]/g,'')"/>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("运费")%>：
+        </th>
+        <td>
+            <input type="text" shop="true" min="notnull" id="Money_Transport" name="Money_Transport" class="input"
+                value="<%=FormatMoney(model.Money_Transport,"Number") %>" style="width: 100px;" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("发票税金")%>：
+        </th>
+        <td>
+            <input type="text" shop="true" min="notnull" id="Money_Bill" name="Money_Bill"
+                class="input" value="<%=FormatMoney(model.Money_Bill,"Number") %>" style="width: 100px;" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("税金")%>：
+        </th>
+        <td>
+            <input type="text" shop="true" min="notnull" id="Money_Tax" name="Money_Tax"
+                class="input" value="<%=FormatMoney(model.Money_Tax,"Number") %>" style="width: 100px;" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
+        </td>
+    </tr>
+    <tr>
+        <th style="width: 25%">
+            <%=Tag("其它金额")%>：
+        </th>
+        <td>
+            <input type="text" shop="true" min="notnull" id="Money_Property" name="Money_Property" class="input"
+                   value="<%=FormatMoney(model.Money_Property,"Number") %>" style="width:100px;" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("返还金额")%>：
+        </th>
+        <td>
+            <input type="text" shop="true" min="notnull" id="Money_Give" name="Money_Give" class="input"
+                value="<%=FormatMoney(model.Money_Give,"Number") %>" style="width: 100px;" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("积分")%>：
+        </th>
+        <td>
+            <input type="text" shop="true" min="notnull" id="Point" name="Point"
+                class="input" value="<%=FormatMoney(model.Point,"Number") %>" style="width: 100px;" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
+        </td>
+    </tr>
+     <tr>
+        <td colspan="2" class="action">
+            <div class="tools tools-m clear">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    function SaveObj() {
+        var postData = GetFormJsonData("shop");
+        var url = "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=Order_Money_Edit&id=<%=model.id %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+</script>
+</lbbody>

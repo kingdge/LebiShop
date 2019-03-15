@@ -1,0 +1,9 @@
+﻿<!--
+Name:搜索关键词横版
+Page:All
+-->
+<div class="searchkeyword">
+${#table:Lebi_Searchkey;#order:Sort desc,id desc;#top:5;
+<%if ({Type}==1){ %><a href="<%=URL("P_Search",""+Lang({Name})+"") %>"><%}else{ %><a href="{%URL%}" target="_blank"><%} %><span><%=Lang({Name})%></span></a>
+}$
+</div>

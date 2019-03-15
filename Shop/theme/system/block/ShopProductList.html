@@ -1,0 +1,115 @@
+﻿<!--
+Name:商品列表
+Page:P_ShopIndex
+-->
+<%if (CurrentLanguage.IsLazyLoad==1){ %>
+<script type="text/javascript">
+    $(document).ready(
+    function ($) {
+        $("img.listlazy").lazyload({
+            threshold: 300,
+            effect: "fadeIn"
+        });
+    });
+</script>
+<%} %>
+<div class="nbbox clearfix">
+<div class="producttitle">
+<div id="filter">
+	<div class="fore1">
+		<dl class="order">
+			<dt>{Tag:排序}：</dt>
+			<dd <%if(sort == "" || sort == "1" || sort == "1a"){ %>class="curr <%if(sort == "" || sort == "1"){ %>up<%}else if(sort == "1a"){ %>down<%} %>"<%} %>><a href="<%=URL("P_ShopProductCategory",""+id+","+cid+","+list+",1"+ordertmp+"") %>">{Tag:销量}</a><b></b></dd>
+			<dd <%if(sort == "2" || sort == "2a"){ %>class="curr <%if(sort == "2"){ %>up<%}else if(sort == "2a"){ %>down<%} %>"<%} %>><a href="<%=URL("P_ShopProductCategory",id+","+cid+","+list+",2"+ordertmp+"") %>">{Tag:价格}</a><b></b></dd>
+			<dd <%if(sort == "3" || sort == "3a"){ %>class="curr <%if(sort == "3"){ %>up<%}else if(sort == "3a"){ %>down<%} %>"<%} %>><a href="<%=URL("P_ShopProductCategory",id+","+cid+","+list+",3"+ordertmp+"") %>">{Tag:评价数}</a><b></b></dd>
+			<dd <%if(sort == "4" || sort == "4a"){ %>class="curr <%if(sort == "4"){ %>up<%}else if(sort == "4a"){ %>down<%} %>"<%} %>><a href="<%=URL("P_ShopProductCategory",id+","+cid+","+list+",4"+ordertmp+"") %>">{Tag:上架时间}</a><b></b></dd>
+		</dl>
+        <div class="list-cutover">
+			<a id="list-unselected"  href="<%=URL("P_ShopProductCategory",""+id+","+cid+",2,"+ sort +"") %>" class="modfiy-url list-unselected <%=list=="2"?"list-curr":"" %>"><b></b>{Tag:列表}</a>
+			<a id="grid-unselected"  href="<%=URL("P_ShopProductCategory",""+id+","+cid+",1,"+ sort +"") %>" class="modfiy-url grid-unselected <%=(list=="1" || list=="")?"grid-curr":"" %>"><b></b>{Tag:网格}</a>
+		</div>
+		<div class="pagin pagin-m" id="top_pagi">
+			<%=HeadPage%>
+		</div>
+		<div class="total">
+			<span>{Tag:共}<strong> <%=B_Lebi_Product.Counts(where) %> </strong>{Tag:个商品}</span>
+		</div>
+		<span class="clr"></span>
+	</div>
+</div>
+ </div>
+<div class="mc clearfix">
+    <div class="productlist loadlist"><ul>
+        <%foreach (DB.LebiShop.Lebi_Product pro in products)
+        {
+        if (list == "" || list == "1"){ %>
+        <li class="grid loadli">
+            <div class="proimg">
+                <p><a href="<%=URL("P_Product",pro.id) %>" target="_blank"><img <%if (CurrentLanguage.IsLazyLoad==1){ %>class="listlazy" src="{/image}lazy.gif" data-original<%}else{ %>src<%} %>="<%=Image(pro,"medium")%>" alt="<%=Lang(pro.Name) %>" /></a></p></div>
+            <div class="proname">
+                <a href="<%=URL("P_Product",pro.id) %>" title="<%=Lang(pro.Name) %>" target="_blank"><%=Lang(pro.Name) %></a>
+            </div>
+            <div class="proinfo">
+              <div class="price"><span><%if (pro.Type_id_ProductType == 321 && (System.DateTime.Now < pro.Time_Expired)){ %><%=FormatMoney(pro.Price_Sale) %><%}else {%><%=FormatMoney(ProductPrice(pro)) %><%} %></span><%if (pro.Price_Market > 0){ %><del><%=FormatMoney(pro.Price_Market) %></del><%} %></div>
+              <div class="comment"><a href="<%=URL("P_Product",pro.id) %>">已有<%=pro.Count_Comment %>人评价</a><span>|</span><%if(ProductStock(pro)<1){ %>{Tag:已售罄}<%}else { %>{Tag:有货}<%} %></div>
+            </div>
+        </li>
+        <%}else{ %>
+        <li class="list loadli">
+            <div class="proimg">
+                <p><a href="<%=URL("P_Product",pro.id) %>" target="_blank"><img <%if (CurrentLanguage.IsLazyLoad==1){ %>class="listlazy" src="{/image}lazy.gif" data-original<%}else{ %>src<%} %>="<%=Image(pro,"medium")%>" alt="<%=Lang(pro.Name) %>" /></a></p></div>
+            <div class="proname">
+                <a href="<%=URL("P_Product",pro.id) %>" title="<%=Lang(pro.Name) %>" target="_blank"><%=Lang(pro.Name) %></a>
+            </div>
+            <div class="proinfo">
+            <%if (pro.Price_Market > 0){ %><div class="marketprice"><i>{Tag:市场价}：</i><strong><%=FormatMoney(pro.Price_Market) %></strong></div><%} %>
+            <%if (pro.Type_id_ProductType == 321 && (System.DateTime.Now < pro.Time_Expired)){ %>
+            <div class="buyprice"><i>{Tag:抢购价}：</i><strong><%=FormatMoney(pro.Price_Sale) %></strong><em><%=Discount(pro.Price_Market,pro.Price_Sale) %>% {Tag:折}</em></div>
+			<%}else{%>
+			<div class="buyprice"><i><%=Lang(CurrentUserLevel.PriceName) %>：</i><strong><%=FormatMoney(ProductPrice(pro)) %></strong></div>
+            <%} %>
+            <div class="introduction"><%=Lang(pro.Introduction)%></div>
+            <div class="probtn">
+                <%if(ProductStock(pro)<1){ %>
+                <strong>{Tag:已售罄}</strong>
+                <%}else{ %>
+                <a href="javascript:void(0)" onclick="UserProduct_Edit(<%=pro.id%>,142,$('#pro_num<%=pro.id%>').val());" class="buy btn btn-12"><s></s>{Tag:加入购物车}</a>
+                <a href="javascript:void(0)" onclick="UserProduct_Edit(<%=pro.id%>,141);" class="fav btn btn-12"><s></s>{Tag:收藏}</a>
+                <%} %>
+            </div>
+            </div>
+        </li>
+        <%} %>
+        <%} %>
+    </ul></div>
+    <div class="clear"></div>
+</div>
+<%if (CurrentSite.IsMobile==0){ %>
+<div class="page"><%=FootPage%></div>
+<%}else{%>
+<div class="loadpage">
+    <a data-next="<%=NextPage%>"></a>
+</div>
+<script>
+    $(document).ready(function () {
+        var container = document.querySelector('.loadlist');
+        var ias = $.ias({
+            container: ".loadlist",
+            item: ".loadli",
+            pagination: ".loadpage",
+            next: ".loadpage a"
+        });
+        ias.on('render', function (items) {
+            //$(items).css({ opacity: 0 });
+        });
+        ias.on("rendered", function (items) {
+        });
+        ias.extension(new IASSpinnerExtension({ html: "<li class=\"loadinginfo\"><img src=\"{src}\" />&nbsp;{Tag:加载中}</li>" }));
+        ias.extension(new IASTriggerExtension({ text: '{Tag:加载更多}', offset: 100, html: "<li class=\"loadinginfo more\"><p>{text}</p></li>" }));
+        ias.extension(new IASNoneLeftExtension({
+            text: '', html: ""
+        }));
+    });
+</script>
+<%}%>
+ </div>

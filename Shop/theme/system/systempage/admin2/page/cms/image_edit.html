@@ -1,0 +1,98 @@
+﻿{layout:default} {class:Shop.Admin.cms.Image_Edit}
+<lbhead>
+    <title><%=node.Name%>-<%=pnode.Name%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=node.Name%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><a href="UserNodeList.aspx?code=<%=pnode.Code %>"><%=pnode.Name%></a></li>
+        <li class="breadcrumb-item"><a href="<%=Shop.Bussiness.NodePage.AdminIndexPage(node) %>"><%=node.Name%></a></li>
+        <%if (page.Name !="") {%>
+        <li class="breadcrumb-item active"><%=page.Name%></li><%} %>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form action="javascript:SaveObj();" novalidate>
+                    <div class="form-group">
+                        <label for="Language_ids"><%=Tag("语言")%>：</label>
+                        <%=Shop.Bussiness.Language.SiteLanguageCheckbox("Language_ids", page.Language_ids,CurrentLanguage.Code)%>
+                    </div>
+                    <div class="form-group">
+                        <label for="Name"><%=Tag("标题")%>：</label>
+                        <input type="text" class="form-control" id="Name" name="Name" value="<%=page.Name %>" required shop="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="url"><%=Tag("跳转页面")%>：</label>
+                        <input type="text" class="form-control" id="url" name="url" value="<%=page.url %>" shop="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="ImageSmall"><%=Tag("图片地址")%>：</label>
+                        <div class="input-group">
+                            <div id="image_ImageSmall"><%if (page.ImageSmall != ""){%><img height="80" src="<%=site.WebPath + page.ImageSmall%>" /><%} %></div>
+                            <input type="text" class="form-control" id="ImageSmall" name="ImageSmall" value="<%=page.ImageSmall %>" shop="true">
+                            <div class="input-group-btn">
+                                <div class="input-group-append">
+                                    <input id="file_ImageSmall" name="file_ImageSmall" class="btn btn-info" type="file" />
+                                    <!--<button type="button" class="btn btn-success" onclick="uploadImage('ImageSmall')"><%=Tag("上传")%></button>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Sort"><%=Tag("排序序号")%>：</label>
+                        <input type="text" class="form-control" id="Sort" name="Sort" value="<%=page.Sort %>" shop="true" onkeyup="value=value.replace(/[^\d]/g,'')">
+                    </div>
+                    <%if (PageReturnMsg == ""){%>
+                    <input type="hidden" id="Node_id" name="Node_id" value="<%=page.Node_id %>" shop="true">
+                    <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                    <%}%>
+                </form>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+    <script>
+        ! function(window, document, $) {
+            "use strict";
+            $("input,select,textarea").not("[type=submit]").jqBootstrapValidation()
+        }(window, document, jQuery);
+        function uploadImage(id) {
+            $.ajaxFileUpload
+        (
+	        {
+	            url: WebPath + '/ajax/imageuploadone.aspx?path=cms',
+	            secureuri: false,
+	            fileElementId: 'file_' + id,
+	            dataType: 'json',
+	            success: function (data, status) {
+	                if (data.msg != 'OK') {
+	                    MsgBox(2, data.msg, "");
+	                }
+	                else {
+	                    var imageUrl = data.ImageUrl;
+	                    if (imageUrl.length > 0) {
+	                        $("#image_" + id + "").html('<img height="80" src=' + imageUrl + '>');
+	                        $("#" + id + "").val(imageUrl);
+	                    }
+	                }
+	            },
+	            error: function (data, status, e) {
+	                MsgBox(2, data.error, "");
+	            }
+	        }
+        )
+        }
+        function SaveObj() {
+            var postData = GetFormJsonData("shop");
+            var nodeid = $("#Node_id").val();
+            var url = "<%=site.AdminPath %>/ajax/ajax_node.aspx?__Action=Page_Edit&id=<%=page.id %>";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "pagelist.aspx?Node_id=" + nodeid + "")});
+        }
+    </script>
+</lbscripts>

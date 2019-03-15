@@ -1,0 +1,75 @@
+﻿{layout:default} {class:Shop.Admin.admin.menu}
+<lbhead>
+    <title><%=Tag("菜单管理")%>-<%=Tag("管理权限")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+</lbfile>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("菜单管理")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("菜单管理")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-info" onclick="Edit(0,0);"><i class="ti-plus"></i> <%=Tag("添加")%></button>
+                        <%}%>
+                    </div>
+                </div>
+                <table class="table table-bordered m-t-20">
+                    <%foreach (DB.LebiShop.Lebi_Menu p in models)
+                    { %>
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <a href="javascript:Edit(<%=p.id %>,0);"><i class="ti-plus"></i></a>
+                                <i class="<%=p.Image%>"></i> <a href="javascript:void(0);" onclick="Edit(0,<%=p.id %>);"><%=Tag(p.Name)%></a>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%foreach (DB.LebiShop.Lebi_Menu p2 in GetMenu(p.id))
+                        {
+                        %>
+                        <tr>
+                            <td class="text-nowrap">
+                                <a href="javascript:Edit(<%=p2.id %>,0);"><i class="ti-plus"></i></a>
+                                [<%=p2.Sort %>] <i class="<%=p2.Image%>"></i> <a href="javascript:void(0);" onclick="Edit(<%=p.id %>,<%=p2.id %>);"><%=Tag(p2.Name)%></a>
+                            </td>
+                            <td>
+                                <%
+                                foreach (DB.LebiShop.Lebi_Menu p3 in GetMenu(p2.id)){
+                                %>
+                                [<%=p3.Sort %>] <a href="javascript:Edit(<%=p2.id %>,<%=p3.id %>)"><%=Tag(p3.Name)%></a>&nbsp;&nbsp;
+                                <%}%>
+                            </td>
+                        </tr>
+                        <%}%>
+                    </tbody>
+                    <%} %>
+                </table>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        function Edit(pid,id) {
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "menu_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {pid: pid,id: id},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+    </script>
+</lbscripts>

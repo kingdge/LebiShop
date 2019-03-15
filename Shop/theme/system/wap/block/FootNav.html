@@ -1,0 +1,12 @@
+﻿<%
+if(!IsAPP()){
+%>
+<div id="footnav">
+<ul>
+<li><a href="<%=URL("P_Index", "")%>"><img src="{/image}home.png" alt="{tag:首页}" /><span>{tag:首页}</span></a></li>
+<li><a href="<%=URL("P_AllProductCategories", "")%>"><img src="{/image}category.png" alt="{tag:商品分类}" /><span>{tag:商品分类}</span></a></li>
+<li><a href="<%=URL("P_Basket", "")%>"><img src="{/image}cart.png" alt="{tag:购物车}" /><span>{tag:购物车}</span></a></li>
+<li><a href="<%=URL("P_UserCenter", "")%>"><img src="{/image}user.png" alt="{tag:会员中心}" /><span>{tag:会员中心}</span></a></li>
+</ul>
+</div>
+<%}%>

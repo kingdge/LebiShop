@@ -1,0 +1,11 @@
+﻿<!--
+Name:商品分类导航栏
+Page:All
+-->
+<div class="productcategorynav clearfix">
+<ul>
+${#table:Lebi_Pro_Type;#where:"+ProductCategoryWhere+" and Parentid = 0 and IsShow = 1 and IsIndexShow = 1;#order:Sort desc;
+<li><a href="<%=URL("P_ProductCategory",{id},Lang({Url}))%>"><span><%=Lang({Name}) %></span></a></li>
+}$
+</ul>
+</div>

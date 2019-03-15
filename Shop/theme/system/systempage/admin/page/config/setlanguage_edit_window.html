@@ -1,0 +1,59 @@
+﻿{layout:simple} {class:Shop.Admin.config.SetLanguage_Edit_window}
+<lbbody>
+<table class="table">
+    <tr>
+        <th style="width:20%;vertical-align:top">
+            <%=Tag("显示语言")%>：
+        </th>
+        <td>
+            <%= Shop.Bussiness.Language.SiteLanguageCheckbox("Language_ids", "", CurrentLanguage.Code,CurrentAdmin)%>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("数据来源")%>：
+        </th>
+        <td>
+            <label><input type="radio" name="DataType" value="1" shop="true" <%if (ids == ""){%>checked<%}%> /><%=Tag("全部")%></label>
+            <label><input type="radio" name="DataType" value="0" shop="true" <%if (ids != ""){%>checked<%}%> /><%=Tag("选择")%></label>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("更新类型")%>：
+        </th>
+        <td>
+            <label><input type="radio" name="UpdateType" value="1" shop="true" checked /><%=Tag("追加")%></label>
+            <label><input type="radio" name="UpdateType" value="0" shop="true" /><%=Tag("覆盖")%></label>
+        </td>
+    </tr>
+    <tr>
+    <td colspan="2" class="action">
+    <div class="tools tools-m clear">
+        <ul>
+            <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+        </ul>
+    </div>
+    <input type="hidden" name="table" id="table" value="<%=table %>" shop="true" />
+    <input type="hidden" name="ids" id="ids" value="<%=ids %>" shop="true" />
+    </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    function SaveObj() {
+        var DataType=$("input[name='DataType']:checked").val();
+        var ids = $("#ids").val();
+        if (DataType == 0){
+            if (ids == ""){
+                MsgBox(2, "<%=Tag("没有选择任何数据")%>", "");
+                return;
+            }
+        }
+        var postData = GetFormJsonData("shop");
+        if (!CheckForm("shop", "span"))
+            return false;
+        var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=SetLanguage_Update";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+</script>
+</lbbody>

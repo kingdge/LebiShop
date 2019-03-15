@@ -1,0 +1,85 @@
+﻿{layout:default} {class:Shop.Admin.config.filelist}
+<lbhead>
+    <title>
+        <%=Tag("文件编辑") %>-<%=Tag("主题管理")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("文件编辑")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><a href="filelist.aspx"><%=Tag("文件编辑")%></a></li>
+        <%if (file.IndexOf("/") > -1)
+        {
+        string files = file;
+        string[] filesArr;
+        string filepath = "";
+        filesArr = files.Split(new char[1] { '/' });
+        int i = 0;
+        foreach (string _file in filesArr)
+        {
+        for (int ii = 0; ii <= i; ii++)
+        {
+        filepath += filesArr[ii];
+        if (ii < i)
+        filepath += "/";
+        }
+        if (filepath != "" && filepath != null){
+        %>
+        <li class="breadcrumb-item active"><a href="<%=site.AdminPath %>/config/filelist.aspx?file=<%=filepath%>"><%=filesArr[i]%></a></li>
+        <%
+        }i++; filepath = "";}
+        }else if (file != ""){
+        %>
+        <li class="breadcrumb-item active"><a href="<%=site.AdminPath %>/config/filelist.aspx?file=<%=file%>"><%=file%></a></li>
+        <%}%>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <button class="btn btn-default" onclick="history.back();"><i class="ti-back-left"></i> <%=Tag("返回")%></button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table m-t-10 table-hover no-wrap">
+                        <thead>
+                            <tr class="no-wrap">
+                                <th>
+                                    <%=Tag("名称")%>
+                                </th>
+                                <th>
+                                    <%=Tag("说明")%>
+                                </th>
+                                <th>
+                                    <%=Tag("限制")%>
+                                </th>
+                                <th>
+                                    <%=Tag("更新时间")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%=GetList() %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        function Edit(name) {
+            window.location = "file_edit.aspx?file=" + name;
+        }
+        function Load(name) {
+            window.location = "filelist.aspx?file=" + name;
+        }
+    </script>
+</lbscripts>

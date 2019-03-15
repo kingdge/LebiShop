@@ -1,0 +1,124 @@
+﻿{layout:default} {class:Shop.Admin.sorteConfig.Language}
+<lbhead>
+    <title><%=Tag("站点设置")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("站点设置")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("站点设置")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-info" onclick="AddSite();"><i class="ti-plus"></i> <%=Tag("添加")%></button>
+                        <%if(NeedCody){ %>
+                        <button class="btn btn-default" onclick="CopyFiles()"><i class="ti-loop"></i> <%=Tag("同步系统文件")%></button>
+                        <%} %>
+                        <%}%>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table m-t-10 table-hover no-wrap">
+                        <thead>
+                            <tr class="no-wrap">
+                                <th>
+                                    <%=Tag("ID")%>
+                                </th>
+                                <th>
+                                    <%=Tag("站点简称")%>
+                                </th>
+                                <th>
+                                    <%=Tag("站点路径")%>
+                                </th>
+                                <%if (domain3admin) {%>
+                                <th>
+                                    <%=Tag("站点域名")%>
+                                </th>
+                                <%} %>
+                                <th>
+                                    <%=Tag("WAP站点")%>
+                                </th>
+                                <th>
+                                    <%=Tag("站点语言")%>
+                                </th>
+                                <th>
+                                    <%=Tag("排序")%>
+                                </th>
+                                <th>
+                                    <%=Tag("编辑")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_Site model in models){%>
+                            <tr>
+                                <td>
+                                    <%=model.id %>
+                                </td>
+                                <td>
+                                    <%=model.SubName %> <a href="<%if (model.Domain==""){ %><%=models.FirstOrDefault().Domain=="" ? site.WebPath + model.Path : "http://"+ models.FirstOrDefault().Domain + model.Path%><%}else{ %>http://<%=model.Domain%><%} %>" target="_blank"><i class="ti-new-window"></i></a>
+                                </td>
+                                <td>
+                                    <%=model.Path %>
+                                </td>
+                                <%if (domain3admin) {%>
+                                <td>
+                                    <%=model.Domain %>
+                                </td>
+                                <%} %>
+                                <td>
+                                    <%=model.IsMobile == 1 ? "<span class=\"label label-success\">" + Tag("是") + "</span>" : "<span class=\"label label-danger\">" + Tag("否") + "</span>"%></td>
+                                <td>
+                                    <%foreach (DB.LebiShop.Lebi_Language lang in Shop.Bussiness.Language.SiteLanguages(model.id)){%>
+                                    <%=lang.Name %>
+                                    <%} %>
+                                </td>
+                                <td>
+                                    <%=model.Sort %>
+                                </td>
+                                <td>
+                                    <a href="language_edit.aspx?id=<%=model.id %>"><%=Tag("编辑")%></a><%if (models.Count > 1 && model.id > 1){ %> | <a href="javascript:void(0);" onclick="DeleteConfirm(<%=model.id %>);"><%=Tag("删除")%></a><%} %>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        function AddSite()
+        {
+            var postData = '';
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=AddSite";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "language_edit.aspx?id="+res.id)});
+        }
+        function DeleteConfirm(id) {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要删除吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "DelSite(" + id + ");");
+        }
+        function DelSite(id)
+        {
+            $("#Modal-Confirm").modal("hide");
+            var postData = { "id": id };
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=Site_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function CopyFiles()
+        {
+            var postData = '';
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=UpdateSonSite";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+    </script>
+</lbscripts>

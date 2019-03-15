@@ -1,0 +1,16 @@
+﻿<!--
+Name:语言选择横版
+Page:All
+-->
+<div class="language">
+    <ul class="droplanguage">
+        <li class="language_li"><a class="noclick"><span>{Tag:网站语言}：</span><s><%if (CurrentLanguage.ImageUrl!=""){%><img src="<%=Image(CurrentLanguage.ImageUrl) %>" /><%}%><%=CurrentLanguage.Name %></s></a><dl
+            class="language_li_content">
+            ${#Source:Languages;
+            <dd <%if ({i}==RecordCount){%>class="last" <%} %>>
+                <a href="javascript:SetLanguage({%id%},'{%Code%}','{%Path%}');"><%if ({ImageUrl}!=""){%><img src="<%=Image({ImageUrl}) %>" /><%}%>{%Name%}</a></dd>
+            }$
+        </dl>
+        </li>
+    </ul>
+</div>

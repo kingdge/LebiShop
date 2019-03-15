@@ -1,0 +1,76 @@
+﻿{layout:default} {class:Shop.statis.userlevel}
+<lbhead>
+   <title><%=Tag("分组统计")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+   <script language="javascript" type="text/javascript" src="<%=site.AdminJsPath %>/highcharts/highcharts.js"></script>
+   <script language="javascript" type="text/javascript" src="<%=site.AdminJsPath %>/highcharts/exporting.js"></script>
+   <script language="javascript" type="text/javascript" src="<%=site.AdminJsPath %>/highcharts/themes/grid.js"></script>
+    <style>#body_bottom{height:0;overflow:hidden;display:none}</style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="export"><a href="javascript:void(0);" onclick="Export();"><b></b><span><%=Tag("导出")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="<%=site.AdminPath %>/statis/userlevel.aspx"><%=Tag("分组统计")%></a></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <script type="text/javascript">
+    var chart;
+    $(document).ready(function() {
+    chart = new Highcharts.Chart({
+    chart: {type: 'column',renderTo: 'container',reflow:false,borderColor:'#C4D8ED',borderRadius:'3',borderWidth:'1'},
+    title: {text: '<%=Tag("分组统计") %>',align: 'left',x: 5,style:{font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'}},
+    subtitle: {text: ''},
+    xAxis: {categories: [<%
+    int i=1; 
+    int count=models.Count;
+    foreach (DB.LebiShop.Lebi_UserLevel model in models)
+    {
+        Response.Write("'"+Shop.Bussiness.Language.Content(model.Name, CurrentLanguage.Code)+"'");
+        if(i<count){Response.Write(", ");}
+    i++;
+    }
+    %>],lineWidth:1},
+    yAxis: {min: 0,title: {text: ''},lineWidth:1},
+    tooltip: {crosshairs: true,shared: true},
+    plotOptions: {column: {pointPadding: 0.3,borderWidth: 0}},
+    series: [{name: '<%=Tag("会员数量") %>',data: [<%foreach (DB.LebiShop.Lebi_UserLevel model in models){%><%=Shop.Bussiness.EX_User.UserCount(model.id)%>,<%} %>]},{name: '<%=Tag("余额") %>',data: [<%foreach (DB.LebiShop.Lebi_UserLevel model in models){%><%=Shop.Bussiness.EX_User.MoneyCount(model.id)%>,<%} %>]},{name: '<%=Tag("积分") %>',data: [<%foreach (DB.LebiShop.Lebi_UserLevel model in models){%><%=Shop.Bussiness.EX_User.PointCount(model.id)%>,<%} %>]},{name: '<%=Tag("订单") %>',data: [<%foreach (DB.LebiShop.Lebi_UserLevel model in models){%><%=Shop.Bussiness.EX_User.OrderCount(model.id)%>,<%} %>]},{name: '<%=Tag("消费") %>',data: [<%foreach (DB.LebiShop.Lebi_UserLevel model in models){%><%=Shop.Bussiness.EX_User.Money_xiaofeiCount(model.id)%>,<%} %>]}]
+    });});
+    </script>
+    <div id="container" style="margin:0 auto;width: 98%;"></div>
+    <table class="datalist">
+        <tr class="title">
+            <th><%=Tag("会员分组")%></th>
+            <th><%=Tag("会员数量")%></th>
+            <th><%=Tag("余额")%></th>
+            <th><%=Tag("积分")%></th>
+            <th><%=Tag("订单")%></th>
+            <th><%=Tag("消费")%></th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_UserLevel model in models)
+          {%>
+        <tr class="list">
+            <td><%=Shop.Bussiness.Language.Content(model.Name, CurrentLanguage.Code)%></td>
+            <td><%=Shop.Bussiness.EX_User.UserCount(model.id)%></td>
+            <td><%=Shop.Bussiness.EX_User.MoneyCount(model.id)%></td>
+            <td><%=Shop.Bussiness.EX_User.PointCount(model.id)%></td>
+            <td><%=Shop.Bussiness.EX_User.OrderCount(model.id)%></td>
+            <td><%=Shop.Bussiness.EX_User.Money_xiaofeiCount(model.id)%></td>
+        </tr>
+      <%} %>
+    </table> 
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+<script>
+    function Export(){
+        MsgBox(1, "<%=Tag("正在处理，请等待")%>", "<%=site.AdminPath %>/ajax/export.aspx?__Action=Statis_UserLevel")
+    }
+</script>
+</div>
+</lbbottom>

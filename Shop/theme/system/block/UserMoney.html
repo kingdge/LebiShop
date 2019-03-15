@@ -1,0 +1,44 @@
+﻿<!--
+Name:用户中心-会员资金
+Page:All
+-->
+<div class="nbbox clearfix">
+<div class="user">
+    <div class="searchbox clearfix">
+        <input type="text" name="dateFrom" id="dateFrom" size="12" class="input-calendar" value="<%=dateFrom %>" /> - <input type="text" name="dateTo" id="dateTo" size="12" class="input-calendar" value="<%=dateTo %>" />
+        <input type="text" id="key" name="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" />
+        <a href="javascript:void(0)" onclick="search_();" class="btn btn-12"><s></s>{tag:查询}</a>
+        <a href="<%=URL("P_Recharge","") %>"  class="btn btn-12"><s></s>{tag:充值}</a>
+        <a href="<%=URL("P_UserCash","") %>"  class="btn btn-12"><s></s>{tag:提现}</a>
+        <div style="padding:10px 0 0 0;">
+         {tag:帐户余额}：<%=FormatMoney(CurrentUser.Money) %>
+        </div>
+    </div>
+    <table cellpadding="0" cellspacing="0" width="100%" class="tablelist box">
+        <tr>
+            <th style="width:120px;">{tag:时间}</th>
+            <th style="width:100px;">{tag:类型}</th>
+            <th style="width:100px;">{tag:金额}</th>
+            <th>{tag:备注}</th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_User_Money model in user_moneys)
+        {%>
+        <tr>
+            <td><%=FormatTime(model.Time_Add)%></td>
+            <td><%=TypeName(model.Type_id_MoneyType)%></td>
+            <td><%=FormatMoney(model.Money) %></td>
+            <td><%=model.Remark %></td>
+        </tr>
+        <%} %>
+    </table>
+    <div class="bottom clearfix"><div class="right"><%=PageString%></div></div>
+</div>
+</div>
+<script type="text/javascript">
+    function search_() {
+        var key = $("#key").val();
+        var dateFrom = $("#dateFrom").val();
+        var dateTo = $("#dateTo").val();
+        window.location = "?key=" + escape(key) + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo;
+    }
+</script>

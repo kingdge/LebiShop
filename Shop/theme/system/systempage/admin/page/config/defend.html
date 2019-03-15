@@ -1,0 +1,74 @@
+﻿{layout:default} {class:Shop.Admin.storeConfig.Defend}
+<lbhead>
+    <title><%=Tag("网站维护")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("网站维护")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table class="table">
+    <tbody>
+        <!--tr>
+            <th>
+                <%=Tag("网站维护")%>：
+            </th>
+            <td>
+                <input type="radio" name="WeiHuFlag" value="1" shop="true" <%=model.WeiHuFlag=="1"?"checked":"" %> /><%=Tag("开启")%>
+                <input type="radio" name="WeiHuFlag" value="0" shop="true" <%=model.WeiHuFlag=="0"?"checked":"" %> /><%=Tag("关闭")%>
+            </td>
+        </tr-->
+        <tr>
+            <th>
+                <%=Tag("禁止访问")%>：
+            </th>
+            <td>
+                <label><input type="radio" name="VisitTimeFlag" value="1" shop="true" <%=model.VisitTimeFlag=="1"?"checked":"" %> /><%=Tag("开启")%></label>
+                <label><input type="radio" name="VisitTimeFlag" value="0" shop="true" <%=model.VisitTimeFlag=="0"?"checked":"" %> /><%=Tag("关闭")%></label>
+            </td>
+        </tr>
+        <!--tr>
+            <th style="vertical-align:top">
+                <%=Tag("禁止时间段")%>：
+            </th>
+            <td>
+                <textarea id="VisitTime" cols="40" rows="3" class="textarea" style="height:60px;width: 550px;" name="VisitTime" shop="true"><%=model.VisitTime%></textarea><br /><a href="javascript:resizeEditor('VisitTime',50)"><img src="../images/bt_open.gif" alt="<%=Tag("展开")%>" /></a>&nbsp;<a href="javascript:resizeEditor('VisitTime',-50)"><img src="../images/bt_close.gif" alt="<%=Tag("收缩")%>" /></a>
+            </td>
+        </tr-->
+        <tr>
+            <th style="vertical-align:top">
+                <%=Tag("禁止提示语")%>：
+            </th>
+            <td>
+                <textarea id="Wornings" cols="83" rows="3" class="textarea" style="height:60px;width: 550px;" name="Wornings" shop="true"><%=model.Wornings%></textarea>
+                <div class="tools clear">
+                    <ul>
+                        <li class="plus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Wornings',100);"><b></b><span><%=Tag("展开")%></span></a></li>
+                        <li class="minus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Wornings',-100)"><b></b><span><%=Tag("收缩")%></span></a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        <!--tr>
+            <td class="classfaq" colspan="2">
+                <div class="faq_main">
+                    <p class="faq_title"><%=Tag("使用答疑：")%></p>
+                    <%=Tag("开启禁止访问，每天禁止时间段内用户不能访问网站, 请使用24小时时段格式, 每个时间段一行, 如需要也可跨越零点,留空为不限制。例如:晚 11:25 到次日早 5:05 可设置为: 23:25-5:05, 早 9:00 到当日下午 2:30 可设置为: 9:00-14:30。注意:格式不正确将可能导致意想不到的问题。")%></div>
+            </td>
+        </tr-->
+        </tbody>
+    </table>
+    <script type="text/javascript">
+        function SaveObj() {
+            var postData = GetFormJsonData("shop");
+            var url="<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=Defend_Edit";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+    </script>
+</lbbody>

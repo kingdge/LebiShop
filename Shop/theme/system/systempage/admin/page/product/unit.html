@@ -1,0 +1,78 @@
+﻿{layout:default} {class:Shop.Admin.product.Unit}
+<lbhead>
+    <title><%=Tag("单位管理")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="add"><a href="javascript:void(0);" onclick="Edit(0);"><b></b><span><%=Tag("添加")%></span></a></li>
+    <li class="del"><a href="javascript:void(0);" onclick="Del(0);"><b></b><span><%=Tag("删除")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("单位管理")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <%foreach (DB.LebiShop.Lebi_Language_Code lang in Shop.Bussiness.Language.Languages())
+              {%>
+            <th style="width: 200px">
+                <%=lang.Name %>
+            </th>
+            <%} %>
+            <th>
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_Units model in models)
+          { %>
+        <tr class="list" ondblclick="Edit(<%=model.id %>)">
+            <td style="text-align:center">
+                <input type="checkbox" name="id" value="<%=model.id %>" del="true" />
+            </td>
+            <%foreach (DB.LebiShop.Lebi_Language_Code lang in Shop.Bussiness.Language.Languages())
+              {%>
+            <td>
+                <%=Shop.Bussiness.Language.Content(model.Name,lang.Code) %>
+            </td>
+            <%} %>
+            <td>
+                <a href="javascript:" onclick="Edit(<%=model.id %>)"><%=Tag("编辑")%></a> | <a href="javascript:" onclick="Del(<%=model.id %>)"><%=Tag("删除")%></a>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function Edit(id) {
+            var title_ = "<%=Tag("编辑单位")%>";
+            if (id == 0) title_ = "<%=Tag("添加单位")%>";
+            var url_ = "unit_edit_window.aspx?id=" + id;
+            var width_ = 400;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+            //tipsWindown("编辑导航", "url:get?" + url_ + "", width_, height_, "true", "", "true", ""); 
+        }
+        function Del(id) {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData;
+            if (id == 0)
+                postData = GetFormJsonData("del");
+            else
+                postData = { "id": id };
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Unit_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

@@ -1,0 +1,126 @@
+﻿<!--
+Name:帐号绑定
+Page:All
+-->
+<div class="nbbox clearfix">
+<div class="userbox">
+    <div class="mt clearfix">
+        <h2>{tag:帐号绑定}</h2>
+    </div>
+    <div class="mc platform clearfix">
+    <div class="dl-table clearfix">
+    <%if(SYS.platform_login.Contains("qq")){ %>
+    <dl>
+        <dt><img src="<%=Shop.Platform.QQ.Instance.ImageURL %>" /></dt>
+        <dd><%if(CurrentUser.bind_qq_id=="") {%>
+            <a href="<%=Shop.Platform.QQ.Instance.LoginURL(backurl) %>" >{Tag:绑定}</a>
+            <%}else{ %>
+            <a href="javascript:void(0);" onclick="cancalbind('qq');" >{Tag:取消绑定}</a>
+            <%} %></dd>
+    </dl>
+    <%} %>
+    <%if(SYS.platform_login.Contains("weibo")){ %>
+    <dl>
+        <dt><img src="<%=Shop.Platform.Weibo.Instance.ImageURL %>" /></dt>
+        <dd><%if(CurrentUser.bind_weibo_id=="") {%>
+            <a href="<%=Shop.Platform.Weibo.Instance.LoginURL(backurl) %>" >{Tag:绑定}</a>
+            <%}else{ %>
+            <a href="javascript:void(0);" onclick="cancalbind('weibo');" >{Tag:取消绑定}</a>
+            <%} %></dd>
+    </dl>
+    <%} %>
+    <%if(SYS.platform_login.Contains("taobao")){ %>
+    <dl>
+        <dt><img src="<%=Shop.Platform.Taobao.Instance.ImageURL %>" /></dt>
+        <dd><%if(CurrentUser.bind_taobao_id=="") {%>
+            <a href="<%=Shop.Platform.Taobao.Instance.LoginURL(backurl) %>" >{Tag:绑定}</a>
+            <%}else{ %>
+            <a href="javascript:void(0);" onclick="cancalbind('taobao');" >{Tag:取消绑定}</a>
+            <%} %></dd>
+    </dl>
+    <%} %>
+    <%if(SYS.platform_login.Contains("facebook")){ %>
+    <dl>
+        <dt><img src="<%=Shop.Platform.Facebook.Instance.ImageURL %>" /></dt>
+        <dd><%if(CurrentUser.bind_facebook_id=="") {%>
+            <a href="<%=Shop.Platform.Facebook.Instance.LoginURL(backurl) %>" >{Tag:绑定}</a>
+            <%}else{ %>
+            <a href="javascript:void(0);" onclick="cancalbind('facebook');" >{Tag:取消绑定}</a>
+            <%} %></dd>
+    </dl>
+    <%} %>
+    <%if(SYS.platform_login.Contains("weixin")){ %>
+    <dl>
+        <dt><img src="<%=Shop.Platform.weixin.Instance.ImageURL %>" /></dt>
+        <dd><%if(CurrentUser.bind_weixin_id=="") {%>
+            使用微信“扫一扫”功能扫描此二维码绑定
+            <br/>
+            <img src="<%=WebPath %>/ajax/ajax_user.aspx?__Action=GetQrCode&url=<%=backurl %>" style="width:200px;height:200px"/>
+            <%}else{ %>
+            <a href="javascript:void(0);" onclick="cancalbind('weixin');" >{Tag:取消绑定}</a>
+            <%} %></dd>
+    </dl>
+    <%} %>
+    </div>
+    </div>
+</div>
+</div>
+<div class="nbbox clearfix">
+<div class="userbox">
+    <div class="mt clearfix">
+        <h2>{tag:账号合并}</h2>
+    </div>
+    <div class="mc clearfix">
+    <div class="dl-table clearfix">
+    <dl>
+        <dt>{tag:用户名}：</dt>
+        <dd><input name="UserName" id="UserName" size="30" type="text" shop="true" min="notnull" class="input" /></dd>
+    </dl>
+    <dl>
+        <dt>{tag:密码}：</dt>
+        <dd><input name="Password" id="Password" size="30" type="password" shop="true" min="notnull" class="input" /></dd>
+    </dl>
+    <dl class="dl-btn">
+        <dt></dt>
+        <dd><a href="javascript:void(0)" onclick="userloginsubmit();" class="btn btn-11"><s></s>{tag:提交}</a></dd>
+    </dl>
+    </div>
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+    function cancalbind(t) {
+        if (!confirm("{tag:确认操作吗？}"))
+            return false;
+        var postData = {"t": t};
+        var url = path+"/ajax/Ajax_userin.aspx?__Action=Cancalbind";
+        RequestAjax(url, postData, function () { MsgBox(1, "{tag:操作成功}", "?") });
+    }
+    function userloginsubmit() {
+        var postData = GetFormJsonData("shop");
+        var url = path + "/ajax/ajax_userin.aspx?__Action=User_Bind";
+        RequestAjax(url, postData, function (res) { MsgBox(1, "{tag:操作成功}", "?") });
+    }
+    <%if(SYS.platform_login.Contains("weixin") && CurrentUser.bind_weixin_id==""){ %>
+    var wflag=0;
+    function wechatbind()
+    {
+        if(wflag==0){
+            wflag=1;
+            $.ajax({
+                type: "POST",
+                url: path+"/ajax/ajax_user.aspx?__Action=wechatbind",
+                data: '',
+                dataType: 'json',
+                success: function (res) {
+                    if(res.msg=='OK')
+                       MsgBox(1, "{tag:操作成功}", "?");
+                    else
+                        wflag=0;
+                }
+            });
+        }
+    }
+    setInterval("wechatbind()",3000);
+    <%} %>
+</script>

@@ -1,0 +1,76 @@
+﻿{layout:default} {class:Shop.Admin.user.OftenBuy}
+<lbhead>
+    <title><%if (type == 141){ %><%=Tag("收藏夹")%><%}else{%><%=Tag("常购清单")%><%} %>-<%=Tag("会员管理")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a>
+                > <a href="<%=site.AdminPath %>/user/default.aspx"><%=Tag("会员管理")%></a> > <a href="<%=site.AdminPath %>/user/oftenbuy.aspx"><%if (type == 141){ %><%=Tag("收藏夹")%><%}else{%><%=Tag("常购清单")%><%} %></a><%if (user.UserName != ""){ %> > <%=user.UserName%><%} %></span>
+           </li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox">
+        <select name="type" id="type">
+            <option value="141" <%=type==141?"selected":"" %>>┌ <%=Tag("收藏夹")%></option>
+            <option value="144" <%=type==144?"selected":"" %>>┌ <%=Tag("常购清单")%></option>
+        </select>
+        <input type="text" name="dateFrom" id="dateFrom" size="12" class="input-calendar" value="<%=dateFrom %>" /> - <input type="text" name="dateTo" id="dateTo" size="12" class="input-calendar" value="<%=dateTo %>" />
+        <input name="key" type="text" id="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" align="absmiddle" />
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width:40px;"><%=Tag("图片")%></th>
+            <th><%=Tag("商品")%></th>
+            <th style="width:80px;"><%=Tag("价格")%></th>
+            <th style="width:80px;"><%=Tag("数量")%></th>
+            <%if (type == 141){ %>
+            <th style="width:130px;"><%=Tag("收藏时间")%></th>
+            <%}else{ %>
+            <th style="width:80px;"><%=Tag("购买周期")%></th>
+            <th style="width:130px;"><%=Tag("预购时间")%></th>
+            <%} %>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_User_Product model in models)
+          {
+              DB.LebiShop.Lebi_Product product = GetProduct(model.Product_id);
+           %>
+        <tr class="list">
+            <td>
+                <% if (product.ImageSmall == "")
+                   { %>
+                &nbsp;
+                <%}else
+                   { %>
+                <a href="<%=Image(product.ImageOriginal,"big") %>" data-lightbox="image<%=model.Product_id %>"><img style="height: 30px;width: 30px;vertical-align:middle" src="<%=Image(product.ImageOriginal,30,30) %>" /></a>
+                <%} %>
+            </td>
+            <td><a href="<%=Shop.Bussiness.ThemeUrl.GetURL("P_Product",model.Product_id.ToString(),"",CurrentLanguage.Code) %>" target="_blank"><%=Lang(product.Name)%></a></td>
+            <td><%=FormatMoney(product.Price) %></td>
+            <td><%=model.count %></td>
+            <%if (type == 141){ %>
+            <td><%=FormatTime(model.Time_Add.AddDays(model.WarnDays))%></td>
+            <%}else{ %>
+            <td><%=model.WarnDays %> <%=Tag("天")%></td>
+            <td><%=FormatTime(model.Time_Add.AddDays(model.WarnDays))%></td>
+            <%} %>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function search_() {
+            var key = $("#key").val();
+            var dateFrom = $("#dateFrom").val();
+            var dateTo = $("#dateTo").val();
+            var type = $("#type").val();
+            window.location = "?key=" + escape(key) + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&type=" + type;
+        }
+    </script>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+        <%=PageString%>
+    </div>
+</lbbottom>

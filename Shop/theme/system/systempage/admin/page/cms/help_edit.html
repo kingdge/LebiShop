@@ -1,0 +1,116 @@
+﻿{layout:default} {class:Shop.Admin.cms.Help_Edit}
+<lbhead>
+    <title><%=node.Name%>-<%=pnode.Name%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <script type="text/javascript" src="<%=site.WebPath %>/Editor/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript" src="<%=site.WebPath %>/Editor/ckfinder/ckfinder.js"></script>
+    <link rel="stylesheet" type="text/css" href="<%=site.AdminJsPath %>/bigcolorpicker/jquery.bigcolorpicker.css" /> 
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/bigcolorpicker/jquery.bigcolorpicker.min.js"></script> 
+    <script type="text/javascript">
+        $(function () {
+            $("#NameColor").bigColorpicker("NameColor");
+            $("#s_NameColor").bigColorpicker(function (el, color) { $(el).css("background-color", color); $("#NameColor").val(color); $("#Name").css("color", color); });
+        });
+    </script>
+    <style>
+        .bottom{height: 0;overflow: hidden;display: none;}
+    </style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+    <%}%>
+    <li class="rotate"><a href="javascript:void(0);" onclick="history.go(-1);"><b></b><span><%=Tag("返回")%></span></a></li>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="UserNodeList.aspx?code=<%=pnode.Code %>"><%=pnode.Name%></a> > <a href="<%=Shop.Bussiness.NodePage.AdminIndexPage(node) %>"><%=node.Name%></a><%if (page.Name !="") {%> > <%=page.Name%><%} %></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse;" class="table">
+        <tr>
+            <th>
+                <%=Tag("分类")%>：
+            </th>
+            <td>
+                <select name="Node_id" id="Node_id" shop="true">
+                    <%=GetOptionTreeString(0, pnode.id, node.id, page.Language)%>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("标题")%>：
+            </th>
+            <td>
+                <input type="text" id="Name" name="Name" class="input" shop="true" min="notnull" style="width: 500px;color:<%=page.NameColor %>" value="<%=page.Name %>" />
+                <input id="NameColor" name="NameColor" type="hidden" shop="true" value="<%=page.NameColor %>"><img id="s_NameColor" border="0" src="<%=AdminImage("rect.gif")%>" width="18" align="absmiddle" style="cursor: pointer;background-Color:<%=page.NameColor %>">
+            </td>
+        </tr>
+        <tr>
+            <th style="vertical-align:top">
+                <%=Tag("摘要")%>：
+            </th>
+            <td>
+                <textarea id="Description" name="Description" shop="true" cols="95" rows="4" class="textarea" style="width: 500px;height: 60px;"><%=page.Description%></textarea>
+                <div class="tools clear">
+                    <ul>
+                        <li class="plus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Description',100);"><b></b><span><%=Tag("展开")%></span></a></li>
+                        <li class="minus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Description',-100)"><b></b><span><%=Tag("收缩")%></span></a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        
+        <tr>
+            <th style="vertical-align:top">
+                <%=Tag("内容")%>：
+            </th>
+            <td>
+                <textarea name="Content" id="Content" style="width: 800px; height: 200px;" shop="true" class="textarea"><%=page.Content%></textarea>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("排序")%>：
+            </th>
+            <td>
+                <input type="text" id="Sort" name="Sort" shop="true" class="input" style="width: 150px" onkeyup="value=value.replace(/[^\d]/g,'')" value="<%=page.Sort %>" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("语言")%>：
+            </th>
+            <td>
+                <%= page.Language %>
+                <input type="hidden" id="Language" name="Language" shop="true" value="<%=node.Language %>" />
+                <input type="hidden" id="Language_ids" name="Language_ids" shop="true" value="<%=node.Language_ids %>" />
+            </td>
+        </tr>
+        
+    </table>
+    <script type="text/javascript">
+        CKEDITOR.replace('Content', {
+            height: '200',
+            width: '98%',
+            language: '<%=Tag("CKEditor语言")%>'
+		});  
+        function SaveObj() {
+            editor = CKEDITOR.instances.Content;
+            $("#Content").val(editor.getData());
+            var postData = GetFormJsonData("shop");
+            var nodeid = $("#Node_id").val();
+            if (!CheckForm("shop", "span"))
+                return false;
+            var url = "<%=site.AdminPath %>/ajax/ajax_node.aspx?__Action=Page_Edit&id=<%=page.id %>";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "pagelist.aspx?Node_id=<%=node.id %>")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+</div>
+</lbbottom>

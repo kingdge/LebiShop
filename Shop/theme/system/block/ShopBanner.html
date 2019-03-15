@@ -1,0 +1,31 @@
+﻿<!--
+Name:店铺Banner
+Page:All
+-->
+<%if (Getindeximages(5).Count>0){ %>
+<style>
+    #ShopBanner{float:left; overflow:hidden;width:100%;height:280px;position:relative;clear:both;}
+    #ShopBanner #TabID{ position:absolute; bottom:10px; right:10px;}
+    #ShopBanner #TabID li{list-style:none;float:left;width:16px;height:16px;line-height:16px;FILTER:alpha(opacity=80);opacity:0.8;border:1px solid #CD2A2C;background-color:#ECF4EC;color:#CD2A2C;list-style:none;text-align:center;cursor:pointer;padding:2px 5px;margin:0 2px}
+    #ShopBanner #TabID li:hover,#ShopBanner #TabID li.active{border:1px solid #CD2A2C;background-color:#E43C3E;color:#FFFFFF;}
+</style>
+<div id="ShopBanner">
+<div id="ShopBannerBox" style="margin:0 auto;">
+<ul id="ContentID">
+<%foreach(shopindeximage img in Getindeximages(5)){ %>
+<li><a href="<%=img.url %>" title="<%=img.title %>"><img src="<%=img.image %>" width="100%" height="280" /></a></li>
+<%} %>
+</ul>
+</div>
+<ul id="TabID">
+<%int i = 1;foreach(shopindeximage img in Getindeximages(5)){ %>
+<li class=""><%=i %></li>
+<%i++;} %>
+</ul>
+</div>
+<script type="text/javascript">
+    $(function () {
+        new Marquee({ MSClassID: "ShopBannerBox", ContentID: "ContentID", TabID: "TabID", Direction: 2, Step: 0.3, Width: "100%", Height: 280, Timer: 20, DelayTime: 4000, WaitTime: 0, ScrollStep: 1, SwitchType: 2, AutoStart: 1 });
+    });
+</script>
+<%} %>

@@ -1,0 +1,124 @@
+﻿{layout:default} 
+{class:Shop.Admin.admin.Log}
+<lbhead>
+    <title><%=Tag("操作日志")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="del"><a href="javascript:void(0);" onclick="Delete();"><b></b><span><%=Tag("删除")%></span></a></li>
+    <%}%>
+    <li class="rotate"><a href="javascript:void(0);" onclick="javascript:history.back();"><b></b><span><%=Tag("返回")%></span></a></li>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("操作日志")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox">
+        <select name="id" id="id">
+            <option value="0">┌ <%=Tag("系统用户")%></option>
+            <%=Administrator_TypeOption("PointStatus", id)%>
+        </select>
+        <select name="type" id="type">
+            <option value="">┌ <%=Tag("日志类型")%></option>
+            <option value="0" <%if (type == "0"){ %>selected<%} %>><%=Tag("操作日志")%></option>
+            <option value="1" <%if (type == "1"){ %>selected<%} %>><%=Tag("登陆日志")%></option>
+        </select>
+        <input type="text" name="dateFrom" id="dateFrom" size="12" class="input-calendar" value="<%=dateFrom %>" /> - <input type="text" name="dateTo" id="dateTo" size="12" class="input-calendar" value="<%=dateTo %>" />
+        <input name="key" type="text" id="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" align="absmiddle" />
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("系统用户")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("数据表")%>
+            </th>
+            <th style="width: 200px">
+                <%=Tag("内容")%>
+            </th>
+            <th style="width: 200px">
+                <%=Tag("描述")%>
+            </th>
+            <th>
+                <%=Tag("URL")%>
+            </th>
+            <th style="width: 130px">
+                <%=Tag("时间")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("IP地址")%>
+            </th>
+            <th style="width: 60px">
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_Log model in models)
+          {%>
+        <tr class="list" ondblclick="View(<%=model.id %>);">
+            <td style="text-align:center">
+                <input type="checkbox" name="id" value="<%=model.id %>" del="true" />
+            </td>
+            <td>
+                <%=model.AdminName %>
+            </td>
+            <td>
+                <%=model.TableName %>&nbsp;
+            </td>
+            <td>
+                <%=LB.Tools.Utils.GetUnicodeSubString(model.Content, 26, "...")%>
+            </td>
+            <td>
+                <%=LB.Tools.Utils.GetUnicodeSubString(model.Description, 26, "...")%>&nbsp;
+            </td>
+            <td>
+                <%=LB.Tools.Utils.GetUnicodeSubString(model.URL, 40, "...")%>
+            </td>
+            <td>
+                <%=FormatTime(model.Time_Add) %>
+            </td>
+            <td>
+                <a href="http://www.ip138.com/ips138.asp?ip=<%=model.IP_Add%>&action=2" target="_blank"><%=model.IP_Add%></a>
+            </td>
+            <td>
+                <a href="javascript:void(0)" onclick="View(<%=model.id %>);"><%=Tag("查看")%></a>     
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function search_() {
+            var key = $("#key").val();
+            var type = $("#type").val();
+            var dateFrom = $("#dateFrom").val();
+            var dateTo = $("#dateTo").val();
+            var id = $("#id").val();
+            window.location = "?key=" + escape(key) + "&lb=<%=lb %>&dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&type=" + type + "&id=" + id;
+        }
+        function View(id) {
+            var title_ = "<%=Tag("日志详情")%>";
+            var url_ = "log_edit_window.aspx?id=" + id;
+            var width_ = 600;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function Delete() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=Log_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

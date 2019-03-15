@@ -1,0 +1,198 @@
+﻿{layout:default} {class:Shop.Admin.agent.User}
+<lbhead>
+    <title><%=Tag("会员列表")%>-<%=Tag("分销")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+</lbfile>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("会员列表")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><%=Tag("分销")%></li>
+        <li class="breadcrumb-item active"><%=Tag("会员列表")%></li>
+        <%if (su.Description !=""){%>
+        <li class="breadcrumb-item active"><%=su.Description%></li><%}%>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 m-b-10">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-info" onclick="Update();"><i class="ti-plus"></i> <%=Tag("批量设置")%></button>
+                        <button class="btn btn-default" data-toggle="modal" data-target="#SearchModal"><i class="ti-search"></i> <%=Tag("搜索")%></button>
+                        <button class="btn btn-default" onclick="SearchWindow();"><i class="ti-search"></i> <%=Tag("高级搜索")%></button>
+                        <%}%>
+                    </div>
+                </div>
+                <div class="table-responsive sorttable">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th class="selectAll" style="width:40px">
+                                    <a href="javascript:void(0);" onclick="$('input[name=\'sid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+                                </th>
+                                <th>
+                                    <%=Tag("ID")%>
+                                </th>
+                                <th>
+                                    <%=Tag("会员编号")%>
+                                </th>
+                                <th onclick="OrderBy('<%=OrderByName(OrderBy,"UserNameDesc")%>');">
+                                    <div class="th-inner sort <%=OrderByName(OrderBy,"UserNameDesc","icon")%>"><%=Tag("会员帐号")%></div>
+                                </th>
+                                <th onclick="OrderBy('<%=OrderByName(OrderBy,"RealNameDesc")%>');">
+                                    <div class="th-inner sort <%=OrderByName(OrderBy,"RealNameDesc","icon")%>"><%=Tag("姓名")%></div>
+                                </th>
+                                <th onclick="OrderBy('<%=OrderByName(OrderBy,"UserLevelDesc")%>');">
+                                    <div class="th-inner sort <%=OrderByName(OrderBy,"UserLevelDesc","icon")%>"><%=Tag("等级")%></div>
+                                </th>
+                                <th>
+                                    <%=Tag("一级佣金")%>
+                                </th>
+                                <th>
+                                    <%=Tag("二级佣金")%>
+                                </th>
+                                <th>
+                                    <%=Tag("三级佣金")%>
+                                </th>
+                                <th>
+                                    <%=Tag("分销商") %>
+                                </th>
+                                <%if (domain3admin)
+                                { %>
+                                <th>
+                                    <%=Tag("站点") %>
+                                </th>
+                                <%} %>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_User model in models){%>
+                            <tr ondblclick="Edit(<%=model.id %>);">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox<%=model.id %>" name="sid" value="<%=model.id %>" class="custom-control-input">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=model.id%>
+                                </td>
+                                <td>
+                                    <%=model.UserNumber %>
+                                </td>
+                                <td title="<%=Tag(" 昵称")%>
+                                    ：<%=model.NickName %>">
+                                    <%=model.UserName %>
+                                </td>
+                                <td>
+                                    <%=model.RealName %>
+                                </td>
+                                <td>
+                                    <%=Shop.Bussiness.EX_User.TypeName(model.UserLevel_id, CurrentLanguage.Code)%>
+                                </td>
+                                <td>
+                                    <%=User_Commission(model.id).Angent1_Commission %> %
+                                </td>
+                                <td>
+                                    <%=User_Commission(model.id).Angent2_Commission %> %
+                                </td>
+                                <td>
+                                    <%=User_Commission(model.id).Angent3_Commission %> %
+                                </td>
+                                <td><%=GetDTName(model.DT_id)%></td>
+                                <%if (domain3admin){ %>
+                                <td><%if (site.SiteCount > 1){ %><%=SiteName(model.Site_id)%><%} %></td>
+                                <%} %>
+                                <td>
+                                    <a href="javascript:void(0)" onclick="Edit(<%=model.id %>);"><%=Tag("编辑")%></a>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation">
+                            <%=PageString%>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="SearchModal" tabindex="-1" role="dialog" aria-labelledby="SearchModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"><%=Tag("搜索")%></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <input name="key" type="text" id="key" class="form-control" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="ti-close"></i> <%=Tag("关闭")%></button>
+                    <button type="button" class="btn btn-success" onclick="search_();"><i class="ti-search"></i> <%=Tag("搜索")%></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+    function search_(scurl) {
+        var key = $("#key").val();
+        if(scurl==undefined || scurl=='')
+            scurl='<%=su.URL %>';
+        window.location = "?key=" + escape(key) + "&OrderBy=<%=OrderBy%>&"+scurl;
+    }
+    function OrderBy(url) {
+        MsgBox(4, "<%=Tag("正在排序，请稍后")%> ……", url+"&<%=su.URL %>");
+    }
+    function Edit(id) {
+        $("#EditModal").modal("show");
+        $.ajax({
+            url: "user_edit_window.aspx",
+            type: "GET",
+            cache: false,
+            data: {id: id},
+        }).done(function(result){
+            $("#EditModal .modal-content").html(result);
+        });
+    }
+    function Update() {
+        $("#EditModal").modal("show");
+        var ids = GetChkCheckedValues("sid");
+        $.ajax({
+            url: "user_update_window.aspx",
+            type: "GET",
+            cache: false,
+            data: {id: ids},
+        }).done(function(result){
+            $("#EditModal .modal-content").html(result);
+        });
+    }
+    function SearchWindow() {
+        $("#EditModal").modal("show");
+        $.ajax({
+            url: "../user/user_search_window.aspx?callback=search_&<%=su.URL %>",
+            type: "GET",
+            cache: false,
+        }).done(function(result){
+            $("#EditModal .modal-content").html(result);
+        });
+    }
+    </script>
+</lbscripts>

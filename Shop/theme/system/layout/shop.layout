@@ -1,0 +1,24 @@
+﻿{MOD:Top}
+<!DOCTYPE html PUBliC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+{MOD:HeadFile} 
+{HOLDER:lbheadfile}
+</head>
+<body id="shop">
+{MOD:Head}
+<div class="body clearfix">
+    <div class="location"><div class="path"><%=path%></div></div>
+    {HOLDER:lbbanner}
+    <div class="bodyside clearfix">
+        {HOLDER:lbleft}
+    </div>
+    <div class="bodymain clearfix">
+        {HOLDER:lbright}
+    </div>
+</div>
+{MOD:Foot}
+{HOLDER:lbfoot}
+{MOD:SideBar}
+</body>
+</html>

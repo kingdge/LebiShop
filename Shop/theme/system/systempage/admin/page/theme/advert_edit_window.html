@@ -1,0 +1,69 @@
+﻿{layout:simple} {class:Shop.Admin.theme.Advert_Edit_window}
+<lbbody>
+<table class="table">
+    <tr>
+        <th style="width: 15%">
+            <%=Tag("代码")%>：
+        </th>
+        <td>
+            <input type="text" id="Code" name="Code" class="input" shop="true" style="width: 220px;" value="<%=model.Code %>" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("描述")%>：
+        </th>
+        <td>
+           <input type="text" id="Description" name="Description" class="input" shop="true" style="width: 220px;" value="<%=model.Description %>" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("尺寸")%>：
+        </th>
+        <td>
+            <input type="text" id="Width" name="Width" style="width: 70px" shop="true" class="input" value="<%=model.Width %>" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="4" /> *
+            <input type="text" id="Height" name="Height" style="width: 70px" shop="true" class="input" value="<%=model.Height %>" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="4" />
+        </td>
+    </tr>
+     <tr>
+        <th style="vertical-align:top">
+            <%=Tag("内容")%>：
+        </th>
+        <td>
+            <textarea id="Content" name="Content" shop="true" style="width:500px;height:200px;" class="textarea"><%=model.Content %></textarea>
+            <div class="tools clear">
+                <ul>
+                    <li class="plus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Content',100);"><b></b><span><%=Tag("展开")%></span></a></li>
+                    <li class="minus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Content',-100)"><b></b><span><%=Tag("收缩")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("排序序号")%>：
+        </th>
+        <td>
+            <input type="text" id="Sort" name="Sort" style="width: 70px" shop="true" class="input" value="<%=model.Sort %>" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength="4" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+        <div class="tools tools-m clear">
+            <ul>
+                <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+            </ul>
+        </div>
+        <input type="hidden" name="Theme_id" id="Theme_id" value="<%=model.Theme_id %>" shop="true" />
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    function SaveObj() {
+        var postData = GetFormJsonData("shop");
+        var url="<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=Advert_Edit&id=<%=model.id %>";
+        RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+</script>
+</lbbody>

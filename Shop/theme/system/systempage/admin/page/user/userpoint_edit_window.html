@@ -1,0 +1,138 @@
+﻿{layout:simple} {class:Shop.Admin.user.UserPoint_Edit_window}
+<lbbody>
+<table class="table">
+    <%if (mode == "scope")
+      { %>
+    <tr>
+        <th style="width: 20%;">
+            <%=Tag("调整范围")%>：
+        </th>
+        <td>
+            <%=su.Description == "" ? Tag("全部") : su.Description%>
+        </td>
+    </tr>
+    <%}
+      else
+      { %>
+    <tr id="showuser">
+        <th valign="top" style="width: 20%;">
+            <%=Tag("会员账号")%>：
+        </th>
+        <td>
+        <%if (user_ids != "")
+          { %>
+        <div class="proBox" id="proBox" style="width: 400px;overflow:hidden">
+            <ul class="btns clear">
+                <li class="delete" id="delInsurance" onclick="delitem();" style="margin-left:5px"><%=Tag("删除")%></li>
+                <li class="clean" id="clearInsurance" onclick="removeall();"><%=Tag("清空")%></li>
+            </ul>
+			<div id="User_idsList" class="iTabBox" style="max-height: 75px;height:75px;_height: 75px;"><ul class="iTab"></ul></div>
+        </div>
+        <%foreach (DB.LebiShop.Lebi_User u in users)
+          { %>
+        <script type="text/javascript">
+            var temp = '<li ondblclick="delitem();" title="<%=Tag("双击删除") %>" class="iName"><input type="hidden" name="User_ids" id="User_ids" value="<%=u.id %>" shop="true" /><input type="hidden" name="UserName_ids" id="UserName_ids" value="<%=u.UserName %>" shop="true" /><span><%=u.UserName %></span></li>';
+            $('#User_idsList ul').append(temp);
+            $('#User_idsList ul li').selectedElement({ css: 'on' });
+            $("#User_Name_To").attr("min", "");
+        </script>
+        <%}
+          }%>
+        <%if (id > 0)
+          { %>
+        <input type="hidden" id="User_Name_To" name="User_Name_To" value="<%=User_Name %>" /><%=User_Name%>
+        <%}
+          else
+          { %>
+        <input type="text" id="User_Name_To" name="User_Name_To" class="input" shop="true" min="notnull" style="width: 200px;<%if (user_ids != ""){ %>display:none<%}%>" value="<%=User_Name %>" />
+        <%} %>
+        </td>
+    </tr>
+    <%} %>
+    <tr>
+        <th>
+            <%=Tag("积分")%>：
+        </th>
+        <td style="text-align: left;">
+            <input type="text" class="input" shop="true" min="notnull" name="Point" id="Point" value="<%=Point %>" onkeyup="value=value.replace(/[^-\d\.]/g,'');" style="width: 80px;" />
+        </td>
+    </tr>
+    <tr>
+        <th style="vertical-align:top">
+            <%=Tag("状态")%>：
+        </th>
+        <td style="text-align: left;">
+            <%=Shop.Bussiness.EX_Type.TypeRadio("PointStatus", "Type_id_PointStatus", model.Type_id_PointStatus, "shop=\"true\"",CurrentLanguage.Code)%>
+        </td>
+    </tr>
+    <tr  >
+        <th style="vertical-align:top">
+            <%=Tag("操作说明")%>：<br>
+            <em>≤ <span id="remLen">255</span></em>
+        </th>
+        <td>
+            <textarea name="Remark" id="Remark" shop="true" rows="3" cols="60" class="textarea" onKeyDown="checkMaxInput(this.form)" onKeyUp="checkMaxInput(this.form)" style="height: 60px;width: 400px;"><%=model.Remark%></textarea>
+            <div class="tools clear">
+                <ul>
+                    <li class="plus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Remark',100);"><b></b><span><%=Tag("展开")%></span></a></li>
+                    <li class="minus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Remark',-100)"><b></b><span><%=Tag("收缩")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+            <div class="tools tools-m clear">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("提交")%></span></a></li>
+                </ul>
+            </div>
+            <input type="hidden" name="id" value="<%=id%>" shop=true" />
+            <input type="hidden" name="mode" value="<%=mode%>" shop=true" />
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    LanguageTab_EditPage('<%=CurrentLanguage.Code %>'); //加载默认语言
+    var maxLen = 255;
+    var Remark = document.getElementById("Remark");
+    function checkMaxInput(form) {
+        if (Remark.value.length > maxLen)
+            Remark.value = Remark.value.substring(0, maxLen);
+        else document.getElementById("remLen").innerHTML = maxLen - Remark.value.length;
+    }
+    function UType(n){
+	    if (n==0){
+            $("#User_Name_To").attr("min","notnull");
+		    $("#showuser").show();
+            $("#showuserlevel").hide();
+	    }else if (n==1){
+            $("#User_Name_To").attr("min","");
+		    $("#showuser").hide();
+            $("#showuserlevel").show();
+	    }
+    }
+    function delitem() {
+        $("#User_idsList ul li[selectedElement]").remove();
+        if ($("#User_idsList ul li").length == 0)
+        {
+            $("#User_Name_To").show();
+            $("#User_Name_To").attr("min","notnull");
+            $("#proBox").hide();
+        }
+    }
+    function removeall() {
+        $("#User_idsList ul li").remove();
+        $("#User_Name_To").show();
+        $("#User_Name_To").attr("min","notnull");
+        $("#proBox").hide();
+    }
+    function SaveObj() {
+        var postData = GetFormJsonData("shop");
+        if (!CheckForm("shop", "span"))
+            return false;
+        var url = "<%=site.AdminPath %>/ajax/ajax_user.aspx?__Action=UserPoint_Edit&<%=su.URL %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", '?')});
+    }
+</script>
+</lbbody>

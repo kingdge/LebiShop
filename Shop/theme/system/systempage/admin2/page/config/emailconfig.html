@@ -1,0 +1,181 @@
+﻿{layout:default} {class:Shop.Admin.storeConfig.EmailConfig}
+<lbhead>
+    <title><%=Tag("邮件设置")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("邮件设置")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("邮件设置")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form action="javascript:SaveObj();" novalidate>
+                    <div class="row m-b-20">
+                        <div class="col-12">
+                            <%if (PageReturnMsg == ""){%>
+                            <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                            <button type="button" class="btn btn-info" onclick="Send();"><i class="ti-email"></i> <%=Tag("测试")%></button>
+                            <%}%>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="MailAddress"><%=Tag("发信邮箱")%>：</label>
+                        <input type="text" id="MailAddress" name="MailAddress" value="<%=model.MailAddress %>" class="form-control" shop="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="SmtpAddress"><%=Tag("SMTP Server地址")%>：</label>
+                        <div class="input-group">
+                            <input type="text" id="SmtpAddress" name="SmtpAddress" value="<%=model.SmtpAddress %>" class="form-control" shop="true">
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="MailIsSSL" name="MailIsSSL" value="1" class="custom-control-input" shop="true" <%=model.MailIsSSL=="1"?"checked":"" %>>
+                                        <span class="custom-control-label"><%=Tag("SSL")%></span>
+                                    </label>
+                                </span>
+                            </div>
+                        </div>
+                        <small class="form-text text-muted"><%=Tag("如：smtp.163.com")%></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="MailPort"><%=Tag("端口")%>：</label>
+                        <input type="text" id="MailPort" name="MailPort" value="<%=model.MailPort %>" class="form-control" shop="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="MailName"><%=Tag("邮件登陆名")%>：</label>
+                        <input type="text" id="MailName" name="MailName" value="<%=model.MailName %>" class="form-control" shop="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="MailPassWord"><%=Tag("登陆密码")%>：</label>
+                        <input type="text" id="MailPassWord" name="MailPassWord" value="<%=model.MailPassWord %>" class="form-control" shop="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="MailDisplayName"><%=Tag("发信名称")%>：</label>
+                        <input type="text" id="MailDisplayName" name="MailDisplayName" value="<%=model.MailDisplayName %>" class="form-control" shop="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="Mail_SendTop"><%=Tag("失败邮件尝试次数")%>：</label>
+                        <input type="text" id="Mail_SendTop" name="Mail_SendTop" value="<%=model.Mail_SendTop %>" class="form-control" shop="true" onkeyup="value=value.replace(/[^\d]/g,'')">
+                    </div>
+                    <div class="form-group">
+                        <label for="Mail_SendTime"><%=Tag("邮件队列提取间隔")%>：</label>
+                        <div class="input-group">
+                            <input type="text" id="Mail_SendTime" name="Mail_SendTime" value="<%=model.Mail_SendTime %>" class="form-control" shop="true" onkeyup="value=value.replace(/[^\d]/g,'')">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><%=Tag("分钟")%></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="MailSign_0"><%=Tag("发件设置")%>：</label>
+                        <div class="input-group">
+                            <%string ms = model.MailSign;
+                            if (ms == null)
+                            ms = "";
+                            ms = ms.ToLower();
+                            %>
+                            <label class="custom-control custom-checkbox m-r-20">
+                                <input type="checkbox" id="MailSign_0" name="MailSign" value="zhuce" class="custom-control-input" shop="true" <%=ms.Contains("zhuce")?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("新用户注册")%></span>
+                            </label>
+                            <label class="custom-control custom-checkbox m-r-20">
+                                <input type="checkbox" id="MailSign_1" name="MailSign" value="getpwd" class="custom-control-input" shop="true" <%=ms.Contains("getpwd")?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("找回密码")%></span>
+                            </label>
+                            <label class="custom-control custom-checkbox m-r-20">
+                                <input type="checkbox" id="MailSign_2" name="MailSign" value="dingdantijiao" class="custom-control-input" shop="true" <%=ms.Contains("dingdantijiao")?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("订单提交")%></span>
+                            </label>
+                            <label class="custom-control custom-checkbox m-r-20">
+                                <input type="checkbox" id="MailSign_3" name="MailSign" value="orderpaid" class="custom-control-input" shop="true" <%=ms.Contains("orderpaid")?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("订单付款")%></span>
+                            </label>
+                            <label class="custom-control custom-checkbox m-r-20">
+                                <input type="checkbox" id="MailSign_4" name="MailSign" value="dingdanfahuo" class="custom-control-input" shop="true" <%=ms.Contains("dingdanfahuo")?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("订单发货")%></span>
+                            </label>
+                            <label class="custom-control custom-checkbox m-r-20">
+                                <input type="checkbox" id="MailSign_5" name="MailSign" value="changgouqingdan" class="custom-control-input" shop="true" <%=ms.Contains("changgouqingdan")?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("常购清单")%></span>
+                            </label>
+                            <label class="custom-control custom-checkbox m-r-20">
+                                <input type="checkbox" id="MailSign_6" name="MailSign" value="sendfriend" class="custom-control-input" shop="true" <%=ms.Contains("sendfriend")?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("邮件分享")%></span>
+                            </label>
+                            <label class="custom-control custom-checkbox">
+                                <input type="checkbox" id="MailSign_7" name="MailSign" value="reserveok" class="custom-control-input" shop="true" <%=ms.Contains("reserveok")?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("预定到货提醒")%></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="AdminMailAddress"><%=Tag("抄送邮箱")%>：</label>
+                        <input type="text" id="AdminMailAddress" name="AdminMailAddress" value="<%=model.AdminMailAddress %>" class="form-control" shop="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="AdminMailSign_0"><%=Tag("抄送设置")%>：</label>
+                        <div class="input-group">
+                            <%string ams = model.AdminMailSign;
+                            if (ams == null)
+                            ams = "";
+                            ams = ams.ToLower();
+                            %>
+                            <label class="custom-control custom-checkbox m-r-20">
+                                <input type="checkbox" id="AdminMailSign_0" name="AdminMailSign" value="register" class="custom-control-input" shop="true" <%=ams.Contains("register")?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("注册")%></span>
+                            </label>
+                            <label class="custom-control custom-checkbox m-r-20">
+                                <input type="checkbox" id="AdminMailSign_1" name="AdminMailSign" value="ordersubmit" class="custom-control-input" shop="true" <%=ams.Contains("ordersubmit")?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("订单提交")%></span>
+                            </label>
+                            <label class="custom-control custom-checkbox m-r-20">
+                                <input type="checkbox" id="AdminMailSign_2" name="AdminMailSign" value="orderpaid" class="custom-control-input" shop="true" <%=ams.Contains("orderpaid")?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("订单付款")%></span>
+                            </label>
+                            <label class="custom-control custom-checkbox m-r-20">
+                                <input type="checkbox" id="AdminMailSign_3" name="AdminMailSign" value="ordercomment" class="custom-control-input" shop="true" <%=ams.Contains("ordercomment")?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("订单留言")%></span>
+                            </label>
+                            <label class="custom-control custom-checkbox m-r-20">
+                                <input type="checkbox" id="AdminMailSign_4" name="AdminMailSign" value="inquiry" class="custom-control-input" shop="true" <%=ams.Contains("inquiry")?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("留言反馈")%></span>
+                            </label>
+                            <label class="custom-control custom-checkbox m-r-20">
+                                <input type="checkbox" id="AdminMailSign_5" name="AdminMailSign" value="comment" class="custom-control-input" shop="true" <%=ams.Contains("comment")?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("商品评论")%></span>
+                            </label>
+                            <label class="custom-control custom-checkbox m-r-20">
+                                <input type="checkbox" id="AdminMailSign_6" name="AdminMailSign" value="ask" class="custom-control-input" shop="true" <%=ams.Contains("ask")?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("商品咨询")%></span>
+                            </label>
+                            <label class="custom-control custom-checkbox">
+                                <input type="checkbox" id="AdminMailSign_7" name="AdminMailSign" value="message" class="custom-control-input" shop="true" <%=ams.Contains("message")?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("站内信")%></span>
+                            </label>
+                        </div>
+                    </div>
+                    <%if (PageReturnMsg == ""){%>
+                    <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                    <%}%>
+                </form>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        function SaveObj() {
+            var postData = GetFormJsonData("shop");
+            var url="<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=EmailConfig_Edit";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+        function Send() {
+            var url="<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=EmailTestSend";
+            RequestAjax(url,"",function(res){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+    </script>
+</lbscripts>

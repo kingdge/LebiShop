@@ -1,0 +1,122 @@
+﻿{layout:default} {class:Shop.Admin.promotion.EmailTask_Edit}
+<lbhead>
+    <title><%=Tag("邮件模板") %>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <link href="<%=site.AdminAssetsPath %>/plugins/daterangepicker/daterangepicker.css" rel="stylesheet">
+</lbfile>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("群发邮件")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("群发邮件")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form action="javascript:SaveObj();" novalidate>
+                    <div class="row">
+                        <div class="col-md-9 m-b-10">
+                            <%if (PageReturnMsg == ""){%>
+                            <%if (model.IsSubmit != 1){ %>
+                            <button type="submit" class="btn btn-success"><i class="ti-save"></i> <%=Tag("保存")%></button>
+                            <%}%>
+                            <%if (model.id > 0){ %>
+                            <button type="button" class="btn btn-success" onclick="SubmitConfirm();"><i class="ti-check"></i> <%=Tag("提交")%></button>
+                            <%}%>
+                            <%}%>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <ul class="nav nav-tabs customtab" role="tablist">
+                                <%
+                                List
+                                <DB.LebiShop.Lebi_Language_Code>
+                                    tablangs = Shop.Bussiness.Language.Languages();foreach (DB.LebiShop.Lebi_Language_Code lang in langs){
+                                    %>
+                                    <li class="nav-item"> <a class="nav-link <%if (tablangs.FirstOrDefault().Code == lang.Code){%>active show<%}%>" data-toggle="tab" href="#lang_<%=lang.Code %>" role="tab" aria-selected="true"><%=lang.Name %></a> </li>
+                                    <%}%>
+                            </ul>
+                            <div class="tab-content m-t-20">
+                                <%
+                                foreach (DB.LebiShop.Lebi_Language_Code lang in tablangs)
+                                {%>
+                                <div class="tab-pane <%if (tablangs.FirstOrDefault().Code == lang.Code){%>active show<%}%>" id="lang_<%=lang.Code %>" role="tabpanel">
+                                    <div class="form-group">
+                                        <label for="EmailTitle<%=lang.Code %>"><%=Tag("标题")%>：</label>
+                                        <input type="text" id="EmailTitle<%=lang.Code %>" name="EmailTitle<%=lang.Code %>" value="<%=Shop.Bussiness.Language.Content(model.EmailTitle, lang.Code)%>" class="form-control" shop="true">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="EmailContent<%=lang.Code %>"><%=Tag("内容")%>：</label>
+                                        <textarea id="EmailContent<%=lang.Code %>" name="EmailContent<%=lang.Code %>" class="form-control" style="height: 400px;" shop="true">
+                                        <%=Shop.Bussiness.Language.Content(model.EmailContent, lang.Code)%>
+                                    </textarea>
+                                    </div>
+                                </div>
+                                <%} %>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="showuserlevel">
+                        <div class="form-group">
+                            <label for="UserLevel_ids"><%=Tag("会员分组")%>：</label>
+                            <div class="input-group">
+                                <%=Shop.Bussiness.EX_User.TypeCheckbox("grade > 0", "UserLevel_ids", model.UserLevel_ids,"shop=\"true\"", CurrentLanguage.Code)%>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="Time_task"><%=Tag("发送时间")%>：</label>
+                            <div class="input-group">
+                                <input type="text" id="Time_task" name="Time_task" value="<%=FormatTime(model.Time_task) %>" class="form-control" shop="true">
+                            </div>
+                        </div>
+                    </div>
+                    <%if (PageReturnMsg == "" && model.IsSubmit != 1){ %>
+                    <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                    <%}%>
+                </form>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script src="<%=site.WebPath %>/Editor/ckeditor/ckeditor.js"></script>
+    <script src="<%=site.WebPath %>/Editor/ckfinder/ckfinder.js"></script>
+    <script src="<%=site.AdminAssetsPath %>/plugins/moment/moment.js"></script>
+    <script src="<%=site.AdminAssetsPath %>/plugins/daterangepicker/daterangepicker.js"></script>
+    <script>
+        $('#Time_task').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            timePicker24Hour: true,
+            timePicker: true,
+            locale: { format: 'YYYY-MM-DD hh:mm:s' }
+        });
+        var langs = "<%=Shop.Bussiness.Language.LanguageCodes()%>"
+        var Arrlangs = langs.split(",");
+        for (var i = 0; i < Arrlangs.length; i++){
+            CKEDITOR.replace('EmailContent'+ Arrlangs[i] +'', {
+                height: '300',
+                toolbar: 'Basic',
+                language: '<%=Tag("CKEditor语言")%>'
+            });
+        }
+        function SaveObj() {
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_sale.aspx?__Action=EmailTask_Edit&id=<%=model.id %>";
+            RequestAjax(url, postData, function (res) { MsgBox(1, "<%=Tag("操作成功")%>", "?id=" + res.id) });
+        }
+        function SubmitConfirm() {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认提交吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "CreateObj();");
+        }
+        function CreateObj() {
+            $("#Modal-Confirm").modal("hide");
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_sale.aspx?__Action=EmailTask_Create&id=<%=model.id %>";
+            RequestAjax(url, postData, function () { MsgBox(1, "<%=Tag("操作成功")%>", "javascript:window.close();") });
+        }
+    </script>
+</lbscripts>

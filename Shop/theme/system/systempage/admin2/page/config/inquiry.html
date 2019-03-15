@@ -1,0 +1,189 @@
+﻿{layout:default} {class:Shop.Admin.Config.Inquiry}
+<lbhead>
+    <title><%=Tag("留言反馈")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <link href="<%=site.AdminAssetsPath %>/plugins/daterangepicker/daterangepicker.css" rel="stylesheet">
+</lbfile>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("留言反馈")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("留言反馈")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 m-b-10">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-danger" onclick="DeleteConfirm()"><i class="ti-trash"></i> <%=Tag("删除")%></button>
+                        <button class="btn btn-success" onclick="Update()"><i class="ti-check"></i> <%=Tag("已回复")%></button>
+                        <%}%>
+                        <button class="btn btn-default" data-toggle="modal" data-target="#SearchModal"><i class="ti-search"></i> <%=Tag("搜索")%></button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr class="no-wrap">
+                                <th class="selectAll" style="width:40px">
+                                    <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+                                </th>
+                                <th>
+                                    <%=Tag("语言")%>
+                                </th>
+                                <th>
+                                    <%=Tag("时间")%>
+                                </th>
+                                <th>
+                                    <%=Tag("昵称")%>
+                                </th>
+                                <th>
+                                    <%=Tag("电话")%>
+                                </th>
+                                <th>
+                                    <%=Tag("电子邮件")%>
+                                </th>
+                                <th>
+                                    <%=Tag("标题")%>
+                                </th>
+                                <th>
+                                    <%=Tag("状态")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_Inquiry model in models){%>
+                            <tr ondblclick="Edit(<%=model.id %>);">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox<%=model.id %>" name="id" value="<%=model.id %>" class="custom-control-input" del="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td><%=model.Language%></td>
+                                <td>
+                                    <%=FormatTime(model.Time_Add) %>
+                                </td>
+                                <td>
+                                    <%=model.UserName %>
+                                </td>
+                                <td>
+                                    <%=model.Phone %>
+                                </td>
+                                <td>
+                                    <a href="mailto:<%=model.Email %>?subject=RE:<%=model.Subject %>"><%=model.Email %></a>
+                                </td>
+                                <td>
+                                    <a href="javascript:void(0)" onclick="Edit(<%=model.id %>);"><%=model.Subject %></a>
+                                </td>
+                                <td>
+                                    <%=Shop.Bussiness.EX_Type.TypeName(model.Type_id_InquiryStatus)%>
+                                </td>
+                                <td>
+                                    <a href="javascript:void(0)" onclick="Edit(<%=model.id %>);"><%=Tag("编辑")%></a>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation ">
+                            <%=PageString%>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="SearchModal" tabindex="-1" role="dialog" aria-labelledby="SearchModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"><%=Tag("搜索")%></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <select id="lang" name="lang" class="form-control">
+                                <option value=""><%=Tag("语言")%></option>
+                                <%=Shop.Bussiness.Language.LanguageOption(lang)%>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text" name="daterange" id="daterange" class="form-control">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        <span class="ti-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input name="key" type="text" id="key" class="form-control" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="ti-close"></i> <%=Tag("关闭")%></button>
+                    <button type="button" class="btn btn-success" onclick="search_();"><i class="ti-search"></i> <%=Tag("搜索")%></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    {MOD:DateRangePicker}
+    <script>
+        function search_() {
+            var status = $("#status").val();
+            var lang = $("#lang").val();
+            var key = $("#key").val();
+            var dateFrom = "";
+            var dateTo = "";
+            var daterange = $("#daterange").val();
+            if (daterange.indexOf(" - ") >-1){
+                dateFrom = daterange.split(" - ")[0];
+                dateTo = daterange.split(" - ")[1];
+            }
+            window.location = "?key=" + escape(key) + "&lang=" + lang + "&status=" + status + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo;
+        }
+        function Edit(id) {
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "inquiry_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {id: id},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function DeleteConfirm() {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要删除吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "DeleteObj();");
+        }
+        function DeleteObj() {
+            $("#Modal-Confirm").modal("hide");
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=Inquiry_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function Update() {
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=Inquiry_Update";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbscripts>

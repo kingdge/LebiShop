@@ -1,0 +1,177 @@
+﻿{layout:default} {class:Shop.Admin.product.Class}
+<lbhead>
+    <title><%=Tag("商品分类")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("商品分类")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("商品分类")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-9 m-b-10">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-info" onclick="Edit(0,0);"><i class="ti-plus"></i> <%=Tag("添加")%></button>
+                        <button class="btn btn-info" onclick="Class_MAdd();"><i class="ti-plus"></i> <%=Tag("批量添加")%></button>
+                        <button class="btn btn-danger" onclick="DeleteConfirm(0)"><i class="ti-trash"></i> <%=Tag("删除")%></button>
+                        <button class="btn btn-default" onclick="Class_Unite();"><i class="ti-exchange-vertical"></i> <%=Tag("合并")%></button>
+                        <%if (site.SiteCount > 1){ %><button class="btn btn-default" onclick="Class_Site()"><i class="ti-world"></i> <%=Tag("站点")%></button><%} %>
+                        <%}%>
+                    </div>
+                    <div class="col-md-3 m-b-10">
+                        <div class="input-group">
+                            <input type="text" id="key" name="key" value="<%=key %>" class="form-control" onkeydown="if(event.keyCode==13){search_();}">
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-primary" onclick="search_();"><i class="ti-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px" class="selectAll">
+                                    <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+                                </th>
+                                <th style="width: 40px">
+                                    <%=Tag("ID")%>
+                                </th>
+                                <th>
+                                    <%=Tag("分类名称")%>
+                                </th>
+                                <th>
+                                    <%=Tag("商品数量")%>
+                                </th>
+                                <th>
+                                    <%=Tag("是否显示")%>
+                                </th>
+                                <th>
+                                    <%=Tag("首页显示")%>
+                                </th>
+                                <th>
+                                    <%=Tag("排序序号")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="listinfo">
+                            <%=List%>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+    <script>
+        function search_() {
+            var key = $("#key").val();
+            window.location = "?key=" + escape(key);
+        }
+        function DeleteConfirm(id) {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要删除吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "Del(" + id +");");
+        }
+        function Del(id) {
+            $("#Modal-Confirm").modal("hide");
+            var postData;
+            if (id == 0)
+                id = GetChkCheckedValues("id");
+            postData = { "id": id };
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Type_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "");if ((id + "a").indexOf(",") == -1){$("#tr" + id + "").remove();}else {var arr = id.split(',');for (var i in arr) {$("#tr" + arr[i] + "").remove();}}});
+        }
+        function Edit(pid, id) {
+            var title_ = "<%=Tag("编辑分类")%>";
+            if (id == 0) title_ = "<%=Tag("添加分类")%>";
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "class_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {pid:pid,id:id,title:title_},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function Class_MAdd() {
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "class_madd_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function Class_Unite() {
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "class_unite_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function Class_Site(){
+            var ids = GetChkCheckedValues("id");
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "class_site_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {ids:ids},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        var showTypeids = GetCookie("showTypeids");
+        function ShowProductTypeChild(ids, id, deep) {
+            if (showTypeids == '' || showTypeids == undefined)
+                showTypeids = ',';
+            if (showTypeids.indexOf(',' + id + ',') < 0) {
+                showTypeids = showTypeids + id + ',';
+                SetCookie("showTypeids", showTypeids, 1);
+            }
+            var src = $("#img" + id + "").attr("class");
+            if (src.indexOf("plus") == -1) {
+                $("#img" + id + "").attr("class", "ti-plus");
+                var arr = ids.split(',');
+                for (var i in arr) {
+                    DoHide(arr[i]);
+                }
+                showTypeids = showTypeids.replace(',' + id + ',', ',');
+                SetCookie("showTypeids", showTypeids, 1);
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: AdminPath + '/ajax/ajax_product.aspx?__Action=CreateTree&t=' + Math.random(),
+                    data: { "pid": id, "deep": deep },
+                    dataType: 'html',
+                    success: function (res) {
+                        $("#tr" + id).after(res);
+                    }
+                });
+                $("#img" + id + "").attr("class", "ti-minus");
+                $("tr[name='tr" + id + "']").each(function () {
+                    $(this).show();
+                })
+            }
+        }
+    </script>
+</lbscripts>

@@ -1,0 +1,35 @@
+﻿{layout:simple} {class:Shop.Admin.storeConfig.CnzzConfig}
+<lbbody>
+<table class="table">
+    <tr>
+        <th style="width:20%"><%=Tag("是否开启")%>：</th>
+        <td>
+        <input id="Radio2" type="radio" name="r1" value="0" shop="true" <%=model.state==0?"checked":"" %> /><%=Tag("否")%>
+        <input id="Radio1" type="radio" name="r1" value="1" shop="true" <%=model.state==1?"checked":"" %> /><%=Tag("是")%>
+        </td>
+    </tr>
+    <tr>
+        <th><%=Tag("重新开通")%>：</th>
+        <td>
+            <input id="Radio3" type="radio" name="r2" value="0" shop="true" checked /><%=Tag("否")%>
+            <input id="Radio4" type="radio" name="r2" value="1" shop="true" /><%=Tag("是")%>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+        <div class="tools tools-m clear">
+            <ul>
+                <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+            </ul>
+        </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+function SaveObj() {
+    var postData = GetFormJsonData("shop");
+    var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=CnzzConfig_Edit";
+    RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "");$("#divid").dialog("close");});
+}
+</script>
+</lbbody>

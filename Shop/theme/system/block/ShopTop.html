@@ -1,0 +1,18 @@
+﻿<!--
+Name:最新加入商家
+Page:All
+-->
+<div class="mbox clearfix">
+<div class="shoptop">
+<div class="mt">
+    <h2>{tag:最新加入}</h2>
+</div>
+<div class="mc clearfix">
+    <ul>
+        ${#table:Lebi_Supplier;#where:Supplier_Group_id in (select w.id from [Lebi_Supplier_Group] as w where w.type='supplier' or w.type='');#order:id desc;#top:10;
+        <li class="text"><a href="<%=URL("P_ShopIndex",{id},"")%>" title="<%=Lang({Name})%>" target="_blank"><%=Lang({Name})%></a></li>
+        }$
+    </ul>
+</div>
+</div>
+</div>

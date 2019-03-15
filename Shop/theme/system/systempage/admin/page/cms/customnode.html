@@ -1,0 +1,67 @@
+﻿{layout:default} {class:Shop.Admin.cms.customnode}
+<lbhead>
+    <title>
+        <%=Tag("结点配置")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <%if (PageReturnMsg == ""){%>
+            <li class="add"><a href="javascript:void(0);" onclick="Node_Edit(<%=Topnode.id %>,0);"><b></b><span>
+                <%=Tag("添加")%></span></a></li>
+            <li class="del"><a href="javascript:void(0);" onclick="Node_Del();"><b></b><span><%=Tag("删除")%></span></a></li>
+            <%}%>
+            <li class="name"><span id="navIgation">
+                <%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a>
+                ><%=Tag("结点配置")%>><%=Topnode.Name%></span>
+            </li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table cellspacing="0" border="0" id="list" style="width: 100%; border-collapse: collapse;"
+        class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'ids\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th style="width: 80px">
+                ID
+            </th>
+            <th style="width: 80px">
+                <%=Tag("排序")%>
+            </th>
+            <th style="width: 300px">
+                <%=Tag("名称")%>
+            </th>
+            <th>
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <div id="listinfo" style="display: none;">
+            <tbody>
+                <%=GetTreeString(Topnode.id, 0)%>
+            </tbody>
+        </div>
+    </table>
+    <script type="text/javascript">
+        function Node_Edit(pid, id) {
+            var title_ = "<%=Tag("编辑结点")%>";
+            if (id == 0)
+                var title_ = "<%=Tag("添加结点")%>";
+            var url_ = "customnode_edit_window.aspx?id=" + id + "&pid=" + pid+"&code=<%=Topnode.Code %>";
+            var width_ = 400;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function Node_Del() {
+            if (!confirm("确认要删除？"))
+                return false;
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_node.aspx?__Action=UserNode_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+           
+        }
+    </script>
+</lbbody>

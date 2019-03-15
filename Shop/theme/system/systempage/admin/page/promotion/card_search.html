@@ -1,0 +1,111 @@
+﻿{layout:simple} {class:Shop.Admin.promotion.card_search}
+<lbbody>
+<table class="table">
+    <tr>
+        <th style="width: 20%">
+            <%=Tag("会员帐号")%>：
+        </th>
+        <td>
+            <input name="UserName" id="UserName" value="<%=model.UserName %>" shop="true" type="text" class="input" style="width: 200px;" onkeydown="if(event.keyCode==13){SearchCard();}" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("编号")%>：
+        </th>
+        <td>
+            <input name="Code" value="<%=model.Code %>" shop="true" type="text" class="input" style="width: 200px;" onkeydown="if(event.keyCode==13){SearchCard();}" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("头字符")%>：
+        </th>
+        <td>
+            <input name="IndexCode" value="<%=model.IndexCode %>" shop="true" type="text" class="input" style="width: 200px;" onkeydown="if(event.keyCode==13){SearchCard();}" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("面值")%>：
+        </th>
+        <td>
+            <input name="Money" shop="true" type="text" class="input" style="width: 70px;" onkeyup="value=value.replace(/[^\d]/g,'')" value="<%=model.Money %>" onkeydown="if(event.keyCode==13){SearchCard();}" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("号码")%>：
+        </th>
+        <td>
+            <input name="number1" shop="true" type="text" class="input" style="width: 70px;" onkeyup="value=value.replace(/[^\d]/g,'')" value="<%=model.number1 %>" onkeydown="if(event.keyCode==13){SearchCard();}" />
+            -
+            <input name="number2" shop="true" type="text" class="input" style="width: 70px;" onkeyup="value=value.replace(/[^\d]/g,'')" value="<%=model.number2 %>" onkeydown="if(event.keyCode==13){SearchCard();}" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("生效时间")%>：
+        </th>
+        <td>
+            <input name="Time_begin1" shop="true" type="text" class="input-calendar" style="width: 120px;" value="<%=model.Time_begin1 %>"/>
+            -
+            <input name="Time_begin2" shop="true" type="text" class="input-calendar" style="width: 120px;" value="<%=model.Time_begin2 %>"/>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("失效时间")%>：
+        </th>
+        <td>
+            <input name="Time_end1" shop="true" type="text" class="input-calendar" style="width: 120px;" value="<%=model.Time_end1 %>"/>
+            -
+            <input name="Time_end2" shop="true" type="text" class="input-calendar" style="width: 120px;" value="<%=model.Time_end2 %>"/>
+        </td>
+    </tr>
+     <tr>
+        <th>
+            <%=Tag("类型")%>：
+        </th>
+        <td>
+            <%int ct = 0;
+              int.TryParse(model.Type_id_CardType,out ct);
+                 %>
+            <%=Shop.Bussiness.EX_Type.TypeRadio("CardType", "type", ct, "shop=\"true\"", CurrentLanguage.Code)%>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("状态")%>：
+        </th>
+        <td>
+            <%=Shop.Bussiness.EX_Type.TypeCheckbox("CardStatus", "Type_id_CardStatus", model.Type_id_CardStatus, "shop=\"true\"", CurrentLanguage.Code)%>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+            <div class="tools tools-m clear">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SearchCard();"><b></b><span><%=Tag("提交")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    function SearchCard()
+    {
+        var postData = GetFormJsonData("shop");
+        var url = "<%=site.AdminPath %>/ajax/ajax_search.aspx?__Action=CardSearch";
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: postData,
+            dataType: 'json',
+            success: function (res) {
+                <%=callback %>(res.url);
+            }
+        });
+    }
+</script>
+</lbbody>

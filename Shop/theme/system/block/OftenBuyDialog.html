@@ -1,0 +1,32 @@
+﻿<!--
+Name:浏览历史
+Page:All
+-->
+<div class="nbbox clearfix">
+<div class="userbox">
+    <div class="mt clearfix">
+        <h2>{tag:加入常购清单}</h2>
+    </div>
+    <div class="mc clearfix">
+    <div class="dl-table clearfix">
+    <dl>
+        <dt>{tag:购买周期}：</dt>
+        <dd><input name="warndays" id="warndays" size="5" type="text" min="notnull" shop="true" class="input" /> {tag:天}</dd>
+    </dl>
+    <dl class="dl-btn">
+        <dt></dt>
+        <dd><a href="javascript:void(0)" onclick="submitofftenbuy();" class="btn btn-11"><s></s>{tag:提交}</a><input name="type" id="type" type="hidden" value="144" shop="true" /><input name="pid" id="pid" type="hidden" value="<%=num %>" shop="true" /><input name="num" id="num" type="hidden" value="<%=num %>" shop="true" /><input name="property" id="property" type="hidden" value="<%=property %>" shop="true" /></dd>
+    </dl>
+    </div>
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+    function submitofftenbuy() {
+        var postData = GetFormJsonData("shop"); 
+        if (!CheckForm("shop", "span"))
+            return false;
+        var url = path+"/ajax/Ajax_user.aspx?__Action=UserProduct_Edit";
+        RequestAjax(url, postData, function () { MsgBox(1, "{tag:操作成功}", "?") });
+    }
+</script>

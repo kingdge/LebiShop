@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="tonglianPay.notify_url" Codebehind="notify_url.aspx.cs" %>

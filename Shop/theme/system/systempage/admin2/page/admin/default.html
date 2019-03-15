@@ -1,0 +1,138 @@
+﻿{layout:default} {class:Shop.Admin.admin.Default}
+<lbhead>
+    <title><%=Tag("系统用户")%>-<%=Tag("管理权限")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("系统用户")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("系统用户")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <%if (PageReturnMsg == ""){%>
+                        <a class="btn btn-info" href="admin_user_edit.aspx"><i class="ti-plus"></i> <%=Tag("添加")%></a>
+                        <button class="btn btn-danger" onclick="DeleteConfirm();"><i class="ti-trash"></i> <%=Tag("删除")%></button>
+                        <%}%>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table m-t-10 table-hover no-wrap">
+                        <thead>
+                            <tr class="no-wrap">
+                                <th class="selectAll" style="width:40px">
+                                    <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+                                </th>
+                                <th>
+                                    <%=Tag("登陆帐号")%>
+                                </th>
+                                <th>
+                                    <%=Tag("姓名")%>
+                                </th>
+                                <th>
+                                    <%=Tag("头像")%>
+                                </th>
+                                <th>
+                                    <%=Tag("权限组")%>
+                                </th>
+                                <th>
+                                    <%=Tag("状态")%>
+                                </th>
+                                <th>
+                                    <%=Tag("登录次数")%>
+                                </th>
+                                <th>
+                                    <%=Tag("最后登陆")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_Administrator model in models){%>
+                            <tr>
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox<%=model.id %>" name="id" value="<%=model.id %>" class="custom-control-input" del="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=model.UserName %>
+                                </td>
+                                <td>
+                                    <%=model.RealName %>
+                                </td>
+                                <td>
+                                    <%if (model.Avatar != ""){ %>
+                                    <img src="<%=site.WebPath + model.Avatar %>" style="max-height:25px" />
+                                    <%} %>
+                                </td>
+                                <td>
+                                    <%=Admingroup(model.Admin_Group_id) %>
+                                </td>
+                                <td>
+                                    <%=Shop.Bussiness.EX_Type.TypeName(model.Type_id_AdminStatus) %>
+                                </td>
+
+                                <td>
+                                    <%=model.Count_Login %>
+                                </td>
+                                <td>
+                                    <%=FormatTime(model.Time_Last) %>
+                                </td>
+                                <td>
+                                    <a href="admin_user_edit.aspx?id=<%=model.id %>"><%=Tag("编辑")%></a> | <a href="javascript:void(0)" onclick="EditPWD(<%=model.id %>);"><%=Tag("编辑密码")%></a> | <a href="Log.aspx?type=0&id=<%=model.id %>" target="_blank"><%=Tag("操作日志")%></a> | <a href="Log.aspx?type=1&id=<%=model.id %>" target="_blank"><%=Tag("登陆日志")%></a>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation">
+                            <%=PageString%>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        ! function(window, document, $) {
+            "use strict";
+            $("input,select,textarea").not("[type=submit]").jqBootstrapValidation()
+        }(window, document, jQuery);
+        function EditPWD(id) {
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "admin_pwd_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {id: id},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function DeleteConfirm() {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要删除吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "DeleteObj();");
+        }
+        function DeleteObj() {
+            $("#Modal-Confirm").modal("hide");
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_admin.aspx?__Action=Admin_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbscripts>

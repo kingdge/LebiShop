@@ -1,0 +1,59 @@
+﻿{layout:simple} {class:Shop.Admin.storeConfig.appconfig_edit_window}
+<lbbody>
+    <table class="table">
+        <tr>
+            <th style="width:20%">
+                <%=Tag("状态")%>：
+            </th>
+            <td>
+                <input type="radio" name="APPPush_state" value="1" shop="true" <%=model.APPPush_state=="1"?"checked":"" %> /><%=Tag("开启")%>
+                <input type="radio" name="APPPush_state" value="0" shop="true" <%=model.APPPush_state=="0"?"checked":"" %> /><%=Tag("关闭")%>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("发给会员")%>：
+            </th>
+            <td>
+                <%string ms = model.APPPush_sendmode;
+                if (ms == null)
+                ms = "";
+                %>
+                <label>
+                    <input type="checkbox" name="APPPush_sendmode" value="ordershipping" shop="true" <%=ms.Contains("ordershipping")?"checked":"" %> /><%=Tag("订单发货")%>
+                </label>
+                <label>
+                    <input type="checkbox" name="APPPush_sendmode" value="balance" shop="true" <%=ms.Contains("balance")?"checked":"" %> /><%=Tag("余额提醒")%>
+                </label>
+                <label>
+                    <input type="checkbox" name="APPPush_sendmode" value="comment" shop="true" <%=ms.Contains("comment")?"checked":"" %> /><%=Tag("商品评论")%>
+                </label>
+                <label>
+                    <input type="checkbox" name="APPPush_sendmode" value="ask" shop="true" <%=ms.Contains("ask")?"checked":"" %> /><%=Tag("商品咨询")%>
+                </label>
+                <label>
+                    <input type="checkbox" name="APPPush_sendmode" value="message" shop="true" <%=ms.Contains("message")?"checked":"" %> /><%=Tag("站内信")%>
+                </label>
+                <label>
+                    <input type="checkbox" name="APPPush_sendmode" value="reserveok" shop="true" <%=ms.Contains("reserveok")?"checked":"" %> /><%=Tag("预定到货提醒")%>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="action">
+                <div class="tools tools-m clear">
+                    <ul>
+                        <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </table>
+<script type="text/javascript">
+function SaveObj() {
+    var postData = GetFormJsonData("shop");
+    var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=APPPush_Edit";
+    RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "");});
+}
+</script>
+</lbbody>

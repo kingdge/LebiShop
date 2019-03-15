@@ -1,0 +1,47 @@
+﻿<!--
+Name:帮助中心详情
+Page:P_Help
+-->
+<%if (CurrentLanguage.IsLazyLoad==1){ %>
+<script type="text/javascript">
+    $(document).ready(
+    function ($) {
+        $("img.contentlazy").lazyload({
+            placeholder: "{/image}lazy.gif",
+            effect: "fadeIn"
+        });
+    });
+</script>
+<%} %>
+<div class="nodecontent clearfix">
+<div class="mc">
+    <%if (id == 0 && type != ""){%>
+    <div class="mt">
+        <h2><%=Name%></h2>
+    </div>
+    <div class="content">
+    <%=Content%>
+    </div>
+    <%
+    }else{
+    string strwhere = "";
+    if (type !=""){
+        strwhere="id = "+ pageid +"";
+    }else{
+        strwhere="Node_id="+node.id+"";
+    }
+        %>
+    ${#table:Lebi_Page;#where:"+strwhere+";#pagesize:999;
+    <div class="nodeitem clearfix" id="help{%id%}">
+    <div class="mt">
+        <h2><font style="color:{%NameColor%}">{%Name%}</font></h2>
+    </div>
+    <%if ({Description} != ""){ %><div class="tips">{%Description%}</div><%} %>
+    <div class="content">
+    <%=ImgSrc({Content},CurrentLanguage.IsLazyLoad) %>
+    </div>
+    </div>
+    }$
+    <%} %>
+</div>
+</div>

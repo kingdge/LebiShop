@@ -1,0 +1,5 @@
+body{font-family:Arial,Helvetica,sans-serif;font-size:11px;}
+.user .dl-table dl dt,.userbox .dl-table dl dt{width:30%}
+.user .dl-table dl dd,.userbox .dl-table dl dd{width:70%}
+.user .login .userloginbox dl dt{width:30%}
+.user .login .userloginbox dl dd{width:70%}

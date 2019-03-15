@@ -1,0 +1,169 @@
+﻿{layout:default} {class:Shop.Admin.Config.DataClear}
+<lbhead>
+    <title>
+        <%=Tag("数据清理")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("数据清理")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("数据清理")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 m-b-10">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-success" onclick="DeleteConfirm()"><i class="ti-check"></i> <%=Tag("清理")%></button>
+                        <%}%>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px" class="selectAll">
+                                    <a href="javascript:void(0);" onclick="$('input[name=\'datatype\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+                                </th>
+                                <th>
+                                    <%=Tag("类型")%>
+                                </th>
+                                <th>
+                                    <%=Tag("数量")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox_product" name="datatype" value="product" class="custom-control-input" power="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=Tag("商品")%>
+                                </td>
+                                <td><%=Count("Lebi_Product") %></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox_user" name="datatype" value="user" class="custom-control-input" power="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=Tag("会员")%>
+                                </td>
+                                <td><%=Count("Lebi_User") %></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox_order" name="datatype" value="order" class="custom-control-input" power="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=Tag("订单")%>
+                                </td>
+                                <td><%=Count("Lebi_Order") %></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox_log" name="datatype" value="log" class="custom-control-input" power="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=Tag("系统日志")%>
+                                </td>
+                                <td><%=Count("Lebi_Log") %></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox_userpoint" name="datatype" value="userpoint" class="custom-control-input" power="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=Tag("会员积分")%>
+                                </td>
+                                <td><%=Count("Lebi_User_Point") %></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox_usermoney" name="datatype" value="usermoney" class="custom-control-input" power="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=Tag("会员资金")%>
+                                </td>
+                                <td><%=Count("Lebi_User_Money") %></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox_card" name="datatype" value="card" class="custom-control-input" power="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=Tag("卡券")%>
+                                </td>
+                                <td><%=Count("Lebi_Card")%></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox_message" name="datatype" value="message" class="custom-control-input" power="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=Tag("站内信")%>
+                                </td>
+                                <td><%=Count("Lebi_Message")%></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox_userproduct" name="datatype" value="userproduct" class="custom-control-input" power="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=Tag("浏览记录")%> <%=Tag("商品收藏")%>
+                                </td>
+                                <td><%=Count("Lebi_User_Product")%></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        function DeleteConfirm() {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要删除吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "DeleteObj();");
+        }
+        function DeleteObj() {
+            $("#Modal-Confirm").modal("hide");
+            var postData = GetFormJsonData("power");
+            var url = "<%=site.AdminPath %>/ajax/ajax_db.aspx?__Action=DataClear";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbscripts>

@@ -1,0 +1,88 @@
+﻿{layout:default} {class:Shop.Admin.theme.filelist}
+<lbhead>
+    <title>
+        <%=Tag("系统块") %>-<%=Tag("主题管理")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <style>
+        .bottom{height: 0;overflow: hidden;display: none;}
+    </style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <%if (PageReturnMsg == ""){%>
+            <li class="submit"><a href="javascript:void(0);" onclick="CreateTheme();"><b></b><span><%=Tag("生成主题")%></span></a></li>
+            <%}%>
+            <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="<%=site.AdminPath %>/theme/default.aspx"><%=Tag("模板管理")%></a> > <a href="<%=site.AdminPath %>/theme/skin.aspx?id=<%=theme.id %>"><%=theme.Name %></a></span></li>
+        </ul>
+    </div>
+</lbpath>
+<lbtop>
+    <div class="mainbody_top">
+        <ul class="tablist">
+           
+            <li><a href="skin.aspx?id=<%=theme.id %>"><span><%=Tag("页面")%></span></a></li>
+            <li <%if (t=="block"){Response.Write("class=\"selected\"");} %>><a href="?id=<%=theme.id %>&t=block"><span><%=Tag("块")%></span></a></li>
+            <li <%if (t=="layout"){Response.Write("class=\"selected\"");} %>><a href="?id=<%=theme.id %>&t=layout"><span><%=Tag("布局")%></span></a></li>
+            <%if (theme.Path_JS != "")
+              { %>
+            <li <%if (t=="js"){Response.Write("class=\"selected\"");} %>><a href="?id=<%=theme.id %>&t=js"><span>JS</span></a></li>
+            <%} %>
+            <%if (theme.Path_CSS != "")
+              { %>
+            <li <%if (t=="css"){Response.Write("class=\"selected\"");} %>><a href="?id=<%=theme.id %>&t=css"><span>CSS</span></a></li>
+            <%} %>
+        </ul>
+    </div>
+</lbtop>
+<lbbody>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 250px;">
+                <%=Tag("名称")%>
+            </th>
+            <th style="width: 200px;">
+                <%=Tag("说明")%>
+            </th>
+            <th style="width: 200px;">
+                <%=Tag("限制")%>
+            </th>
+            <th style="width: 150px;">
+                <%=Tag("更新时间")%>
+            </th>
+            <th>
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%if (t == "css")
+              Response.Write(GetList(theme.Path_CSS));
+          else if (t == "js")
+              Response.Write(GetList(theme.Path_JS));
+          else if (t == "layout")
+              Response.Write(GetList(theme.Path_Files.TrimEnd('/') + "/layout"));
+          else
+          {
+              Response.Write(GetList(theme.Path_Files.TrimEnd('/') + "/inc")); 
+              Response.Write(GetList(theme.Path_Files.TrimEnd('/')+"/block")); 
+          }
+         %>
+    </table>
+    <script type="text/javascript">
+        function Edit(name) {
+            window.location = "file_edit.aspx?file=" + name;
+        }
+        function Load(name) {
+            window.location = "filelist.aspx?file=" + name;
+        }
+        function CreateTheme() {
+            var postData = { "Theme_id": <%=theme.id %> };
+            var url="<%=site.AdminPath %>/ajax/ajax_aspx.aspx?__Action=CreateTheme";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+    </div>
+</lbbottom>

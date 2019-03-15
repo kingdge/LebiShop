@@ -1,0 +1,128 @@
+﻿{layout:default} {class:Shop.Admin.Config.Version}
+<lbhead>
+    <title><%=Tag("版本管理")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0">V<%=SYS.Version %>.<%=SYS.Version_Son %></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("版本管理")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 m-b-10">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-info" onclick="CheckVersion();"><i class="ti-loop"></i> <%=Tag("检查新版本")%></button>
+                        <%}%>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <%=Tag("版本号")%>
+                                </th>
+                                <th>
+                                    <%=Tag("文件大小")%>
+                                </th>
+                                <th>
+                                    <%=Tag("文件路径")%>
+                                </th>
+                                <th>
+                                    <%=Tag("文件状态")%>
+                                </th>
+                                <th>
+                                    <%=Tag("描述")%>
+                                </th>
+                                <th>
+                                    <%=Tag("更新时间")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_Version model in models){%>
+                            <tr>
+                                <td>
+                                    <a href="<%=site.AdminPath %>/update.aspx?id=<%=model.id%>" target="_blank"><%=model.Version %>.<%=model.Version_Son %></a>
+</td>
+                                <td>
+                                    <%=model.Size%>KB
+                                </td>
+                                <td>
+                                    <%=model.Path_rar == "" ? "-" : model.Path_rar%>
+                                </td>
+                                <td>
+                                    <%if (model.Path_rar != ""){%>
+                                    <i class="<%=IsDown(model) ? "ti-check color-success" : "ti-close color-danger"%>"></i>
+                                    <%}%>
+                                </td>
+                                <td>
+                                    <%=LB.Tools.Utils.GetUnicodeSubString(model.Description, 70, "...")%>
+                                </td>
+                                <td>
+                                    <%=model.IsUpdate==1?model.Time_Update.ToString():""%>
+                                </td>
+                                <td>
+                                    <%if (model.IsUpdate == 0){
+                                    if (Shop.LebiAPI.Service.Instanse.ISRightVersion(SYS, model)){
+                                    %>
+                                    <a href="<%=site.AdminPath %>/update.aspx?id=<%=model.id%>" target="_blank"><%=Tag("升级")%></a> |
+                                    <%
+                                    }}
+                                    %>
+                                    <a href="javascript:void(0)" onclick="DeleteConfirm(<%=model.id %>);"><%=Tag("删除")%></a>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation ">
+                            <%=PageString%>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        function SaveObj() {
+            var postData = GetFormJsonData("shop");
+            var url="<%=site.AdminPath %>/ajax/ajax_service.aspx?__Action=CheckType";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+        function CheckVersion() {
+            var postData = '';
+            var url="<%=site.AdminPath %>/ajax/ajax_service.aspx?__Action=CheckVersion";
+            RequestAjax(url,postData,function(res){
+                if(res.count>0)
+                    MsgBox(1, "<%=Tag("发现新版本")%>", "?");
+            else
+                    MsgBox(2, "<%=Tag("未发现新版本")%>", "");
+            });
+        }
+        function DeleteConfirm(id) {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要删除吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "DeleteObj(" + id +");");
+        }
+        function DeleteObj(id) {
+            $("#Modal-Confirm").modal("hide");
+            var postData = { "id": id };
+            var url = "<%=site.AdminPath %>/ajax/ajax_service.aspx?__Action=Version_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbscripts>

@@ -1,0 +1,172 @@
+﻿{layout:default} {class:Shop.Admin.theme.AdvertList}
+<lbhead>
+    <title>
+        <%=theme.Name %>-<%=Tag("主题管理")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <link href="<%=site.AdminAssetsPath %>/plugins/lightbox/css/lightbox.min.css" rel="stylesheet" />
+</lbfile>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("广告位") %></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/theme/default.aspx"><%=Tag("主题管理")%></a></li>
+        <li class="breadcrumb-item"><a href="Advert.aspx?id=<%=theme.id %>"><%=Tag("广告位") %></a></li>
+        <li class="breadcrumb-item active"><%=adv.Code%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-9 m-b-10">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-info" onclick="AdvertImage(<%=adv.id %>,0);"><i class="ti-plus"></i> <%=Tag("添加")%></button>
+                        <button class="btn btn-success" onclick="Update()"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                        <button class="btn btn-danger" onclick="DeleteConfirm()"><i class="ti-trash"></i> <%=Tag("删除")%></button>
+                        <%}%>
+                    </div>
+                    <div class="col-md-3 m-b-10">
+                        <div class="input-group">
+                            <input type="text" id="key" name="key" value="<%=key %>" class="form-control" onkeydown="if(event.keyCode==13){search_();}">
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-primary" onclick="search_();"><i class="ti-search"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th class="selectAll" style="width:40px">
+                                    <a href="javascript:void(0);" onclick="$('input[name=\'sid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+                                </th>
+                                <th>
+                                    <%=Tag("ID")%>
+                                </th>
+                                <th>
+                                    <%=Tag("图片")%>
+                                </th>
+                                <th>
+                                    <%=Tag("语言")%>
+                                </th>
+                                <th style="width: 20%;">
+                                    <%=Tag("标题")%>
+                                </th>
+                                <th style="width: 20%;">
+                                    <%=Tag("链接")%>
+                                </th>
+                                <th style="width: 7%;">
+                                    <%=Tag("排序")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%int i = 1; foreach (DB.LebiShop.Lebi_Advert img in imgs){%>
+                            <tr ondblclick="AdvertImage(<%=id %>,<%=img.id %>);">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox<%=img.id %>" name="sid" value="<%=img.id %>" class="custom-control-input">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                    <input type="hidden" name="Uid" shop="true" value="<%=img.id %>" />
+                                </td>
+                                <td>
+                                    <%=i%>
+                                </td>
+                                <td>
+                                    <a href="<%=WebPath + theme.Path_Advert + img.Image %>" data-lightbox="image<%=img.id %>"><img src="<%=WebPath + theme.Path_Advert + img.ImageSmall %>" /></a>
+                                </td>
+                                <td>
+                                    <div class="more" style="width: 100px;" title="<%=LanguageName(img.Language_ids)%>">
+                                        <%=LanguageName(img.Language_ids)%>
+                                    </div>
+                                </td>
+                                <td>
+                                    <input type="text" id="Title<%=img.id %>" name="Title<%=img.id %>" value="<%=img.Title%>" class="form-control form-control-sm" shop="true">
+                                </td>
+                                <td>
+                                    <input type="text" id="URL<%=img.id %>" name="URL<%=img.id %>" value="<%=img.URL%>" class="form-control form-control-sm" shop="true">
+                                </td>
+                                <td>
+                                    <input type="text" id="Sort<%=img.id %>" name="Sort<%=img.id %>" value="<%=img.Sort%>" class="form-control form-control-sm" onkeyup="value=value.replace(/[^\d\.]/g,'')" shop="true">
+                                </td>
+                                <td>
+                                    <a href="javascript:void(0)" onclick="AdvertImage(<%=id %>,<%=img.id %>);"><%=Tag("编辑")%></a>
+                                </td>
+                            </tr>
+                            <%i++;} %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation ">
+                            <%=PageString%>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+    <script src="<%=site.AdminAssetsPath %>/plugins/lightbox/lightbox.min.js"></script>
+    <script type="text/javascript">
+        function search_() {
+            var key = $("#key").val();
+            window.location = "?id=<%=id%>&tid=<%=tid%>&key=" + escape(key);
+        }
+        function Editobj(tid, id) {
+            var title_ = "<%=Tag("编辑")%>";
+            if (id == 0)
+                var title_ = "<%=Tag("添加")%>";
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "advert_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: { id: id, tid: tid, title: title_ },
+            }).done(function (result) {
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function AdvertImage(aid, id) {
+            var title_ = "<%=Tag("编辑")%>";
+            if (id == 0)
+                var title_ = "<%=Tag("添加")%>";
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "advertimage_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: { id: id, aid: aid, title: title_ },
+            }).done(function (result) {
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function DeleteConfirm() {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要删除吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "AdvertImage_Del();");
+        }
+        function AdvertImage_Del() {
+            $("#Modal-Confirm").modal("hide");
+            var ids = GetChkCheckedValues("sid");
+            var postData = { "ids": ids };
+            var url = "<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=AdvertImage_Del";
+            RequestAjax(url, postData, function (res) { MsgBox(1, "<%=Tag("操作成功")%>", "?") });
+        }
+        function Update() {
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=AdvertImage_Update";
+            RequestAjax(url, postData, function () { MsgBox(1, "<%=Tag("操作成功")%>", "?") });
+        }
+    </script>
+</lbscripts>

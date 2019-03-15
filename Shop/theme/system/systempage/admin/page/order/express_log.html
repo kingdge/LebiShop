@@ -1,0 +1,108 @@
+﻿{layout:default} {class:Shop.Admin.order.Express_Log}
+<lbhead>
+    <title><%=Tag("打印清单")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="submit"><a href="javascript:void(0);" onclick="Update(0);"><b></b><span><%=Tag("保存")%></span></a></li>
+    <li class="del"><a href="javascript:void(0);" onclick="DEL();"><b></b><span><%=Tag("删除")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("打印清单")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <% LicenseWord(); %>
+    <div class="searchbox clear">
+        <select name="Status" id="Status">
+        <option value=""><%=Tag("打印状态")%></option>
+        <option value="0" <%=Status=="0"?"selected":""%>><%=Tag("未打印") %></option>
+        <option value="1" <%=Status=="1"?"selected":""%>><%=Tag("已打印")%></option>
+        </select>
+        <input type="text" id="key" name="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" value="" />
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'sid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th style="width: 150px">
+                <%=Tag("打印单号")%>
+            </th>
+            <th style="width: 150px">
+                <%=Tag("配送方式")%>
+            </th>
+            <th style="width: 130px">
+                <%=Tag("添加时间")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("打印状态")%>
+            </th>
+            <th>
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_Express_Log model in models)
+          {%>
+        <tr class="list" ondblclick="Edit(<%=model.id %>)">
+            <td style="text-align:center">
+                <input type="checkbox" value="<%=model.id %>" name="sid" />
+                <input type="hidden" name="Uid" shop="true" value="<%=model.id %>" />
+            </td>
+            <td>
+                <%=model.Number %>
+            </td>
+            <td>
+                <%=model.Transport_Name%>
+            </td>
+            <td>
+                <%=FormatTime(model.Time_Add)%>
+            </td>
+            <td>
+                <select name="Status<%=model.id %>" id="Status<%=model.id %>" shop="true">
+                <option value="0" <%=model.Status==0?"selected":""%>><%=Tag("未打印") %></option>
+                <option value="1" <%=model.Status==1?"selected":""%>><%=Tag("已打印")%></option>
+                </select>
+            </td>
+            <td>
+                <a href="javascript:void(0)" onclick="View(<%=model.id %>,<%=model.Transport_id%>)"><%=Tag("订单清单")%></a> | <a href="javascript:void(0)" onclick="Print(<%=model.id %>,<%=model.Transport_id%>)"><%=Tag("批量打印")%></a>
+            </td>
+        </tr>
+        <%} %>
+    </table> 
+    <script type="text/javascript">
+        function search_() {
+            var key = $("#key").val();
+            var Status = $("#Status").val();
+            window.location = "?key=" + escape(key) + "&Status=" + Status;
+        }
+        function View(id, Tid) {
+            window.location = "express_logList.aspx?Tid=" + Tid + "&id=" + id;
+        }
+        function Print(id, Tid) {
+            var postData = { "id": id };
+            var url = "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=Express_LogList_IdList";
+            RequestAjax(url,postData,function(res){$("#div_error").dialog('close');setTimeout(function () { window.open("Express_Print.aspx?Eid=" + id + "&Tid=" + Tid + "&id=" + res.id); }, 1000);});
+        }
+        function DEL() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var ids = GetChkCheckedValues("sid");
+            var postData = { "ids": ids };
+            var url = "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=Express_Log_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function Update(id) {
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=Express_Log_Update&id="+ id;
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

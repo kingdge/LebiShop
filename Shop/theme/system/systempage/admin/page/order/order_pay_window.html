@@ -1,0 +1,74 @@
+﻿{layout:simple} {class:Shop.Admin.order.Order_Pay_window}
+<lbbody>
+<table class="table">
+    <tr>
+        <th style="width: 25%">
+            <%=Tag("订单总额")%>：
+        </th>
+        <td>
+            <%=FormatMoney(model.Money_Order)%>
+            <%=FormatMoney(model.Money_Order,model.Currency_Code)%>
+        </td>
+    </tr>
+    <%if (model.Money_Pay>0){ %>
+    <tr>
+        <th>
+            <%=Tag("应付金额")%>：
+        </th>
+        <td>
+            <strong>
+                <%=FormatMoney(model.Money_Pay)%>
+                <%=FormatMoney(model.Money_Pay, model.Currency_Code)%>
+            </strong>
+        </td>
+    </tr>
+    <%} %>
+    <tr>
+        <th>
+            <%=Tag("支付状态")%>：
+        </th>
+        <td id="paystatus">
+            <%=Tag("未支付")%>
+        </td>
+    </tr>
+     <tr>
+        <td colspan="2" class="action">
+            <div class="tools tools-m clear">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("已支付")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    function SaveObj()
+    {
+        if (!confirm("<%=Tag("确认操作吗？")%>"))
+            return false;
+        var url = "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=Order_type&id=<%=id%>&model=IsPaid";
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: { "t": 1 },
+            dataType: 'json',
+            success: function (res) {
+                if (res.msg == "OK") {
+                    var url = "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=Order_Pay_Check";
+                    RequestAjax(url,{ "id": "<%=id%>" },function(data){
+                        $("#paystatus").html(data.mes);
+                        if (data.status == 1){
+                            MsgBox(1, "<%=Tag("操作成功")%>", "?");
+                        }else{
+                            MsgBox(2, "<%=Tag("操作失败")%>", "");
+                        }
+                    });
+                }
+                else {
+                    return false;
+                }
+            }
+        });
+    }
+</script>
+</lbbody>

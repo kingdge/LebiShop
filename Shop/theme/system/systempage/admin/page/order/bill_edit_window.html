@@ -1,0 +1,171 @@
+﻿{layout:simple} {class:Shop.Admin.order.Bill_Edit_window}
+<lbbody>
+<table class="table">
+    <tr>
+        <th style="width:25%">
+            <%=Tag("订单号")%>：
+        </th>
+        <td>
+           <%=model.Order_Code%>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("会员")%>：
+        </th>
+        <td>
+           <%=model.User_UserName %>&nbsp;（<%=Tag("真实姓名")%>：<%=GetUser(model.User_id).RealName %>）
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("类型")%>：
+        </th>
+        <td>
+           <select id="BillType_id" name="BillType_id" shop="true" onchange="changebilltype()">
+                <%=billlist(model.BillType_id)%>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("金额")%>：
+        </th>
+        <td>
+            <input type="text" shop="true" id="Money" name="Money" class="input" value="<%=FormatMoney(model.Money,"Number") %>" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
+        </td>
+    </tr>
+    <tr class="kai">
+        <th>
+            <%=Tag("发票号码")%>：
+        </th>
+        <td>
+            <input type="text" shop="true" id="BillNo" name="BillNo" class="input" value="<%=model.BillNo %>" />
+        </td>
+    </tr>
+<tbody id="t151" style="display:none;">
+    <tr>
+        <th>
+            <%=Tag("抬头")%>：
+        </th>
+        <td>
+            <input type="text" shop="true" id="Title" name="Title" class="input" value="<%=model.Title %>" style="width:200px;" />
+        </td>
+    </tr>
+</tbody>
+<tbody id="t152" style="display:none;">
+    <tr>
+        <th>
+            <%=Tag("单位名称")%>：
+        </th>
+        <td>
+            <input type="text" shop="true" id="Company_Name" name="Company_Name" class="input" value="<%=model.Company_Name %>" style="width:200px;" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("纳税人识别号")%>：
+        </th>
+        <td>
+            <input type="text" shop="true" id="Company_Code" name="Company_Code" class="input" value="<%=model.Company_Code %>" style="width:200px;" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("注册地址")%>：
+        </th>
+        <td>
+            <input type="text" shop="true" id="Company_Address" name="Company_Address" class="input" value="<%=model.Company_Address %>" style="width:200px;" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("注册电话")%>：
+        </th>
+        <td>
+            <input type="text" shop="true" id="Company_Phone" name="Company_Phone" class="input" value="<%=model.Company_Phone %>" style="width:200px;" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("开户银行")%>：
+        </th>
+        <td>
+            <input type="text" shop="true" id="Company_Bank" name="Company_Bank" class="input" value="<%=model.Company_Bank %>" style="width:200px;" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("银行帐户")%>：
+        </th>
+        <td>
+            <input type="text" shop="true" id="Company_Bank_User" name="Company_Bank_User" class="input" value="<%=model.Company_Bank_User %>" style="width:200px;" />
+        </td>
+    </tr>
+</tbody>
+     <tr class="kai" style="display:none;">
+        <th>
+            <%=Tag("内容")%>：
+        </th>
+        <td>
+            <input type="text" shop="true" id="Content" name="Content" class="input" value="<%=model.Content %>" style="width:200px;" />
+        </td>
+    </tr>
+    <tr class="kai" style="display:none;">
+        <th>
+            <%=Tag("状态")%>：
+        </th>
+        <td>
+           <%=Shop.Bussiness.EX_Type.TypeRadio("BillStatus", "Type_id_BillStatus", model.Type_id_BillStatus, "shop=\"true\"")%>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+            <div class="tools tools-m">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<input type="hidden" shop="true" id="Order_id" name="Order_id" class="input" value="<%=model.Order_id %>" />
+<input type="hidden" shop="true" id="Order_Code" name="Order_Code" class="input" value="<%=model.Order_Code %>" />
+    <input type="hidden" shop="true" id="User_id" name="User_id" class="input" value="<%=model.User_id %>" />
+    <input type="hidden" shop="true" id="User_UserName" name="User_UserName" class="input" value="<%=model.User_UserName %>" />
+<script type="text/javascript">
+    
+    function SaveObj() {
+        var postData = GetFormJsonData("shop");
+        if (!CheckForm("shop", "span"))
+            return false;
+        var url = "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=Bill_Edit&id=<%=model.id %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+    function changebilltype()
+    {
+        var code=$('#BillType_id option:selected').attr('code');
+        if(code=='151'){
+            $('#t151').show();
+            $('#t152').hide();
+            $('.kai').each(function(){
+                $(this).show();
+            });
+        }
+        else if(code=='152'){
+            $('#t151').hide();
+            $('#t152').show();
+            $('.kai').each(function(){
+                $(this).show();
+            });
+        }else{
+            $('.kai').each(function(){
+                $(this).hide();
+            });
+            $('#t151').hide();
+            $('#t152').hide();
+        }
+    }
+    changebilltype();
+</script>
+</lbbody>

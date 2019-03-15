@@ -1,0 +1,65 @@
+﻿{layout:default} {class:Shop.Admin.cms.NodeList}
+<lbhead>
+    <title><%=Tag("结点配置")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="add"><a href="javascript:void(0);" onclick="Node_Edit(0,0);"><b></b><span><%=Tag("添加")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("结点配置")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width:150px">
+                <%=Tag("代码")%>
+            </th>
+
+            <th style="width:80px">
+                <%=Tag("排序")%>
+            </th>
+            <th>
+                <%=Tag("名称")%>
+            </th>
+            <th style="width:100px">
+                <%=Tag("类型")%>
+            </th>
+            <th style="width:100px">
+                <%=Tag("多语言")%>
+            </th>
+            <th style="width:100px">
+                <%=Tag("内容")%>
+            </th>
+            <th style="width:200px">
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <div id="listinfo" style="display: none;">
+            <tbody>
+                <%=GetTreeString(0,0) %>
+            </tbody>
+        </div>
+    </table>
+    <script type="text/javascript">
+        function Node_Edit(pid, id) {
+            var title_ = "<%=Tag("编辑结点")%>";
+            if (id == 0)
+                var title_ = "<%=Tag("添加结点")%>";
+            var url_ = "node_edit_window.aspx?id=" + id + "&pid=" + pid;
+            var width_ = 800;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function Node_Del(id) {
+            if (!confirm("确认要删除？"))
+                return false;
+            var url = "<%=site.AdminPath %>/ajax/ajax_node.aspx?__Action=Node_Del&id="+ id;
+            RequestAjax(url,"",function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>

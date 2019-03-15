@@ -1,0 +1,59 @@
+﻿<!--
+Name:用户中心-会员卡券
+Page:All
+-->
+<div class="nbbox clearfix">
+<div class="user">
+    <ul class="tablist">
+        <%=SearchTab() %>
+    </ul>
+    <div class="table-list loadlist">
+        <%foreach (DB.LebiShop.Lebi_Card uc in cards){%>
+        <div class="loadli">
+        <table cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <th style="width:100px;"><%=FormatMoney(uc.Money) %></th>
+            <th style="width:100px;"><%=TypeName(uc.Type_id_CardStatus)%></th>
+            <th><%=FormatDate(uc.Time_End)%></th>
+        </tr>
+        <tr>
+            <th>{tag:代码}：<%=uc.Code%></th>
+            <th colspan="2">{tag:名称}：<%=CardName(uc.CardOrder_id) %></th>
+        </tr>
+        <tr>
+            <td colspan="3"><%=CardRemark(uc) %></td>
+        </tr>
+        </table>
+        </div>
+        <%} %>
+    </div>
+    <%if (CurrentSite.IsMobile==0){ %>
+        <div class="bottom clearfix"><div class="right"><%=PageString%></div></div>
+    <%}else{%>
+    <div class="loadpage">
+        <a data-next="<%=NextPage%>"></a>
+    </div>
+    <script>
+        $(document).ready(function () {
+            var container = document.querySelector('.loadlist');
+            var ias = $.ias({
+                container: ".loadlist",
+                item: ".loadli",
+                pagination: ".loadpage",
+                next: ".loadpage a"
+            });
+            ias.on('render', function (items) {
+                //$(items).css({ opacity: 0 });
+            });
+            ias.on("rendered", function (items) {
+            });
+            ias.extension(new IASSpinnerExtension({ html: "<div class=\"loadinginfo\"><img src=\"{src}\" />&nbsp;{Tag:加载中}</div>" }));
+            ias.extension(new IASTriggerExtension({ text: '{Tag:加载更多}', offset: 100, html: "<div class=\"loadinginfo more\"><p>{text}</p></div>" }));
+            ias.extension(new IASNoneLeftExtension({
+                text: '', html: ""
+            }));
+        });
+    </script>
+    <%}%>
+</div>
+</div>

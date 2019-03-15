@@ -1,0 +1,65 @@
+﻿<!--
+Name:会员中心菜单
+Page:P_User
+-->
+<div class="mbox clearfix">
+    <div class="mt">
+        <h2>{tag:控制面板}</h2>
+    </div>
+    <div class="mc usermenu clearfix">
+        <ul>
+            <li><a href="<%=URL("P_UserOrders","")%>"><span>{tag:我的订单}</span></a></li>
+            <%if(SYS.IsClosetuihuo=="0"){ %>
+            <li><a href="<%=URL("P_UserReturn","")%>"><span>{tag:退货订单}</span></a></li>
+            <%} %>
+            <li><a href="<%=URL("P_UserCard","")%>"><span>{tag:我的卡券}</span></a></li>
+            <li><a href="<%=URL("P_UserPoint","")%>"><span>{tag:积分记录}</span></a></li>
+            <li><a href="<%=URL("P_UserMoney","")%>"><span>{tag:资金记录}</span></a></li>
+            <li><a href="<%=URL("P_UserProfile","")%>"><span>{tag:资料管理}</span></a></li>
+            <li><a href="<%=URL("P_UserAccount","")%>"><span>{tag:绑定帐号}</span></a></li>
+            <li><a href="<%=URL("P_UserChangePassword","")%>"><span>{tag:修改密码}</span></a></li>
+            <li><a href="<%=URL("P_UserQuestion","")%>"><span>{tag:安全问题}</span></a></li>
+            <li><a href="<%=URL("P_UserAddress","")%>"><span>{tag:收货地址}</span></a></li>
+            <li><a href="<%=URL("P_UserBank","")%>"><span>{tag:收款账号}</span></a></li>
+            <li><a href="javascript:LoginOut();"><span>{tag:登录注销}</span></a></li>
+        </ul>
+    </div>
+</div>
+<div class="mbox clearfix">
+    <div class="mt">
+        <h2>{tag:商品关注}</h2>
+    </div>
+    <div class="mc usermenu clearfix">
+        <ul>
+            <li><a href="<%=URL("P_UserLike","")%>"><span>{tag:我的收藏}</span></a></li>
+            <li><a href="<%=URL("P_UserOftenBuy","")%>"><span>{tag:常购清单}</span></a></li>
+            <li><a href="<%=URL("P_UserComment","")%>"><span>{tag:商品评价}<em>(<%=Count_Comment(0) %>)</em></span></a></li>
+            <li><a href="<%=URL("P_UserAsk","")%>"><span>{tag:商品咨询}<em>(<%=Count_ProductAsk(0) %>)</em></span></a></li>
+        </ul>
+    </div>
+</div>
+<div class="mbox clearfix">
+    <div class="mt">
+        <h2>{tag:站内信}</h2>
+    </div>
+    <div class="mc usermenu clearfix">
+        <ul>
+            <li><a href="<%=URL("P_UserMessage","0")%>"><span>{tag:收件箱}<em>(<%=Count_Message(0) %>)</em></span></a></li>
+            <li><a href="<%=URL("P_UserMessage","1")%>"><span>{tag:发件箱}</span></a></li>
+            <li><a href="<%=URL("P_UserMessageWrite","")%>"><span>{tag:发信息}</span></a></li>
+        </ul>
+    </div>
+</div>
+<%if (Shop.LebiAPI.Service.Instanse.Check("plugin_agent")){ %>
+<div class="mbox clearfix">
+    <div class="mt">
+        <h2>{tag:推广佣金}</h2>
+    </div>
+    <div class="mc usermenu clearfix">
+        <ul>
+            <li><a href="<%=URL("P_UserAgent","")%>"><span>{tag:基本信息}<em></em></span></a></li>
+            <li><a href="<%=URL("P_UserAgentMoney","")%>"><span>{tag:佣金查询}</span></a></li>
+        </ul>
+    </div>
+</div>
+<%} %>

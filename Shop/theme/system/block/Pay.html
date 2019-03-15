@@ -1,0 +1,205 @@
+﻿<!--
+Name:付款
+Page:P_Pay
+-->
+<div id="pay">
+    <div class="nbbox clearfix">
+        <div class="userbox">
+            <div class="mt clearfix">
+                <h2>
+                    {tag:在线付款}</h2>
+            </div>
+            <div class="mc clearfix">
+                <div class="dl-table clearfix">
+                    <dl>
+                        <dt>{tag:订单号码}：</dt>
+                        <dd>
+                            <%=order.Code %></dd>
+                    </dl>
+                    <!--
+    <dl>
+        <dt>{tag:商品总价}：</dt>
+        <dd><%=FormatMoney(order.Money_Product) %></dd>
+    </dl>
+    <dl>
+        <dt>{tag:配送费用}：</dt>
+        <dd><%=FormatMoney(order.Money_Transport) %></dd>
+    </dl>
+    <dl>
+        <dt>{tag:税金}：</dt>
+        <dd><%=FormatMoney(order.Money_Bill) %></dd>
+    </dl>
+    <dl>
+        <dt>{tag:减免金额}：</dt>
+        <dd><%=FormatMoney(order.Money_Cut) %></dd>
+    </dl>
+    <dl>
+        <dt>{tag:已付金额}：</dt>
+        <dd><%=FormatMoney(order.Money_UserCut) %>
+            </td>
+        </tr>
+        -->
+                    <dl>
+                        <dt>{tag:应付金额}：</dt>
+                        <dd>
+                            <span class="price">
+                                <%=FormatMoney((order.Money_Pay),order.Currency_id)%></span></dd>
+                    </dl>
+                    <dl>
+                        <dt>{tag:支付方式}：</dt>
+                        <dd>
+                            <%
+                            int onlinepay_id = 0;
+                            foreach(DB.LebiShop.Lebi_OnlinePay opm in onlinepays){ 
+                            
+                            DB.LebiShop.Lebi_OnlinePay op=Getpay(opm);
+                            onlinepay_id = op.id;
+                            if(op==null)
+                                continue;
+                            %>
+                            <input type="radio" name="onlinepay_id" money="<%=FormatMoneyValue((order.Money_Pay*(1+(op.FeeRate/100))),op.Currency_Code)%>" value="<%=onlinepay_id %>" <%=op.id==order.OnlinePay_id?"checked":"" %> url="<%=op.Url %>" paytype="<%=op.Code %>" order="true" onclick="changepaytype();" />
+                            <%=Lang(op.Name)%>
+                            <%if (op.FeeRate > 0 && op.FreeFeeRate !=1){ %>(<%=op.Currency_Code %>:<%=FormatMoney((order.Money_Pay*(1+(op.FeeRate/100))),op.Currency_id)%>&nbsp;&nbsp;<%=Tag("手续费")%>：<%=op.FeeRate%> %)<%} %>
+                            <div id="show<%=op.Code %>" style="display:none;padding:10px 0 0 0;">
+                                <%if(op.Code=="authroize"){%>
+                                <img alt="Visa Checkout" class="v-button" role="button" src="https://sandbox.secure.checkout.visa.com/wallet-services-web/xo/button.png" />
+                                <%}%>
+                            </div>
+                            <br>
+                            <%}%></dd>
+                    </dl>
+                    <dl class="dl-btn">
+                        <dt></dt>
+                        <dd>
+                            <%
+                            string mes = "";
+                            foreach(DB.LebiShop.Lebi_Order_Product op in order_products){ 
+                                Lebi_Product pro = EX_Product.GetProduct(op.Product_id);
+                                if (pro == null || pro.Type_id_ProductStatus != 101){
+                                    mes += Lang(op.Product_Name) + " " + Tag("该商品已经下架") +"<br/>";
+                                }
+                            }
+                            if (mes == ""){
+                            %>
+                            <a id="nowpay" href="javascript:void(0)" onclick="pay();" class="btn btn-7"><s></s>{tag:立即付款}</a>
+                            <%}else{%>
+                            <%=mes %>
+                            <%} %>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function pay() {
+        var obj = $("input[name='onlinepay_id']:checked");
+        var url = obj.attr("url");
+        if (url == undefined) {
+            alert('<%=Tag("请选择付款方式！") %>');
+            return false;
+        }
+        var id = obj.val();
+        if (url.indexOf('?')>-1)
+            window.location = path + url + "&order_id=<%=order_id %>&opid=" + id;
+        else
+            window.location = path + url + "?order_id=<%=order_id %>&opid=" + id;
+    }
+    var ischeck=false;
+    var Isweixin = <%=Isweixin.ToString().ToLower()%>;
+    function changepaytype(){
+        var obj = $("input[name='onlinepay_id']:checked");
+        var paytype=obj.attr('paytype');
+        if(paytype=='weixinpay'){
+            <%if(!Isweixin){ %>
+                var img='<img src="'+path+'/inc/qrcode.aspx?txt=<%=weixinpay.NativePay.GetPayUrl(order.id.ToString()) %>" style="width:220px;"/>';
+                $('#show'+paytype).html(img+'<br/>请使用微信“扫一扫”功能，扫描以上二维码完成支付。');
+                $('#show'+paytype).show();
+                $('#nowpay').hide();
+            <%}%>
+            if(ischeck==false){
+                ischeck=true;
+                setInterval("checkorderpaid()",3000);
+            }
+        }
+        else if(paytype=='authroize'){
+            visamoney=obj.attr('money');
+            $('#show'+paytype).show();
+            $('#nowpay').hide();
+        }
+        else{
+            $('#showweixinpay').hide();
+            $('#nowpay').show();
+        }
+    }
+    function checkorderpaid(){
+        $.ajax({
+		    type : 'POST',
+		    url : path + "/ajax/ajax.aspx?__Action=IsOrderPaid&id=<%=order_id %>",
+		    data : '',
+		    dataType : 'json',
+		    success : function(data) {
+			   if(data.msg=="OK"){
+                    window.location = '<%=URL("P_UserOrderDetails",order_id)%>';
+               }
+		    }
+	    });
+    }
+    changepaytype();
+</script>
+
+ <%if(IsPayShow("authroize")){%>
+<script type="text/javascript">
+    var visamoney=0;
+    function onVisaCheckoutReady(){
+        V.init({
+            apikey: "<%=GetPay("authroize").UserKey%>",
+            paymentRequest:{
+            currencyCode: "USD",
+            total: visamoney
+            }
+        });
+        V.on("payment.success", function(payment)
+        {
+            console.log(JSON.stringify(payment));
+            //{"encKey":"...",
+            //"encPaymentData":"...",
+            //"callid":"...",
+            //"paymentRequest":{
+            //    "apikey":"...",
+            //    "paymentRequest":{
+            //        "currencyCode":"USD",
+            //        "total":"10.00"},
+            //        "parentUrl":"http://....html"
+            //}}
+            $.ajax({
+                type : 'POST',
+                url : path + "onlinepay/authroizeVisa/default.aspx",
+                data : {'order_id':<%=order.id%>,'datakey':payment.encKey,'datavalue':payment.encPaymentData,'callid':payment.callid},
+                dataType : 'json',
+                success : function(res) {
+                    console.log(JSON.stringify(res));
+                    if(res.status=="error"){
+                        alert(res.msg);
+                    }else{
+                        window.location = '<%=URL("P_UserOrderDetails",order_id)%>';
+                    }
+                }
+            });
+
+        });
+        V.on("payment.cancel", function(payment)
+        {
+            console.log(JSON.stringify(payment));
+        });
+        V.on("payment.error", function(payment, error)
+        {
+            console.log(JSON.stringify(payment));
+            console.log(JSON.stringify(error));
+            //alert('<%=Tag("付款失败")%>');
+        });
+    }
+</script>
+<script type="text/javascript" src="https://assets.secure.checkout.visa.com/checkout-widget/resources/js/integration/v1/sdk.js"></script>
+<%}%>

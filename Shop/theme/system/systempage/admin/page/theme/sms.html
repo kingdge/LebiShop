@@ -1,0 +1,254 @@
+﻿{layout:default} {class:Shop.Admin.theme.SMSTPL}
+<lbhead>
+    <title><%=Tag("短信模板") %>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <style>
+        .bottom{height: 0;overflow: hidden;display: none;}
+    </style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("短信模板")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox clear">
+        <ul class="tabmenus">
+            <li<%if (type =="user"){ %> class="current"<%} %>><a href="?type=user"><span><%=Tag("会员模板")%></span></a></li>
+            <li<%if (type =="admin"){ %> class="current"<%} %>><a href="?type=admin"><span><%=Tag("管理员模板")%></span></a></li>
+        </ul>
+    </div>
+    <%=Shop.Bussiness.Language.AdminLanguageTab("") %>
+    <table
+        id="lang" class="table">
+        <%foreach (DB.LebiShop.Lebi_Language_Code lang in Shop.Bussiness.Language.Languages())
+          {%>
+        <tbody id="lang_<%=lang.Code %>" class="lang_table" style="display: none">
+            <%if (type == "user"){ %>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("新用户注册") %>：
+                </th>
+                <td>
+                    <textarea id="SMSTPL_newuser<%=lang.Code %>" class="textarea" style="height: 55px; width: 100%;" name="SMSTPL_newuser<%=lang.Code %>" shop="true"><%=Shop.Bussiness.Language.Content(model.SMSTPL_newuser, lang.Code)%></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("订单提交") %>：
+                </th>
+                <td>
+                    <textarea id="SMSTPL_ordersubmit<%=lang.Code %>" class="textarea" style="height: 55px; width: 100%;" name="SMSTPL_ordersubmit<%=lang.Code %>" shop="true"><%=Shop.Bussiness.Language.Content(model.SMSTPL_ordersubmit, lang.Code)%></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("订单自提确认") %>：
+                </th>
+                <td>
+                    <textarea id="SMSTPL_orderpickup<%=lang.Code %>" class="textarea" style="height: 55px; width: 100%;" name="SMSTPL_orderpickup<%=lang.Code %>" shop="true"><%=Shop.Bussiness.Language.Content(model.SMSTPL_orderpickup, lang.Code)%></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("订单发货") %>：
+                </th>
+                <td>
+                    <textarea id="SMSTPL_ordershipping<%=lang.Code %>" class="textarea" style="height: 55px; width: 100%;" name="SMSTPL_ordershipping<%=lang.Code %>" shop="true"><%=Shop.Bussiness.Language.Content(model.SMSTPL_ordershipping, lang.Code)%></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("余额提醒") %>：
+                </th>
+                <td>
+                    <textarea id="SMSTPL_balance<%=lang.Code %>" class="textarea" style="height: 55px; width: 100%;" name="SMSTPL_balance<%=lang.Code %>" shop="true"><%=Shop.Bussiness.Language.Content(model.SMSTPL_balance, lang.Code)%></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("找回密码") %>：
+                </th>
+                <td>
+                    <textarea id="SMSTPL_getpwd<%=lang.Code %>" class="textarea" style="height: 55px; width: 100%;" name="SMSTPL_getpwd<%=lang.Code %>" shop="true"><%=Shop.Bussiness.Language.Content(model.SMSTPL_getpwd, lang.Code)%></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("获取新密码") %>：
+                </th>
+                <td>
+                    <textarea id="SMSTPL_getnewpwd<%=lang.Code %>" class="textarea" style="height: 55px; width: 100%;" name="SMSTPL_getnewpwd<%=lang.Code %>" shop="true"><%=Shop.Bussiness.Language.Content(model.SMSTPL_getnewpwd, lang.Code)%></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("商品评论")%>：
+                </th>
+                <td>
+                    <textarea id="SMSTPL_comment<%=lang.Code %>" class="textarea" style="height: 55px; width: 100%;" name="SMSTPL_comment<%=lang.Code %>" shop="true"><%=Shop.Bussiness.Language.Content(model.SMSTPL_comment, lang.Code)%></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("商品咨询")%>：
+                </th>
+                <td>
+                    <textarea id="SMSTPL_ask<%=lang.Code %>" class="textarea" style="height: 55px; width: 100%;" name="SMSTPL_ask<%=lang.Code %>" shop="true"><%=Shop.Bussiness.Language.Content(model.SMSTPL_ask, lang.Code)%></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("站内信")%>：
+                </th>
+                <td>
+                    <textarea id="SMSTPL_message<%=lang.Code %>" class="textarea" style="height: 55px; width: 100%;" name="SMSTPL_message<%=lang.Code %>" shop="true"><%=Shop.Bussiness.Language.Content(model.SMSTPL_message, lang.Code)%></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("手机验证码")%>：
+                </th>
+                <td>
+                    <textarea id="SMSTPL_checkcode<%=lang.Code %>" class="textarea" style="height: 55px; width: 100%;" name="SMSTPL_checkcode<%=lang.Code %>" shop="true"><%=Shop.Bussiness.Language.Content(model.SMSTPL_checkcode, lang.Code)%></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("预定到货提醒")%>：
+                </th>
+                <td>
+                    <textarea id="SMSTPL_reserveok" class="textarea" style="height: 55px; width: 100%;" name="SMSTPL_reserveok<%=lang.Code %>" shop="true"><%=Shop.Bussiness.Language.Content(model.SMSTPL_reserveok, lang.Code)%></textarea>
+                </td>
+            </tr>
+            <%}else{ %>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("新用户注册") %>：
+                </th>
+                <td>
+                    <textarea id="SMSTPL_Admin_newuser<%=lang.Code %>" class="textarea" style="height: 55px; width: 100%;" name="SMSTPL_Admin_newuser<%=lang.Code %>" shop="true"><%=Shop.Bussiness.Language.Content(model.SMSTPL_Admin_newuser, lang.Code)%></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("订单提交") %>：
+                </th>
+                <td>
+                    <textarea id="SMSTPL_Admin_ordersubmit<%=lang.Code %>" class="textarea" style="height: 55px; width: 100%;" name="SMSTPL_Admin_ordersubmit<%=lang.Code %>" shop="true"><%=Shop.Bussiness.Language.Content(model.SMSTPL_Admin_ordersubmit, lang.Code)%></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("订单付款") %>：
+                </th>
+                <td>
+                    <textarea id="SMSTPL_Admin_orderpaid<%=lang.Code %>" class="textarea" style="height: 55px; width: 100%;" name="SMSTPL_Admin_orderpaid<%=lang.Code %>" shop="true"><%=Shop.Bussiness.Language.Content(model.SMSTPL_Admin_orderpaid, lang.Code)%></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("订单收货") %>：
+                </th>
+                <td>
+                    <textarea id="SMSTPL_Admin_orderrecive<%=lang.Code %>" class="textarea" style="height: 55px; width: 100%;" name="SMSTPL_Admin_orderrecive<%=lang.Code %>" shop="true"><%=Shop.Bussiness.Language.Content(model.SMSTPL_Admin_orderrecive, lang.Code)%></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("订单留言") %>：
+                </th>
+                <td>
+                    <textarea id="SMSTPL_Admin_ordercomment<%=lang.Code %>" class="textarea" style="height: 55px; width: 100%;" name="SMSTPL_Admin_ordercomment<%=lang.Code %>" shop="true"><%=Shop.Bussiness.Language.Content(model.SMSTPL_Admin_ordercomment, lang.Code)%></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("留言反馈") %>：
+                </th>
+                <td>
+                    <textarea id="SMSTPL_Admin_inquiry<%=lang.Code %>" class="textarea" style="height: 55px; width: 100%;" name="SMSTPL_Admin_inquiry<%=lang.Code %>" shop="true"><%=Shop.Bussiness.Language.Content(model.SMSTPL_Admin_inquiry, lang.Code)%></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("商品评论")%>：
+                </th>
+                <td>
+                    <textarea id="SMSTPL_Admin_comment<%=lang.Code %>" class="textarea" style="height: 55px; width: 100%;" name="SMSTPL_Admin_comment<%=lang.Code %>" shop="true"><%=Shop.Bussiness.Language.Content(model.SMSTPL_Admin_comment, lang.Code)%></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("商品咨询")%>：
+                </th>
+                <td>
+                    <textarea id="SMSTPL_Admin_ask<%=lang.Code %>" class="textarea" style="height: 55px; width: 100%;" name="SMSTPL_Admin_ask<%=lang.Code %>" shop="true"><%=Shop.Bussiness.Language.Content(model.SMSTPL_Admin_ask, lang.Code)%></textarea>
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("站内信")%>：
+                </th>
+                <td>
+                    <textarea id="SMSTPL_Admin_message<%=lang.Code %>" class="textarea" style="height: 55px; width: 100%;" name="SMSTPL_Admin_message<%=lang.Code %>" shop="true"><%=Shop.Bussiness.Language.Content(model.SMSTPL_Admin_message, lang.Code)%></textarea>
+                </td>
+            </tr>
+            <%} %>
+        </tbody>
+        <%} %>
+        <tr>
+            <td colspan="2" class="classfaq">
+            <div class="faq_main">
+                <p class="faq_title"><%=Tag("标签规则")%>：</p>
+                <%if (type == "user")
+                  { %>
+                <%=Tag("用户名")%>：{$UserName}
+                <%=Tag("用户ID")%>：{$UserID}
+                <%=Tag("真实姓名")%>：{$RealName}
+                <%=Tag("密码")%>：{$Password}
+                <%=Tag("自提点")%>：{$PickUpStation}
+                <%=Tag("自提时间")%>：{$PickUpTime}
+                <%} %>
+                <%=Tag("用户昵称")%>：{$NickName}
+                <%=Tag("订单号码")%>：{$OrderNO}
+                <%=Tag("快递公司")%>：{$ExpressCompany}
+                <%=Tag("快递单号")%>：{$ExpressNumber}
+                <%if (type == "admin")
+                  { %>
+                <%=Tag("配送方式")%>：{$Transport}
+                <%} %>
+                <%=Tag("金额")%>：{$Money}
+                <%=Tag("时间")%>：{$Time}
+                <%=Tag("标题")%>：{$Title}
+                <%=Tag("内容")%>：{$Content}
+                <%=Tag("客服电话")%>：{$Phone}
+                <%=Tag("客服传真")%>：{$Fax}
+                <%=Tag("客服邮箱")%>：{$Email}
+                <%=Tag("客服QQ")%>：{$QQ}
+                <%=Tag("域名")%>：{$Domain}
+                <%=Tag("站点名称")%>：{$SiteName}
+                <%=Tag("验证码")%>：{$CheckCode}
+            </div>
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+         LanguageTab_EditPage('<%=CurrentLanguage.Code %>'); //加载默认语言
+        function SaveObj() {
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_site.aspx?__Action=SMSTPL_Edit&type=<%=type %>";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+    </div>
+</lbbottom>

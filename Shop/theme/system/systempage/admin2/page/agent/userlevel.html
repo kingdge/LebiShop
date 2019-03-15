@@ -1,0 +1,91 @@
+﻿{layout:default} {class:Shop.Admin.agent.UserLevel}
+<lbhead>
+    <title><%=Tag("会员分组")%>-<%=Tag("分销")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("会员分组")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><%=Tag("分销")%></li>
+        <li class="breadcrumb-item active"><%=Tag("会员分组")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap m-t-10">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <%=Tag("名称")%>
+                                </th>
+                                <th>
+                                    <%=Tag("级别")%>
+                                </th>
+                                <th>
+                                    <%=Tag("会员数量")%>
+                                </th>
+                                <th>
+                                    <%=Tag("一级佣金")%>
+                                </th>
+                                <th>
+                                    <%=Tag("二级佣金")%>
+                                </th>
+                                <th>
+                                    <%=Tag("三级佣金")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_UserLevel model in models){%>
+                            <tr ondblclick="Edit(<%=model.id %>);">
+                                <td>
+                                    <%=Shop.Bussiness.Language.Content(model.Name, CurrentLanguage.Code)%>
+                                </td>
+                                <td>
+                                    <%=model.Grade %>
+                                </td>
+                                <td>
+                                    <a href="user.aspx?level=<%=model.id %>"><%=Shop.Bussiness.EX_User.UserCount(model.id)%></a>
+                                </td>
+                                <td>
+                                    <%=Shop.Bussiness.Agent.UserLevel_Commission(model.id).Angent1_Commission %> %
+                                </td>
+                                <td>
+                                    <%=Shop.Bussiness.Agent.UserLevel_Commission(model.id).Angent2_Commission %> %
+                                </td>
+                                <td>
+                                    <%=Shop.Bussiness.Agent.UserLevel_Commission(model.id).Angent3_Commission %> %
+                                </td>
+                                <td>
+                                    <a href="javascript:void(0)" onclick="Edit(<%=model.id %>);"><%=Tag("编辑")%></a>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+<script>
+    function Edit(id) {
+        $("#EditModal").modal("show");
+        $.ajax({
+            url: "userlevel_edit_window.aspx",
+            type: "GET",
+            cache: false,
+            data: {id: id},
+        }).done(function(result){
+            $("#EditModal .modal-content").html(result);
+        });
+    }
+</script>
+</lbscripts>

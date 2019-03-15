@@ -1,0 +1,74 @@
+﻿{layout:simple} {class:Shop.Admin.plugin.weinxin.menu_edit_window}
+<lbbody>
+<table
+    id="common" class="table">
+    <tr>
+        <th style="width: 20%">
+            <%=Tag("上级")%>：
+        </th>
+        <td>
+            <%=pmodel.name %>
+        </td>
+    </tr>
+    <tr>
+        <th style="width: 20%">
+            <%=Tag("名称")%>：
+        </th>
+        <td>
+            <input type="text" id="name" name="name" class="input"
+                shop="true" style="width: 350px;" value="<%=model.name %>" min="0" max="8" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("链接地址")%>：
+        </th>
+        <td>
+            <input type="text" id="url" name="url" class="input" min="0" max="255"
+                shop="true" style="width: 350px;" value="<%=model.url %>" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("登录验证")%>：
+        </th>
+        <td>
+            <label>
+                <input type="radio" name="IsLogin" shop="true" value="1" <%=IsLogin==1?"checked":"" %> /><%=Tag("是")%></label>
+            <label>
+                <input type="radio" name="IsLogin" shop="true" value="0" <%=IsLogin==0?"checked":"" %> /><%=Tag("否")%></label>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("排序序号")%>：
+        </th>
+        <td>
+            <input type="text" id="Sort" name="Sort" style="width: 70px" shop="true" class="input"
+                value="<%=model.Sort %>" onkeyup="value=value.replace(/[^\d]/g,'')"
+                maxlength="4" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+            <div class="tools tools-m clear">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span>
+                        <%=Tag("保存")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    
+    function SaveObj() {
+        var postData = GetFormJsonData("shop");
+        if (!CheckForm("shop", "span"))
+            return false;
+        var url = "ajax.aspx?__Action=Menu_Edit&parentid=<%=pmodel.id %>&id=<%=model.id %>";
+        RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+    
+</script>
+</lbbody>

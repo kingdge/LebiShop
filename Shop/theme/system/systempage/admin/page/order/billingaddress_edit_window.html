@@ -1,0 +1,85 @@
+﻿{layout:simple} {class:Shop.Admin.order.BillingAddress_Edit_window}
+<lbbody>
+<table
+    class="table">
+    <tr>
+        <th style="width: 15%">
+            <%=Tag("收货人")%>：
+        </th>
+        <td >
+            <input type="text" shop="true" min="notnull" id="T_Name" name="T_Name" class="input"
+                value="<%=model.T_Name %>" style="width: 300px;" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("邮箱")%>：
+        </th>
+        <td>
+            <input type="text" shop="true" min="notnull" id="T_Email" name="T_Email" class="input"
+                value="<%=model.T_Email %>" style="width: 300px;" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("手机")%>：
+        </th>
+        <td>
+            <input type="text" shop="true" min="notnull" id="T_MobilePhone" name="T_MobilePhone"
+                class="input" value="<%=model.T_MobilePhone %>" style="width: 300px;" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("电话")%>：
+        </th>
+        <td>
+            <input type="text" shop="true" min="notnull" id="T_Phone" name="T_Phone" class="input"
+                value="<%=model.T_Phone %>" style="width: 300px;" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("邮编")%>：
+        </th>
+        <td>
+            <input type="text" shop="true" min="notnull" id="T_Postalcode" name="T_Postalcode"
+                class="input" value="<%=model.T_Postalcode %>" style="width: 300px;" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("地区")%>：
+        </th>
+        <td id="Area_id_div">
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("地址")%>：
+        </th>
+        <td>
+            <input type="text" shop="true" min="notnull" id="T_Address" name="T_Address" class="input"
+                value="<%=model.T_Address %>" style="width: 400px;" />
+        </td>
+    </tr>
+     <tr>
+        <td colspan="2" class="action">
+            <div class="tools tools-m">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    function SaveObj() {
+        var postData = GetFormJsonData("shop");
+        var T_Area_id=$("#Area_id").val();
+        var url = "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=Order_shouhuo_Edit&id=<%=model.id %>&T_Area_id="+T_Area_id;
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+    GetAreaList(0,<%=model.T_Area_id %>);
+</script>
+</lbbody>

@@ -1,0 +1,128 @@
+﻿{layout:default} {class:Shop.Admin.Config.DataClear}
+<lbhead>
+    <title>
+        <%=Tag("数据清理")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <%if (PageReturnMsg == ""){%>
+            <li class="del"><a href="javascript:void(0);" onclick="Del();"><b></b><span><%=Tag("清理")%></span></a></li>
+            <%}%>
+            <li class="name"><span id="navIgation">
+                <%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a>
+                >
+                <%=Tag("数据清理")%></span></li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'datatype\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th style="width:150px;">
+                <%=Tag("类型")%>
+            </th>
+            <th >
+                <%=Tag("数量")%>
+            </th>
+        </tr>
+        <tr class="list">
+            <td>
+                <input type="checkbox" name="datatype" value="product" power="true" />
+            </td>
+            <td>
+                <%=Tag("商品")%>
+            </td>
+             <td><%=Count("Lebi_Product") %></td>
+        </tr>
+        <tr class="list">
+            <td>
+                <input type="checkbox" name="datatype" value="user" power="true" />
+            </td>
+            <td>
+                <%=Tag("会员")%>
+            </td>
+            <td><%=Count("Lebi_User") %></td>
+        </tr>
+        <tr class="list">
+            <td>
+                <input type="checkbox" name="datatype" value="order" power="true" />
+            </td>
+            <td>
+                <%=Tag("订单")%>
+            </td>
+             <td><%=Count("Lebi_Order") %></td>
+        </tr>
+        <tr class="list">
+            <td>
+                <input type="checkbox" name="datatype" value="log" power="true" />
+            </td>
+            <td>
+                <%=Tag("系统日志")%>
+            </td>
+             <td><%=Count("Lebi_Log") %></td>
+        </tr>
+        <tr class="list">
+            <td>
+                <input type="checkbox" name="datatype" value="userpoint" power="true" />
+            </td>
+            <td>
+                <%=Tag("会员积分")%>
+            </td>
+             <td><%=Count("Lebi_User_Point") %></td>
+        </tr>
+        <tr class="list">
+            <td>
+                <input type="checkbox" name="datatype" value="usermoney" power="true" />
+            </td>
+            <td>
+                <%=Tag("会员资金")%>
+            </td>
+             <td><%=Count("Lebi_User_Money") %></td>
+        </tr>
+        <tr class="list">
+            <td>
+                <input type="checkbox" name="datatype" value="card" power="true" />
+            </td>
+            <td>
+                <%=Tag("卡券")%>
+            </td>
+             <td><%=Count("Lebi_Card")%></td>
+        </tr>
+        <tr class="list">
+            <td>
+                <input type="checkbox" name="datatype" value="message" power="true" />
+            </td>
+            <td>
+                <%=Tag("站内信")%>
+            </td>
+             <td><%=Count("Lebi_Message")%></td>
+        </tr>
+        <tr class="list">
+            <td>
+                <input type="checkbox" name="datatype" value="userproduct" power="true" />
+            </td>
+            <td>
+                <%=Tag("浏览记录")%>，<%=Tag("商品收藏")%>
+            </td>
+             <td><%=Count("Lebi_User_Product")%></td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+        function Del() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            if (!confirm("<%=Tag("请再次确认？")%>"))
+                return false;
+            var postData = GetFormJsonData("power");
+            var url = "<%=site.AdminPath %>/ajax/ajax_db.aspx?__Action=DataClear";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+    >
+</lbbottom>

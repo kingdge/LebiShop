@@ -1,0 +1,144 @@
+﻿{layout:default} {class:Shop.Admin.Config.CardType}
+<lbhead>
+    <title><%=Shop.Bussiness.EX_Type.TypeName(type) %>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <link href="<%=site.AdminAssetsPath %>/plugins/daterangepicker/daterangepicker.css" rel="stylesheet">
+    <link href="<%=site.AdminAssetsPath %>/plugins/multiselect/css/jquery.multiselect2side.css" rel="stylesheet">
+</lbfile>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Shop.Bussiness.EX_Type.TypeName(type) %></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Shop.Bussiness.EX_Type.TypeName(type) %></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 m-b-10">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-info" onclick="Edit(0);"><i class="ti-plus"></i> <%=Tag("添加")%></button>
+                        <%}%>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <%=Tag("类型")%>
+                                </th>
+                                <th>
+                                    <%=Tag("名称")%>
+                                </th>
+                                <th>
+                                    <%=Tag("面值")%>
+                                </th>
+                                <th>
+                                    <%=Tag("头字符")%>
+                                </th>
+                                <th>
+                                    <%=Tag("找零")%>
+                                </th>
+                                <th>
+                                    <%=Tag("最低消费")%>
+                                </th>
+                                <th>
+                                    <%=Tag("号码段")%>
+                                </th>
+                                <th>
+                                    <%=Tag("限制分类")%>
+                                </th>
+                                <th>
+                                    <%=Tag("生成")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_CardOrder model in models){%>
+                            <tr ondblclick="Edit(<%=model.id %>);">
+                                <td>
+                                    <%=Shop.Bussiness.EX_Type.TypeName(model.Type_id_CardType) %>
+                                </td>
+                                <td>
+                                    <%=Shop.Bussiness.Language.Content(model.Name, CurrentLanguage.Code)%>
+                                </td>
+                                <td>
+                                    <%=model.Money%>
+                                </td>
+                                <td>
+                                    <%=model.IndexCode%>
+                                </td>
+                                <td>
+                                    <%=model.IsPayOnce==0?"<span class=\"label label-success\">" + Tag("是") + "</span>" : "<span class=\"label label-danger\">" + Tag("否") + "</span>"%>
+                                </td>
+                                <td>
+                                    <%=model.Money_Buy%>
+                                </td>
+                                <td>
+                                    <%=model.NO_Start+" - "+model.NO_End%>
+                                </td>
+                                <td><%=Shop.Bussiness.EX_Product.TypeNames(model.Pro_Type_ids,CurrentLanguage.Code) %></td>
+                                <td>
+                                    <%=model.NO_End==model.NO_Now?Tag("完毕"):"-" %>
+                                </td>
+                                <td>
+                                    <a href="javascript:void(0)" onclick="Edit(<%=model.id %>);"><%=Tag("编辑")%></a> |
+                                    <%if (model.NO_End > model.NO_Now){ %>
+                                    <a href="javascript:void(0)" onclick="Create(<%=model.id %>);"><%=Tag("生成")%></a> |
+                                    <%} %>
+                                    <%if (model.Type_id_CardType == 312){ %><a href="<%=Shop.Bussiness.ThemeUrl.GetURL(" P_UserCardGet",model.id.ToString(),"",CurrentLanguage.Code)%>" target="_blank"><%=Tag("申请链接")%></a><%} %>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation ">
+                            <%=PageString%>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script src="<%=site.AdminAssetsPath %>/plugins/multiselect/js/jquery.multiselect2side.js"></script>
+    <script src="<%=site.AdminAssetsPath %>/plugins/moment/moment.js"></script>
+    <script src="<%=site.AdminAssetsPath %>/plugins/daterangepicker/daterangepicker.js"></script>
+    <script>
+        function Edit(id) {
+            var title_ = "<%=Tag("编辑优惠券")%>";
+            if (id == 0) title_ = "<%=Tag("添加优惠券")%>"
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "cardtype_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {id:id,title:title_},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function Create(id) {
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "card_create_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {id:id},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+    </script>
+</lbscripts>

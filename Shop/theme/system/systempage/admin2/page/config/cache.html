@@ -1,0 +1,197 @@
+﻿{layout:default} {class:Shop.Admin.Config.cache}
+<lbhead>
+    <title><%=Tag("更新缓存")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("更新缓存")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("更新缓存")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 m-b-10">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-success" onclick="UpdateConfirm()"><i class="ti-check"></i> <%=Tag("更新")%></button>
+                        <%}%>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th class="selectAll" style="width:40px">
+                                    <%=Tag("选择")%>
+                                </th>
+                                <th>
+                                    <%=Tag("类型")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox_producttype" name="datatype" value="producttype" class="custom-control-input" power="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=Tag("商品分类")%>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox_config" name="datatype" value="config" class="custom-control-input" power="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=Tag("站点设置")%>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox_languagetag" name="datatype" value="languagetag" class="custom-control-input" power="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=Tag("语言标签")%>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox_themepage" name="datatype" value="themepage" class="custom-control-input" power="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=Tag("页面设置")%>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox_dbbody" name="datatype" value="dbbody" class="custom-control-input" power="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=Tag("更新数据库结构")%>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox_lebitype" name="datatype" value="lebitype" class="custom-control-input" power="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=Tag("下载基础类型数据")%>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox_lebimenu" name="datatype" value="lebimenu" class="custom-control-input" power="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=Tag("下载系统菜单数据")%>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox_lebipage" name="datatype" value="lebipage" class="custom-control-input" power="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=Tag("下载系统页面数据")%>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox_product_count_freeze" name="datatype" value="product_count_freeze" class="custom-control-input" power="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=Tag("冻结库存")%>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox_product_count_sales" name="datatype" value="product_count_sales" class="custom-control-input" power="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=Tag("销量")%>
+                                </td>
+                            </tr>
+                            <%if (IsEditStock){%>
+                            <tr>
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox_product_count_stock" name="datatype" value="product_count_stock" class="custom-control-input" power="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <%=Tag("库存数量")%>
+                                </td>
+                            </tr>
+                            <%}%>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="UpdateConfirm" tabindex="-1" role="dialog" aria-labelledby="UpdateConfirm">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"><%=Tag("更新缓存")%></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <p><i class="ti-alert"></i> <%=Tag("确认要更新缓存吗？")%></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="ti-close"></i> <%=Tag("取消")%></button>
+                    <button type="button" class="btn btn-success btn-ok"><i class="ti-check"></i> <%=Tag("确定")%></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        function UpdateConfirm() {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要更新吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "SaveObj();");
+        }
+        function SaveObj() {
+            $('#Modal-Confirm').modal("hide");
+            var postData = GetFormJsonData("power");
+            var url = "<%=site.AdminPath %>/ajax/ajax_db.aspx?__Action=CacheReset";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbscripts>

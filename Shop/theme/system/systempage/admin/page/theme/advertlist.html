@@ -1,0 +1,128 @@
+﻿{layout:default} {class:Shop.Admin.theme.AdvertList}
+<lbhead>
+    <title>
+        <%=theme.Name %>-<%=Tag("主题管理")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+    <script type="text/javascript" src="<%=site.WebPath %>/Editor/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript" src="<%=site.WebPath %>/Editor/ckfinder/ckfinder.js"></script>
+</lbfile>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <%if (PageReturnMsg == ""){%>
+            <li class="add"><a href="javascript:void(0);" onclick="AdvertImage(<%=adv.id %>,0);"><b></b><span><%=Tag("添加")%></span></a></li>
+            <li class="submit"><a href="javascript:void(0);" onclick="Update();"><b></b><span><%=Tag("保存")%></span></a></li>
+            <li class="del"><a href="javascript:void(0);" onclick="AdvertImage_Del();"><b></b><span><%=Tag("删除")%></span></a></li>
+            <%}%>
+            <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="<%=site.AdminPath %>/theme/default.aspx"><%=Tag("主题管理")%></a> > <%=theme.Name %> > <a href="Advert.aspx?id=<%=theme.id %>"><%=Tag("广告位") %></a> > <a href="javascript:void(0)" onclick="Editobj(<%=theme.id %>,<%=adv.id %>);"><%=adv.Code%></a></span></li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox">
+        <input name="key" type="text" id="key" class="input-query" value="<%=key %>" /><input
+            type="button" id="btnSou" class="btn-query" onclick="search_();" align="absmiddle" />
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'sid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th style="width: 40px">
+                <%=Tag("ID")%>
+            </th>
+            <th style="width: 120px;">
+                <%=Tag("图片")%>
+            </th>
+            <th style="width: 100px;">
+                <%=Tag("语言")%>
+            </th>
+            <th style="width: 200px;">
+                <%=Tag("标题")%>
+            </th>
+            <th style="width: 280px;">
+                <%=Tag("链接")%>
+            </th>
+            <th style="width: 70px;">
+                <%=Tag("排序")%>
+            </th>
+            <th>
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%int i = 1; foreach (DB.LebiShop.Lebi_Advert img in imgs)
+          {%>
+        <tr class="list" ondblclick="AdvertImage(<%=id %>,<%=img.id %>);">
+            <td style="text-align:center">
+                <input type="checkbox" value="<%=img.id %>" name="sid" />
+                <input type="hidden" name="Uid" shop="true" value="<%=img.id %>" />
+            </td>
+            <td>
+                <%=i%>
+            </td>
+            <td style="width:100px;padding:5px 0;text-align:center;">
+                <a href="<%=WebPath + theme.Path_Advert + img.Image %>" data-lightbox="image<%=img.id %>"><img src="<%=WebPath + theme.Path_Advert + img.ImageSmall %>" /></a>
+            </td>
+            <td>
+                <div class="more" style="width: 100px;" title="<%=LanguageName(img.Language_ids)%>">
+                <%=LanguageName(img.Language_ids)%>
+                </div>
+            </td>
+            <td>
+                <input type="text" name="Title<%=img.id %>" id="Title<%=img.id %>" shop="true" value="<%=img.Title%>" class="input" style="width:200px">
+            </td>
+            <td>
+                <input type="text" name="URL<%=img.id %>" id="URL<%=img.id %>" shop="true" value="<%=img.URL%>" class="input" style="width:280px">
+            </td>
+            <td>
+                <input type="text" name="Sort<%=img.id %>" id="Sort<%=img.id %>" shop="true" value="<%=img.Sort%>" class="input" style="width: 70px" onkeyup="value=value.replace(/[^\d\.]/g,'')" />
+            </td>
+            <td>
+                <a href="javascript:void(0)" onclick="AdvertImage(<%=id %>,<%=img.id %>);"><%=Tag("编辑")%></a>
+            </td>
+        </tr>
+        <%i++;
+          } %>
+    </table>
+    <script type="text/javascript">
+        function search_() {
+            var key = $("#key").val();
+            window.location = "?id=<%=id%>&tid=<%=tid%>&key=" + escape(key);
+        }
+        function Editobj(tid, id) {
+            var title_ = "<%=Tag("编辑")%>";
+            if (id == 0)
+                var title_ = "<%=Tag("添加")%>";
+            var url_ = "advert_edit_window.aspx?id=" + id+"&tid="+tid;
+            var width_ = 550;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function AdvertImage(aid,id) {
+            var title_ = "<%=Tag("编辑")%>";
+            if (id == 0)
+                var title_ = "<%=Tag("添加")%>";
+            var url_ = "advertimage_edit_window.aspx?id=" + id+"&aid="+aid;
+            var width_ = 700;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function AdvertImage_Del() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var ids = GetChkCheckedValues("sid");
+            var postData = { "ids": ids };
+            var url="<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=AdvertImage_Del";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function Update() {
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=AdvertImage_Update";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>

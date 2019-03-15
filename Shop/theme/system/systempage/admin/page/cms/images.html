@@ -1,0 +1,65 @@
+﻿{layout:default} {class:Shop.Admin.cms.Images}
+<lbhead>
+    <title><%=Tag("图片管理") %>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+</lbfile>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <%if (PageReturnMsg == ""){%>
+            <li class="selectAll"><a href="javascript:void(0);" onclick="$('input[name=\'ids\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><b></b><span>
+                <%=Tag("全选")%></span></a></li>
+            <li class="del"><a href="javascript:void(0);" onclick="Page_Del();"><b></b><span>
+                <%=Tag("删除")%></span></a></li>
+            <%}%>
+            <li class="name"><span id="navIgation">
+                <%=Tag("当前位置")%>： <a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0">
+                    <%=Tag("管理首页")%></a> >
+                <%=Tag("图片管理") %></span></li>
+        </ul>
+    </div>
+</lbpath>
+<lbtop>
+    <div class="mainbody_top">
+    <ul class="tablist">
+        <li <%if (type==""){Response.Write("class=\"selected\"");} %>><a href="?type=&status=<%=status %>"><span><%=Tag("全部")%></span></a></li>
+        <%=ImageType()%>
+    </ul>
+    </div>
+</lbtop>
+<lbbody>
+    <div class="searchbox clear">
+        <ul class="tabmenus">
+            <li<%if (status == 2){ %> class="current"<%} %>><a href="?type=<%=type%>&status=2"><span><%=Tag("全部")%></span></a></li>
+            <li<%if (status == 1){ %> class="current"<%} %>><a href="?type=<%=type%>&status=1"><span><%=Tag("使用中")%></span></a></li>
+            <li<%if (status == 0){ %> class="current"<%} %>><a href="?type=<%=type%>&status=0"><span><%=Tag("未使用")%></span></a></li>
+        </ul>
+    </div>
+    <div class="imagelists">
+    <%foreach (DB.LebiShop.Lebi_Image model in pages)
+        {%><div class="imagelist">
+    <div class="image">
+        <a href="<%=Image(model.Image) %>" data-lightbox="image"><img src="<%=Image(model.Image,100,100) %>" /></a>
+    </div>
+    <div class="btn">
+        <input type="checkbox" name="ids" del="true" value="<%=model.id %>" />
+    </div></div>
+    <%} %>
+    </div>
+    <script type="text/javascript">
+        function Page_Del(id) {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_node.aspx?__Action=Image_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

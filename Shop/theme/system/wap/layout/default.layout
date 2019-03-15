@@ -1,0 +1,18 @@
+﻿{MOD:Top}
+<!DOCTYPE html PUBliC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    {MOD:headfile}
+</head>
+<body class="default">
+    {MOD:Head}
+    <div class="body">
+        <div class="bodymain">
+            {MOD:NavMenu}
+            {HOLDER:lbbody}
+        </div>
+    </div>
+    {MOD:Foot}
+    {HOLDER:lbfoot}
+</body>
+</html>

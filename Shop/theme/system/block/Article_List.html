@@ -1,0 +1,73 @@
+﻿<!--
+Name:文章列表
+Page:P_Article
+-->
+<div class="nbbox clearfix">
+    <div class="nodelist">
+        <div class="mt">
+            <h2><%=node.Name %></h2>
+        </div>
+        <div class="mc clearfix">
+            <%if(node.ShowMode=="image"){ %>
+            <div class="list_image loadlist clearfix">
+                <ul>
+                    <%foreach (DB.LebiShop.Lebi_Page p in pages){%>
+                    <li class="loadli">
+                        <div class="img">
+                             <a href="<%=URL("P_ArticleDetails",p.id,p.url)%>">
+                             <img src="<%=Image(p.ImageSmall) %>" alt="<%=p.Name%>" title="<%=p.Name%>" />
+                             </a>
+                        </div>
+                        <div class="des">
+                        <a href="<%=URL("P_ArticleDetails",p.id,p.url)%>" target="<%=p.target%>" title="<%=p.Name%>">
+                        <span style="color: <%=p.NameColor%>"><%=p.Name%></span></a>
+                        </div>
+                    </li>
+                    <%} %>
+                </ul>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+            <%}else{ %>
+            <div class="list loadlist">
+                <ul>
+                    <%foreach (DB.LebiShop.Lebi_Page p in pages){%>
+                    <li class="loadli"><a href="<%=URL("P_ArticleDetails",p.id,p.url)%>" target="<%=p.target%>" title="<%=p.Name%>">
+                        <span style="color: <%=p.NameColor%>"><%=p.Name%></span></a><em><%=FormatDate(p.Time_Add)%></em></li>
+                    <%} %>
+                </ul>
+            </div>
+            <%} %>
+            <%if (CurrentSite.IsMobile==0){ %>
+            <div class="bottom clearfix">
+                <%=FootPage%>
+            </div>
+            <%}else{%>
+            <div class="loadpage">
+                <a data-next="<%=NextPage%>"></a>
+            </div>
+            <script>
+                $(document).ready(function () {
+                    var container = document.querySelector('.loadlist');
+                    var ias = $.ias({
+                        container: ".loadlist",
+                        item: ".loadli",
+                        pagination: ".loadpage",
+                        next: ".loadpage a"
+                    });
+                    ias.on('render', function (items) {
+                        //$(items).css({ opacity: 0 });
+                    });
+                    ias.on("rendered", function (items) {
+                    });
+                    ias.extension(new IASSpinnerExtension({ html: "<li class=\"loadinginfo\"><img src=\"{src}\" />&nbsp;{Tag:加载中}</li>" }));
+                    ias.extension(new IASTriggerExtension({ text: '{Tag:加载更多}', offset: 100, html: "<li class=\"loadinginfo more\"><p>{text}</p></li>" }));
+                    ias.extension(new IASNoneLeftExtension({
+                        text: '', html: ""
+                    }));
+                });
+            </script>
+            <%}%>
+        </div>
+    </div>
+</div>

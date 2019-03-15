@@ -1,0 +1,307 @@
+﻿<!--
+Name:用户中心-订单详情
+Page:P_UserOrderDetails
+-->
+<div id="orderstate">
+    <div class="mt">
+        <div class="left">
+            <strong>{tag:订单编号}：<%=order.Code %>&nbsp;&nbsp;&nbsp;&nbsp;{tag:状态}：<span class="ftx14"><%=Shop.Bussiness.Order.OrderStatus(order, CurrentLanguage.Code) %></span></strong>
+        </div>
+        <div class="right">
+            <div class="toolbar">
+                <%if(Shop.Bussiness.Order.CancelOrder(order)){ %><a href="javascript:void(0)" onclick="OrderCancel(<%=order.id %>);" class="btn btn-11"><s></s>{tag:取消}</a><%} %>
+                <%if(order.OnlinePay_id>0 && order.IsPaid!=1 && pay.Code=="OnlinePay" && order.IsInvalid==0){ %><a href="javascript:void(0)" onclick="window.open('<%=URL("P_Pay",order.id)%>');" class="btn btn-7"><s></s>{tag:立即付款}</a><%} %>
+            </div>
+        </div>
+    </div>
+    <%if(order.IsCompleted==0){ %>
+        <div class="mm">
+    <%}else{ %>
+        <div class="mc">
+    <%} %>
+    <%foreach (DB.LebiShop.Lebi_Comment m in comments){%>
+    <div>
+        <span style="color: #dddddd"><%=FormatTime(m.Time_Add) %></span> <%=m.User_UserName%><%=m.Admin_UserName%>：<%=m.Content%>
+    </div>
+    <%} %>
+    </div>
+    <%if(order.IsCompleted==0){ %>
+    <div class="mc">
+        <input type="text" id="comment" style="width:400px" class="input" />
+        <a href="javascript:void(0)" onclick="submitcomment(<%=order.id %>);" class="btn btn-11"><s></s>{tag:留言}</a>
+    </div>
+    <%} %>
+</div>
+<%foreach (DB.LebiShop.Lebi_Transport_Order t in transport_orders){%>
+<%if (t != null){ %>
+<div id="ordertrack" class="clearfix">
+    <div class="mt"><strong>{tag:订单追踪}</strong></div>
+    <div class="mc tabcon">
+        <table width="100%" cellspacing="0" cellpadding="0">
+            <tbody id="tbody_track">
+                <tr>
+                    <th colspan="2" style="text-align: left; height: 30px;">
+                        <%=t.Transport_Name %> {tag:运单号}：<%=t.Code %> {tag:状态}：<%=TypeName(t.Type_id_TransportOrderStatus) %>
+                        <%if(t.Type_id_TransportOrderStatus==220){ %>
+                        <a href="javascript:void(0)" onclick="Received(<%=order.id%>,<%=t.id %>);" class="btn btn-11"><s></s>{tag:确认收货}</a>
+                        <%} %>
+                    </th>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div class="p-list">
+                            <table width="100%" cellspacing="0" cellpadding="0">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">{tag:商品编号}</th>
+                                        <th>{tag:商品名称}</th>
+                                        <th style="width:100px">{tag:规格}</th>
+                                        <th style="width:100px">{tag:发货数量}</th>
+                                    </tr>
+                                    <%foreach (Shop.Model.TransportProduct tp in Shop.Bussiness.EX_Area.GetTransportProduct(t))
+                                        { %>
+                                    <tr>
+                                        <td><%=tp.Product_Number %></td>
+                                        <td style="text-align:left"><a href="<%=URL("P_Product",tp.Product_id) %>" target="_blank"><%=Lang(tp.Product_Name) %></a></td>
+                                        <td><%=Shop.Bussiness.EX_Product.ProPertyNameStr(Shop.Bussiness.EX_Product.GetProduct(tp.Product_id), CurrentLanguage.Code)%></td>
+                                        <td><%=tp.Count %></td>
+                                    </tr>
+                                    <%} %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                <%
+                    Shop.Model.KuaiDi100 log = Shop.Bussiness.EX_Area.GetKuaiDi100(t);
+                    if (log.message == "ok")
+                    {
+                        foreach (Shop.Model.KuaiDi100.KuaiDi100data d in log.data)
+                        { %>
+                <tr>
+                    <td width="15%"><%=d.time%></td>
+                    <td><%=d.context%></td>
+                </tr>
+                <%}
+                    }
+                    else
+                    { %>
+                    <tr>
+                    <td colspan="2" align="center">
+                    <%if(t.HtmlLog.IndexOf("http://")==0){ %>
+                    <iframe name="kuaidi100" src="<%=t.HtmlLog %>" width="650" height="400" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+                    <%} %>
+                    </td></tr>
+                    <%} %>
+            </tbody>
+        </table>
+    </div>
+</div>
+<%} %>
+<%} %>
+<div id="orderinfo" class="clearfix">
+    <div class="mt"><strong>{tag:订单信息}</strong></div>
+    <div class="mc">
+        <dl class="fore clearfix">
+            <dd>
+                <ul>
+                    <li>{tag:订购时间}：<%=FormatTime(order.Time_Add) %></li>
+                </ul>
+            </dd>
+        </dl>
+        <dl>
+            <dt>{tag:收货人信息}</dt>
+            <dd>
+                <ul>
+                    <li>{tag:收货人}：<%=order.T_Name %></li>
+                    <li>{tag:地址}：<%=Shop.Bussiness.EX_Area.GetAreaName(order.T_Area_id)%> <%=order.T_Address %></li>
+                    <li>{tag:固定电话}：<%=order.T_Phone %></li>
+                    <li>{tag:手机号码}：<%=order.T_MobilePhone %></li>
+                    <li>{tag:电子邮件}：<%=order.T_Email %></li>
+                </ul>
+            </dd>
+        </dl>
+        <%if(order.Remark_User!=""){%>
+        <dl>
+            <dt>{tag:备注信息}</dt>
+            <dd>
+                <%=order.Remark_User%>
+            </dd>
+        </dl>
+        <%}%>
+        <dl>
+            <dt>{tag:支付及配送方式}</dt>
+            <dd>
+                <ul>
+                    <%if (order.OnlinePay_id > 0){%>
+                        <li>{tag:支付方式}：
+                            <%=Lang(order.OnlinePay)%>
+                        </li>
+                    <%}else{%>
+                        <li>{tag:支付方式}：<%=Lang(order.Pay) %></li>
+                        <li class="tips"><%=Lang(pay.Description)%></li>
+                    <%}%>
+                    <li>{tag:配送方式}：<%=order.Transport_Name %></li>
+                    <%if(order.PickUp_id>0){ %>
+                    <li>{tag:自提点}：<%=order.PickUp_Name %></li>
+                    <li>{tag:自提时间}：<span id="pickupdateshow"><%=order.PickUp_Date.ToString("yyyy-MM-dd") %></span><input type="hidden" id="pickupdate_<%=order.PickUp_id %>" name="pickupdate_<%=order.PickUp_id %>" value="<%=order.PickUp_Date.ToString("yyyy-MM-dd") %>" order="true" size="12" class="input-calendar" readonly />
+                    <a href="javascript:void(0);" onclick="changepickupdate(<%=order.PickUp_id %>);" >{tag:修改}</a></li>
+                    <%} %>
+                </ul>
+            </dd>
+        </dl>
+        <%if (SYS.BillFlag == "1"){ %>
+        <dl>
+            <dt>{tag:发票信息}</dt>
+            <dd>
+                <ul>
+                    <li>{tag:发票类型}：<%=Lang(order.BillType_Name) %></li>
+                    <%foreach (DB.LebiShop.Lebi_Bill b in bills){%>
+                    <%if(b.Type_id_BillType==151){ %>
+                    <li>{tag:发票内容}：<%=b.Content%></li>
+                    <li>{tag:发票抬头}：<%=b.Title%></li>
+                    <%}else{ %>
+                    <li>{tag:单位名称}：<%=b.Company_Name%></li>
+                    <li>{tag:纳税人识别号}：<%=b.Company_Code%></li>
+                    <li>{tag:注册地址}：<%=b.Company_Address%></li>
+                    <li>{tag:注册电话}：<%=b.Company_Phone%></li>
+                    <li>{tag:开户银行}：<%=b.Company_Bank%></li>
+                    <li>{tag:银行帐户}：<%=b.Company_Bank_User%></li>
+                    <%} %>
+                    <%} %>
+                </ul>
+            </dd>
+        </dl>
+       <%} %>
+        <%if (Shop.Bussiness.EX_Supplier.GetSupplier(order.Supplier_id).IsSupplierTransport==1){ %>
+        <dl>
+            <dt>{tag:商家名称}</dt>
+            <dd>
+                <ul>
+                    <li><a href="<%=URL("P_ShopIndex",order.Supplier_id) %>"><%=Lang(Shop.Bussiness.EX_Supplier.GetSupplier(order.Supplier_id).Name)%></a></li>
+                </ul>
+            </dd>
+        </dl>
+        <%} %>
+        <%if (order.Refund_VAT > 0){ %>
+        <dl>
+            <dt>{tag:退税信息}</dt>
+            <dd>
+                <ul>
+                    <li>{tag:所含税额}：<%=FormatMoney(order.Refund_VAT)%></li>
+                    <li>{tag:退税手续费}：<%=FormatMoney(order.Refund_Fee)%></li>
+                    <li>{tag:退税总额}：<%=FormatMoney(order.Refund_VAT - order.Refund_Fee)%></li>
+                </ul>
+            </dd>
+        </dl>
+       <%} %>
+        <dl>
+            <dt>{tag:订单清单}</dt>
+            <dd class="p-list">
+                <table width="100%" cellspacing="0" cellpadding="0">
+                    <tbody>
+                        <tr>
+                            <th style="width:100px">{tag:商品编号}</th>
+                            <th>{tag:商品名称}</th>
+                            <th style="width:100px">{tag:规格}</th>
+                            <th style="width:100px">{tag:价格}</th>
+                            <th style="width:100px">{tag:订购数量}</th>
+                            <th style="width:100px">{tag:发货数量}</th>
+                            <th style="width:150px">{tag:操作}</th>
+                        </tr>
+                        <%foreach (DB.LebiShop.Lebi_Order_Product o_p in order_products){%>
+                        <tr>
+                            <td><%=o_p.Product_Number %></td>
+                            <td style="text-align:left">
+                            <img src="<%=Image(o_p.ImageOriginal,50,50) %>" style="height:30px;padding:3px 0" />
+                            <%if(o_p.Type_id_OrderProductType==252){Response.Write("["+Tag("赠品")+"]");} %><a href="<%=URL("P_Product",o_p.Product_id) %>" target="_blank"><%=Lang(o_p.Product_Name) %></a></td>
+                            <td><%if (o_p.ProPerty134!=""){ %><%=o_p.ProPerty134%><br /><%} %><%=Shop.Bussiness.EX_Product.ProPertyNameStr(Shop.Bussiness.EX_Product.GetProduct(o_p.Product_id), CurrentLanguage.Code)%></td>
+                            <td>
+                            <%
+                                if(o_p.Type_id_OrderProductType==255)
+                                    Response.Write(Tag("积分")+":"+o_p.Point_Buy_one);
+                                else if(o_p.Type_id_OrderProductType==252)
+                                    Response.Write(FormatMoney(0));
+                                else
+                                    Response.Write(FormatMoney(o_p.Price));
+                            %>
+                            
+                            </td>
+                            <td><%=o_p.Count%></td>
+                            <td><%=o_p.Count_Shipped%></td>
+                            <td>
+                                <%if(order.IsReceived==1 && SYS.IsClosetuihuo=="0"){ %>
+                                <a target="_blank" href="<%=URL("P_UserReturnApply",o_p.Order_id)%>">{tag:退货}</a><br />
+                                <%} %>
+                                <a href="javascript:void(0);" onclick="AddOftenBuy(<%=o_p.Product_id %>,<%=o_p.Count %>,'<%=o_p.ProPerty134 %>')">{tag:加入常购清单}</a>
+                            </td>
+                        </tr>
+                        <%} %>
+                    </tbody>
+                </table>
+            </dd>
+        </dl>
+    </div>
+    <div class="total">
+        <ul>
+            <li><strong>{tag:商品总额}：</strong><%=FormatMoney(order.Money_Product) %></li>
+            <%if(order.Money_Transport!=0){ %><li><strong>+ {tag:运费}：</strong><%=FormatMoney(order.Money_Transport) %></li><%} %>
+            <%if(order.Money_Bill>0){ %><li><strong>+ {tag:发票税金}：</strong><%=FormatMoney(order.Money_Bill) %></li><%} %>
+            <%if(order.Money_Tax>0){ %><li><strong>+ {tag:税金}：</strong><%=FormatMoney(order.Money_Tax) %></li><%} %>
+            <%if(order.Money_Property>0){ %><li><strong>+ {tag:其它费用}：</strong><%=FormatMoney(order.Money_Property) %></li><%} %>
+            <%if(order.Money_UseCard311>0 || order.Money_UseCard312>0){ %>
+                <li><strong>- {tag:卡券支付}：</strong><%=FormatMoney(order.Money_UseCard312+order.Money_UseCard311) %></li>
+            <%} %>
+            <%if(order.Money_Cut>0){ %><li><strong>- {tag:优惠}：</strong><%=FormatMoney(order.Money_Cut) %></li><%} %>
+            <%if (order.Money_UserCut > 0){ %><li><strong>- {tag:使用余额}：</strong><%=FormatMoney(order.Money_UserCut)%></li><%} %>
+        </ul>
+        <span class="clear"></span>
+        <div class="extra">
+            {tag:应付金额}：<span class="red"><b><%=FormatMoney(order.Money_Pay)%></b></span></div>
+    </div>
+</div>
+<script type="text/javascript">
+    function Received(id,tid) {
+        if (!confirm("{tag:请确认操作？}"))
+            return false;
+        var url = path+"/ajax/ajax_order.aspx?__Action=Received&id=" + id+"&tid="+tid;
+        RequestAjax(url, "", function () { MsgBox(1, "{tag:操作成功}", "?") });
+    }
+    function submitcomment(order_id) {
+        var comment = $("#comment").val();
+        if (comment == "") {
+            MsgBox(2, "{tag:请填写留言内容}", "");
+            return false;
+        }
+        var postData = { "comment": comment, "order_id": order_id };
+        var url = path+"/ajax/ajax_order.aspx?__Action=OrderComment_Edit";
+        RequestAjax(url, postData, function () { MsgBox(1, "{tag:操作成功}", "?") });
+    }
+    function OrderCancel(id) {
+        var url = "<%=URL("P_UserOrderCancel","[id]") %>";
+        var title_ = Tag("取消订单");
+        var url_ = url.replace("[id]",id);
+        var width_ = 400;
+        var height_ = 200;
+        var modal_ = true;
+        var div_ = "div_window";
+        EditWindow(title_, url_, width_, height_, modal_, div_);
+    }
+    function changepickupdate(pickid){
+            var title_ = "<%=Tag("选择日期")%>";
+            var url_ = "<%=WebPath%>/inc/selectpickupdate.aspx?pickupid=" + pickid+"&selectedday=<%=order.PickUp_Date.ToString("yyyy-MM-dd") %>&callback=changepickupdateOK";
+            var width_ = 630;
+            var height_ = 700;
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_,'selectdatewindow');
+    }
+    function changepickupdateOK()
+    {
+        $('#selectdatewindow').dialog('close');
+        var pickupdate=$("#pickupdate_<%=order.PickUp_id %>").val();
+        $('#pickupdateshow').html(pickupdate);
+        var postData = { "orderid": <%=order.id %>, "pickupdate": pickupdate };
+        var url = path+"/ajax/ajax_order.aspx?__Action=OrderPickUpDate_Edit";
+        RequestAjax(url, postData, function () { MsgBox(1, "{tag:操作成功}", "?") });
+    }
+</script>

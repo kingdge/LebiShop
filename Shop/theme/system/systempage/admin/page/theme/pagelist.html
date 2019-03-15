@@ -1,0 +1,107 @@
+﻿{layout:default} {class:Shop.Admin.theme.PageList}
+<lbhead>
+    <title><%=Tag("页面设置")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("页面设置")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox">
+        <input name="key" type="text" id="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" align="absmiddle" />
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width:150px">
+                <%=Tag("代码")%>
+            </th>
+            <th style="width:130px">
+                <%=Tag("名称")%>
+            </th>
+            <th style="width:150px">
+                <%=Tag("页面")%>
+            </th>
+            <th style="width:150px">
+                <%=Tag("动态参数")%>
+            </th>
+            <th style="width:150px">
+                <%=Tag("静态参数")%>
+            </th>
+            <th style="width:50px">
+                <%=Tag("排序")%>
+            </th>
+            <th style="width:100px">
+                <%=Tag("类型")%>
+            </th>
+            <th>
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_Theme_Page model in models)
+          {%>
+        <tr class="list" ondblclick="Editobj(<%=model.id %>);">
+            <td>
+                <%=model.Code %>
+            </td>
+            <td>
+                <%=model.Name %>
+            </td>
+            <td>
+                <%=model.PageName%>
+            </td>
+            <td title="<%=model.PageParameter %>">
+                <%=LB.Tools.Utils.CutString(model.PageParameter, 30, true)%>
+            </td>
+            <td title="<%=model.StaticPageName %>">
+                <%=LB.Tools.Utils.CutString(model.StaticPageName, 30, true)%>
+            </td>
+            <td>
+                <%=model.Sort %>
+            </td>
+            <td>
+                <%=Shop.Bussiness.EX_Type.TypeName(model.Type_id_PublishType,CurrentLanguage) %>
+            </td>
+            <td>
+                <a href="javascript:void(0)" onclick="Editobj(<%=model.id %>);"><%=Tag("编辑")%></a> 
+                <%if (model.IsAllowHtml == 1 && model.Type_id_PublishType == 122)
+                  { %>
+                | <a href="javascript:void(0)" onclick="Create(<%=model.id %>);"><%=Tag("生成")%></a> 
+                <%} %>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function search_() {
+            var key = $("#key").val();
+            window.location = "?key=" + escape(key);
+        }
+        function Editobj(id) {
+            var title_ = "<%=Tag("编辑")%>";
+            if (id == 0)
+                var title_ = "<%=Tag("添加")%>";
+            var url_ = "page_edit_window.aspx?id=" + id
+            var width_ = 600;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function Create(id) {
+            var title_ = "<%=Tag("生成静态页")%>";
+            
+            var url_ = "page_create_window.aspx?id=" + id
+            var width_ = 680;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+   <div style="text-align:center"><%=Tag("总数") %>： <%=models.Count%></div>
+</div>
+</lbbottom>

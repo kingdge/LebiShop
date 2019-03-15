@@ -1,0 +1,86 @@
+﻿{layout:simple} {class:Shop.Admin.admin.Log_Edit_window}
+<lbbody>
+<table class="table">
+    <tr>
+        <th style="width: 20%;">
+            <%=Tag("系统用户")%>：
+        </th>
+        <td>
+            <%=model.AdminName %>
+        </td>
+    </tr>
+    <tr>
+        <th >
+            <%=Tag("数据表")%>：
+        </th>
+        <td>
+            <%=model.TableName %>
+        </td>
+    </tr>
+    <%if (model.Keyid != "")
+      { %>
+    <tr>
+        <th >
+            <%=Tag("主键")%>：
+        </th>
+        <td>
+            <%=model.Keyid%>
+        </td>
+    </tr>
+    <%} %>
+    <tr>
+        <th >
+            <%=Tag("内容")%>：
+        </th>
+        <td>
+            <%=model.Content%>
+        </td>
+    </tr>
+    <%if (model.Description != "")
+      { %>
+    <tr>
+        <th >
+            <%=Tag("描述")%>：
+        </th>
+        <td>
+            <%=model.Description%>
+        </td>
+    </tr>
+    <%} %>
+    <tr>
+        <th >
+            <%=Tag("URL")%>：
+        </th>
+        <td>
+            <%=model.URL%>
+        </td>
+    </tr>
+    <%if (model.RefererURL != "")
+      { %>
+    <tr>
+        <th >
+            <%=Tag("来源URL")%>：
+        </th>
+        <td>
+            <%=model.RefererURL%>
+        </td>
+    </tr>
+    <%} %>
+    <tr>
+        <th >
+            <%=Tag("IP地址")%>：
+        </th>
+        <td>
+            <a href="http://www.ip138.com/ips138.asp?ip=<%=model.IP_Add%>&action=2" target="_blank"><%=model.IP_Add%></a>
+        </td>
+    </tr>
+    <tr>
+        <th >
+            <%=Tag("时间")%>：
+        </th>
+        <td>
+            <%=FormatTime(model.Time_Add)%>
+        </td>
+    </tr>
+</table>
+</lbbody>

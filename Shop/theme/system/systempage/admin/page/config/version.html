@@ -1,0 +1,142 @@
+﻿{layout:default} {class:Shop.Admin.Config.Version}
+<lbhead>
+    <title>
+        <%=Tag("版本管理")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <style>
+        .bottom{height: 0;overflow: hidden;display: none;}
+    </style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <li class="submit"><a><span>
+                <%=Tag("当前版本")%>: <%=SYS.Version %>.<%=SYS.Version_Son %></span></a></li>
+            <%if (PageReturnMsg == ""){%>
+            <li class="down"><a href="javascript:void(0);" onclick="CheckVersion();"><b></b><span>
+                <%=Tag("检查新版本")%></span></a></li>
+            <%}%>
+            <li class="name"><span id="navIgation">
+                <%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a>
+                >
+                <%=Tag("版本管理") %></span></li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <% LicenseWord(); %>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 80px">
+                <%=Tag("版本号")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("文件大小")%>
+            </th>
+            <th style="width: 150px">
+                <%=Tag("文件路径")%>
+            </th>
+            <th style="width: 60px">
+                <%=Tag("文件状态")%>
+            </th>
+            <th>
+                <%=Tag("描述")%>
+            </th>
+            <th style="width: 130px">
+                <%=Tag("更新时间")%>
+            </th>
+            <th style="width: 220px">
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (DB.LebiShop.Lebi_Version model in models)
+          {%>
+        <tr class="list" ondblclick="Edit(<%=model.id %>);">
+            <td>
+                <%=model.Version %>.<%=model.Version_Son %>
+            </td>
+            <td>
+                <%=model.Size%>
+                KB
+            </td>
+            <td>
+              <%=model.Path_rar == "" ? "-" : model.Path_rar%>
+            </td>
+            <td>
+               <%if (model.Path_rar != "")
+                 {
+                     if (IsDown(model))
+                     { %>
+              <img src="<%=PageImage("icon/toolsSubmit.png") %>" />
+              <%}
+                     else
+                     { %>
+              <img src="<%=PageImage("icon/toolsDel2.png") %>" />
+              <%}
+                 } %>
+            </td>
+            <td>
+              <%=LB.Tools.Utils.GetUnicodeSubString(model.Description, 70, "...")%>
+            </td>
+            <td>
+                <%=model.IsUpdate==1?model.Time_Update.ToString():""%>
+            </td>
+            <td>
+                <%if (model.IsUpdate == 0)
+                  {
+                      if (Shop.LebiAPI.Service.Instanse.ISRightVersion(SYS, model))
+                      {
+                 %>
+                        <a href="<%=site.AdminPath %>/update.aspx?id=<%=model.id%>" target="_blank" ><%=Tag("升级")%></a> | 
+                      <%
+                       }
+                  }
+                  %>
+                <a href="javascript:void(0)" onclick="Show(<%=model.id %>);"><%=Tag("详情")%></a> |
+                <a href="javascript:void(0)" onclick="Del(<%=model.id %>);"><%=Tag("删除")%></a>
+                <div style="display:none;" id="show_<%=model.id %>">
+                <div style="text-align:left;" ><%=model.Content %></div>
+                </div>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <div id="dss"></div>
+    <script type="text/javascript">
+        function Show(id) {
+            var title_ = "<%=Tag("详细")%>";
+            var div_ = "show_" + id;
+            var width_ = 400;
+            var height_ = 400;
+            var modal_ = true;
+            ShowWindow(title_, div_, width_, height_, modal_);
+        }
+        function SaveObj() {
+            var postData = GetFormJsonData("shop");
+            var url="<%=site.AdminPath %>/ajax/ajax_service.aspx?__Action=CheckType";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+        function CheckVersion() {
+            var postData = '';
+            var url="<%=site.AdminPath %>/ajax/ajax_service.aspx?__Action=CheckVersion";
+            RequestAjax(url,postData,function(res){
+                if(res.count>0)
+                    MsgBox(1, "<%=Tag("发现新版本")%>", "?");
+                else
+                    MsgBox(2, "<%=Tag("未发现新版本")%>", "");
+            });
+        }
+        function Del(id) {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = { "id": id };
+            var url = "<%=site.AdminPath %>/ajax/ajax_service.aspx?__Action=Version_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+    </div>
+</lbbottom>

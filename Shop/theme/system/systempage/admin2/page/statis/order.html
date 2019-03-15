@@ -1,0 +1,348 @@
+﻿{layout:default} {class:Shop.statis.order}
+<lbhead>
+    <title><%=Tag("订单统计")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("订单统计") %></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item active"><%=Tag("订单统计")%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-info" onclick="Export();"><i class="ti-export"></i> <%=Tag("导出")%></button>
+                        <%}%>
+                    </div>
+                    <div class="col-md-12 m-t-10">
+                        <ul class="nav nav-tabs customtab" role="tablist">
+                            <li class="nav-item"><a class="nav-link <%if (type == 0){Response.Write(" active");} %>" href="order.aspx?time=<%=time %>" role="tab"><%=Tag("销售额")%></a></li>
+                            <li class="nav-item"><a class="nav-link <%if (type == 1){Response.Write(" active");} %>" href="order.aspx?type=1&time=<%=time %>" role="tab"><%=Tag("订单数")%></a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-12 m-t-10">
+                        <ul class="nav nav-tabs customtab" role="tablist">
+                            <li class="nav-item"><a class="nav-link <%if (time == 0){Response.Write(" active");} %>" href="?time=0&type=<%=type %>" role="tab"><%=Tag("今日")%></a></li>
+                            <li class="nav-item"><a class="nav-link <%if (time == 1){Response.Write(" active");} %>" href="?time=1&type=<%=type %>" role="tab"><%=Tag("昨日")%></a></li>
+                            <li class="nav-item"><a class="nav-link <%if (time == 2){Response.Write(" active");} %>" href="?time=2&type=<%=type %>" role="tab"><%=Tag("最近7日")%></a></li>
+                            <li class="nav-item"><a class="nav-link <%if (time == 3){Response.Write(" active");} %>" href="?time=3&type=<%=type %>" role="tab"><%=Tag("最近30日")%></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row m-t-20 m-b-20">
+                    <div id="container" style="width:100%;height:400px"></div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover no-wrap">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <%
+                                    switch(time) {
+                                    case 0:
+                                    Response.Write(Tag("时间"));
+                                    break;
+                                    case 1:
+                                    Response.Write(Tag("时间"));
+                                    break;
+                                    case 2:
+                                    Response.Write(Tag("日期"));
+                                    break;
+                                    case 3:
+                                    Response.Write(Tag("日期"));
+                                    break;
+                                    }
+                                    %>
+                                </th>
+                                <th><%=Tag("未确认") %></th>
+                                <th><%=Tag("未支付") %></th>
+                                <th><%=Tag("已支付")%></th>
+                                <th><%=Tag("未发货")%></th>
+                                <th><%=Tag("已发货")%></th>
+                                <th><%=Tag("已收货")%></th>
+                                <th><%=Tag("已完成")%></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%if (type == 0)
+                            { %>
+                            <%if (time == 0)
+                            { %>
+                            <%var i = 1;for(i=1; i<=24; i++){%>
+                            <tr>
+                                <td><%=i-1 %>:00</td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsVerified = 0",i-1) %></td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsPaid = 0", i - 1)%></td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsPaid = 1", i - 1)%></td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsShipped = 0", i - 1)%></td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsShipped = 1", i - 1)%></td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsReceived = 1", i - 1)%></td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsCompleted = 1", i - 1)%></td>
+                            </tr>
+                            <%} %>
+                            <%} %>
+                            <%if (time == 1)
+                            { %>
+                            <%var i = 1;for(i=1; i<=24; i++){%>
+                            <tr>
+                                <td><%=i-1 %>:00</td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsVerified = 0",i-1) %></td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsPaid = 0", i - 1)%></td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsPaid = 1", i - 1)%></td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsShipped = 0", i - 1)%></td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsShipped = 1", i - 1)%></td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsReceived = 1", i - 1)%></td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsCompleted = 1", i - 1)%></td>
+                            </tr>
+                            <%} %>
+                            <%} %>
+                            <%if (time == 2)
+                            { %>
+                            <%var i = 1;for(i=1; i<=7; i++){%>
+                            <tr>
+                                <td><%=System.DateTime.Now.AddDays(-7+i).Month.ToString()%>-<%=System.DateTime.Now.AddDays(-7+i).Day.ToString()%></td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsVerified = 0")%></td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsPaid = 0")%></td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsPaid = 1")%></td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsShipped = 0")%></td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsShipped = 1")%></td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsReceived = 1")%></td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsCompleted = 1")%></td>
+                            </tr>
+                            <%} %>
+                            <%} %>
+                            <%if (time == 3)
+                            { %>
+                            <%var i = 1;for(i=1; i<=30; i++){%>
+                            <tr>
+                                <td><%=System.DateTime.Now.AddDays(-30+i).Month.ToString()%>-<%=System.DateTime.Now.AddDays(-30 + i).Day.ToString()%></td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsVerified = 0")%></td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsPaid = 0")%></td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsPaid = 1")%></td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsShipped = 0")%></td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsShipped = 1")%></td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsReceived = 1")%></td>
+                                <td><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsCompleted = 1")%></td>
+                            </tr>
+                            <%} %>
+                            <%} %>
+                            <%} %>
+                            <%if (type == 1)
+                            { %>
+                            <%if (time == 0)
+                            { %>
+                            <%var i = 1;for(i=1; i<=24; i++){%>
+                            <tr>
+                                <td><%=i-1 %>:00</td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsVerified = 0",i-1) %></td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsPaid = 0", i - 1)%></td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsPaid = 1", i - 1)%></td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsShipped = 0", i - 1)%></td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsShipped = 1", i - 1)%></td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsReceived = 1", i - 1)%></td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsCompleted = 1", i - 1)%></td>
+                            </tr>
+                            <%} %>
+                            <%} %>
+                            <%if (time == 1)
+                            { %>
+                            <%var i = 1;for(i=1; i<=24; i++){%>
+                            <tr>
+                                <td><%=i-1 %>:00</td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsVerified = 0",i-1) %></td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsPaid = 0", i - 1)%></td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsPaid = 1", i - 1)%></td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsShipped = 0", i - 1)%></td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsShipped = 1", i - 1)%></td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsReceived = 1", i - 1)%></td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsCompleted = 1", i - 1)%></td>
+                            </tr>
+                            <%} %>
+                            <%} %>
+                            <%if (time == 2)
+                            { %>
+                            <%var i = 1;for(i=1; i<=7; i++){%>
+                            <tr>
+                                <td><%=System.DateTime.Now.AddDays(-7+i).Month.ToString()%>-<%=System.DateTime.Now.AddDays(-7+i).Day.ToString()%></td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsVerified = 0")%></td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsPaid = 0")%></td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsPaid = 1")%></td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsShipped = 0")%></td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsShipped = 1")%></td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsReceived = 1")%></td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-7 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsCompleted = 1")%></td>
+                            </tr>
+                            <%} %>
+                            <%} %>
+                            <%if (time == 3)
+                            { %>
+                            <%var i = 1;for(i=1; i<=30; i++){%>
+                            <tr>
+                                <td><%=System.DateTime.Now.AddDays(-30+i).Month.ToString()%>-<%=System.DateTime.Now.AddDays(-30 + i).Day.ToString()%></td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsVerified = 0")%></td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsPaid = 0")%></td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsPaid = 1")%></td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsShipped = 0")%></td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsShipped = 1")%></td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsReceived = 1")%></td>
+                                <td><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-30 + i).ToString("yyyy-MM-dd"), "Type_id_OrderType = 211 and IsCompleted = 1")%></td>
+                            </tr>
+                            <%} %>
+                            <%} %>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script src="<%=site.AdminAssetsPath %>/plugins/highcharts/highcharts.js"></script>
+    <script src="<%=site.AdminAssetsPath %>/plugins/highcharts/exporting.js"></script>
+    <%if (type == 0){ %>
+    <%if (time == 0){ %>
+    <script type="text/javascript">
+        var chart;
+        $(document).ready(function() {
+            chart = new Highcharts.Chart({
+                chart: {type: 'spline',renderTo: 'container',reflow:false},
+                title: {text: '<%=Tag("订单统计") %>',align: 'left',x: 5,style:{font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'}},
+                subtitle: {text: ''},
+                xAxis: {categories: [<%var i = 1;for(i=1; i<=24; i++){%>'<%=(i-1)%>:00'<%if (i <24){Response.Write(", ");} %><%} %>],lineWidth:1},
+            yAxis: {min: 0,title: {text: ''},lineWidth:1},
+        tooltip: {crosshairs: true,shared: true},
+        plotOptions: {column: {pointPadding: 1,borderWidth: 0}},
+        series: [{name: '<%=Tag("未确认") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsVerified = 0",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]}, {name: '<%=Tag("未支付") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsPaid = 0",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]}, {name: '<%=Tag("已支付") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsPaid = 1",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("未发货") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsShipped = 0",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("已发货") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsShipped = 1",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("已收货") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsReceived = 1",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("已完成") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsCompleted = 1",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]}]
+        });});
+    </script>
+    <%} %>
+    <%if (time == 1){ %>
+    <script type="text/javascript">
+        var chart;
+        $(document).ready(function() {
+            chart = new Highcharts.Chart({
+                chart: {type: 'spline',renderTo: 'container',reflow:false},
+                title: {text: '<%=Tag("订单统计") %>',align: 'left',x: 5,style:{font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'}},
+                subtitle: {text: ''},
+                xAxis: {categories: [<%var i = 1;for(i=1; i<=24; i++){%>'<%=(i-1)%>:00'<%if (i <24){Response.Write(", ");} %><%} %>],lineWidth:1},
+            yAxis: {min: 0,title: {text: ''},lineWidth:1},
+        tooltip: {crosshairs: true,shared: true},
+        plotOptions: {column: {pointPadding: 1,borderWidth: 0}},
+        series: [{name: '<%=Tag("未确认") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsVerified = 0",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]}, {name: '<%=Tag("未支付") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsPaid = 0",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]}, {name: '<%=Tag("已支付") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsPaid = 1",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("未发货") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsShipped = 0",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("已发货") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsShipped = 1",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("已收货") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsReceived = 1",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("已完成") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsCompleted = 1",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]}]
+        });});
+    </script>
+    <%} %>
+    <%if (time == 2){ %>
+    <script type="text/javascript">
+        var chart;
+        $(document).ready(function() {
+            chart = new Highcharts.Chart({
+                chart: {type: 'spline',renderTo: 'container',reflow:false},
+                title: {text: '<%=Tag("订单统计") %>',align: 'left',x: 5,style:{font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'}},
+                subtitle: {text: ''},
+                xAxis: {categories: [<%var i = 1;for(i=1; i<=7; i++){%>'<%=System.DateTime.Now.AddDays(-7+i).Month.ToString()%>-<%=System.DateTime.Now.AddDays(-7+i).Day.ToString()%>'<%if (i <7){Response.Write(", ");} %><%} %>],lineWidth:1},
+            yAxis: {min: 0,title: {text: ''},lineWidth:1},
+        //legend: {align: 'center',x:0,y:-179,floating: true,shadow: true,verticalAlign: 'middle',borderWidth:0},
+        tooltip: {crosshairs: true,shared: true},
+        plotOptions: {column: {pointPadding: 1,borderWidth: 0}},
+        series: [{name: '<%=Tag("未确认") %>',data: [<%for(i=1; i<=7; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsVerified = 0") %><%if (i <7){Response.Write(", ");} %><%} %>]}, {name: '<%=Tag("未支付") %>',data: [<%for(i=1; i<=7; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsPaid = 0") %><%if (i <7){Response.Write(", ");} %><%} %>]}, {name: '<%=Tag("已支付") %>',data: [<%for(i=1; i<=7; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsPaid = 1") %><%if (i <7){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("未发货") %>',data: [<%for(i=1; i<=7; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsShipped = 0") %><%if (i <7){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("已发货") %>',data: [<%for(i=1; i<=7; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsShipped = 1") %><%if (i <7){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("已收货") %>',data: [<%for(i=1; i<=7; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsReceived = 1") %><%if (i <7){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("已完成") %>',data: [<%for(i=1; i<=7; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsCompleted = 1") %><%if (i <7){Response.Write(", ");} %><%} %>]}]
+        });});
+    </script>
+    <%} %>
+    <%if (time == 3){ %>
+    <script type="text/javascript">
+        var chart;
+        $(document).ready(function() {
+            chart = new Highcharts.Chart({
+                chart: {type: 'spline',renderTo: 'container',reflow:false},
+                title: {text: '<%=Tag("订单统计") %>',align: 'left',x: 5,style:{font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'}},
+                subtitle: {text: ''},
+                xAxis: {categories: [<%var i = 1;var m = 1;for(i=1; i<=30; i++){%>'<%if (System.DateTime.Now.AddDays(-30+i).Month.ToString()==System.DateTime.Now.Month.ToString()){%><%if (m == 1){ %><%=System.DateTime.Now.Month.ToString() %>m<%}else{ %><%=System.DateTime.Now.AddDays(-30+i).Day.ToString()%><%} %><%m=m+1; %><%}else{%><%=System.DateTime.Now.AddDays(-30+i).Day.ToString()%><%} %>'<%if (i <30){Response.Write(", ");} %><%} %>],lineWidth:1},
+            yAxis: {min: 0,title: {text: ''},lineWidth:1},
+        //legend: {align: 'center',x:0,y:-179,floating: true,shadow: true,verticalAlign: 'middle',borderWidth:0},
+        tooltip: {crosshairs: true,shared: true},
+        plotOptions: {column: {pointPadding: 1,borderWidth: 0}},
+        series: [{name: '<%=Tag("未确认") %>',data: [<%for(i=1; i<=30; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsVerified = 0") %><%if (i <30){Response.Write(", ");} %><%} %>]}, {name: '<%=Tag("未支付") %>',data: [<%for(i=1; i<=30; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsPaid = 0") %><%if (i <30){Response.Write(", ");} %><%} %>]}, {name: '<%=Tag("已支付") %>',data: [<%for(i=1; i<=30; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsPaid = 1") %><%if (i <30){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("未发货") %>',data: [<%for(i=1; i<=30; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsShipped = 0") %><%if (i <30){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("已发货") %>',data: [<%for(i=1; i<=30; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsShipped = 1") %><%if (i <30){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("已收货") %>',data: [<%for(i=1; i<=30; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsReceived = 1") %><%if (i <30){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("已完成") %>',data: [<%for(i=1; i<=30; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsCompleted = 1") %><%if (i <30){Response.Write(", ");} %><%} %>]}]
+        });});
+    </script>
+    <%} %>
+    <%} %>
+    <%if (type == 1){ %>
+    <%if (time == 0){ %>
+    <script type="text/javascript">
+        var chart;
+        $(document).ready(function() {
+            chart = new Highcharts.Chart({
+                chart: {type: 'spline',renderTo: 'container',reflow:false},
+                title: {text: '<%=Tag("订单统计") %>',align: 'left',x: 5,style:{font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'}},
+                subtitle: {text: ''},
+                xAxis: {categories: [<%var i = 1;for(i=1; i<=24; i++){%>'<%=(i-1)%>:00'<%if (i <24){Response.Write(", ");} %><%} %>],lineWidth:1},
+            yAxis: {min: 0,title: {text: ''},lineWidth:1},
+        tooltip: {crosshairs: true,shared: true},
+        plotOptions: {column: {pointPadding: 1,borderWidth: 0}},
+        series: [{name: '<%=Tag("未确认") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsVerified = 0",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]}, {name: '<%=Tag("未支付") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsPaid = 0",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]}, {name: '<%=Tag("已支付") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsPaid = 1",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("未发货") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsShipped = 0",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("已发货") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsShipped = 1",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("已收货") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsReceived = 1",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("已完成") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsCompleted = 1",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]}]
+        });});
+    </script>
+    <%} %>
+    <%if (time == 1){ %>
+    <script type="text/javascript">
+        var chart;
+        $(document).ready(function() {
+            chart = new Highcharts.Chart({
+                chart: {type: 'spline',renderTo: 'container',reflow:false},
+                title: {text: '<%=Tag("订单统计") %>',align: 'left',x: 5,style:{font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'}},
+                subtitle: {text: ''},
+                xAxis: {categories: [<%var i = 1;for(i=1; i<=24; i++){%>'<%=(i-1)%>:00'<%if (i <24){Response.Write(", ");} %><%} %>],lineWidth:1},
+            yAxis: {min: 0,title: {text: ''},lineWidth:1},
+        tooltip: {crosshairs: true,shared: true},
+        plotOptions: {column: {pointPadding: 1,borderWidth: 0}},
+        series: [{name: '<%=Tag("未确认") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsVerified = 0",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]}, {name: '<%=Tag("未支付") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsPaid = 0",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]}, {name: '<%=Tag("已支付") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsPaid = 1",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("未发货") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsShipped = 0",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("已发货") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsShipped = 1",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("已收货") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsReceived = 1",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("已完成") %>',data: [<%for(i=1; i<=24; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsCompleted = 1",i-1) %><%if (i <24){Response.Write(", ");} %><%} %>]}]
+        });});
+    </script>
+    <%} %>
+    <%if (time == 2){ %>
+    <script type="text/javascript">
+        var chart;
+        $(document).ready(function() {
+            chart = new Highcharts.Chart({
+                chart: {type: 'spline',renderTo: 'container',reflow:false},
+                title: {text: '<%=Tag("订单统计") %>',align: 'left',x: 5,style:{font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'}},
+                subtitle: {text: ''},
+                xAxis: {categories: [<%var i = 1;for(i=1; i<=7; i++){%>'<%=System.DateTime.Now.AddDays(-7+i).Month.ToString()%>-<%=System.DateTime.Now.AddDays(-7+i).Day.ToString()%>'<%if (i <7){Response.Write(", ");} %><%} %>],lineWidth:1},
+            yAxis: {min: 0,title: {text: ''},lineWidth:1},
+        //legend: {align: 'center',x:0,y:-179,floating: true,shadow: true,verticalAlign: 'middle',borderWidth:0},
+        tooltip: {crosshairs: true,shared: true},
+        plotOptions: {column: {pointPadding: 1,borderWidth: 0}},
+        series: [{name: '<%=Tag("未确认") %>',data: [<%for(i=1; i<=7; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsVerified = 0") %><%if (i <7){Response.Write(", ");} %><%} %>]}, {name: '<%=Tag("未支付") %>',data: [<%for(i=1; i<=7; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsPaid = 0") %><%if (i <7){Response.Write(", ");} %><%} %>]}, {name: '<%=Tag("已支付") %>',data: [<%for(i=1; i<=7; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsPaid = 1") %><%if (i <7){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("未发货") %>',data: [<%for(i=1; i<=7; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsShipped = 0") %><%if (i <7){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("已发货") %>',data: [<%for(i=1; i<=7; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsShipped = 1") %><%if (i <7){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("已收货") %>',data: [<%for(i=1; i<=7; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsReceived = 1") %><%if (i <7){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("已完成") %>',data: [<%for(i=1; i<=7; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-7+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsCompleted = 1") %><%if (i <7){Response.Write(", ");} %><%} %>]}]
+        });});
+    </script>
+    <%} %>
+    <%if (time == 3){ %>
+    <script type="text/javascript">
+        var chart;
+        $(document).ready(function() {
+            chart = new Highcharts.Chart({
+                chart: {type: 'spline',renderTo: 'container',reflow:false},
+                title: {text: '<%=Tag("订单统计") %>',align: 'left',x: 5,style:{font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'}},
+                subtitle: {text: ''},
+                xAxis: {categories: [<%var i = 1;var m = 1;for(i=1; i<=30; i++){%>'<%if (System.DateTime.Now.AddDays(-30+i).Month.ToString()==System.DateTime.Now.Month.ToString()){%><%if (m == 1){ %><%=System.DateTime.Now.Month.ToString() %>m<%}else{ %><%=System.DateTime.Now.AddDays(-30+i).Day.ToString()%><%} %><%m=m+1; %><%}else{%><%=System.DateTime.Now.AddDays(-30+i).Day.ToString()%><%} %>'<%if (i <30){Response.Write(", ");} %><%} %>]},
+            yAxis: {min: 0,title: {text: ''}},
+        tooltip: {crosshairs: true,shared: true},
+        plotOptions: {column: {pointPadding: 1,borderWidth: 0}},
+        series: [{name: '<%=Tag("未确认") %>',data: [<%for(i=1; i<=30; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsVerified = 0") %><%if (i <30){Response.Write(", ");} %><%} %>]}, {name: '<%=Tag("未支付") %>',data: [<%for(i=1; i<=30; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsPaid = 0") %><%if (i <30){Response.Write(", ");} %><%} %>]}, {name: '<%=Tag("已支付") %>',data: [<%for(i=1; i<=30; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsPaid = 1") %><%if (i <30){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("未发货") %>',data: [<%for(i=1; i<=30; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsShipped = 0") %><%if (i <30){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("已发货") %>',data: [<%for(i=1; i<=30; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsShipped = 1") %><%if (i <30){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("已收货") %>',data: [<%for(i=1; i<=30; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsReceived = 1") %><%if (i <30){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("已完成") %>',data: [<%for(i=1; i<=30; i++){%><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-30+i).ToString("yyyy-MM-dd"),"Type_id_OrderType = 211 and IsCompleted = 1") %><%if (i <30){Response.Write(", ");} %><%} %>]}]
+        });});
+    </script>
+    <%} %>
+    <%} %>
+    <script>
+        function Export(){
+            MsgBox(1, "<%=Tag("正在处理，请等待")%>", "<%=site.AdminPath %>/ajax/export.aspx?__Action=Statis_Order&time=<%=time %>&type=<%=type %>")
+        }
+    </script>
+</lbscripts>

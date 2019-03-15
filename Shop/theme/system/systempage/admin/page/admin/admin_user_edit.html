@@ -1,0 +1,271 @@
+﻿{layout:default}
+{class:Shop.Admin.admin.Administrator_Edit}
+<lbhead>
+    <title><%=Tag("系统用户")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+    <link rel="stylesheet" type="text/css" href="<%=site.AdminJsPath %>/jquery.imgareaselect-0.9.10/css/imgareaselect-default.css" />
+    <script src="<%=site.AdminJsPath %>/jquery.imgareaselect-0.9.10/jquery.imgareaselect.pack.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            var imageWidth = 200;
+            var imageHeiht = 200;
+            $(document).ready(function () {
+                $("#avatar").attr("src", "<%=ImageUrl %>");
+                $("#hidImageUrl").val("<%=ImageUrl %>");
+                $("#imgCut").attr("src", "<%=AvatarUrl %>");
+                $('#maxWidth').val($('#avatar').width());
+                $('#maxHeight').val($('#avatar').height());
+                $('img#avatar').imgAreaSelect({
+                    aspectRatio: "1:1",
+                    x1: 50,
+                    y1: 10,
+                    x2: 130,
+                    y2: 90,
+                    maxWidth: 80,
+                    maxHeight: 80,
+                    minWidth: 80,
+                    minHeight: 80,
+                    onSelectEnd: function (img, selection) {
+                        $('#y1').val(selection.y1);
+                        $('#x1').val(selection.x1);
+                        $('#x2').val(selection.x2);
+                        $('#y2').val(selection.y2);
+                    },
+                    onSelectChange: preview
+                });
+            });                                 
+    </script>
+</lbfile>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+    <%}%>
+    <li class="rotate"><a href="javascript:void(0);" onclick="javascript:history.back();"><b></b><span><%=Tag("返回")%></span></a></li>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="<%=site.AdminPath %>/admin/default.aspx"><%=Tag("系统用户")%></a></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+<div class="searchbox clear">
+    <ul class="tabmenus">
+        <li class="current"><a href="admin_user_edit.aspx?id=<%=model.id %>"><span><%if (model.id > 0)
+    { %><%=model.UserName%><%}else{ %><%=Tag("添加")%><%}%></span></a></li>
+        <%if (model.id > 0){%><li><a href="admin_user_avatar.aspx?id=<%=model.id %>"><span><%=Tag("头像")%></span></a></li><%}%>
+    </ul>
+</div>
+<table class="table">
+    <%if (model.id == 0){%>
+    <tr>
+        <th style="vertical-align:top">
+            <%=Tag("头像")%>：
+        </th>
+        <td>
+            <div class="avatarbg">
+                <img id="avatar" src="<%=ImageUrl %>" />
+            </div>
+            <div class="avatarthumb">
+                <img id="imgCut" src="<%=AvatarUrl %>" />
+            </div>
+            <br />
+            <div class="uploadimg">
+                <input type="file" name="file_avatar" id="file_avatar" onchange="uploadImage('avatar')" />
+            </div>
+            <input type="hidden" id="x1" value="0" />  
+            <input type="hidden" id="y1" value="0" />  
+            <input type="hidden" id="x2" value="0" />  
+            <input type="hidden" id="y2" value="0" /> 
+            <input id="hidImageUrl" type="hidden" value="<%=ImageUrl %>" />
+            <input id="maxWidth" type="hidden" value="200" />
+            <input id="maxHeight" type="hidden" value="200" />
+            <input id="Avatar" name="Avatar" type="hidden" shop="true" value="<%=model.Avatar %>" />
+        </td>
+    </tr>
+    <%}%>
+    <tr>
+        <th>
+            <%=Tag("登录账号")%>：
+        </th>
+        <td>
+            <input type="text" shop="true" id="UserName" name="UserName" min="notnull"
+                class="input" value="<%=model.UserName %>" style="width:200px" />
+        </td>
+    </tr>
+    <tr>
+        <th >
+            <%=Tag("姓名")%>：
+        </th>
+        <td>
+            <input type="text" shop="true" id="RealName" name="RealName"
+                class="input" value="<%=model.RealName %>" style="width:200px" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("权限组")%>：
+        </th>
+        <td>
+            <select shop="true" id="Admin_Group_id" name="Admin_Group_id">
+            <%foreach (DB.LebiShop.Lebi_Admin_Group group in groups)
+              {%>
+              <option value="<%=group.id %>" <%=group.id==model.Admin_Group_id?"selected":"" %> ><%=Lang(group.Name) %></option>
+            <%} %>
+            </select>
+        </td>
+    </tr>
+
+    <tr>
+        <th >
+            <%=Tag("状态")%>：
+        </th>
+        <td>
+            <%=Shop.Bussiness.EX_Type.TypeRadio("AdminStatus", "Type_id_AdminStatus", model.Type_id_AdminStatus,"shop=\"true\"")%>
+        </td>
+    </tr>
+    <%if (model.id == 0)
+      { %>
+    <tr>
+        <th >
+            <%=Tag("密码")%>：
+        </th>
+        <td>
+            <input type="password" shop="true" min="notnull" id="Password" name="Password"
+                class="input" value="" style="width:200px" />
+        </td>
+    </tr>
+    <%} %>
+    <tr>
+        <th >
+            <%=Tag("管理分类")%>：
+        </th>
+        <td>
+            <%=Pro_TypeCheckbox("Pro_Type_ids", model.Pro_Type_ids, CurrentLanguage.Code)%>
+        </td>
+    </tr>
+    <%if (domain3admin)
+      { %>
+    <tr>
+        <th >
+            <%=Tag("管理站点")%>：
+        </th>
+        <td>
+            <%=site.SiteCheckbox("Site_ids",model.Site_ids,CurrentLanguage.Code)%>
+        </td>
+    </tr>
+    <%} %>
+    <tr>
+        <th>
+            <%=Tag("管理项目")%>：
+        </th>
+        <td>
+            <%=ProjectCheckbox("Project_ids", model.Project_ids)%>
+        </td>
+    </tr>
+</table>
+</lbbody>
+<lbbottom>
+<script type="text/javascript">
+    function SaveObj() {
+        <%if (model.id == 0){%>
+            $('#avatar').imgAreaSelect({
+                onSelectEnd: function (img, selection) {
+                    $('#x1').val(selection.x1);
+                    $('#y1').val(selection.y1);
+                    $('#x2').val(selection.x2);
+                    $('#y2').val(selection.y2);
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: WebPath + "/ajax/imageupload_avatar_cut.aspx",
+                data: { imgUrl: $('#hidImageUrl').val(), pointX: $("#x1").val(), pointY: $("#y1").val() },
+                success: function (msg) {
+                    if (msg.indexOf('upload/avatar') != -1) {
+                        $("#Avatar").val(msg);
+                        if (!CheckForm("shop", "span"))
+                            return false;
+                        var postData = GetFormJsonData("shop");
+                        var url = "<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=Admin_Edit&id=<%=model.id %>";
+                        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "default.aspx")});
+                    }
+                    //else {
+                    //    alert("error");
+                    //}
+                },
+                error: function (xhr, msg, e) {
+                    alert("error");
+                }
+            });
+        <%}else{%>
+            if (!CheckForm("shop", "span"))
+                return false;
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=Admin_Edit&id=<%=model.id %>";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "default.aspx")});
+        <%}%>
+    }
+    function preview(img, selection) {
+        if (!selection.width || !selection.height)
+            return;
+        $("#imgCut").attr("src", $("#hidImageUrl").val());
+        var maxWidth = $("#maxWidth").val()
+        var maxHeight = $("#maxHeight").val()
+        var scaleX = 80 / (selection.width || 1);
+        var scaleY = 80 / (selection.height || 1);
+        $('#imgCut').css({
+            width: Math.round(scaleX * maxWidth) + 'px',
+            height: Math.round(scaleY * maxHeight) + 'px',
+            marginLeft: '-' + Math.round(scaleX * selection.x1) + 'px',
+            marginTop: '-' + Math.round(scaleY * selection.y1) + 'px'
+        });
+        $('#x1').val(selection.x1);
+        $('#y1').val(selection.y1);
+        $('#x2').val(selection.x2);
+        $('#y2').val(selection.y2);
+    }
+    function uploadImage(id) {
+        $.ajaxFileUpload
+        (
+	        {
+	            url: WebPath + '/ajax/imageupload_avatar.aspx',
+	            secureuri: false,
+	            fileElementId: 'file_' + id,
+	            dataType: 'json',
+	            success: function (data, status) {
+	                if (data.msg != 'OK') {
+	                    MsgBox(2, data.msg, "");
+	                }
+	                else {
+	                    $("#maxWidth").val(data.width);
+	                    $("#maxHeight").val(data.height);
+	                    $("#avatar").attr("src", data.ImageUrl);
+	                    $("#hidImageUrl").val(data.ImageUrl);             //上传路径存入隐藏域
+	                    $("#imgCut").attr("src", data.ImageUrl);
+	                    $("#imgCut").attr("style", "float: left;position: relative;overflow: hidden;width: 80px;height: 80px");
+	                    $('img#avatar').imgAreaSelect({
+	                        aspectRatio: "1:1",
+	                        x1: 50,
+	                        y1: 10,
+	                        x2: 130,
+	                        y2: 90,
+	                        maxWidth: 80,
+	                        maxHeight: 80,
+	                        minWidth: 80,
+	                        minHeight: 80,
+	                        onSelectEnd: function (img, selection) {
+	                            $('#y1').val(selection.y1);
+	                            $('#x1').val(selection.x1);
+	                            $('#x2').val(selection.x2);
+	                            $('#y2').val(selection.y2);
+	                        },
+	                        onSelectChange: preview
+	                    });
+	                }
+	            }
+	        }
+        )
+    }
+</script>
+</lbbottom>

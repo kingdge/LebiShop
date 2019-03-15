@@ -1,0 +1,67 @@
+﻿{layout:default} {class:Shop.Admin.theme.adminskin_edit}
+<lbhead>
+    <title><%=model.Name %>-<%=Tag("自定义页面")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("文件编辑")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/theme/adminskin.aspx"><%=Tag("自定义页面")%></a></li>
+        <li class="breadcrumb-item active"><%=model.Name%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form action="javascript:SaveObj();" novalidate>
+                    <div class="form-group">
+                        <label for="Code"><%=Tag("代码")%>：</label>
+                        <input type="text" id="Code" name="Code" value="<%=model.Code %>" class="form-control" shop="true" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Name"><%=Tag("名称")%>：</label>
+                        <input type="text" id="Name" name="Name" value="<%=model.Name %>" class="form-control" shop="true" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="SkinContent"><%=Tag("页面内容")%>：</label>
+                        <textarea class="form-control" id="SkinContent" name="SkinContent" style="height: 500px;" shop="true"><%=Server.HtmlEncode(SkinContent)%></textarea>
+                        <div class="button-group m-t-5">
+                            <button type="button" class="btn btn-default btn-xs btn-sm" onclick="javascript:resizeEditor('SkinContent',200);"><%=Tag("展开")%></button>
+                            <button type="button" class="btn btn-default btn-xs btn-sm" onclick="javascript:resizeEditor('SkinContent',-200);"><%=Tag("收缩")%></button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Sort"><%=Tag("排序序号")%>：</label>
+                        <input type="text" id="Sort" name="Sort" value="<%=model.Sort %>" class="form-control" shop="true" onkeyup="value=value.replace(/[^\d]/g,'')">
+                    </div>
+                    <%if (PageReturnMsg == ""){%>
+                    <input type="hidden" name="Type_id_AdminSkinType" id="Type_id_AdminSkinType" value="361" shop="true">
+                    <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                    <button type="button" class="btn btn-success" onclick="CreateSkin();"><i class="ti-file"></i> <%=Tag("生成页面")%></button>
+                    <%}%>
+                </form>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    <script>
+        ! function(window, document, $) {
+            "use strict";
+            $("input,select,textarea").not("[type=submit]").jqBootstrapValidation()
+        }(window, document, jQuery);
+        function SaveObj() {
+            var postData = GetFormJsonData("shop");
+            var nodeid = $("#Node_id").val();
+            var url = "<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=AdminSkin_Edit&id=<%=model.id %>";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "?id="+res.id)});
+        }
+        function CreateSkin() {
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_theme.aspx?__Action=AdminSkin_Create&id=<%=model.id %>";
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+
+        }
+    </script>
+</lbscripts>

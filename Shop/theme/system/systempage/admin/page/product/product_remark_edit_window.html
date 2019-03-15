@@ -1,0 +1,55 @@
+﻿{layout:simple} {class:Shop.Admin.product.product_remark_edit_window}
+<lbbody>
+<table cellspacing="0" border="0" style="width: 100%;" class="table">
+    <tr>
+        <th>
+            <%=Tag("商品单位")%>：
+        </th>
+        <td>
+            <select id="Units_id" subproduct_shop="true" name="Units_id">
+                <%=Shop.Bussiness.EX_Product.UnitOption(model.Units_id)%>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td valign="top" colspan="2">
+            <textarea name="Sub_Remarks" id="Sub_Remarks" subproduct_shop="true" class="textarea" style="width: 500px;height: 60px;"><%=model.Remarks %></textarea>
+            <div class="tools clear">
+                <ul>
+                    <li class="plus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Sub_Remarks',100);"><b></b><span><%=Tag("展开")%></span></a></li>
+                    <li class="minus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Sub_Remarks',-100)"><b></b><span><%=Tag("收缩")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td class="action" colspan="2">
+            <div class="tools tools-m clear">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SavePNameObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    function SavePNameObj() {
+        if (!CheckForm("subproduct_shop", "span"))
+            return false;
+        var postData = GetFormJsonData("subproduct_shop");
+        var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Product_Remark_Edit&id=<%=model.id %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "");getsubproducts();});
+    }
+    function getsubproducts() {
+        $.ajax({
+            type: "POST",
+            url: "subproduct_list.aspx?pid=<%=pid %>&randnum=<%=randnum %>",
+            data: '',
+            success: function (res) {
+                $("#div_error").dialog('close'); 
+                $("#subproducts").html(res);
+            }
+        });
+    }
+</script>
+</lbbody>

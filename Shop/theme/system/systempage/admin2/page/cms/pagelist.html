@@ -1,0 +1,189 @@
+﻿{layout:default}{class:Shop.Admin.cms.PageList}
+<lbhead>
+    <title><%=Tag(node.Name)%>-<%=pnode.Name%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <link href="<%=site.AdminAssetsPath %>/plugins/daterangepicker/daterangepicker.css" rel="stylesheet">
+</lbfile>
+<lbpath>
+    <h3 class="text-themecolor m-b-0 m-t-0"><%=Tag("权限组")%></h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a></li>
+        <%if (pnode.Name !="CMS"){ %><li class="breadcrumb-item"><a href="UserNodeList.aspx?code=<%=pnode.Code %>"><%=pnode.Name%></a></li><%} %>
+        <li class="breadcrumb-item active"><%=Tag(node.Name)%></li>
+    </ol>
+</lbpath>
+<lbbody>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <%if (PageReturnMsg == ""){%>
+                        <button class="btn btn-info" onclick="location.href='<%=Shop.Bussiness.NodePage.AdminPage(node) %>'"><i class="ti-plus"></i> <%=Tag("添加")%></button>
+                        <button class="btn btn-danger" onclick="DeleteConfirm();"><i class="ti-trash"></i> <%=Tag("删除")%></button>
+                        <button class="btn btn-success" onclick="Update('<%=node.id %>',0,'Page');"><i class="ti-settings"></i> <%=Tag("设置语言")%></button>
+                        <button class="btn btn-default" data-toggle="modal" data-target="#SearchModal"><i class="ti-search"></i> <%=Tag("搜索")%></button>
+                        <%}%>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table m-t-10 table-hover no-wrap">
+                        <thead>
+                            <tr class="no-wrap">
+                                <th class="selectAll" style="width:40px">
+                                    <a href="javascript:void(0);" onclick="$('input[name=\'ids\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+                                </th>
+                                <th>
+                                    <%=Tag("语言")%>
+                                </th>
+                                <th>
+                                    <%=Tag("名称")%>
+                                </th>
+                                <th>
+                                    <%=Tag("浏览")%>
+                                </th>
+                                <th>
+                                    <%=Tag("排序")%>
+                                </th>
+                                <th>
+                                    <%=Tag("时间")%>
+                                </th>
+                                <th>
+                                    <%=Tag("操作")%>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%foreach (DB.LebiShop.Lebi_Page model in pages)
+                            {%>
+                            <tr ondblclick="Page_Edit('<%=Shop.Bussiness.NodePage.AdminPage(model) %>');">
+                                <td>
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" id="checkbox<%=model.id %>" name="ids" value="<%=model.id %>" class="custom-control-input" del="true">
+                                        <span class="custom-control-label"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <div class="more" style="width: 80px;" title="<%=LanguageName(model.Language_ids)%>">
+                                        <%=LanguageName(model.Language_ids)%>
+                                    </div>
+                                </td>
+                                <td <%if (model.NameColor!=""){ %>style="color:<%=model.NameColor %>"<%} %>>
+                                    <%=model.Name%>
+                                </td>
+                                <td>
+                                    <%=model.Count_Views%>
+                                </td>
+                                <td>
+                                    <%=model.Sort%>
+                                </td>
+                                <td>
+                                    <%=FormatTime(model.Time_Add)%>
+                                </td>
+                                <td>
+                                    <a href="<%=Shop.Bussiness.NodePage.AdminPage(model) %>"><%=Tag("编辑")%></a>
+                                </td>
+                            </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="SearchModal" tabindex="-1" role="dialog" aria-labelledby="SearchModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"><%=Tag("搜索")%></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <select name="lang" id="lang" class="form-control">
+                                <option value=""><%=Tag("语言")%></option>
+                                <%=Shop.Bussiness.Language.LanguageOption(lang)%>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text" name="daterange" id="daterange" class="form-control">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        <span class="ti-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input name="key" type="text" id="key" class="form-control" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="ti-close"></i> <%=Tag("关闭")%></button>
+                    <button type="button" class="btn btn-success" onclick="search_();"><i class="ti-search"></i> <%=Tag("搜索")%></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</lbbody>
+<lbscripts>
+    {MOD:DateRangePicker}
+    <script>
+        function search_() {
+            var lang = $("#lang").val();
+            var key = $("#key").val();
+            var dateFrom = "";
+            var dateTo = "";
+            var daterange = $("#daterange").val();
+            if (daterange.indexOf(" - ") >-1){
+                dateFrom = daterange.split(" - ")[0];
+                dateTo = daterange.split(" - ")[1];
+            }
+            window.location = "?Node_id=<%=Node_id%>&key=" + escape(key) + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&lang=" + lang;
+        }
+        function Node_Edit(pid, id) {
+            $("#EditModal").modal("show");
+            var title_ = "<%=Tag("编辑")%>";
+            if (id == 0) title_ = "<%=Tag("添加")%>";
+            $.ajax({
+                url: "usernode_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {id: id,pid: pid,title: title_},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function DeleteConfirm() {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认要删除吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "DeleteObj();");
+        }
+        function DeleteObj() {
+            $('#Modal-Confirm').modal('hide');
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_node.aspx?__Action=Page_Del";
+            RequestAjax(url,postData,function(){MsgBox(1,"<%=Tag("操作成功")%>","?")});
+        }
+        function Page_Edit(url) {
+            window.location = url;
+        }
+        function Update(id,ids,table) {
+            $("#EditModal").modal("show");
+            if (ids == 0)
+                ids = GetChkCheckedValues("ids");
+            $.ajax({
+                url: "<%=site.AdminPath %>/config/setlanguage_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: {id: id,ids: ids,table: table},
+            }).done(function(result){
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+    </script>
+</lbscripts>

@@ -1,0 +1,38 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using Shop.Bussiness;
+using Shop.Model;using DB.LebiShop;
+using LB.Tools;
+
+namespace Shop.Admin.Config
+{
+    public partial class CardType : AdminPageBase
+    {
+
+        protected List<Lebi_CardOrder> models;
+        protected string PageString;
+        protected int type = 311;
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!EX_Admin.Power("cardtype_list", "优惠券列表"))
+            {
+                PageReturnMsg = PageNoPowerMsg();
+            }
+            
+            type = RequestTool.RequestInt("type", 311);
+            PageSize = RequestTool.getpageSize(25);
+            string where = "1=1";
+            if (type > 0)
+                where += " and Type_id_CardType=" + type + "";
+            models = B_Lebi_CardOrder.GetList(where, "id desc", PageSize, page);
+            int recordCount = B_Lebi_CardOrder.Counts(where);
+
+            PageString = Pager.GetPaginationString("?page={0}", page, PageSize, recordCount);
+            
+        }
+    }
+}

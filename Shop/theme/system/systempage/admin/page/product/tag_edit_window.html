@@ -1,0 +1,47 @@
+﻿{layout:simple} {class:Shop.Admin.product.Tag_Edit_window}
+<lbbody>
+<%=Shop.Bussiness.Language.AdminLanguageTab("") %>
+<table class="table">
+    <%foreach (DB.LebiShop.Lebi_Language_Code lang in Shop.Bussiness.Language.Languages())
+      {%>
+    <tbody id="lang_<%=lang.Code %>" class="lang_table" style="display: none">
+        <tr>
+            <th style="width: 20%">
+                <%=Tag("标签名称")%>：
+            </th>
+            <td>
+                <input type="text" id="Name<%=lang.Code %>" name="Name<%=lang.Code %>" class="input" shop="true"  style="width: 200px;" value="<%=Shop.Bussiness.Language.Content(model.Name,lang.Code) %>" />
+            </td>
+        </tr>
+    </tbody>
+    <%} %>
+</table>
+<ul id="tablistmain"><li class="selected"><a><span><%=Tag("通用信息")%></span></a></li></ul>
+<table class="table">
+    <tr>
+        <th style="width: 20%">
+            <%=Tag("排序序号")%>：
+        </th>
+        <td>
+            <input type="text" id="Sort" name="Sort" style="width: 70px" shop="true" class="input" value="<%=model.Sort %>" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" maxlength="4" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+        <div class="tools tools-m clear">
+            <ul>
+                <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+            </ul>
+        </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    LanguageTab_EditPage('<%=CurrentLanguage.Code %>'); //加载默认语言
+    function SaveObj() {
+        var postData = GetFormJsonData("shop");
+        var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=ProTag_Edit&id=<%=model.id %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+</script>
+</lbbody>
