@@ -27,10 +27,8 @@ back SQL数据库备份文件夹<br/>
 config 系统配置文件文件夹 用于存放系统、插件配置文件<br/>
 editor 网页编辑器文件夹<br/>
 inc 块文件文件夹<br/>
-install 安装向导文件夹<br/>
 onlinepay 在线支付接口文件夹<br/>
 pagebase 页面 cs 文件夹<br/>
-admin 后台文件夹<br/>
 
 
 模板结构 http://www.lebi.cn/faq/info.aspx?id=99<br/>
