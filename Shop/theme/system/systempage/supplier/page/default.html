@@ -1,0 +1,233 @@
+﻿{layout:default} {class:Shop.Supplier._Default}
+<lbhead>
+    <title><%=Tag("数据概况")%>-<%=site.title%></title>
+    <style>#body_path,#body_bottom{height:0;overflow:hidden;display:none}</style>
+</lbhead>
+<lbbody>
+   <%if (CurrentSupplierGroup.type == "supplier")
+     { %>
+   <script language="javascript" type="text/javascript" src="<%=site.AdminJsPath %>/highcharts/highcharts.js"></script>
+   <script language="javascript" type="text/javascript" src="<%=site.AdminJsPath %>/highcharts/themes/grid.js"></script>
+   <div id="main_index">
+    <div class="admindefault">
+        <div class="at">
+                <%=Tag("今日业务量")%>
+        </div>
+        <div class="list">
+                <%=Tag("订单总数")%>
+                <a href="<%=site.AdminPath %>/order/default.aspx?dateFrom=<%=System.DateTime.Now.ToString("yyyy-MM-dd")%>&dateTo=<%=System.DateTime.Now.ToString("yyyy-MM-dd")%>"><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.ToString("yyyy-MM-dd"), System.DateTime.Now.ToString("yyyy-MM-dd"), "Supplier_id = " + CurrentSupplier.id + " and Type_id_OrderType = 211")%></a>
+        </div>
+        <div class="list">
+                <%=Tag("退货订单总数")%>
+                <a href="<%=site.AdminPath %>/order/default.aspx?t=212&dateFrom=<%=System.DateTime.Now.ToString("yyyy-MM-dd")%>&dateTo=<%=System.DateTime.Now.ToString("yyyy-MM-dd")%>"><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.ToString("yyyy-MM-dd"), System.DateTime.Now.ToString("yyyy-MM-dd"), "Supplier_id = " + CurrentSupplier.id + " and Type_id_OrderType = 212")%></a>
+        </div>
+        <div class="list">
+                <%=Tag("未确认订单")%>
+                <a href="<%=site.AdminPath %>/order/default.aspx?dateFrom=<%=System.DateTime.Now.ToString("yyyy-MM-dd")%>&dateTo=<%=System.DateTime.Now.ToString("yyyy-MM-dd")%>&type=1"><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.ToString("yyyy-MM-dd"), System.DateTime.Now.ToString("yyyy-MM-dd"), "Supplier_id = " + CurrentSupplier.id + " and Type_id_OrderType = 211 and IsVerified = 0 and IsInvalid = 0")%></a>
+        </div>
+        <div class="list">
+                <%=Tag("已支付订单")%>
+                <a href="<%=site.AdminPath %>/order/default.aspx?dateFrom=<%=System.DateTime.Now.ToString("yyyy-MM-dd")%>&dateTo=<%=System.DateTime.Now.ToString("yyyy-MM-dd")%>&type=4"><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.ToString("yyyy-MM-dd"), System.DateTime.Now.ToString("yyyy-MM-dd"), "Supplier_id = " + CurrentSupplier.id + " and Type_id_OrderType = 211  and IsVerified = 1 and IsPaid = 1 and IsInvalid = 0")%></a>
+        </div>
+        <div class="list">
+                <%=Tag("已发货订单")%>
+                <a href="<%=site.AdminPath %>/order/default.aspx?dateFrom=<%=System.DateTime.Now.ToString("yyyy-MM-dd")%>&dateTo=<%=System.DateTime.Now.ToString("yyyy-MM-dd")%>&type=6"><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.ToString("yyyy-MM-dd"), System.DateTime.Now.ToString("yyyy-MM-dd"), "Supplier_id = " + CurrentSupplier.id + " and Type_id_OrderType = 211  and IsVerified = 1 and IsShipped = 1 and IsInvalid = 0 and IsInvalid = 0")%></a>
+        </div>
+        <div class="list">
+                <%=Tag("已收货订单")%>
+                <a href="<%=site.AdminPath %>/order/default.aspx?dateFrom=<%=System.DateTime.Now.ToString("yyyy-MM-dd")%>&dateTo=<%=System.DateTime.Now.ToString("yyyy-MM-dd")%>&type=9"><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.ToString("yyyy-MM-dd"), System.DateTime.Now.ToString("yyyy-MM-dd"), "Supplier_id = " + CurrentSupplier.id + " and Type_id_OrderType = 211  and IsVerified = 1 and IsReceived = 1 and IsInvalid = 0 and IsInvalid = 0")%></a>
+        </div>
+        <div class="list">
+                <%=Tag("已完成订单")%>
+                <a href="<%=site.AdminPath %>/order/default.aspx?dateFrom=<%=System.DateTime.Now.ToString("yyyy-MM-dd")%>&dateTo=<%=System.DateTime.Now.ToString("yyyy-MM-dd")%>&type=10"><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.ToString("yyyy-MM-dd"), System.DateTime.Now.ToString("yyyy-MM-dd"), "Supplier_id = " + CurrentSupplier.id + " and Type_id_OrderType = 211  and IsVerified = 1 and IsCompleted = 1")%></a>
+        </div>
+        <div class="list">
+                <%=Tag("站内信")%>
+                <a href="<%=site.AdminPath %>/config/Message.aspx?dateFrom=<%=System.DateTime.Now.ToString("yyyy-MM-dd")%>&dateTo=<%=System.DateTime.Now.ToString("yyyy-MM-dd")%>&type=0"><%=Shop.Bussiness.Message.GetCount_Message(System.DateTime.Now.ToString("yyyy-MM-dd"), System.DateTime.Now.ToString("yyyy-MM-dd"), "Supplier_id = " + CurrentSupplier.id + " and User_id_To = 0")%></a>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div style="border-top:1px solid #ddd;border-bottom:1px solid #ddd;">
+    <script type="text/javascript">
+    var chart;
+    $(document).ready(function() {
+    chart = new Highcharts.Chart({
+    chart: {renderTo: 'container',reflow:false,borderColor:'#ffffff',borderRadius:'3',borderWidth:'0'},
+    title: {text: '<%=Tag("订单统计") %>',align: 'left',x: 5,style:{font: '14px "Trebuchet MS", Verdana, sans-serif'}},
+    subtitle: {text: ''},
+    xAxis: {categories: [<%var i = 1;for(i=1; i<=15; i++){%>'<a href=Order/default.aspx?dateFrom=<%=System.DateTime.Now.AddDays(-15+i).ToString("yyyy-MM-dd") %>&dateTo=<%=System.DateTime.Now.AddDays(-15+i).ToString("yyyy-MM-dd") %>><%=System.DateTime.Now.AddDays(-15+i).Month.ToString()%>-<%=System.DateTime.Now.AddDays(-15+i).Day.ToString()%></a>'<%if (i <15){Response.Write(", ");} %><%} %>],lineWidth:1},
+    yAxis: {min: 0,title: {text: ''},lineWidth:1},
+    legend: {align: 'center',x:0,y:-159,floating: true,shadow: true,verticalAlign: 'middle',borderWidth:0},
+    tooltip: {},
+    plotOptions: {column: {pointPadding: 1,borderWidth: 0}},
+        series: [{name: '<%=Tag("未支付") %>',data: [<%for(i=1; i<=15; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-15+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-15+i).ToString("yyyy-MM-dd"),"Supplier_id = "+ CurrentSupplier.id +" and Type_id_OrderType = 211 and IsVerified = 1 and IsPaid = 0 and IsInvalid = 0") %><%if (i <15){Response.Write(", ");} %><%} %>]}, {name: '<%=Tag("已支付") %>',data: [<%for(i=1; i<=15; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-15+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-15+i).ToString("yyyy-MM-dd"),"Supplier_id = "+ CurrentSupplier.id +" and Type_id_OrderType = 211 and IsVerified = 1 and IsPaid = 1 and IsInvalid = 0") %><%if (i <15){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("未发货") %>',data: [<%for(i=1; i<=15; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-15+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-15+i).ToString("yyyy-MM-dd"),"Supplier_id = "+ CurrentSupplier.id +" and Type_id_OrderType = 211 and IsVerified = 1 and IsShipped = 0 and IsInvalid = 0") %><%if (i <15){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("已发货") %>',data: [<%for(i=1; i<=15; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-15+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-15+i).ToString("yyyy-MM-dd"),"Supplier_id = "+ CurrentSupplier.id +" and Type_id_OrderType = 211 and IsVerified = 1 and IsShipped = 1 and IsInvalid = 0") %><%if (i <15){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("已收货") %>',data: [<%for(i=1; i<=15; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-15+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-15+i).ToString("yyyy-MM-dd"),"Supplier_id = "+ CurrentSupplier.id +" and Type_id_OrderType = 211 and IsVerified = 1 and IsReceived = 1 and IsInvalid = 0") %><%if (i <15){Response.Write(", ");} %><%} %>]},{name: '<%=Tag("已完成") %>',data: [<%for(i=1; i<=15; i++){%><%=Shop.Bussiness.Order.GetMoney_Order(System.DateTime.Now.AddDays(-15+i).ToString("yyyy-MM-dd"),System.DateTime.Now.AddDays(-15+i).ToString("yyyy-MM-dd"),"Supplier_id = "+ CurrentSupplier.id +" and Type_id_OrderType = 211 and IsVerified = 1 and IsCompleted = 1") %><%if (i <15){Response.Write(", ");} %><%} %>]}]
+    });});
+    </script>
+    <div id="container" style="width: 100%; height: 352px; *height:348px; _height:348px; margin: 0 auto"></div>
+    </div>
+    <div class="clear"></div>
+   <div class="float_yestoday">
+    <table class="table">
+        <tr>
+            <th colspan="2" class="head">
+                <%=Tag("昨日业务量")%>
+            </th>
+        </tr>
+        <tr class="list">
+            <th>
+                <%=Tag("订单总数")%>
+            </th>
+            <td>
+                <a href="<%=site.AdminPath %>/order/default.aspx?dateFrom=<%=System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")%>&dateTo=<%=System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")%>"><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), "Supplier_id = " + CurrentSupplier.id + " and Type_id_OrderType = 211 and IsVerified = 1")%></a>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                <%=Tag("已支付订单")%>
+            </th>
+            <td>
+                <a href="<%=site.AdminPath %>/order/default.aspx?dateFrom=<%=System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")%>&dateTo=<%=System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")%>&type=4"><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), "Supplier_id = " + CurrentSupplier.id + " and Type_id_OrderType = 211 and IsVerified = 1 and IsPaid = 1")%></a>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                <%=Tag("已发货订单")%>
+            </th>
+            <td>
+                <a href="<%=site.AdminPath %>/order/default.aspx?dateFrom=<%=System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")%>&dateTo=<%=System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")%>&type=6"><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), "Supplier_id = " + CurrentSupplier.id + " and Type_id_OrderType = 211 and IsVerified = 1 and IsShipped = 1 and IsInvalid = 0")%></a>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                <%=Tag("已收货订单")%>
+            </th>
+            <td>
+                <a href="<%=site.AdminPath %>/order/default.aspx?dateFrom=<%=System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")%>&dateTo=<%=System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")%>&type=9"><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), "Supplier_id = " + CurrentSupplier.id + " and Type_id_OrderType = 211 and IsVerified = 1 and IsReceived = 1 and IsInvalid = 0")%></a>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                <%=Tag("已完成订单")%>
+            </th>
+            <td>
+                <a href="<%=site.AdminPath %>/order/default.aspx?dateFrom=<%=System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")%>&dateTo=<%=System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd")%>&type=10"><%=Shop.Bussiness.Order.GetCount_Order(System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), System.DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd"), "Supplier_id = " + CurrentSupplier.id + " and Type_id_OrderType = 211 and IsVerified = 1 and IsCompleted = 1")%></a>
+            </td>
+        </tr>
+    </table>
+    </div>
+
+    <div class="float_new">
+    <table class="table">
+        <tr>
+            <th colspan="2" class="head">
+                <%=Tag("待处理事务")%>
+            </th>
+        </tr>
+        <tr class="list">
+            <th>
+                <%=Tag("未支付订单")%>
+            </th>
+            <td>
+                <a href="<%=site.AdminPath %>/order/default.aspx?type=3"><%=Shop.Bussiness.Order.GetCount_Order("", "", "Supplier_id = " + CurrentSupplier.id + " and Type_id_OrderType = 211 and IsVerified = 1 and IsPaid = 0 and IsInvalid = 0")%></a>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                <%=Tag("未发货订单")%>
+            </th>
+            <td>
+                <a href="<%=site.AdminPath %>/order/default.aspx?type=5"><%=Shop.Bussiness.Order.GetCount_Order("", "", "Supplier_id = " + CurrentSupplier.id + " and Type_id_OrderType = 211 and IsVerified = 1 and IsShipped = 0 and IsInvalid = 0")%></a>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                <%=Tag("未收货订单")%>
+            </th>
+            <td>
+                <a href="<%=site.AdminPath %>/order/default.aspx?type=8"><%=Shop.Bussiness.Order.GetCount_Order("", "", "Supplier_id = " + CurrentSupplier.id + " and Type_id_OrderType = 211 and IsVerified = 1 and IsReceived = 0 and IsInvalid = 0")%></a>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                <%=Tag("站内信")%>
+            </th>
+            <td>
+                <a href="<%=site.AdminPath %>/config/Message.aspx?type=0"><%=Shop.Bussiness.Message.GetCount_Message("", "", "Supplier_id = " + CurrentSupplier.id + " and User_id_To = 0")%></a>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                
+            </th>
+            <td>
+                
+            </td>
+        </tr>
+        <%--<tr class="list">
+            <th>
+                <%=Tag("商品评价")%>
+            </th>
+            <td>
+                <a href="<%=site.AdminPath %>/product/Comment.aspx?status=280"><%=Shop.Bussiness.Comment.GetCount_Comment("", "", "TableName = 'Product' and Status = 280")%></a>
+            </td>
+        </tr>
+        --%>
+    </table>
+    </div>
+    <div class="float_total">
+    <table class="table">
+        <tr>
+            <th colspan="2" class="head">
+                <%=Tag("数据统计")%>
+            </th>
+        </tr>
+        <tr class="list">
+            <th>
+                <%=Tag("上架商品总数")%>
+            </th>
+            <td>
+                <a href="<%=site.AdminPath %>/product/default.aspx?status=101"><%=Shop.Bussiness.EX_Product.GetCount_Product("", "", "Supplier_id = " + CurrentSupplier.id + " and Type_id_ProductStatus = 101 and Product_id = 0")%></a>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                <%=Tag("下架商品总数")%>
+            </th>
+            <td>
+                <a href="<%=site.AdminPath %>/product/default.aspx?status=100"><%=Shop.Bussiness.EX_Product.GetCount_Product("", "", "Supplier_id = " + CurrentSupplier.id + " and Type_id_ProductStatus = 100 and Product_id = 0")%></a>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                <%=Tag("未审核商品总数")%>
+            </th>
+            <td>
+                <a href="<%=site.AdminPath %>/product/default.aspx?status=102"><%=Shop.Bussiness.EX_Product.GetCount_Product("", "", "Supplier_id = " + CurrentSupplier.id + " and Type_id_ProductStatus = 102 and Product_id = 0")%></a>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                <%=Tag("订单总数")%>
+            </th>
+            <td>
+                <a href="<%=site.AdminPath %>/order/default.aspx"><%=Shop.Bussiness.Order.GetCount_Order("", "", "Supplier_id = " + CurrentSupplier.id + " and Type_id_OrderType = 211")%></a>
+            </td>
+        </tr>
+        <tr class="list">
+            <th>
+                <%=Tag("站内信总数")%>
+            </th>
+            <td>
+                <a href="<%=site.AdminPath %>/config/message.aspx"><%=Shop.Bussiness.Message.GetCount_Message("", "", "Supplier_id = " + CurrentSupplier.id + "")%></a>
+            </td>
+        </tr>
+    </table>
+    </div>
+    <div class="clear"></div>
+    </div>
+    <%}%>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+    </div>
+</lbbottom>

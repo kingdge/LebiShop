@@ -1,0 +1,190 @@
+﻿{layout:default} {class:Shop.supplier.product.default_}
+<lbhead>
+    <title><%=Tag("商品列表")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="add"><a href="Product_Edit.aspx"><b></b><span><%=Tag("添加")%></span></a></li>
+    <li class="del"><a href="javascript:void(0);" onclick="Product_Del();"><b></b><span><%=Tag("删除")%></span></a></li>
+    <li class="down"><a href="javascript:void(0);" onclick="Product_Status_Edit_muti(0);"><b></b><span><%=Tag("下架")%></span></a></li>
+    <li class="reset"><a href="javascript:void(0);" onclick="Product_MoveCategory();"><b></b><span><%=Tag("类别")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="<%=site.AdminPath %>/product/"><%=Tag("商品列表")%></a></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <% LicenseWord(); %>
+    <div class="searchbox">
+        <input name="key" type="text" id="key" class="input-query" value="<%=key %>"/><input type="button" id="btnSou" class="btn-query" onclick="search_();" align="absmiddle" />
+         <div style="margin-top:5px;">
+        <a href="javascript:void(0);" onclick="SearchWindow();"><%=Tag("高级搜索")%></a>
+        <%=sp.Description%>
+        </div>
+    </div>
+    <table id="list" class="datalist">
+        <tr class="title">
+            <th width="40" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'sonproductid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th width="40">
+                <%=Tag("图片")%>
+            </th>
+            <th width="80">
+                <%=Tag("编号")%>
+            </th>
+            <th width="*">
+                <%=Tag("商品名称")%>
+            </th>
+            <th width="60">
+                <%=Tag("子商品")%>
+            </th>
+            <th width="80">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "PriceDesc"){Response.Write("PriceAsc");}else{Response.Write("PriceDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("销售价")%><%if (OrderBy == "PriceDesc") { Response.Write("↓"); } else if (OrderBy == "PriceAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th width="80">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "Price_CostDesc"){Response.Write("Price_CostAsc");}else{Response.Write("Price_CostDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("成本价")%><%if (OrderBy == "Price_CostDesc") { Response.Write("↓"); } else if (OrderBy == "Price_CostAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th width="60">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "CountDesc"){Response.Write("CountAsc");}else{Response.Write("CountDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("库存")%><%if (OrderBy == "CountDesc") { Response.Write("↓"); } else if (OrderBy == "CountAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th width="60">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "FreezeDesc"){Response.Write("FreezeAsc");}else{Response.Write("FreezeDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("冻结库存")%><%if (OrderBy == "FreezeDesc") { Response.Write("↓"); } else if (OrderBy == "FreezeAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th width="60">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "SalesDesc"){Response.Write("SalesAsc");}else{Response.Write("SalesDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("销量")%><%if (OrderBy == "SalesDesc") { Response.Write("↓"); } else if (OrderBy == "SalesAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th width="60">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "ViewsDesc"){Response.Write("ViewsAsc");}else{Response.Write("ViewsDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("浏览量")%><%if(OrderBy == "ViewsDesc"){Response.Write("↓");}else if (OrderBy == "ViewsAsc"){Response.Write("↑");}%></a>
+            </th>
+            <th width="60">
+                <a href="javascript:void(0);" onclick="OrderBy('?OrderBy=<%if(OrderBy == "StatusDesc"){Response.Write("StatusAsc");}else{Response.Write("StatusDesc");}%>');" title="<%=Tag("点击排序")%>"><%=Tag("状态")%><%if (OrderBy == "StatusDesc") { Response.Write("↓"); } else if (OrderBy == "StatusAsc") { Response.Write("↑"); }%></a>
+            </th>
+            <th width="100">
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (Shop.Model.Lebi_Product model in models)
+          {%>
+            <tr class="list" ondblclick="Edit(<%=model.id %>,0);">
+                <td style="text-align:center">
+                    <input type="checkbox" ShopKeyID="true" name="sonproductid" id="<%=model.id %>" value="<%=model.id %>" />
+                </td>
+                <td>
+                    <a href="<%=Image(model.ImageOriginal,"big") %>" data-lightbox="image<%=model.id %>"><img style="height: 30px;width: 30px;vertical-align:middle" src="<%=Image(model.ImageOriginal,50,50) %>" /></a>
+                </td>
+                <td>
+                    <%=model.Number%>
+                </td>
+                <td><%=Shop.Tools.Utils.GetUnicodeSubString(Lang(model.Name), 50, "...")%>&nbsp;<a target="_blank" href="<%=Shop.Bussiness.ThemeUrl.GetURL("P_Product",model.id.ToString(),"",CurrentLanguage.Code)%>"><img src="<%=PageImage("icon/newWindow.png")%>" /></a>
+                
+                </td>
+                <td>
+                    <a href="subproduct_edit.aspx?id=<%=model.id %>" title="<%=Tag("编辑")%>"><%=CountSon(model.id)%></a>
+                </td>
+                <td>
+                    <%=FormatMoney(model.Price)%>
+                </td>
+                <td>
+                    <%=FormatMoney(model.Price_Cost)%>
+                </td>
+                <td>
+                    <%=model.Count_Stock%>
+                </td>
+                <td>
+                    <a href="javascript:void(0)" onclick="Product_Freeze('<%=model.id %>');" title="<%=Tag("查看")%>"><%=model.Count_Freeze%></a>
+                </td>
+                <td>
+                    <a href="javascript:void(0)" onclick="Product_Sales('<%=model.Number %>');" title="<%=Tag("查看")%>"><%=model.Count_Sales_Show %></a>
+                </td>
+                <td>
+                    <%=model.Count_Views_Show%>
+                </td>
+                <td title="<%=Tag("点击更改属性")%>" style="cursor:pointer" onclick="Product_Status(<%=model.id %>);">
+                    <span id="ProductStatus<%=model.id %>">
+                        <%=Shop.Bussiness.EX_Type.TypeName(model.Type_id_ProductStatus,CurrentLanguage.Code) %>
+                    </span><input type="hidden" id="Type_id_ProductStatus<%=model.id %>" value="<%=model.Type_id_ProductStatus %>" />
+                </td>
+                <td>
+                    <a href="javascript:void(0)" onclick="Edit(<%=model.id %>,0);"><%=Tag("编辑")%></a> 
+                </td>
+            </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function search_(scurl) {
+            var key = $("#key").val();
+            window.location = "?key=" + escape(key) + "&OrderBy=<%=OrderBy%>&"+scurl;
+        }
+        function Edit(id,type) {
+            var url = "product_edit.aspx?id=" + id;
+            window.location = url;
+        }
+        function OrderBy(url) {
+            MsgBox(4, "<%=Tag("正在排序，请稍后")%> ……", url);
+        }
+        function Product_Status(id) {
+            var Type_id_ProductStatus = $("#Type_id_ProductStatus" + id).val();
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Product_Status&id=" + id + "&Status="+ Type_id_ProductStatus;
+            RequestAjax(url,"",function(){if (Type_id_ProductStatus == 101) {$("#ProductStatus" + id).html("<%=Tag("下架")%>");$("#Type_id_ProductStatus" + id).val(100);}else if (Type_id_ProductStatus == 100) {$("#ProductStatus" + id).html("<%=Tag("上架")%>");$("#Type_id_ProductStatus" + id).val(101);};MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+        function Product_Del() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = GetFormJsonData("ShopKeyID");
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Product_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function Product_Status_Edit_muti(status) {
+            var postData = GetFormJsonData("ShopKeyID");
+            var action = $("#action").val();
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Product_Status_Edit_muti&status=" + status;
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function Product_Sales(number) {
+            var title_ = "<%=Tag("销量")%>"; 
+            var url_ = "product_sales_window.aspx?number=" + number;
+            var width_ = 770;
+            var height_ = 'auto';
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function Product_Freeze(id) {
+            var title_ = "<%=Tag("冻结库存")%>"; 
+            var url_ = "product_freeze_window.aspx?id=" + id;
+            var width_ = 680;
+            var height_ = 'auto';
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function SearchWindow() {
+            var title_ = "<%=Tag("商品查询")%>";
+            var url_ = "product_search_window.aspx?callback=search_&<%=sp.URL %>";
+            var width_ = 700;
+            var height_ = 505;
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function Product_MoveCategory() {
+            $("li.menu ul").hide();
+            var ids = GetChkCheckedValues("sonproductid");
+            if (ids == ""){
+                MsgBox(2, "<%=Tag("请选择要修改的商品")%>", "");
+                return;
+            }
+            var title_ = "<%=Tag("商品类别")%>"; 
+            var width_ = 650;
+            var url_ = "Supplier_ProductType_edit_window.aspx?ids="+ids+"";
+            var height_ = 'auto';
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

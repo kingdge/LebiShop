@@ -1,0 +1,105 @@
+﻿{layout:default} {class:Shop.Supplier.Config.Description}
+<lbhead>
+    <title><%=Tag("店铺信息")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <script type="text/javascript" src="<%=site.WebPath %>/Editor/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript" src="<%=site.WebPath %>/Editor/ckfinder/ckfinder.js"></script>
+    <style type="text/css">.bottom{display:none;height:0;overflow:hidden}</style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj(0);"><b></b><span><%=Tag("保存")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_supplier.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("店铺信息")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+<div class="searchbox clear">
+    <ul class="tabmenus">
+        <li><a href="profile.aspx"><span><%=Tag("编辑资料")%></span></a></li>
+        <li class="current"><a href="description.aspx"><span><%=Tag("店铺信息")%></span></a></li>
+    </ul>
+</div>
+<%=Shop.Bussiness.Language.AdminLanguageTab("") %>
+<table class="table">
+<%foreach (Shop.Model.Lebi_Language_Code lang in Shop.Bussiness.Language.Languages())
+    {%>
+<tbody id="lang_<%=lang.Code %>" class="lang_table" style="display: none">
+    <tr>
+        <th>
+            <%=Tag("店铺名称")%>：
+        </th>
+        <td>
+            <input type="text" id="Name<%=lang.Code %>" name="Name<%=lang.Code %>" class="input" shop="true"  style="width: 500px;" value="<%=Shop.Bussiness.Language.Content(model.Name,lang.Code) %>" />
+        </td>
+    </tr>
+        <tr>
+            <th style="vertical-align:top">
+                <%=Tag("店铺介绍")%>：
+            </th>
+            <td>
+                <textarea name="Description<%=lang.Code %>" shop="true" id="Description<%=lang.Code %>" class="text"><%=Shop.Bussiness.Language.Content(model.Description, lang.Code)%></textarea>
+                <script type="text/javascript">
+                    CKEDITOR.replace('Description<%=lang.Code %>', {
+                        height: '200',
+                        width: '98%',
+                        language: '<%=Tag("CKEditor语言")%>'
+                    });
+                </script>
+            </td>
+        </tr>
+        <tr>
+            <th class="head" colspan="2" onclick="ShowChild('0<%=lang.Code%>,1<%=lang.Code%>,2<%=lang.Code%>','seo')">
+                <img src="<%=PageImage("plus.gif")%>" name="imgseo" id="imgseo" style="cursor: pointer; text-align: center" /> <%=Tag("SEO优化")%>
+            </th>
+        </tr>
+        <tr style="display:;" name="trseo" id="tr0<%=lang.Code%>">
+            <th>
+                <%=Tag("网页标题")%>：
+            </th>
+            <td>
+                <input type="text" style="width: 600px;" shop="true" class="input" id="SEO_Title<%=lang.Code %>" name="SEO_Title<%=lang.Code %>" value="<%=Shop.Bussiness.Language.Content(model.SEO_Title, lang.Code)%>" />
+            </td>
+        </tr>
+        <tr style="display:;" name="trseo" id="tr1<%=lang.Code%>">
+            <th>
+                <%=Tag("关键词")%>：
+            </th>
+            <td>
+                <input type="text" style="width: 600px;" shop="true" id="SEO_Keywords<%=lang.Code %>" name="SEO_Keywords<%=lang.Code %>" value="<%=Shop.Bussiness.Language.Content(model.SEO_Keywords, lang.Code)%>" class="input" />
+            </td>
+        </tr>
+        <tr style="display:;" name="trseo" id="tr2<%=lang.Code%>">
+            <th>
+                <%=Tag("网页描述")%>：
+            </th>
+            <td>
+                <input type="text" style="width: 600px;" shop="true" id="SEO_Description<%=lang.Code %>" name="SEO_Description<%=lang.Code %>" value="<%=Shop.Bussiness.Language.Content(model.SEO_Description, lang.Code)%> " class="input" />
+            </td>
+        </tr>
+</tbody>
+<%} %>
+</table>
+<script type="text/javascript">
+    LanguageTab_EditPage('<%=CurrentLanguage.Code %>'); //加载默认语言
+    function SaveObj() {
+        <%foreach (Shop.Model.Lebi_Language_Code lang in Shop.Bussiness.Language.Languages()){%>
+        var editor<%=lang.Code %> = CKEDITOR.instances.Description<%=lang.Code %>;
+        $("#Description<%=lang.Code %>").val(editor<%=lang.Code %>.getData());
+        <%} %>
+        var postData = GetFormJsonData("shop");
+        if (!CheckForm("shop", "span"))
+            return false;
+        var url = "<%=site.AdminPath %>/ajax/ajax_config.aspx?__Action=Description_Edit";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+    }
+</script>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+    </div>
+</lbbottom>

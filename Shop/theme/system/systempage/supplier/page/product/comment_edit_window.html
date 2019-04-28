@@ -1,0 +1,117 @@
+﻿{layout:simple} {class:Shop.supplier.product.Comment_Edit_window}
+<lbbody>
+<table class="table">
+    <tr>
+        <th style="width: 15%;">
+            <%=Tag("商品名称")%>：
+        </th>
+        <td colspan="3" style="width: 85%;">
+        <% if (GetProduct(model.Keyid).ImageSmall != "")
+            { %>
+        <img style="height: 30px;width: 30px;vertical-align:middle" src="<%=GetProduct(model.Keyid).ImageOriginal,50,50 %>" />
+        <%} %>
+        <%=Lang(GetProduct(model.Keyid).Name)%>
+        </td>
+    </tr>
+    <tr>
+        <th style="width: 15%;">
+            <%=Tag("会员账号")%>：
+        </th>
+        <td style="width: 35%;">
+            <%=model.User_UserName%>
+        </td>
+        <th style="width: 15%;">
+            <%=Tag("状态")%>：
+        </th>
+        <td style="width: 35%;">
+        <select name="status" shop="true">
+            <%=Shop.Bussiness.EX_Type.TypeOption("CommentStatus", model.Status, CurrentLanguage)%>
+        </select>
+        </td>
+    </tr>
+    <tr>
+        <th >
+            <%=Tag("语言")%>：
+        </th>
+        <td>
+            <%=model.Language_Code%>
+        </td>
+        <th >
+            <%=Tag("时间")%>：
+        </th>
+        <td>
+            <%=FormatTime(model.Time_Add)%>
+        </td>
+    </tr>
+    <tr>
+        <th style="vertical-align:top">
+            <%=Tag("内容")%>：
+        </th>
+        <td colspan="3">
+            <%=model.Content.Replace("\r\n", "<br/>")%>
+        </td>
+    </tr>
+    <tr>
+        <th >
+            <%=Tag("图片")%>：
+        </th>
+        <td colspan="3">
+            <%foreach (string image in images)
+              {
+                  if (image == "")
+                      continue;
+            %>
+            <img src="<%=WebPath+image %>" style="width:50px;margin-right:3px" />
+            <%} %>
+        </td>
+    </tr>
+    </table>
+    <%if (model.Parentid == 0)
+      { %>
+    <ul id="tablistmain"><li class="selected"><a><span><%=Tag("回复")%></span></a></li></ul>
+    <table id="Table1" class="table">
+    <tr>
+        <th style="width: 15%;" valign="top">
+            <%=Tag("内容")%>：
+        </th>
+        <td>
+            <textarea shop="true" class="textarea" style="width:400px;height:60px;" id="Content" name="Content"></textarea>
+            <div class="tools clear">
+                <ul>
+                    <li class="plus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Content',100);"><b></b><span><%=Tag("展开")%></span></a></li>
+                    <li class="minus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Content',-100)"><b></b><span><%=Tag("收缩")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+        <div class="tools tools-m clear">
+            <ul>
+                <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+            </ul>
+        </div>
+        </td>
+    </tr>
+    </table>
+    <table id="Table2" class="table">
+    <%foreach (Shop.Model.Lebi_Comment modellist in models)
+      {%>
+    <tr id="content<%=modellist.id %>" class="list">
+        <th style="width: 25%;" valign="top">
+            <%=modellist.Time_Add%>：
+        </th>
+        <td>
+            <%=modellist.Content.Replace("\r\n", "<br/>")%>
+        </td>
+        <td style="width: 50px;" valign="top">
+            <a href="javascript:void(0);" onclick="delitem(<%=modellist.id %>)"><%=Tag("删除") %></a>
+        </td>
+    </tr>
+    <%} %>
+    </table>
+    <script type="text/javascript">
+        addtrbg(".table");function SaveObj(){var postData=GetFormJsonData("shop");if(!CheckForm("shop","span"))return false;var url="<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Comment_Edit&id=<%=model.id %>";RequestAjax(url,postData,function(){MsgBox(1,"<%=Tag("操作成功")%>","?")})}function delitem(id){if(!confirm("<%=Tag("确认要删除吗？")%>"))return false;var postData="";var url="<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Comment_Del&Delid="+id;RequestAjax(url,postData,function(){$('#div_error').dialog('close');$("#content"+id).remove()})}
+    </script>
+<%} %>
+</lbbody>

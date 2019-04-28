@@ -29,9 +29,12 @@ namespace Shop.Admin.Product
         protected Lebi_Product_Price userlevellimit;
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!EX_Admin.Power("product_user_price", "商品会员价格"))
+            {
+                WindowNoPower();
+            }
             userlevelid = RequestTool.RequestInt("userlevelid");
             userid = RequestTool.RequestInt("userid");
-
             productid = RequestTool.RequestInt("productid");
             key = RequestTool.RequestString("key");
             userlevel = B_Lebi_UserLevel.GetModel(userlevelid);

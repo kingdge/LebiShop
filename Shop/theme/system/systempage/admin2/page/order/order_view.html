@@ -12,6 +12,10 @@
     </style>
 </lbfile>
 <lbbody>
+    <%
+    Lebi.ERP.PLebi_User user =new Lebi.ERP.PLebi_User(model.User_id);
+    //Lebi.ERP.PLebi_Order porder =new Lebi.ERP.PLebi_Order(model.id);
+    %>
     <div id="main-wrapper">
         <div class="container-fluid">
             <div class="page-titles titles-flex print-btn">
@@ -22,6 +26,8 @@
                         <%if (model.IsVerified == 0){ %>
                         <button class="btn btn-success" onclick="Order_type(1,'<%=model.id %>','IsInvalid');"><i class="ti-check"></i> <%=Tag("有效订单")%></button>
                         <button class="btn btn-success" onclick="Order_type(1,'<%=model.id %>','IsVerified');"><i class="ti-check"></i> <%=Tag("审核订单")%></button>
+                        <%} else { %>
+                        <button class="btn btn-danger" onclick="Order_type(0,'<%=model.id %>','IsVerified');"><i class="ti-na"></i> <%=Tag("取消审核")%></button>
                         <%}%>
                         <%if (model.IsReceived_All == 1 && model.IsCreateNewOrder == 0 && model.IsPaid == 0){%>
                         <button class="btn btn-danger" onclick="torder_cash(1);"><i class="ti-back-left"></i> <%=Tag("退款到提现") %></button>
@@ -86,49 +92,49 @@
                                             <ol>
                                                 <li><a href="#0" data-date="01/01/2019" class="selected"><%=Tag("提交订单")%><em><%=FormatTime(model.Time_Add) %></em></a></li>
                                                 <%if (model.IsInvalid == 1){ %>
-                                                    <%if (model.IsRefund == 1){ %>
-                                                        <li><a href="#0" data-date="<%=FormatDate(model.Time_Refund) %>" class="selected"><%=Tag("已取消")%><em><%=FormatTime(model.Time_Refund) %></em></a></li>     
-                                                    <%}else{ %>
-                                                        <li><a href="#0" data-date="<%=FormatDate(model.Time_Completed) %>" class="selected"><%=Tag("无效订单")%><em><%=FormatTime(model.Time_Completed) %></em></a></li>
-                                                    <%} %>
-                                                <%}else if (model.IsVerified == 0){ %>
-                                                    <li><a href="#0" data-date="01/02/2019"><%=Tag("审核订单")%></a></li>
-                                                <%}else if (model.IsRefund == 2){ %>
-                                                    <li><a href="#0" data-date="<%=FormatDate(model.Time_Refund) %>" class="selected"><%=Tag("申请取消")%><em><%=FormatTime(model.Time_Refund) %></em></a></li>  
-                                                    <li><a href="#0" data-date="<%=FormatDate(model.Time_Add) %>"><%=Tag("审核订单")%></a></li>
+                                                <%if (model.IsRefund == 1){ %>
+                                                <li><a href="#0" data-date="01/02/2019" class="selected"><%=Tag("已取消")%><em><%=FormatTime(model.Time_Refund) %></em></a></li>
                                                 <%}else{ %>
-                                                    <li><a href="#0" data-date="01/02/2019" class="selected"><%=Tag("审核订单")%><em><%=FormatTime(model.Time_Verified) %></em></a></li>
-                                                    <%if (model.Type_id_OrderType == 212){ %>
-                                                        <li><a href="#0" data-date="<%=FormatDate(model.Time_Shipped) %>" class="<%=model.IsShipped==1?"selected":"" %>"><%=Tag("发货")%><%=model.IsShipped==1?"<em>"+ FormatTime(model.Time_Shipped) +"</em>":""%></a></li>
-                                                        <li><a href="#0" data-date="<%=FormatDate(model.Time_Received) %>" class="<%=model.IsReceived==1?"selected":"" %>"><%=Tag("收货")%><%=model.IsReceived==1?"<em>"+ FormatTime(model.Time_Received) +"</em>":""%></a></li>
-                                                        <%if (model.IsCreateNewOrder != 1){ %>
-                                                            <li><a href="#0" data-date="<%=FormatDate(model.Time_Paid) %>" class="<%=model.IsPaid==1?"selected":"" %>"><%=Tag("退款")%><%=model.IsPaid==1?"<em>"+ FormatTime(model.Time_Paid) +"</em>":""%></a></li>
-                                                        <%}else{ %>
-                                                            <li><a href="#0" data-date="<%=FormatDate(model.Time_CreateNewOrder) %>" class="<%=model.IsCreateNewOrder==1?"selected":"" %>"><%=Tag("生成新订单")%><%=model.IsCreateNewOrder==1?"<em>"+ FormatTime(model.Time_CreateNewOrder) +"</em>":""%></a></li>
-                                                        <%} %>
-                                                        <li><a href="#0" data-date="<%=FormatDate(model.Time_Completed) %>" class="<%=model.IsCompleted==1?"selected":"" %>"><%=Tag("完成")%><%=model.IsCompleted==1?"<em>"+ FormatTime(model.Time_Completed) +"</em>":""%></a></li>
-                                                    <%}else{ %>
-                                                        <%if (model.IsPaid != 1){ %>
-                                                            <li><a href="#0" data-date="01/03/2019"><%=Tag("已支付")%></a></li>
-                                                        <%}else{ %>
-                                                            <li><a href="#0" data-date="01/03/2019" class="selected"><%=Tag("已支付")%><em><%=FormatTime(model.Time_Paid) %></em></a></li>
-                                                        <%} %>
-                                                        <%if (model.IsShipped != 1){ %>
-                                                            <li><a href="#0" data-date="01/04/2019"><%=Tag("已发货")%></a></li>
-                                                        <%}else{ %>
-                                                            <li><a href="#0" data-date="01/04/2019" class="selected"><%if (model.IsShipped_All != 1){ %><%=Tag("部分发货")%><%}else{ %><%=Tag("已发货")%><%} %><em><%=FormatTime(model.Time_Shipped) %></em></a></li>
-                                                        <%} %>
-                                                        <%if (model.IsReceived != 1){ %>
-                                                            <li><a href="#0" data-date="01/05/2019"><%=Tag("已收货")%></a></li>
-                                                        <%}else{ %>
-                                                            <li><a href="#0" data-date="01/05/2019" class="selected"><%=Tag("已收货")%><em><%=FormatTime(model.Time_Received) %></em></a></li>
-                                                        <%} %>
-                                                        <%if (model.IsCompleted != 1){ %>
-                                                            <li><a href="#0" data-date="01/06/2019"><%=Tag("已完成")%></a></li>
-                                                        <%}else{ %>
-                                                            <li><a href="#0" data-date="01/06/2019" class="selected"><%=Tag("已完成")%><em><%=FormatTime(model.Time_Completed) %></em></a></li>
-                                                        <%} %>
-                                                    <%} %>
+                                                <li><a href="#0" data-date="01/02/2019" class="selected"><%=Tag("无效订单")%><em><%=FormatTime(model.Time_Completed) %></em></a></li>
+                                                <%} %>
+                                                <%}else if (model.IsVerified == 0){ %>
+                                                <li><a href="#0" data-date="01/02/2019"><%=Tag("审核订单")%></a></li>
+                                                <%}else if (model.IsRefund == 2){ %>
+                                                <li><a href="#0" data-date="01/02/2019" class="selected"><%=Tag("申请取消")%><em><%=FormatTime(model.Time_Refund) %></em></a></li>
+                                                <li><a href="#0" data-date="01/03/2019"><%=Tag("审核订单")%></a></li>
+                                                <%}else{ %>
+                                                <li><a href="#0" data-date="01/02/2019" class="selected"><%=Tag("审核订单")%><em><%=FormatTime(model.Time_Verified) %></em></a></li>
+                                                <%if (model.Type_id_OrderType == 212){ %>
+                                                <li><a href="#0" data-date="01/03/2019" class="<%=model.IsShipped==1?" selected":"" %>"><%=Tag("发货")%><%=model.IsShipped==1?"<em>"+ FormatTime(model.Time_Shipped) +"</em>":""%></a></li>
+                                                <li><a href="#0" data-date="01/04/2019" class="<%=model.IsReceived==1?" selected":"" %>"><%=Tag("收货")%><%=model.IsReceived==1?"<em>"+ FormatTime(model.Time_Received) +"</em>":""%></a></li>
+                                                <%if (model.IsCreateNewOrder != 1){ %>
+                                                <li><a href="#0" data-date="01/05/2019" class="<%=model.IsPaid==1?" selected":"" %>"><%=Tag("退款")%><%=model.IsPaid==1?"<em>"+ FormatTime(model.Time_Paid) +"</em>":""%></a></li>
+                                                <%}else{ %>
+                                                <li><a href="#0" data-date="01/05/2019" class="<%=model.IsCreateNewOrder==1?" selected":"" %>"><%=Tag("生成新订单")%><%=model.IsCreateNewOrder==1?"<em>"+ FormatTime(model.Time_CreateNewOrder) +"</em>":""%></a></li>
+                                                <%} %>
+                                                <li><a href="#0" data-date="01/06/2019" class="<%=model.IsCompleted==1?" selected":"" %>"><%=Tag("完成")%><%=model.IsCompleted==1?"<em>"+ FormatTime(model.Time_Completed) +"</em>":""%></a></li>
+                                                <%}else{ %>
+                                                <%if (model.IsPaid != 1){ %>
+                                                <li><a href="#0" data-date="01/03/2019"><%=Tag("已支付")%></a></li>
+                                                <%}else{ %>
+                                                <li><a href="#0" data-date="01/03/2019" class="selected"><%=Tag("已支付")%><em><%=FormatTime(model.Time_Paid) %></em></a></li>
+                                                <%} %>
+                                                <%if (model.IsShipped != 1){ %>
+                                                <li><a href="#0" data-date="01/04/2019"><%=Tag("已发货")%></a></li>
+                                                <%}else{ %>
+                                                <li><a href="#0" data-date="01/04/2019" class="selected"><%if (model.IsShipped_All != 1){ %><%=Tag("部分发货")%><%}else{ %><%=Tag("已发货")%><%} %><em><%=FormatTime(model.Time_Shipped) %></em></a></li>
+                                                <%} %>
+                                                <%if (model.IsReceived != 1){ %>
+                                                <li><a href="#0" data-date="01/05/2019"><%=Tag("已收货")%></a></li>
+                                                <%}else{ %>
+                                                <li><a href="#0" data-date="01/05/2019" class="selected"><%=Tag("已收货")%><em><%=FormatTime(model.Time_Received) %></em></a></li>
+                                                <%} %>
+                                                <%if (model.IsCompleted != 1){ %>
+                                                <li><a href="#0" data-date="01/06/2019"><%=Tag("已完成")%></a></li>
+                                                <%}else{ %>
+                                                <li><a href="#0" data-date="01/06/2019" class="selected"><%=Tag("已完成")%><em><%=FormatTime(model.Time_Completed) %></em></a></li>
+                                                <%} %>
+                                                <%} %>
                                                 <%} %>
                                             </ol>
                                             <span class="filling-line" aria-hidden="true"></span>
@@ -499,6 +505,39 @@
                                                     </td>
                                                 </tr>
                                                 <%} %>
+                                                <%if (Shop.LebiAPI.Service.Instanse.Check("plugin_erp")) {%>
+                                                <%if(model.IsPaid==0){%>
+                                                <tr>
+                                                    <td>
+                                                        <%=Tag("余额")%>：
+                                                    </td>
+                                                    <td>
+                                                        <%=user.Money-user.Money_fanxian%>
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <%if(user.id>0){%>
+                                                        <a href="javascript:money_add('<%=user.UserName%>',<%=user.id%>)"><%=Tag("充值")%></a>
+                                                        <%}%>
+                                                    </td>
+                                                </tr>
+                                                <%if(user.Money_fanxian>0){%>
+                                                <tr>
+                                                    <td>
+                                                        <%=Tag("返利支付")%>：
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="Money_fanxianpay" name="Money_fanxianpay" value="0" class="form-control form-control-sm" onchange="changefanxianpay();" shoporder="true" style="width:70px;" onkeyup="value=value.replace(/[^\d\.-]/g,'')" />
+                                                        <%=Tag("返利余额")%>：<%=user.Money_fanxian%>
+                                                    </td>
+                                                </tr>
+                                                <%}%>
+                                                <tr>
+                                                    <td></td>
+                                                    <td>
+                                                        <!--<input id="btn_pay" type="button" onclick="pay('p,nopoint');" value="使用余额支付￥<%=model.Money_Pay%>" style="width:180px;height:40px" />-->
+                                                        <button type="button" class="btn btn-success" onclick="pay('p');"><i class="ti-check"></i> 使用余额支付￥<%=model.Money_Pay%></button>
+                                                    </td>
+                                                </tr>
+                                                <%}} %>
                                             </tbody>
                                         </table>
                                     </div>
@@ -672,6 +711,9 @@
                                         <input type="text" id="pnumber" name="pnumber" placeholder="<%=Tag(" 商品编号")%>" class="form-control form-control-sm">
                                         <div class="input-group-append">
                                             <button type="button" class="btn btn-success btn-xs btn-sm" onclick="selectproduct(0);"><i class="ti-check"></i> <%=Tag("添加")%></button>
+                                            <%if (Shop.LebiAPI.Service.Instanse.Check("plugin_erp")) {%>
+                                            <button type="button" class="btn btn-info btn-xs btn-sm" onclick="searchprodutwindow();"><i class="ti-search"></i> <%=Tag("查询商品")%></button>
+                                            <%} %>
                                         </div>
                                     </div>
                                 </div>
@@ -725,9 +767,10 @@
                                             <%if (model.IsVerified==0){ %>
                                             <td>
                                                 <label class="custom-control custom-checkbox">
-                                                    <input type="checkbox" id="proid<%=model.id %>" name="proid" value="<%=pro.id %>" class="custom-control-input" pro="true">
+                                                    <input type="checkbox" id="proid<%=model.id %>" name="proid" value="<%=pro.id %>" class="custom-control-input" del="true">
                                                     <span class="custom-control-label"></span>
                                                 </label>
+                                                <input type="hidden" name="Uproid" value="<%=pro.id %>" pro="true" />
                                             </td>
                                             <%} %>
                                             <td>
@@ -751,7 +794,7 @@
                                                 <%if (model.IsVerified==1){ %>
                                                 <%=str + pro.Count%>
                                                 <%}else{ %>
-                                                <input type="text" id="Count<%=pro.id %>" name="Count<%=pro.id %>" value="<%=pro.Count %>" class="form-control form-control-sm" pro="true" onkeyup="value=value.replace(/[^\d]/g,'')">
+                                                <input type="text" id="Count<%=pro.id %>" name="Count<%=pro.id %>" value="<%=pro.Count %>" class="form-control form-control-sm" style="max-width:70px;" pro="true" onkeyup="value=value.replace(/[^\d]/g,'')">
                                                 <%} %>
                                             </td>
                                             <td>
@@ -764,7 +807,7 @@
                                                 <%if (model.IsVerified==1){ %>
                                                 <%=pro.Price %>
                                                 <%}else{ %>
-                                                <input type="text" id="Price<%=pro.id %>" name="Price<%=pro.id %>" value="<%=FormatMoney(pro.Price," Number") %>" class="form-control form-control-sm" pro="true" onkeyup="value=value.replace(/[^\d\.]/g,'')">
+                                                <input type="text" id="Price<%=pro.id %>" name="Price<%=pro.id %>" value="<%=FormatMoney(pro.Price," Number") %>" class="form-control form-control-sm" style="max-width:70px;" pro="true" onkeyup="value=value.replace(/[^\d\.]/g,'')">
                                                 <%} %>
                                             </td>
                                             <td>
@@ -839,10 +882,10 @@
                                                 <td>
                                                     <a href="javascript:Order_shipping_log(<%=torder.id %>);"><%=Tag("跟踪")%></a>
                                                     <%if (model.Type_id_OrderType == 212){ %>
-                                                        <a href="javascript:Order_shipping_shouhuo(<%=torder.id %>);"><%=Tag("收货")%></a>
+                                                    <a href="javascript:Order_shipping_shouhuo(<%=torder.id %>);"><%=Tag("收货")%></a>
                                                     <%}else{%>
-                                                        <a href="javascript:Order_shipping_view(<%=torder.id %>);"><%=Tag("查看")%></a>
-                                                        <a href="Express_Print.aspx?Tid=<%=torder.Transport_id %>&id=<%=model.id %>" target="_blank"><%=Tag("打印快递单")%><%if (model.IsPrintExpress == 1){ %>(<font class=red><%=Tag("已打印")%></font>)<%} %></a>
+                                                    <a href="javascript:Order_shipping_view(<%=torder.id %>);"><%=Tag("查看")%></a>
+                                                    <a href="Express_Print.aspx?Tid=<%=torder.Transport_id %>&id=<%=model.id %>" target="_blank"><%=Tag("打印快递单")%><%if (model.IsPrintExpress == 1){ %>(<font class=red><%=Tag("已打印")%></font>)<%} %></a>
                                                     <%}%>
                                                 </td>
                                             </tr>
@@ -851,17 +894,17 @@
                                     </table>
                                 </div>
                                 <!--<div class="col-12">
-                                <form action="javascript:SaveOrder('<%=model.id %>');" novalidate>
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <%=Tag("提单号")%>：<input type="text" id="BLNo" name="BLNo" value="<%=model.BLNo %>" class="form-control form-control-sm" shop="true" style="width:100px;">&nbsp;&nbsp;
-                                            <%=Tag("集装箱号")%>：<input type="text" id="ContainerNo" name="ContainerNo" value="<%=model.ContainerNo %>" class="form-control form-control-sm" shop="true" style="width:100px;">&nbsp;&nbsp;
-                                            <%=Tag("船号")%>：<input type="text" id="SealNo" name="SealNo" value="<%=model.SealNo %>" class="form-control form-control-sm" shop="true" style="width:100px;">
+                                    <form action="javascript:SaveOrder('<%=model.id %>');" novalidate>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <%=Tag("提单号")%>：<input type="text" id="BLNo" name="BLNo" value="<%=model.BLNo %>" class="form-control form-control-sm" shop="true" style="width:100px;">&nbsp;&nbsp;
+                                                <%=Tag("集装箱号")%>：<input type="text" id="ContainerNo" name="ContainerNo" value="<%=model.ContainerNo %>" class="form-control form-control-sm" shop="true" style="width:100px;">&nbsp;&nbsp;
+                                                <%=Tag("船号")%>：<input type="text" id="SealNo" name="SealNo" value="<%=model.SealNo %>" class="form-control form-control-sm" shop="true" style="width:100px;">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
-                                </form>
-                            </div>-->
+                                        <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                                    </form>
+                                </div>-->
                             </div>
                         </div>
                         <%if (DeliveryCount > 0){ %>
@@ -949,7 +992,7 @@
                                 </div>
                             </div>
                             <%if (comms.Count > 0){%>
-                            <div class="row b-t-20">
+                            <div class="row m-t-20">
                                 <div class="col-md-12 m-b-10">
                                     <button class="btn btn-danger btn-xs btn-sm" onclick="Comment_Del('<%=model.id %>');"><i class="ti-trash"></i> <%=Tag("删除")%></button>
                                 </div>
@@ -1045,6 +1088,7 @@
     </div>
     {MOD:Modal_Confirm}
     {MOD:Modal_Edit}
+    {MOD:subModal_Edit}
 </lbbody>
 <lbscripts>
     <script src="<%=site.AdminJsPath %>/validation.js"></script>
@@ -1223,19 +1267,93 @@
                 $("#EditModal .modal-content").html(result);
             });
         }
-            <%if (Shop.LebiAPI.Service.Instanse.Check("plugin_orderquickpay")) {%>
-            function OrderQucikPay(id) {
-                var title_ = "<%=Tag("付款链接")%>";
-                $("#EditModal").modal("show");
-                $.ajax({
-                    url: "<%=site.AdminPath %>/order/order_quickpay_window.aspx",
-                    type: "GET",
-                    cache: false,
-                    data: { orderid: id },
-                }).done(function (result) {
-                    $("#EditModal .modal-content").html(result);
-                });
-            }
-            <%}%>
     </script>
+    <%if (Shop.LebiAPI.Service.Instanse.Check("plugin_orderquickpay")) {%>
+    <script>
+        function OrderQucikPay(id) {
+            var title_ = "<%=Tag("付款链接")%>";
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "<%=site.AdminPath %>/order/order_quickpay_window.aspx",
+                type: "GET",
+                cache: false,
+                data: { orderid: id },
+            }).done(function (result) {
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+    </script>
+    <%}%>
+    <%if (Shop.LebiAPI.Service.Instanse.Check("plugin_erp")) {%>
+    <script>
+        var selectproductmuti = undefined;
+        function searchprodutwindow() {
+            var title_ = "<%=Tag("选择商品")%>";
+            $("#EditsubModal .modal-dialog").attr("class", "modal-dialog modal-lg");
+            $("#EditsubModal .modal-dialog").attr("style", "max-width:1500px;");
+            $("#EditsubModal").modal("show");
+            $.ajax({
+                url: "selectproductadd_window.aspx",
+                type: "GET",
+                cache: false,
+                data: { title: title_ },
+            }).done(function (result) {
+                $("#EditsubModal .modal-content").html(result);
+            });
+        }
+        function search_product(Product_id, number) {
+            $('#pnumber').val(number);
+            $('#pwindow').dialog('close');
+        }
+        function money_add(User_Name, id) {
+            var title_ = "<%=Tag("充值")%>";
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "usermoney_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: { User_Name: User_Name, t: 191, title: title_ },
+            }).done(function (result) {
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function changefanxianpay() {
+            var s = $('#Money_fanxianpay').val();
+            var p =<%=model.Money_Pay%> -s;
+            if (p < 0) {
+                MsgBox(2, "输入错误！", "")
+                $('#Money_fanxianpay').val('0');
+                $('#btn_pay').val('使用余额支付￥<%=model.Money_Pay%>');
+            } else {
+                $('#btn_pay').val('使用余额支付￥' + p);
+            }
+        }
+        function pay(t) {
+            $("#Modal-Confirm").modal("show");
+            $("#Confirm-Content").html("<%=Tag("确认付款吗？")%>");
+            $("#Modal-Confirm .btn-success.btn-ok").attr("onclick", "pay_obj('" + t + "');");
+        }
+        function pay_obj(t) {
+            $("#Modal-Confirm").modal("hide");
+            var postData = GetFormJsonData("shoporder");
+            //var T_Area_id=$('#Area_id').val();
+            var T_Area_id = 0;
+            var url = "<%=site.AdminPath %>/ajax/ajax_ex.aspx?__Action=checkout_order_pay&id=<%=model.id%>&T_Area_id=" + T_Area_id + "&t=" + t;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: postData,
+                dataType: 'json',
+                success: function (res) {
+                    if (res.msg == "OK") {
+                        MsgBox(1, "<%=Tag("操作成功")%>", "?");
+                    } else {
+                        MsgBox(2, res.msg, "");
+                    }
+                }
+            });
+
+        }
+    </script>
+    <%}%>
 </lbscripts>

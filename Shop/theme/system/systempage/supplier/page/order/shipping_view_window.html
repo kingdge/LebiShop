@@ -1,0 +1,92 @@
+﻿{layout:simple} {class:Shop.supplier.order.shipping_view_window}
+<lbbody>
+<table
+    class="datalist">
+    <tr class="title">
+        <th>
+            <%=Tag("产品")%>
+        </th>
+        <th style="width: 80px">
+            <%=Tag("发货数量")%>
+        </th>
+    </tr>
+    <%foreach (Shop.Model.TransportProduct tp in tps)
+      { %>
+    <tr class="list">
+        <td >
+            <img src="<%=WebPath + tp.ImageSmall %>" style="width: 30px" />
+            <%=Shop.Bussiness.Language.Content(tp.Product_Name, CurrentLanguage)%>
+        </td>
+        <td>
+            <%=tp.Count%>
+        </td>
+    </tr>
+    <%} %>
+</table>
+<table
+    class="table">
+    <tr>
+        <th style="width: 15%">
+            <%=Tag("配送方式")%>：
+        </th>
+        <td>
+            <%=torder.Transport_Name %>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("货运单号")%>：
+        </th>
+        <td>
+            <%=torder.Code %>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("收/发货人")%>：
+        </th>
+        <td>
+            <%=torder.T_Name %>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("电话")%>：
+        </th>
+        <td>
+            <%=torder.T_Phone %>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("手机")%>：
+        </th>
+        <td>
+            <%=torder.T_MobilePhone %>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("EMAIL")%>：
+        </th>
+        <td>
+            <%=torder.T_Email %>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("地址")%>：
+        </th>
+        <td>
+            <%=torder.T_Address %>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    function Shipping() {
+        var postData = GetFormJsonData("Shipping");
+        var url = "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=Order_fahuo&id=<%=model.id %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+    }
+</script>
+</lbbody>

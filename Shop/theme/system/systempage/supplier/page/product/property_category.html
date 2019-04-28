@@ -1,0 +1,75 @@
+﻿{layout:default} {class:Shop.supplier.product.ProPerty_Category}
+<lbhead>
+    <title><%=Tag("关联分类")%>-<%=Tag("属性规格")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="del"><a href="javascript:void(0);" onclick="Del(0);"><b></b><span><%=Tag("删除")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="property.aspx"><%=Tag("属性规格")%></a> > <%=Tag("标签")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox">
+        <input type="text" id="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" />
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'ids\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th style="width: 40px">
+                <%=Tag("ID")%>
+            </th>
+            <th>
+                <%=Tag("分类名称")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (Shop.Model.Lebi_Supplier_ProPerty model in models)
+          { 
+        %>
+        <tr class="list">
+            <td style="text-align:center">
+                <input type="checkbox" name="ids" value="<%=model.Pro_Type_id %>" del="true" name="check_" />
+            </td>
+            <td>
+                <%=model.id%>
+            </td>
+            <td>
+                <%=Categorypath(model.Pro_Type_id)%>
+            </td>
+            <td>
+                <a href="javascript:" onclick="Del(<%=model.Pro_Type_id %>)"><%=Tag("删除")%></a>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function search_() {
+            var key = $("#key").val();
+            window.location = "?id=<%=id%>&key=" + escape(key);
+        }
+        function Del(ids) {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData;
+            if (ids == 0)
+                postData = GetFormJsonData("del");
+            else
+                postData = { "ids": ids };
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Property_Category_Del&pid=<%=id%>";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

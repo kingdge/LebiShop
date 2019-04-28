@@ -1,0 +1,18 @@
+﻿{layout:simple} {class:Shop.supplier.product.product_Edit_part}
+<lbbody>
+<%
+    foreach (Shop.Model.Lebi_ProPerty pro in pros)
+    {
+%>
+<tr>
+    <th>
+        <%=Shop.Bussiness.Language.Content(pro.Name, CurrentLanguage.Code)%>：
+    </th>
+    <td>
+        <%=GetproList(pro) %>
+    </td>
+</tr>
+<%
+    }
+%>
+</lbbody>

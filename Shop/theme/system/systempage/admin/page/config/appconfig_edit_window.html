@@ -40,6 +40,53 @@
             </td>
         </tr>
         <tr>
+            <th>
+                <%=Tag("分享")%>：
+            </th>
+            <td>
+                <%string share = model.app_share;
+                if (share == null)
+                share = "";
+                %>
+                <label>
+                    <input type="checkbox" name="app_share" value="qq" shop="true" <%=share.Contains("qq")?"checked":"" %> /><%=Tag("QQ")%>
+                </label>
+                <label>
+                    <input type="checkbox" name="app_share" value="wechat" shop="true" <%=share.Contains("wechat")?"checked":"" %> /><%=Tag("微信")%>
+                </label>
+                <label>
+                    <input type="checkbox" name="app_share" value="dingtalk" shop="true" <%=share.Contains("dingtalk")?"checked":"" %> /><%=Tag("钉钉")%>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("QQ")%>：
+            </th>
+            <td>
+                Appid：<input type="text" class="input" id="app_share_qq_key" name="app_share_qq_key" shop="true" style="width: 100px;" value="<%=model.app_share_qq_key %>" />
+                Appkey：<input type="text" class="input" id="app_share_qq_secret" name="app_share_qq_secret" shop="true" style="width: 100px;" value="<%=model.app_share_qq_secret %>" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("微信")%>：
+            </th>
+            <td>
+                Appid：<input type="text" class="input" id="app_share_wechat_key" name="app_share_wechat_key" shop="true" style="width: 100px;" value="<%=model.app_share_wechat_key %>" />
+                Appkey：<input type="text" class="input" id="app_share_wechat_secret" name="app_share_wechat_secret" shop="true" style="width: 100px;" value="<%=model.app_share_wechat_secret %>" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("钉钉")%>：
+            </th>
+            <td>
+                Appid：<input type="text" class="input" id="app_share_dingtalk_key" name="app_share_dingtalk_key" shop="true" style="width: 100px;" value="<%=model.app_share_dingtalk_key %>" />
+                Appkey：<input type="text" class="input" id="app_share_dingtalk_secret" name="app_share_dingtalk_secret" shop="true" style="width: 100px;" value="<%=model.app_share_dingtalk_secret %>" />
+            </td>
+        </tr>
+        <tr>
             <td colspan="2" class="action">
                 <div class="tools tools-m clear">
                     <ul>

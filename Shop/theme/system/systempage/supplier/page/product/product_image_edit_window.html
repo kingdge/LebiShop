@@ -1,0 +1,71 @@
+﻿{layout:simple} {class:Shop.supplier.product.product_Image_Edit_window}
+<lbbody>
+<table cellspacing="0" border="0" style="width: 100%;" class="table">
+    <tr>
+        <th style="width:15%" valign="top">
+            <%=Tag("商品主图")%>：
+        </th>
+        <td>
+            <div id="image_ImageOriginalson">
+                <%if (model.ImageOriginal != "")
+                  {%>
+                <img height="30" src="<%=Image(model.ImageOriginal,"small")%>" />
+                <%} %>
+            </div>
+            <input type="hidden" shop="true" id="ImageOriginalson" name="ImageOriginalson" class="input" style="width: 200px;" value="<%=model.ImageOriginal%>" />
+            <input id="file_ImageOriginalson" name="file_ImageOriginalson" class="input" onchange="uploadImage('ImageOriginalson')" type="file" />
+            <!--<input type="button" value="<%=Tag("上传")%>" class="button" onclick="uploadImage('ImageSmallson')" />-->
+        </td>
+    </tr>
+    <tr>
+        <th style="vertical-align:top">
+            <%=Tag("展示图")%>：
+        </th>
+        <td>
+            <textarea id="sonImages" name="sonImages" shop="true" class="textarea" style="height: 60px; width: 450px;display:none;"><%=model.Images %></textarea>
+            <div id="sonimagesdiv"></div>
+        </td>
+    </tr>
+    <tr>
+        <td class="action" colspan="2">
+            <div class="tools tools-m clear">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SavePImageObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    function SavePImageObj() {
+        var smalliamge = $("#ImageOriginalson").val();
+        var images = $("#sonImages").val();
+        var postData = { "smalliamge": smalliamge, "images": images };
+        var action = $("#action").val();
+        var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Product_Image_Edit_muti&ids=<%=ids %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "");getsubproducts();});
+    }
+    function getsubproducts() {
+        $.ajax({
+            type: "POST",
+            url: "subproduct_list.aspx?pid=<%=id %>&randnum=<%=randnum %>",
+            data: '',
+            success: function (res) {
+                $("#div_error").dialog('close'); 
+                $("#subproducts").html(res);
+            }
+        });
+    }
+    $(function () {
+        var images = $("#sonImages").val();
+        $.ajax({
+            type: "POST",
+            url: "<%=site.AdminPath %>/product/imagesupload.aspx?input=sonImages",
+            data: { "images": images },
+            success: function (res) {
+                $("#sonimagesdiv").html(res);
+            }
+        });
+    });
+</script>
+</lbbody>

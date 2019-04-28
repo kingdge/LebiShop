@@ -1,0 +1,39 @@
+﻿{layout:simple} {class:Shop.Supplier.Config.BillType_Edit_window}
+<lbbody>
+    <table class="table">
+    <tr>
+        <th style="width: 20%;">
+            <%=Tag("类型")%>：
+        </th>
+        <td style="text-align: left;">
+            <%=Shop.Bussiness.EX_Type.TypeRadio("BillType", "Type_id_BillType", model.Type_id_BillType,"shop=\"true\"")%>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("税率")%>：
+        </th>
+        <td style="text-align: left;">
+            <input type="text" class="input" shop="true" name="TaxRate" id="TaxRate" value="<%=model.TaxRate %>"
+                style="width: 70px;" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+            <div class="tools tools-m">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    function SaveObj() {
+        var postData = GetFormJsonData("shop");
+        var Type_id_BillType = $('input[name="Type_id_BillType"]:checked').val();
+        var url = "<%=site.AdminPath %>/ajax/ajax_config.aspx?__Action=BillType_Edit&id=<%=model.id %>&Type_id_BillType="+Type_id_BillType+"";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+</script>
+</lbbody>

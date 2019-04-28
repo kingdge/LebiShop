@@ -1,0 +1,107 @@
+﻿{layout:default} {class:Shop.Supplier.Order.UserMoney}
+<lbhead>
+    <title><%=Tag("资金明细")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_supplier.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("资金明细")%></span>
+           </li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox">
+        <select name="status" id="status">
+            <option value="0">┌ <%=Tag("状态")%></option>
+            <%=Shop.Bussiness.EX_Type.TypeOption("MoneyStatus", status)%>
+        </select>
+        <input type="text" name="dateFrom" id="dateFrom" size="12" class="input-calendar" value="<%=dateFrom %>" /> - <input type="text" name="dateTo" id="dateTo" size="12" class="input-calendar" value="<%=dateTo %>" />
+        <input name="key" type="text" id="key" class="input-query" value="<%=key %>"/><input type="button" id="btnSou" class="btn-query" onclick="search_();" align="absmiddle" />
+        <div style="margin-top:5px;">
+             <%=Tag("有效金额") %>：<%=FormatMoney(zmoney) %>
+             <%=Tag("保证金") %>：<%=FormatMoney(CurrentSupplier.Money_Margin) %>
+             <%=Tag("可提现金额") %>：<%=FormatMoney((money-CurrentSupplier.Money_Margin>0?money-CurrentSupplier.Money_Margin:0))%>
+
+
+             <a href="javascript:void(0);" onclick="TackSupplierMoney();" >转入现金账户</a>
+        </div>
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 100px">
+                <%=Tag("金额")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("类型")%>
+            </th>
+            <th style="width: 130px">
+                <%=Tag("订单")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("状态")%>
+            </th>
+            <th style="width: 120px">
+                <%=Tag("时间")%>
+            </th>
+            <th style="width: 120px">
+                <%=Tag("管理员")%>
+            </th>
+            <th>
+                <%=Tag("操作时间")%>
+            </th>
+        </tr>
+        <%foreach (Shop.Model.Lebi_Supplier_Money model in models)
+          {
+           %>
+        <tr class="list">
+            <td>
+                <%=FormatMoney(model.Money) %>
+            </td>
+            <td>
+                <%=Shop.Bussiness.EX_Type.TypeName(model.Type_id_SupplierMoneyType)%>
+            </td>
+            <td>
+                <%if (model.Order_id > 0)
+                  { %>
+                <a href="order_view.aspx?id=<%=model.Order_id%>"><%=model.Order_Code%></a>
+                <%}
+                  else { Response.Write("-"); } %>
+            </td>
+             <td>
+                <%=Shop.Bussiness.EX_Type.TypeName(model.Type_id_MoneyStatus)%>
+            </td>
+            <td>
+                <%=FormatTime(model.Time_Add) %>
+            </td>
+            <td>
+                <%=model.Admin_UserName %>
+            </td>
+            <td>
+                <%if (model.Admin_UserName != "")
+                  {%><%=FormatTime(model.Time_Update) %><%}else{%>&nbsp;<%} %>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function search_() {
+            var key = $("#key").val();
+            var dateFrom = $("#dateFrom").val();
+            var dateTo = $("#dateTo").val();
+            var status = $("#status").val();
+            window.location = "?key=" + escape(key) + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&status=" + status;
+        }
+        function TackSupplierMoney() { 
+            if (!confirm("<%=Tag("确认提交吗？")%>"))
+                return false;
+            var url = "<%=WebPath %>/supplier/ajax/ajax_order.aspx?__Action=TackSupplierMoney";
+            RequestAjax(url,'',function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+        <%=PageString%>
+    </div>
+</lbbottom>

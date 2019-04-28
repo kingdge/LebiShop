@@ -14,7 +14,7 @@ namespace Shop.Bussiness
     public class InstallBase : System.Web.UI.Page
     {
         protected string version = "6";
-        protected string version_son = "0.01";
+        protected string version_son = "1.00";
         public InstallBase()
         {
             

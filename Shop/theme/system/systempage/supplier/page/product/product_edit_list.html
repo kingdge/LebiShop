@@ -1,0 +1,110 @@
+﻿{layout:simple} {class:Shop.supplier.product.product_Edit_list}
+<lbbody>
+<div class="proBox clear">
+    <ul class="btns clear">
+        <li class="add" onclick="CreateProduct();"><%=Tag("生成")%></li>
+        <li class="submit" onclick="Product_Edit_muti();"><%=Tag("保存")%></li>
+        <li class="delete" onclick="Product_Del();"><%=Tag("删除")%></li>
+        <li class="edit" onclick="Product_Image_Edit();"><%=Tag("修改图片")%></li>
+        <li class="down" onclick="Product_Status_Edit_muti(0);"><%=Tag("下架")%></li>
+    </ul>
+    <div class="iTabHead">
+        <table class="table">
+            <tr>
+                <th>
+                    <%=Tag("主规格")%>：
+                </th>
+                <td>
+                    <select id="ProPertyMain" name="ProPertyMain" shop="true" sonproduct="true">
+                        <option value="0"><%=Tag("不设置")%></option>
+                        <%
+                            foreach (Shop.Model.Lebi_ProPerty pro in ggs)
+                            {
+                        %>
+                        <option value="<%=pro.id %>" <%=modelp.ProPertyMain==pro.id?"selected":"" %> ><%=Lang(pro.Name)%></option>
+                        <%} %>
+                    </select>
+                </td>
+            </tr>
+            <%
+                foreach (Shop.Model.Lebi_ProPerty pro in ggs)
+                {
+            %>
+            <tr>
+                <th>
+                    <%=Lang(pro.Name)%>：
+                </th>
+                <td>
+                    <%=Getpro131List(pro.id)%>
+                </td>
+            </tr>
+            <%} %>
+        </table>
+    </div>
+    <table cellpadding="0" cellspacing="0" width="100%" class="datalist">
+        <tr class="title">
+            <th style="width: 24px;">
+                <a href="javascript:void(0);" onclick="$('input[name=\'sonproductid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));">
+                    <%=Tag("全选")%></a>
+            </th>
+            <th style="width: 40px">
+                <%=Tag("图片")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("编号")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("规格")%>
+            </th>
+            <th>
+                <%=Tag("商品名称")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("市场价")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("销售价")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("成本价")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("库存")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("冻结库存")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("销量")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("显示销量")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("状态")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <tbody id="subproducts"></tbody>
+    </table>
+</div>
+<script type="text/javascript">
+    function getsubproducts() {
+        $.ajax({
+            type: "POST",
+            url: "subproduct_list.aspx?pid=<%=pid %>&randnum=<%=randnum %>",
+            data: '',
+            success: function (res) {
+                $("#div_error").dialog('close');
+                $("#subproducts").html(res);
+            }
+        });
+    }
+    $(function () {
+        getsubproducts();
+        addtrbg(".datalist");
+    });
+</script>
+</lbbody>

@@ -227,7 +227,14 @@ namespace Shop.Bussiness
                 string sel = "";
                 if (("," + id + ",").Contains("," + model.id + ","))
                     sel = "checked";
-                str += "<label><input type=\"radio\" name=\"" + name + "\" value=\"" + model.id + "\" " + sel + " " + ext + "/>" + Shop.Bussiness.Language.Content(model.Name, lang) + "&nbsp;</label>";
+                if (!string.IsNullOrEmpty(RequestTool.GetConfigKey("SystemAdmin").Trim()))
+                {
+                    str += "<label class=\"custom-control custom-checkbox m-r-20\"><input type=\"checkbox\" id=\"" + name + "" + model.id + "\" name=\"" + name + "\" value=\"" + model.id + "\" class=\"custom-control-input\" " + sel + " " + ext + "/><span class=\"custom-control-label\">" + Shop.Bussiness.Language.Content(model.Name, lang) + "</span></label>";
+                }
+                else
+                {
+                    str += "<label><input type=\"radio\" name=\"" + name + "\" value=\"" + model.id + "\" " + sel + " " + ext + "/>" + Shop.Bussiness.Language.Content(model.Name, lang) + "&nbsp;</label>";
+                }
             }
             return str;
 
@@ -241,7 +248,14 @@ namespace Shop.Bussiness
                 string sel = "";
                 if (("," + id + ",").Contains("," + model.id + ","))
                     sel = "checked";
-                str += "<label><input type=\"radio\" name=\"" + name + "\" value=\"" + model.id + "\" " + sel + " " + ext + "/>" + Shop.Bussiness.Language.Content(model.Name, lang) + "&nbsp;</label>";
+                if (!string.IsNullOrEmpty(RequestTool.GetConfigKey("SystemAdmin").Trim()))
+                {
+                    str += "<label class=\"custom-control custom-radio m-r-20\"><input type=\"radio\" id=\"" + name + "" + model.id + "\" name=\"" + name + "\" value=\"" + model.id + "\" class=\"custom-control-input\" " + sel + " " + ext + "/><span class=\"custom-control-label\">" + Shop.Bussiness.Language.Content(model.Name, lang) + "</span></label>";
+                }
+                else
+                {
+                    str += "<label><input type=\"radio\" name=\"" + name + "\" id=\"" + name + "" + model.id + "\" value=\"" + model.id + "\" " + sel + " " + ext + "/>" + Shop.Bussiness.Language.Content(model.Name, lang) + "&nbsp;</label>";
+                }
             }
             return str;
 
@@ -366,7 +380,14 @@ namespace Shop.Bussiness
                 string sel = "";
                 if (("," + ids + ",").IndexOf("," + model.id + ",") > -1)
                     sel = "checked";
-                str += "<input type=\"checkbox\" name=\"" + InputName + "\" id=\"" + InputName + "" + model.id + "\" shop=\"true\" value=\"" + model.id + "\" " + sel + "><label for=\"" + InputName + "" + model.id + "\">" + Shop.Bussiness.Language.Content(model.Name, lang) + "&nbsp;</label>";
+                if (!string.IsNullOrEmpty(RequestTool.GetConfigKey("SystemAdmin").Trim()))
+                {
+                    str += "<label class=\"custom-control custom-checkbox m-r-20\"><input type=\"checkbox\" id=\"" + InputName + "" + model.id + "\" name=\"" + InputName + "\" value=\"" + model.id + "\" class=\"custom-control-input\" shop=\"true\" " + sel + "><span class=\"custom-control-label\">" + Shop.Bussiness.Language.Content(model.Name, lang) + "</span></label>";
+                }
+                else
+                {
+                    str += "<label><input type=\"checkbox\" name=\"" + InputName + "\" id=\"" + InputName + "" + model.id + "\" shop=\"true\" value=\"" + model.id + "\" " + sel + ">" + Shop.Bussiness.Language.Content(model.Name, lang) + "&nbsp;</label>";
+                }
             }
             return str;
         }

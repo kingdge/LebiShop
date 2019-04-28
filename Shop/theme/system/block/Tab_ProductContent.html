@@ -17,9 +17,9 @@ Page:P_Product
                 var divindex = divShow.find("div.cont")[i];
                 $(divindex).show();
                 SetCookie("Product-<%=product.id %>", i, 1);
-                if (i == 1) { getcommentlist(); }
-                if (i == 2) { getasklist(); }
-                if (i == 3) { getrelatedlist(); }
+                if (i == 2) { getcommentlist(); }
+                if (i == 3) { getasklist(); }
+                if (i == 4) { getrelatedlist(); }
             });
         });
         var i = GetCookie("Product-<%=product.id %>");
@@ -33,9 +33,9 @@ Page:P_Product
                 $(li[i]).addClass("selected");
                 $(divindex).show();
             });
-            if (i == 1) { getcommentlist(); }
-            if (i == 2) { getasklist(); }
-            if (i == 3) { getrelatedlist(); }
+            if (i == 2) { getcommentlist(); }
+            if (i == 3) { getasklist(); }
+            if (i == 4) { getrelatedlist(); }
         }
     });
     function ask() {
@@ -58,24 +58,54 @@ Page:P_Product
 </script>
 <div class="product-tab clearfix">
     <ul class="tablist">
-        <li class="selected"><a href="javascript:void(0);"><span>
-            {tag:详细介绍}</span></a></li>
-        <li><a href="javascript:void(0);"><span>
-            {tag:商品评价}</span></a></li>
-        <li><a href="javascript:void(0);"><span>
-            {tag:商品咨询}</span></a></li>
-        <li><a href="javascript:void(0);"><span>
-            {tag:相关商品}</span></a></li>
+        <li class="selected">
+            <a href="javascript:void(0);">
+                <span>
+                    {tag:详细介绍}
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="javascript:void(0);">
+                <span>
+                    {tag:使用说明}
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="javascript:void(0);">
+                <span>
+                    {tag:商品评价}
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="javascript:void(0);">
+                <span>
+                    {tag:商品咨询}
+                </span>
+            </a>
+        </li>
+        <li>
+            <a href="javascript:void(0);">
+                <span>
+                    {tag:相关商品}
+                </span>
+            </a>
+        </li>
     </ul>
 </div>
 <div class="product-cont">
     <div style="display: block" class="cont">
         <%if (CurrentSite.IsMobile==0){ %>
-            <%=ImgSrc(Lang(product.Description),CurrentLanguage.IsLazyLoad) %>
+        <%=ImgSrc(Lang(product.Description),CurrentLanguage.IsLazyLoad) %>
         <%}else{ %>
-            <%=ImgSrc(Lang(product.MobileDescription),CurrentLanguage.IsLazyLoad) %>
-            <%if (Lang(product.MobileDescription)==""){ %><%=ImgSrc(Lang(product.Description),CurrentLanguage.IsLazyLoad) %><%} %>
+        <%=ImgSrc(Lang(product.MobileDescription),CurrentLanguage.IsLazyLoad) %>
+        <%if (Lang(product.MobileDescription)==""){ %><%=ImgSrc(Lang(product.Description),CurrentLanguage.IsLazyLoad) %><%} %>
         <%} %>
+    </div>
+    <div style="display: none" class="cont clearfix">
+        <%=ImgSrc(Lang(product.Specification),CurrentLanguage.IsLazyLoad) %>
     </div>
     <div style="display: none" class="cont clearfix">
         <div id="commentlist">

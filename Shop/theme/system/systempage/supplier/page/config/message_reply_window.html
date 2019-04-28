@@ -1,0 +1,129 @@
+﻿{layout:simple} {class:Shop.Supplier.Config.Message_Reply_window}
+<lbbody>
+<table class="table">
+    <tr>
+        <th style="width: 15%;">
+            <%=Tag("收件人")%>：
+        </th>
+        <td style="width: 35%;">
+            <%=model.User_Name_To %>
+        </td>
+        <th style="width: 15%;">
+            <%=Tag("发件人")%>：
+        </th>
+        <td style="width: 35%;">
+            <%=model.User_Name_From%>
+        </td>
+    </tr>
+    <tr>
+        <th >
+            <%=Tag("语言")%>：
+        </th>
+        <td>
+            <%=model.Language%>
+        </td>
+        <th >
+            <%=Tag("时间")%>：
+        </th>
+        <td>
+            <%=FormatTime(model.Time_Add)%>
+        </td>
+    </tr>
+    <%if (model.Message_Type_id != 0)
+      { %>
+    <tr>
+        <th >
+            <%=Tag("类别")%>：
+        </th>
+        <td colspan="3">
+            <%=Lang(Shop.Bussiness.Message.Message_Type(model.Message_Type_id).Name)%>
+        </td>
+    </tr>
+    <%} %>
+    <tr>
+        <th >
+            <%=Tag("标题")%>：
+        </th>
+        <td colspan="3">
+            <%=model.Title%>
+        </td>
+    </tr>
+    <tr>
+        <th >
+            <%=Tag("内容")%>：
+        </th>
+        <td colspan="3">
+            <%=model.Content%>
+        </td>
+    </tr>
+    <tr>
+        <th >
+            <%=Tag("IP地址")%>：
+        </th>
+        <td colspan="3">
+            <%=model.IP%>
+        </td>
+    </tr>
+    </table>
+    <%if (model.User_id_From == 0)
+      { %>
+    <ul id="tablistmain"><li class="selected"><a><span><%=Tag("回复")%></span></a></li></ul>
+    <table id="Table1" class="table">
+        <tr>
+            <th style="width: 15%;">
+                <%=Tag("标题")%>：
+            </th>
+            <td>
+                <input type="text" shop="true" min="notnull" id="Title" name="Title" value="Re <%=model.Title %>" class="input" style="width:400px" />
+            </td>
+        </tr>
+    <tr>
+        <th style="vertical-align:top">
+            <%=Tag("内容")%>：
+        </th>
+        <td>
+            <textarea shop="true" min="notnull" class="textarea" style="width:400px;height:60px;" id="Content" name="Content"></textarea>
+            <div class="tools clear">
+                <ul>
+                    <li class="plus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Content',100);"><b></b><span><%=Tag("展开")%></span></a></li>
+                    <li class="minus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Content',-100)"><b></b><span><%=Tag("收缩")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+        <div class="tools tools-m clear">
+            <ul>
+                <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("提交")%></span></a></li>
+            </ul>
+        </div>
+        </td>
+    </tr>
+    </table>
+    <%if (models.Count > 0){%>
+    <table class="table">
+    <%foreach (Shop.Model.Lebi_Message modellist in models)
+      {%>
+    <tr id="content<%=modellist.id %>" class="list">
+        <th style="width: 15%;vertical-align:top">
+            <%=modellist.User_Name_From %>：
+        </th>
+        <td>
+            <%=modellist.Content.Replace("\r\n", "<br/>")%><em>(<%=modellist.Time_Add%>)</em>
+        </td>
+    </tr>
+    <%} %>
+    </table>
+    <%}%>
+    <script type="text/javascript">
+        function SaveObj() {
+            var postData = GetFormJsonData("shop");
+            if (!CheckForm("shop", "span"))
+                return false;
+            var url = "<%=site.AdminPath %>/ajax/ajax_config.aspx?__Action=Message_Reply&id=<%=model.id %>";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+<%} %>
+</lbbody>

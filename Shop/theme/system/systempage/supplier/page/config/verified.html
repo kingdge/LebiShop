@@ -1,0 +1,83 @@
+﻿{layout:default} {class:Shop.Supplier.Config.Verified}
+<lbhead>
+    <title><%=Tag("身份验证")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+</lbfile>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_supplier.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("身份验证")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 200px">
+                <%=Tag("项目名称")%>
+            </th>
+            <th style="width: 150px">
+                <%=Tag("图片")%>
+            </th>
+            <th style="width: 130px">
+                <%=Tag("提交日期")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("状态")%>
+            </th>
+            <th>
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (Shop.Model.Lebi_Supplier_Verified model in models)
+          {%>
+        <tr class="list" ondblclick="Edit(<%=model.id %>)">
+            <td>
+                <%=Lang(model.Name)%>
+            </td>
+            <td>
+                <% if (Shop.Bussiness.EX_Supplier.GetVerified_Log(model.id, CurrentSupplier.id).ImageUrl == "")
+                   { %>
+                &nbsp;
+                <%}
+                   else
+                   { %>
+                <a href="<%=Image(Shop.Bussiness.EX_Supplier.GetVerified_Log(model.id, CurrentSupplier.id).ImageUrl) %>" target="_blank"><img src="<%=Image(Shop.Bussiness.EX_Supplier.GetVerified_Log(model.id, CurrentSupplier.id).ImageUrl,100,100) %>" style="height: 25px;vertical-align:middle" name="ImageUrl" /></a>
+                <%} %>
+            </td>
+            <td>
+                <%if (Shop.Bussiness.EX_Supplier.GetVerified_Log(model.id, CurrentSupplier.id).Type_id_SupplierVerifiedStatus != 0)
+                  {%>
+                <%=FormatTime(Shop.Bussiness.EX_Supplier.GetVerified_Log(model.id, CurrentSupplier.id).Time_Add)%>
+                <%} %>&nbsp;
+            </td>
+            <td>
+                <%=Shop.Bussiness.EX_Type.TypeName(Shop.Bussiness.EX_Supplier.GetVerified_Log(model.id, CurrentSupplier.id).Type_id_SupplierVerifiedStatus)%>&nbsp;
+            </td>
+            <td>
+                <%if (Shop.Bussiness.EX_Supplier.GetVerified_Log(model.id, CurrentSupplier.id).Type_id_SupplierVerifiedStatus != 9021)
+                  {%>
+                <a href="javascript:void(0)" onclick="Edit(<%=model.id %>,<%=Shop.Bussiness.EX_Supplier.GetVerified_Log(model.id, CurrentSupplier.id).id %>)"><%=Tag("上传")%></a>
+                <%} %>&nbsp;
+            </td>
+        </tr>
+        <%} %>
+    </table> 
+    <script type="text/javascript">
+        function Edit(id,vid) {
+            var title_ = "<%=Tag("上传")%>";
+            var url_ = "verified_edit_window.aspx?id=" + id +"&vid=" + vid;
+            var width_ = 600;
+            var height_ = 'auto';
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

@@ -1,0 +1,92 @@
+﻿{layout:simple} {class:Shop.Supplier.Config.Message_Write_window}
+<lbbody>
+<table class="table">
+    <tbody>
+        <tr>
+            <th style="width: 20%;">
+                <%=Tag("标题")%>：
+            </th>
+            <td style="width: 80%;">
+                <input type="text" shop="true" min="notnull" id="Title" name="Title" class="input" style="width: 400px" />
+            </td>
+        </tr>
+        <tr>
+            <th style="vertical-align:top">
+                <%=Tag("内容")%>：
+            </th>
+            <td>
+                <textarea shop="true" min="notnull" class="textarea" style="width: 400px; height: 60px;" id="Content"
+                    name="Content"></textarea>
+                <div class="tools clear">
+                    <ul>
+                        <li class="plus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Content',100);">
+                            <b></b><span>
+                                <%=Tag("展开")%></span></a></li>
+                        <li class="minus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Content',-100)">
+                            <b></b><span>
+                                <%=Tag("收缩")%></span></a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th style="width: 20%;">
+                <%=Tag("类别")%>：
+            </th>
+            <td>
+                <select id="type_id" name="type_id" shop="true">
+                    <option value="0">┌
+                        <%=Tag("类别") %></option>
+                    <%=Shop.Bussiness.Message.Message_TypeOption(351,"0", CurrentLanguage.Code)%>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="action">
+                <div class="tools tools-m clear">
+                    <ul>
+                        <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span>
+                            <%=Tag("提交")%></span></a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<script type="text/javascript">
+    LanguageTab_EditPage('<%=CurrentLanguage.Code %>'); //加载默认语言
+    function UType(n){
+	    if (n==0){
+            $("#User_Name_To").attr("min","notnull");
+		    $("#showuser").show();
+            $("#showuserlevel").hide();
+	    }else if (n==1){
+            $("#User_Name_To").attr("min","");
+		    $("#showuser").hide();
+            $("#showuserlevel").show();
+	    }
+    }
+    function delitem() {
+        $("#User_idsList ul li[selectedElement]").remove();
+        if ($("#User_idsList ul li").length == 0)
+        {
+            $("#User_Name_To").show();
+            $("#User_Name_To").attr("min","notnull");
+            $("#proBox").hide();
+        }
+    }
+    function remove() {
+        $("#User_idsList ul li").remove();
+        $("#User_Name_To").show();
+        $("#User_Name_To").attr("min","notnull");
+        $("#proBox").hide();
+    }
+    function SaveObj() {
+        var postData = GetFormJsonData("shop");
+        if (!CheckForm("shop", "span"))
+            return false;
+        var url = "<%=site.AdminPath %>/ajax/ajax_config.aspx?__Action=Message_Write";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "Message.aspx?type=1")});
+    }
+</script>
+</lbbody>

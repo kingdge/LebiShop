@@ -157,6 +157,9 @@
     <script src="<%=site.AdminJsPath %>/main.js"></script>
     <script src="<%=site.AdminJsPath %>/messagebox.js"></script>
 	<script>
+		$(function(){
+			$(".modal-dialog").draggable();
+		})
 		function Copyright() {
 			$("#EditModal").modal("show");
 			$.ajax({

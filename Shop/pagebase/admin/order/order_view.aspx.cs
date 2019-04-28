@@ -31,10 +31,6 @@ namespace Shop.Admin.order
         protected string Promotion = "";
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!EX_Admin.Power("order_edit", "编辑订单"))
-            {
-                NewPageNoPower();
-            }
             int id = RequestTool.RequestInt("id", 0);
             string where = "id = "+ id +"";
             if (!string.IsNullOrEmpty(EX_Admin.Project().Site_ids))
@@ -53,6 +49,20 @@ namespace Shop.Admin.order
             }
             else
             {
+                if (model.Type_id_OrderType == 212)
+                {
+                    if (!EX_Admin.Power("order_return_list", "退货订单列表"))
+                    {
+                        NewPageNoPower();
+                    }
+                }
+                else
+                {
+                    if (!EX_Admin.Power("order_list", "订单列表"))
+                    {
+                        NewPageNoPower();
+                    }
+                }
                 if (model.Supplier_id > 0)
                     shop = B_Lebi_Supplier.GetModel(model.Supplier_id);
                 if (shop == null)

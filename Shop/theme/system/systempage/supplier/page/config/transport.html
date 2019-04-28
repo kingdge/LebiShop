@@ -1,0 +1,55 @@
+﻿{layout:default} {class:Shop.Supplier.Config.Transport}
+<lbhead>
+    <title><%=Tag("配送方式")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_supplier.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("配送方式")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox">
+        <input type="text" id="key" name="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" />
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 200px">
+                <%=Tag("配送方式")%>
+            </th>
+            <th >
+                <%=Tag("配送描述")%>
+            </th>         
+            <th style="width: 150px">
+                <%=Tag("编辑")%>
+            </th>
+        </tr>
+        <%foreach (Shop.Model.Lebi_Transport model in models)
+          {%>
+        <tr class="list">
+            <td>
+                <%=model.Name %>
+            </td>
+            <td>
+                <%=model.Description %>&nbsp;
+            </td>
+            <td>
+                <a href="Transport_Price.aspx?tid=<%=model.id %>"><%=Tag("配送区域")%></a>
+            </td>
+        </tr>
+        <%} %>
+       
+    </table>
+    <script type="text/javascript">
+        function search_() {
+            var key = $("#key").val();
+            window.location = "?key=" + escape(key);
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

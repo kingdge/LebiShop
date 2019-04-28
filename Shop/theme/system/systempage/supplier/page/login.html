@@ -1,0 +1,191 @@
+﻿{layout:simple} {class:Shop.Supplier.Login}
+<lbbody>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+    <meta name="author" content="LebiShop" />
+    <meta name="generator" content="LebiShop V<%=SYS.Version+"."+SYS.Version_Son %>" />
+    <meta name="copyright" content="2003-<%=DateTime.Now.Year %> lebi.cn" />
+    <%if (Shop.LebiAPI.Service.Instanse.Check("managelicenese")){%>
+    <link rel="icon" type="image/x-icon" href="http://www.lebi.cn/favicon.ico" media="screen" />
+    <link rel="shortcut icon" type="image/x-icon" href="http://www.lebi.cn/favicon.ico" media="screen" />
+    <%}%>
+    <script type="text/javascript" src="<%=site.AdminJsPath%>/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="<%=site.AdminJsPath%>/messagebox.js"></script>
+    <script type="text/javascript" src="<%=site.AdminJsPath%>/jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="<%=site.AdminJsPath%>/jqueryuicss/redmond/jquery-ui.css" media="screen" />
+    <style type="text/css">
+    html {height:100%;}
+    BODY{width:100%;background:url(<%=site.AdminImagePath%>/login/loginbg.jpg) center no-repeat; background-size:100% 100% ;margin:0;padding:0;height:100%;overflow:hidden}
+    .both{clear:both;font-size:0;height:0;overflow:hidden;visibility:hidden}
+    .logo {width:220px;height:121px;margin:0px auto 0 auto;padding-top:150px;}
+    .main{background:url(<%=site.AdminImagePath%>/login/main.jpg) no-repeat;height:539px;width:889px;margin:100px auto 0 auto;padding:0;position:relative}
+    .license{position:absolute;height:36px;width:84px;text-align:center;font-size:12px;color:#fff;padding:0 9px 28px 0;background:url(<%=site.AdminImagePath%>/login/lpop.png) 0px 0px no-repeat;line-height:36px;margin-top:-130px;margin-left:240px;}
+    .license a {color:#fff; text-decoration:none;}
+    .browsers{position:absolute;left:50%;text-align:center;width:300px;margin-left:-150px;bottom:50px;}
+    .browsers h2{margin:0;padding:0;font-size:12px;line-height:13px;color:#99cccc;font-weight:normal}
+    .browsers p{margin:8px 0 0 0;padding:0;text-align:center;display:block;width:100%;}
+    .browsers p a{text-decoration:none}
+    .login-form{position:relative;width:auto;margin:90px auto;text-align:center;}
+    .login-form ul{list-style-type:none;margin:0;padding:0;width:auto}
+    .login-form ul li{float:none;display:inline-block;position:relative;}
+    .login-form ul li.last {position:relative;top:0px;}
+    .login-form ul li label{display:block;font-size:12px;height:42px;margin:0;position:relative;top:0px;left:0px;float:left;}
+    .login-form ul li strong{color:#999;cursor:text;left:8px;font-weight:400;font-size:14px;height:40px;line-height:40px;position:absolute}
+    .login-form ul li input {background:#ccdae4;border-radius:3px;box-shadow:4px 4px 5px rgba(0,0,0,0.2) inset;height:40px;line-height:40px;border:0px;padding:0 10px;font-size:14px;}
+    .login-form .input-name{color:#3278a8;width:180px;margin-right:4px;}
+    .login-form .input-yzm {padding-right:30px;}
+    .login-form ul li .verifycode{height:25px;margin:6px 0;vertical-align:middle;position:absolute;right:30px;margin-left: -90px;margin-top: 8px;}
+    .login-form .login-checkbox{width:auto;padding:0;color:#fff;font-size:12px;position:absolute;padding-left:5px;margin-top:-20px;white-space:nowrap}
+    .login-form .login-checkbox input {width:10px;height:10px;margin-right:5px;float:left;}
+    .login-form .login-btn{width:auto;margin:0;padding:0}
+    .login-form .login-btn .submit{border:0;width:auto;border-radius:3px;height:40px;line-height:35px;padding:0 15px;text-align:left;background:#99cc00;text-align:center;color:#fff;font-size:1.4em;cursor:pointer;box-shadow:2px 2px 3px rgba(0,0,0,0.2);position:relative;top:0px;line-height:45px\0;}
+
+    .login-form .mes{width:auto;margin:0px 0 0 0;padding:50px 0 0 0;text-align:center;color:#fc0;font-size:16px;margin:0px auto;}
+    .login-msg{margin:10px 0;padding:0;color:#000;font-size:12px}
+    .login-msg a{color:#3278A8;font-size:12px;text-decoration:none;height:38px;cursor:pointer}
+    .login-msg a:hover{color:#2D52A5;text-decoration:underline}
+    .login-title{color:#fff;font-size:12px;margin:0 0 10px 0;position:absolute;top:-20px;}
+    .copy{font-size:12px;color:#fff;}
+    .verifycode {vertical-align:middle;width:80px;height:25px;margin:0 0 0 5px;}
+    .refresh {vertical-align:middle;width:16px;height:16px;margin:13px 0 0 5px;position:absolute;right:10px;cursor:pointer}
+    </style>
+    <title><%=Tag("商家登陆")%>-<%=site.title%></title>
+</head>
+<body class="loginp">
+    <form id="form-field" class="form" novalidate>
+        <div class="logo">
+            <img src="<%=site.AdminImagePath%>/login/newlogo<%if (Shop.LebiAPI.Service.Instanse.Check("managelicenese")){%>_oem<%}%>.png" />
+            <div class="license">
+                <%=Tag("商家登陆")%>
+            </div>
+        </div>
+        <div class="login-form">
+            <input type="hidden" name="url " id="url" value="<%=url%>" />
+            <ul>
+                <li>
+                    <label for="adminUserName"><strong><%=Tag("请输入用户名")%></strong>
+                    <input type="text" class="input-name" maxlength="25" name="adminUserName" id="adminUserName"
+                        <%if (Shop.Tools.CookieTool.GetCookieString("SupplierUserName") != ""){ %>value="<%=Shop.Tools.CookieTool.GetCookieString("SupplierUserName") %>"
+                        <%} %> /></label></li>
+                <li id="password" <%if (!LoginError){ %>
+                    class="last" <%} %>>
+                    <label for="adminPwd"><strong><%=Tag("请输入密码")%></strong>
+                    <input type="password" class="input-name" maxlength="25" name="adminPwd" id="adminPwd" /></label></li>
+                <%if (SYS.Verifycode_SupplierLogin == "1"){ %>
+                <li id="code" class="last" <%if (LoginError != true){ %>style="display:none"
+                    <%}else{ %>style="display:" <%} %>>
+                    <label for="txt_yz"><strong><%=Tag("验证码")%></strong> 
+                    <input type="text" class="input-name input-yzm" maxlength="5" name="txt_yz" id="txt_yz" value="" style="width:150px;" /><img class="verifycode" id="img1" src="../code.aspx" /><img src="<%=site.AdminImagePath%>/reload.gif" class="refresh" title="<%=Tag("点击刷新验证码")%>" onclick="refresh('img1')" /></label>
+                </li>
+                <%} %>
+                <li>
+                    <label class="login-btn">
+                        <input type="button" value="<%=Tag("登陆")%>" name="submit" onclick="Login();" class="submit" />
+                    </label>
+                </li>
+                <li class="login-checkpop">
+                    <div class="login-checkbox">
+                        <input type="checkbox" id="saveusername" name="saveusername" value="1" checked /><%=Tag("记住用户名")%>
+                    </div>
+                </li>
+            </ul>
+            <div class="mes">
+                <span id="mes"></span>
+            </div>
+        </div>
+
+        <div class="browsers">
+			<h2><%=Tag("为获得最佳体验，推荐使用以下浏览器")%></h2>
+    		<p>
+    			<a href="http://www.google.cn/intl/zh-CN/chrome/browser/desktop/index.html" target="_blank">
+    				<img src="<%=site.AdminImagePath%>/login/chrome.png" style="height:30px; margin:0 5px 0 0;">
+                </a>
+    			<a href="http://windows.microsoft.com/zh-cn/internet-explorer/ie-10-worldwide-languages" target="_blank">
+    				<img src="<%=site.AdminImagePath%>/login/ie.png" style="height:30px; margin-right:10px;"></a>
+    			<a href="http://www.firefox.com.cn/" target="_blank">
+    				<img src="<%=site.AdminImagePath%>/login/firefox.png" style="height:30px;"> 
+    			</a>
+			</p>
+		</div>
+
+        <div class="copy">
+            <asp:Label ID="LBLicense" runat="server"></asp:Label>
+        </div>
+
+    </form>
+</body>
+</html>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#form-field .input-name").each(function () {
+            var thisVal = $(this).val();
+            if (thisVal != "") {
+                $(this).siblings("strong").hide();
+            } else {
+                $(this).siblings("strong").show();
+            }
+            $(this).keyup(function () {
+                var val = $(this).val();
+                $(this).siblings("strong").hide();
+            }).blur(function () {
+                var val = $(this).val();
+                if (val != "") {
+                    $(this).siblings("strong").hide();
+                } else {
+                    $(this).siblings("strong").show();
+                }
+            })
+        });
+    });
+    $(document).keyup(function (event) {
+        if (event.keyCode == 13) {
+            Login();
+        }
+    });
+    function Login() {
+        var userName = $("#adminUserName").val();
+        var userPwd = $("#adminPwd").val();
+        var code = $("#txt_yz").val();
+        var saveusername = $("#saveusername").val();
+        if (userName == "" || userName=="<%=Tag("请输入用户名")%>") {
+            $("#mes").html("<%=Tag("请输入用户名")%>");
+            return;
+        }
+        if (userPwd == "" || userPwd == "<%=Tag("请输入密码")%>") {
+            $("#mes").html("<%=Tag("请输入密码")%>");
+            return;
+        }
+        <%if (LoginError && SYS.Verifycode_SupplierLogin == "1"){ %>
+        if (code == "") {
+            $("#mes").html("<%=Tag("请输入验证码")%>");
+            return;
+        }
+        <%} %>
+        $.ajax({
+            type: "POST",
+            url: "<%=site.AdminPath%>/ajax/ajax_user.aspx?__Action=User_Login&logintype=<%=logintype %>",
+            data: { UserName: userName, UserPWD: userPwd, code: code, saveusername: saveusername },
+            beforeSend: function () {
+                $("#mes").html("<%=Tag("正在登录")%>……");
+            },
+            success: function (res) {
+                if (res == "OK") {
+                    $("#mes").html("<%=Tag("登录成功，请稍后")%>……");
+                    location.href = "<%=site.AdminPath%>/";
+                }
+                else {
+                    $("#mes").html(res);
+                    $("#password").attr("class","");
+                    $("#code").show();
+                }
+            }
+        });
+    }
+    function refresh(id) {
+        $("#"+ id +"").attr("src","../code.aspx?t="+Math.random());
+    }
+</script>
+</lbbody>

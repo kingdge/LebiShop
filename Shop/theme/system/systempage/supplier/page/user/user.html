@@ -1,0 +1,115 @@
+﻿{layout:default} {class:Shop.Supplier.user.user}
+<lbhead>
+    <title><%=Tag("用户列表")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="add"><a href="javascript:void(0);" onclick="Edit(0);"><b></b><span><%=Tag("添加")%></span></a></li>
+    <li class="del"><a href="javascript:void(0);" onclick="DEL();"><b></b><span><%=Tag("删除")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("用户列表")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox clear">
+        <select name="status" id="status">
+            <option value="0">┌ <%=Tag("状态")%></option>
+            <%=Shop.Bussiness.EX_Type.TypeOption("SupplierUserStatus", status)%>
+        </select>
+        <input type="text" id="key" name="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" value="" />
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'sid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th style="width: 200px">
+                <%=Tag("名称")%>
+            </th>
+            <th style="width: 200px">
+                <%=Tag("账号")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("分组")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("手机")%>
+            </th>
+            <th style="width: 100px">
+                Email
+            </th>
+            <th style="width: 80px">
+                <%=Tag("状态")%>
+            </th>
+            <th>
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (Shop.Model.Lebi_Supplier_User model in models)
+          {
+              Shop.Model.Lebi_User user = Shop.Bussiness.B_Lebi_User.GetModel(model.User_id);
+              if (user == null)
+                  user = new Shop.Model.Lebi_User();
+              %>
+        <tr class="list" ondblclick="Edit(<%=model.id %>)">
+            <td style="text-align:center">
+                <input type="checkbox" value="<%=model.id %>" name="sid" />
+            </td>
+            <td>
+                <%=model.RemarkName %>
+            </td>
+            <td>
+                <%=user.UserName %>
+            </td>
+            <td>
+                <%=GetGroupName(model.Supplier_UserGroup_id)%>
+            </td>
+            <td>
+                <%=user.MobilePhone %>
+            </td>
+            <td>
+                <%=user.Email %>
+            </td>
+           
+            <td>
+                <%=TypeName(model.Type_id_SupplierUserStatus) %>
+            </td>
+
+            <td>
+                <a href="javascript:void(0)" onclick="Edit(<%=model.id %>)"><%=Tag("编辑")%></a>
+            </td>
+        </tr>
+        <%} %>
+    </table> 
+    <script type="text/javascript">
+        function search_() {
+            var key = $("#key").val();
+            var status=$("#status").val();
+            window.location.href = "?status="+status+"&key=" + escape(key);
+        }
+        function Edit(id) {
+            if (id == 0) { var title_ = "<%=Tag("添加用户")%>"; } else { var title_ = "<%=Tag("编辑用户")%>"; }
+            var url_ = "user_edit_window.aspx?id=" + id;
+            var width_ = 500;
+            var height_ = 'auto';
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function DEL() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var ids = GetChkCheckedValues("sid");
+            var postData = { "ids": ids };
+            var url = AdminPath+"/ajax/ajax_supplier.aspx?__Action=User_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

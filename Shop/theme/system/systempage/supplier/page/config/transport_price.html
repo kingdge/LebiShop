@@ -1,0 +1,137 @@
+﻿{layout:default} {class:Shop.Supplier.storeConfig.Transport_Price}
+<lbhead>
+    <title><%=Tag("配送价格")%>-<%=tmodel.Name %>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="add"><a href="javascript:void(0);" onclick="Edit(<%=tmodel.id%>,0);"><b></b><span><%=Tag("添加")%></span></a></li>
+    <li class="submit"><a href="javascript:void(0);" onclick="Update();"><b></b><span><%=Tag("保存")%></span></a></li>
+    <li class="del"><a href="javascript:void(0);" onclick="Del();"><b></b><span><%=Tag("删除")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="Transport.aspx"><%=Tag("配送方式")%></a> > <a href="Transport.aspx?key=<%=System.Web.HttpUtility.HtmlEncode(tmodel.Name) %>"><%=tmodel.Name %></a> > <%=Tag("配送价格")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox">
+        <%=Tag("定额运费")%>:
+        <input type="radio" name="OnePrice" shop="true" value="2" <%=OnePrice==2?"checked":"" %> onclick="search_();" /><%=Tag("全部")%>
+        <input type="radio" name="OnePrice" shop="true" value="1" <%=OnePrice==1?"checked":"" %> onclick="search_();" /><%=Tag("是")%>
+        <input type="radio" name="OnePrice" shop="true" value="0" <%=OnePrice==0?"checked":"" %> onclick="search_();" /><%=Tag("否")%> 
+        &nbsp;&nbsp;&nbsp;&nbsp;<%=Tag("货到付款")%>：
+        <input type="radio" name="OfflinePay" shop="true" value="2" <%=OfflinePay==2?"checked":"" %> onclick="search_();" /><%=Tag("全部")%>
+        <input type="radio" name="OfflinePay" shop="true" value="1" <%=OfflinePay==1?"checked":"" %> onclick="search_();" /><%=Tag("支持")%>
+        <input type="radio" name="OfflinePay" shop="true" value="0" <%=OfflinePay==0?"checked":"" %> onclick="search_();" /><%=Tag("不支持")%>  
+        <!--<input type="button" id="btnSou" class="btn-search" onclick="search_();" />-->  
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'Fid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("定额运费")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("订单金额")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("基准运费")%>
+            </th>         
+            <th style="width: 100px">
+                <%=Tag("起始重量")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("递进重量")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("递进价格")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("货到付款")%>
+            </th>
+            <th>
+                <%=Tag("配送地区")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (Shop.Model.Lebi_Transport_Price model in models)
+          {%>
+        <tr class="list" ondblclick="Edit(<%=tmodel.id+","+model.id %>);" >
+            <td style="text-align:center">
+                <input type="checkbox" name="Fid" del="true" value="<%=model.id %>" />
+                <input type="hidden" name="Uid" shop="true" value="<%=model.id %>" />
+            </td>
+            <td>
+                <%=model.IsOnePrice == 1 ? "" + Tag("是") + "" : "" + Tag("否") + ""%>
+            </td>
+           
+            <td>
+                <input type="text" id="OrderMoney<%=model.id %>" name="OrderMoney<%=model.id %>" shop="true" class="input" style="width: 80px" value="<%=FormatMoney(model.OrderMoney,"Number") %>" onkeyup="value=value.replace(/[^\d\.]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d\.]/g,''))" />
+            </td>
+            <td>
+                <input type="text" id="Price<%=model.id %>" name="Price<%=model.id %>" shop="true" class="input" style="width: 80px" value="<%=FormatMoney(model.Price,"Number") %>" onkeyup="value=value.replace(/[^\d\.]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d\.]/g,''))" />
+            </td>
+             <%if (tmodel.Type_id_TransportType == 330)
+              { %>
+            <td>
+                <input type="text" id="Weight_Start<%=model.id %>" name="Weight_Start<%=model.id %>" shop="true" class="input" style="width: 80px" value="<%=model.Weight_Start %>" onkeyup="value=value.replace(/[^\d\.]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d\.]/g,''))" />
+            </td>
+            <td>
+                <input type="text" id="Weight_Step<%=model.id %>" name="Weight_Step<%=model.id %>" shop="true" class="input" style="width: 80px" value="<%=model.Weight_Step %>" onkeyup="value=value.replace(/[^\d\.]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d\.]/g,''))" />
+            </td>
+            <td>
+                <input type="text" id="Price_Step<%=model.id %>" name="Price_Step<%=model.id %>" shop="true" class="input" style="width: 80px" value="<%=FormatMoney(model.Price_Step,"Number") %>" onkeyup="value=value.replace(/[^\d\.]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d\.]/g,''))" />
+            </td>
+            <%}else{ %>
+            <td>-</td><td>-</td><td>-</td>
+            <%} %>
+            <td>
+                <%=model.IsCanofflinePay == 1 ? "" + Tag("支持") + "" : "" + Tag("不支持") + ""%>
+            </td>
+            <td>
+                <%=AreaName(model.Area_id)%>
+            </td>
+            <td>
+                <a href="javascript:void(0)" onclick="Edit(<%=tmodel.id+","+model.id %>);"><%=Tag("编辑")%></a>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function search_() {
+            var OnePrice = $("input[name='OnePrice']:checked").val();
+            var OfflinePay = $("input[name='OfflinePay']:checked").val();
+            window.location = "?tid=<%=tmodel.id %>&OnePrice=" + OnePrice + "&OfflinePay=" + OfflinePay;
+        }
+        function Edit(tid,id) {
+            var title_ = "<%=Tag("编辑配送价格")%>";
+            var url_ = "transport_price_edit_window.aspx?tid=" + tid+"&id="+id;
+            var width_ = 600;
+            var height_ = 500;
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function Update() {
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_config.aspx?__Action=Transport_Price_Update&tid=<%=tmodel.id %>";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+        function Del() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_config.aspx?__Action=Transport_Price_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

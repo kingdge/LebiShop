@@ -21,6 +21,10 @@ namespace Shop.Admin.product
         protected string ename = "";
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!EX_Admin.Power("product_user_price", "商品会员价格"))
+            {
+                PageReturnMsg = PageNoPowerMsg();
+            }
             PageSize = RequestTool.getpageSize(25);
             id = RequestTool.RequestInt("id");
             userid = RequestTool.RequestInt("userid");

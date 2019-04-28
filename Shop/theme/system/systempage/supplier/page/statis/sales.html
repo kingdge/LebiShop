@@ -1,0 +1,104 @@
+﻿{layout:default} {class:Shop.Supplier.Statis.Statis_Sales}
+<lbhead>
+    <title><%=Tag("销售报表")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <style>#body_bottom{height:0;overflow:hidden;display:none}</style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="submit"><a href="javascript:void(0);" onclick="submit();"><b></b><span><%=Tag("提交")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_supplier.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="<%=site.AdminPath %>/statis/sales.aspx"><%=Tag("销售报表")%></a></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table class="table">
+    <tr>
+        <th>
+            <%=Tag("订购日期")%>：
+        </th>
+        <td>
+            <input type="text" name="dateFrom" id="dateFrom" size="12" class="input-calendar" value="<%=dateFrom%>" readonly /> - <input type="text" name="dateTo" id="dateTo" size="12" class="input-calendar" value="<%=dateTo%>" readonly />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("支付方式")%>：
+        </th>
+        <td>
+            <select name="Pay_id" id="Pay_id">
+                <option value="0">┌<%=Tag("全部")%></option>
+                <%foreach (Shop.Model.Lebi_Pay pay in pays){%>
+                <option value="<%=pay.id %>" <%=Pay_id == pay.id?"selected":"" %>><%=Shop.Bussiness.Language.Content(pay.Name, CurrentLanguage.Code)%></option>
+                <%} %>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("配送方式")%>：
+        </th>
+        <td>
+            <select name="Transport_id" id="Transport_id">
+                <option value="0">┌<%=Tag("全部")%></option>
+                <%foreach (Shop.Model.Lebi_Transport transport in transports)
+                    {%>
+                <option value="<%=transport.id %>" <%=Transport_id == transport.id?"selected":"" %>><%=transport.Name%></option>
+                <%} %>
+            </select>
+        </td>
+    </tr>
+    </table>
+    <%if (display == 1){ %>
+        <table class="datalist">
+            <tr class="title">
+                <th>&nbsp;</th>
+                <th><%=Tag("销售数量")%></th>
+                <th><%=Tag("订单金额")%></th>
+                <th><%=Tag("商品金额")%></th>
+                <th><%=Tag("运费")%></th>
+                <th><%=Tag("税金")%></th>
+                <th><%=Tag("成本")%></th>
+                <th><%=Tag("利润")%></th>
+            </tr>
+            <tbody id="monthparts"></tbody>
+            <script type="text/javascript">
+                function getmonthparts() {
+                    $.ajax({
+                        type: "POST",
+                        url: "sales_part.aspx?dateFrom=<%=dateFrom %>&dateTo=<%=dateTo %>&Pay_id=<%=Pay_id %>&Transport_id=<%=Transport_id%>",
+                        data: '',
+                        success: function (res) {
+                            $("#div_error").dialog('close');
+                            $("#monthparts").html(res);
+                        }
+                    });
+                }
+                $(function () {
+                    getmonthparts();
+                    addtrbg(".datalist");
+                });
+            </script>
+        </table> 
+    <%} %>
+    <script type="text/javascript">
+        function submit() {
+            var dateFrom = $("#dateFrom").val();
+            var dateTo = $("#dateTo").val();
+            var Pay_id = $("#Pay_id").val();
+            var Transport_id = $("#Transport_id").val();
+            if (dateFrom == "" || dateTo == "") {
+                MsgBox(1, "<%=Tag("请选择订购日期")%>", "")
+            }
+            window.location = "?display=1&dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&Pay_id=" + Pay_id + "&Transport_id=" + Transport_id;
+        }
+    </script>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+    </div>
+</lbbottom>

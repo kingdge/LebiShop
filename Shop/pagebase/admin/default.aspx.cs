@@ -16,6 +16,7 @@ namespace Shop.Admin
         protected string serviceinfo = "";
         protected void Page_Load(object sender, EventArgs e)
         {
+            desk = 1;
             if (!EX_Admin.Power("admin_data", "系统桌面"))
             {
                 PageReturnMsg = PageNoPowerMsg();

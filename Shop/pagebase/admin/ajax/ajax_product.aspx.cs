@@ -1077,6 +1077,7 @@ namespace Shop.Admin.Ajax
                 int UpdateType_id_ProductType = RequestTool.RequestInt("UpdateType_id_ProductType", 0);
                 int UpdateProPerty133 = RequestTool.RequestInt("UpdateProPerty133", 0);
                 int UpdateDescription = RequestTool.RequestInt("UpdateDescription", 0);
+                int UpdateSpecification = RequestTool.RequestInt("UpdateSpecification", 0);
                 int UpdateMobileDescription = RequestTool.RequestInt("UpdateMobileDescription", 0);
                 int UpdateSEO = RequestTool.RequestInt("UpdateSEO", 0);
                 int UpdateUnits_id = RequestTool.RequestInt("UpdateUnits_id", 0);
@@ -1096,6 +1097,8 @@ namespace Shop.Admin.Ajax
                         son.Introduction = model.Introduction;
                     if (UpdateDescription == 1)
                         son.Description = model.Description;
+                    if (UpdateSpecification == 1)
+                        son.Specification = model.Specification;
                     if (UpdateMobileDescription == 1)
                         son.MobileDescription = model.MobileDescription;
                     if (UpdateSEO == 1)
@@ -1258,6 +1261,7 @@ namespace Shop.Admin.Ajax
             B_Lebi_Product.SafeBindForm(model);
             model.Name = Language.RequestSafeString("Name");
             model.Description = Language.RequestStringForUserEditor("Description");
+            model.Specification = Language.RequestStringForUserEditor("Specification");
             model.MobileDescription = Language.RequestStringForUserEditor("MobileDescription");
             model.Time_Edit = DateTime.Now;
             //====================================================
@@ -3033,6 +3037,11 @@ namespace Shop.Admin.Ajax
         /// </summary>
         public void ProductLimit_Edit()
         {
+            if (!EX_Admin.Power("product_user_limit", "商品会员权限"))
+            {
+                AjaxNoPower();
+                return;
+            }
             int userlevelid = RequestTool.RequestInt("userlevelid");
             int userid = RequestTool.RequestInt("userid");
             Lebi_User user = B_Lebi_User.GetModel(userid);
@@ -3098,6 +3107,11 @@ namespace Shop.Admin.Ajax
         /// </summary>
         public void ProductLimit_Edit_product()
         {
+            if (!EX_Admin.Power("product_user_limit", "商品会员权限"))
+            {
+                AjaxNoPower();
+                return;
+            }
             int userlevelid = RequestTool.RequestInt("userlevelid");
             int productid = RequestTool.RequestInt("productid");
             Lebi_Product product = B_Lebi_Product.GetModel(productid);
@@ -3181,6 +3195,11 @@ namespace Shop.Admin.Ajax
         }
         public void ProductLimit_mutiEdit()
         {
+            if (!EX_Admin.Power("product_user_limit", "商品会员权限"))
+            {
+                AjaxNoPower();
+                return;
+            }
             string ids = RequestTool.RequestString("limituserid");
             if (ids != "")
             {
@@ -3201,6 +3220,11 @@ namespace Shop.Admin.Ajax
         }
         public void ProductLimit_Del()
         {
+            if (!EX_Admin.Power("product_user_limit", "商品会员权限"))
+            {
+                AjaxNoPower();
+                return;
+            }
             string ids = RequestTool.RequestString("limitid");
             if (ids != "")
             {
@@ -3222,6 +3246,11 @@ namespace Shop.Admin.Ajax
         /// </summary>
         public void Product_Price_Edit()
         {
+            if (!EX_Admin.Power("product_user_price", "商品会员价格"))
+            {
+                AjaxNoPower();
+                return;
+            }
             int productid = RequestTool.RequestInt("productid");
             Lebi_Product product = B_Lebi_Product.GetModel(productid);
             if (product == null)
@@ -3260,6 +3289,11 @@ namespace Shop.Admin.Ajax
         }
         public void Product_Price_Update()
         {
+            if (!EX_Admin.Power("product_user_price", "商品会员价格"))
+            {
+                AjaxNoPower();
+                return;
+            }
             string ids = RequestTool.RequestString("id");
             if (ids != "")
             {
@@ -3274,6 +3308,11 @@ namespace Shop.Admin.Ajax
         }
         public void Product_Price_Del()
         {
+            if (!EX_Admin.Power("product_user_price", "商品会员价格"))
+            {
+                AjaxNoPower();
+                return;
+            }
             string ids = RequestTool.RequestString("id");
             if (ids != "")
             {

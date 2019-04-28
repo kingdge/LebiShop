@@ -23,9 +23,10 @@ namespace Shop.Admin.product
         protected string ename = "";
         protected void Page_Load(object sender, EventArgs e)
         {
-
-
-
+            if (!EX_Admin.Power("product_user_limit", "商品会员权限"))
+            {
+                PageReturnMsg = PageNoPowerMsg();
+            }
             PageSize = RequestTool.getpageSize(25);
             proid = RequestTool.RequestInt("proid");
             userid = RequestTool.RequestInt("userid");

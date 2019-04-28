@@ -720,7 +720,7 @@ namespace Shop.Bussiness
             Lebi_User user = B_Lebi_User.GetModel(order.User_id);
             if (user == null)
                 return false;
-            if ((order.Money_Pay + order.Money_Paid) != order.Money_Order)
+            if ((order.Money_Order - order.Money_Paid) > order.Money_Pay)
             {
                 Log.Add("½ğ¶îĞ£Ñé´íÎó[" + (order.Money_Pay + order.Money_Paid) + "]", "Order", order.id.ToString(), user, "");
                 return false;

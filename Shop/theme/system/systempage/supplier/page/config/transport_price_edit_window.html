@@ -1,0 +1,180 @@
+﻿{layout:simple} {class:Shop.Supplier.storeConfig.Transport_Price_Edit_window}
+<lbbody>
+<table class="table">
+    <tr>
+        <th style="width: 20%">
+            <%=Tag("货运名称")%>：
+        </th>
+        <td style="width: 80%"><%=tmodel.Name%>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("货到付款")%>：
+        </th>
+        <td><input type="radio" name="IsCanofflinePay" shop="true" value="1" <%=model.IsCanofflinePay==1?"checked":"" %>/><%=Tag("支持")%>
+            <input type="radio" name="IsCanofflinePay" shop="true" value="0" <%=model.IsCanofflinePay==0?"checked":"" %>/><%=Tag("不支持")%>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("订单金额")%>>=：
+        </th>
+        <td style="text-align: left;">
+            <input type="text" class="input" shop="true" min="notnull" name="OrderMoney" id="OrderMoney" value="<%=FormatMoney(model.OrderMoney,"Number") %>" style="width: 100px;" onkeyup="value=value.replace(/[^\d\.]/g,'')" /> 
+            <em><%=Tag("运费")%></em>
+            <input type="text" class="input" shop="true" min="notnull" name="Price_OrderMoneyOK" id="Price_OrderMoneyOK" value="<%=FormatMoney(model.Price_OrderMoneyOK,"Number") %>" style="width: 80px;" onkeyup="value=value.replace(/[^\d\.]/g,'')" /> 
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("定额运费")%>：
+        </th>
+        <td><input type="radio" name="IsOnePrice" shop="true" value="1" <%=model.IsOnePrice==1?"checked":"" %> onclick="ChangePayType(1)"/><%=Tag("是")%>
+            <input type="radio" name="IsOnePrice" shop="true" value="0" <%=model.IsOnePrice==0?"checked":"" %> onclick="ChangePayType(0)"/><%=Tag("否")%>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("基准运费")%>：
+        </th>
+        <td style="text-align: left;">
+            <input type="text" class="input" shop="true" min="notnull" name="Price" id="Price" value="<%=FormatMoney(model.Price,"Number") %>" style="width: 100px;" onkeyup="value=value.replace(/[^\d\.]/g,'')" /> <span></span>
+        </td>
+    </tr>
+     <tbody id="muti">
+     <%if (tmodel.Type_id_TransportType == 331)
+      { %>
+    <tr>
+        <th style="vertical-align:top">
+            <%=Tag("货柜")%>：
+        </th>
+        <td>
+        <div class="proBox" style="width: 400px;">
+        <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'Containerid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th style="width: 250px">
+                <%=Tag("货柜名称")%>
+            </th>  
+            <th style="width: 100px">
+                <%=Tag("运费")%>
+            </th>
+        </tr>
+        <%=Containestr %>
+        </table>
+        </div>
+        </td>
+    </tr>
+    <%}
+      else
+      { %>
+      
+    <tr>
+        <th>
+            <%=Tag("起始重量")%>：
+        </th>
+        <td style="text-align: left;">
+            <input type="text" class="input" shop="true" min="notnull" name="Weight_Start" id="Weight_Start" value="<%=model.Weight_Start %>" style="width: 100px;" onkeyup="value=value.replace(/[^\d\.]/g,'')" /> <span><%=Tag("KG")%></span>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("递进重量")%>：
+        </th>
+        <td style="text-align: left;">
+            <input type="text" class="input" shop="true" min="notnull" name="Weight_Step" id="Weight_Step" value="<%=model.Weight_Step %>" style="width: 100px;" onkeyup="value=value.replace(/[^\d\.]/g,'')" /> <span><%=Tag("KG")%></span>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("递进价格")%>：
+        </th>
+        <td style="text-align: left;">
+            <input type="text" class="input" shop="true" min="notnull" name="Price_Step" id="Price_Step" value="<%=FormatMoney(model.Price_Step,"Number") %>" style="width: 100px;" onkeyup="value=value.replace(/[^\d\.]/g,'')" /> <span></span>
+        </td>
+    </tr>
+   
+    <%} %>
+     </tbody>
+    <tr>
+        <th style="vertical-align:top">
+            <%=Tag("配送地区")%>：
+        </th>
+        <td>
+            <%if (model.id == 0)
+              { %>
+            <div class="proBox" style="width: 400px;overflow:hidden">
+                <ul class="btns clear">
+                    <li class="add" id="addInsurance" onclick="SelectArea(0,0);"><%=Tag("添加")%></li>
+                    <li class="delete" id="delInsurance" onclick="delitem();"><%=Tag("删除")%></li>
+                    <li class="clean" id="clearInsurance" onclick="remove();"><%=Tag("清空")%></li>
+                </ul>
+				<div id="Area_idsList" class="iTabBox" style="max-height: 75px;height:75px;_height: 75px;"><ul class="iTab"></ul></div>
+            </div>
+            <div id="Area_names"></div>
+            <%}
+              else
+              {
+                  Response.Write(AreaName(model.Area_id));
+              } %>
+        </td>
+    </tr>
+    <tr>
+        <th style="vertical-align:top">
+            <%=Tag("货运描述")%>：
+        </th>
+        <td >
+            <textarea name="Description" id="Description" shop="true" class="input" style="width: 400px; height: 80px;"><%=model.Description%></textarea>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+            <div class="tools tools-m">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    $('#Area_idsList ul').selectedElement({ css: 'on' });
+    function remove() {
+        $('#Area_idsList ul li').remove();
+//        $('#Area_ids').val("");
+    }
+    function delitem() {
+        $('#Area_idsList ul li[selectedElement]').remove();
+    }
+    function SaveObj() {
+        var postData = GetFormJsonData("shop");
+        if (!CheckForm("shop", "span"))
+            return false;
+        var url = "<%=site.AdminPath %>/ajax/ajax_config.aspx?__Action=Transport_Price_Edit&id=<%=model.id %>&tid=<%=tmodel.id %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+    function SelectArea(pid,notid) {
+        var title_ = "<%=Tag("编辑配送地区")%>";
+        if (pid == 0) title_ = "<%=Tag("添加配送地区")%>";
+        var url_ = "area_window.aspx?pid=" + pid+"&notid="+notid;
+        var width_ = 500;
+        var height_ = 450;
+        var modal_ = true;
+        EditWindow(title_, url_, width_, height_, modal_,'areadiv');
+    }
+    function ChangePayType(t)
+    {
+        if(t==1){
+            $("#muti").hide();
+            //$("#once").show();
+        }else{
+            $("#muti").show();
+            //$("#once").hide();
+        }
+    }
+    ChangePayType(<%=model.IsOnePrice %>);
+</script>
+</lbbody>

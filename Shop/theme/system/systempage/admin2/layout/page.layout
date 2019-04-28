@@ -34,6 +34,15 @@
     <script src="<%=site.AdminJsPath %>/Cookies.js"></script>
     <script src="<%=site.AdminJsPath %>/main.js"></script>
     <script src="<%=site.AdminJsPath %>/messagebox.js"></script>
+	<script>
+		$(document).on("modal fade show", ".modal", function(){
+			$(this).draggable({
+				handle: ".modal-header"   // 只能点击头部拖动
+				cursor: 'move',
+			});
+			$(this).css("overflow", "hidden");
+		});
+	</script>
     {HOLDER:lbscripts}
 </body>
 </html>

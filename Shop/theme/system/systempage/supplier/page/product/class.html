@@ -1,0 +1,158 @@
+﻿{layout:default} {class:Shop.supplier.product.Class}
+<lbhead>
+    <title><%=Tag("商品分类")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+    <style type="text/css">.bottom{display:none;height:0;overflow:hidden}</style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <%if (PageReturnMsg == ""){%>
+            <li class="add"><a href="javascript:void(0);" onclick="Edit(0,0);"><b></b><span><%=Tag("添加")%></span></a></li>
+            <li class="del"><a href="javascript:void(0);" onclick="Del(0)"><b></b><span><%=Tag("删除")%></span></a></li>
+            <%}%>
+            <li class="name"><span id="navIgation">
+                <%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a>
+                >
+                <%=Tag("商品分类")%></span></li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    
+
+    <table
+        class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));">
+                    <%=Tag("全选")%></a>
+            </th>
+            <th style="width: 40px">
+                <%=Tag("ID")%>
+            </th>
+            <th style="width: 200px">
+                <%=Tag("分类名称")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("商品数量")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("分类排序")%>
+            </th>
+            <th>
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <tr class="list">
+            <td style="text-align:center">&nbsp;</td>
+            <td>0</td>
+            <td><%=Tag("未分组")%></td>
+            <td><a href="javascript:void(0);" onclick="SearchProduct(0);"><%=TypeProductCount(CurrentSupplier.id,0)%></a></td>
+            <td>0</td>
+            <td></td>
+        </tr>
+        <%foreach (Shop.Model.Lebi_Supplier_ProductType t in PTypes)
+          { %>
+        <tr class="list" ondblclick="Edit(0,<%=t.id %>)" name="tr<%=t.parentid %>" id="tr<%=t.id %>">
+            <td style="text-align:center">
+                <input type="checkbox" value="<%=t.id %>" name="id" del="del" />
+            </td>
+            <td>
+                <%=t.id %>
+            </td>
+            <td>
+                
+                <% 
+                    if (t.ImageUrl != "")
+                    {
+                        Response.Write("<img src=\"" + t.ImageUrl + "\" height=\"16\" />&nbsp;");
+                    }
+                    Response.Write(Lang(t.Name));
+                %>
+            </td>
+            <td>
+                <a href="javascript:void(0);" onclick="SearchProduct(<%=t.id %>);"><%=TypeProductCount(CurrentSupplier.id,t.id)%></a>
+            </td>
+            <td>
+                <%=t.Sort %>
+            </td>
+            <td>
+            <a href="javascript:Edit(<%=t.id %>,0)"><%=Tag("添加子类")%></a> 
+            |  <a href="javascript:Edit(0,<%=t.id %>)"><%=Tag("编辑") %></a> 
+
+            </td>
+        </tr>
+        <%foreach (Shop.Model.Lebi_Supplier_ProductType st in GeteList(t.id))
+          { %>
+        <tr class="list" name="tr<%=t.parentid %>" id="tr<%=t.id %>">
+            <td style="text-align:center">
+                <input type="checkbox" value="<%=st.id %>" name="id" del="del" />
+            </td>
+            <td>
+                <%=st.id%>
+            </td>
+            <td>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <% 
+                    if (st.ImageUrl != "")
+                    {
+                        Response.Write("<img src=\"" + st.ImageUrl + "\" height=\"16\" />&nbsp;");
+                    }
+                    Response.Write(Lang(st.Name));
+                %>
+            </td>
+            <td>
+                <a href="javascript:void(0);" onclick="SearchProduct(<%=st.id %>);"><%=TypeProductCount(CurrentSupplier.id,st.id)%></a>
+            </td>
+            <td>
+                <%=st.Sort %>
+            </td>
+            <td>
+                <a href="javascript:Edit(0,<%=st.id %>)"><%=Tag("编辑") %></a> 
+            </td>
+        </tr>
+        <%} %>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function Del(id) {
+            if (confirm("<%=Tag("确认要删除吗？")%>")){
+            var postData;
+            if (id == 0)
+                id = GetChkCheckedValues("id");
+            postData = { "id": id };
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Type_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "");if ((id + "a").indexOf(",") == -1){$("#tr" + id + "").remove();}else {var arr = id.split(',');for (var i in arr) {$("#tr" + arr[i] + "").remove();}}});}
+        }
+        function Edit(pid, id) {
+            var title_ = "<%=Tag("编辑分类")%>";
+            if (id == 0) title_ = "<%=Tag("添加分类")%>";
+            var url_ = "class_edit_window.aspx?pid=" + pid + "&id=" + id;
+            var width_ = 600;
+            var height_ = 'auto';
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function SearchProduct(id)
+        {
+            var postData = GetFormJsonData("shop");
+            var url = "<%=site.AdminPath %>/ajax/ajax_search.aspx?__Action=ProductSearch&Supplier_ProductType_ids="+id;
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: postData,
+                dataType: 'json',
+                success: function (res) {
+                    window.location.href="default.aspx?"+ res.url;
+                }
+            });
+        }
+</script>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+    </div>
+</lbbottom>

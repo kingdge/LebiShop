@@ -1,0 +1,132 @@
+﻿{layout:default} {class:Shop.Supplier.Config.skin}
+<lbhead>
+    <title><%=Tag("编辑资料")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <script type="text/javascript" src="<%=site.WebPath %>/Editor/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript" src="<%=site.WebPath %>/Editor/ckfinder/ckfinder.js"></script>
+</lbfile>
+<lbpath>
+    <style type="text/css">
+        .mainbody_top
+        {
+            display: none;
+            height: 0;
+            overflow: hidden;
+        }
+    </style>
+    <div class="tools">
+        <ul>
+            <%if (PageReturnMsg == ""){%>
+            <li class="submit"><a href="javascript:void(0);" onclick="SaveObj(0);"><b></b><span><%=Tag("保存")%></span></a></li>
+            <%}%>
+            <li class="name"><span id="navIgation">
+                <%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_supplier.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a>
+                >
+                <%=Tag("编辑资料")%></span></li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <table id="common" class="table">
+        <tr>
+            <th>
+                <%=Tag("可选皮肤")%>：
+            </th>
+            <td>
+                <input type="hidden" id="Supplier_Skin_id" name="Supplier_Skin_id" shop="true" value="<%=model.Supplier_Skin_id %>" />
+                <div style="width:100%">
+                    <%foreach (Shop.Model.Lebi_Supplier_Skin skin in GetSkins())
+                      { %>
+                    <div style="width:120px;height:150px;float:left;padding:5px;border:1px solid #ececec;margin-right:10px;">
+                        <div style="height:100px;"><img src="<%=skin.Image %>" style="width:100px;height:100px;"/></div>
+                        <div style="height:20px;background-color:#cccccc;margin:5px 0 5px 0;"><%=skin.Name %></div>
+                        <div style="text-align:center;">
+                            <%if (model.Supplier_Skin_id == skin.id)
+                              { %>
+                              <%=Tag("已选择") %>
+                            <%}
+                              else
+                              { %>
+                              <input type="button" value="<%=Tag("选择") %>" onclick="window.location='?id=<%=skin.id %>'" />
+                            <%} %>
+                        </div>
+                    </div>
+                    
+                    <%} %>
+                </div>
+                <div class="clear"></div>
+            </td>
+        </tr>
+        <tr>
+            <th style="vertical-align:top">
+                <%=Tag("头部")%>：
+            </th>
+            <td>
+                <textarea id="head" name="head" shop="true" class="textarea" style="height: 200px;
+                    width: 100%" rows="4" class="input"><%=Server.HtmlEncode(model.head)%></textarea>
+
+            </td>
+        </tr>
+        <tr>
+            <th style="vertical-align:top">
+                小窗口头部：
+            </th>
+            <td>
+                <textarea id="shortbar" name="shortbar" shop="true" class="textarea" style="height: 50px;
+                    width: 100%" rows="4" class="input"><%=Server.HtmlEncode(model.shortbar)%></textarea>
+                <div class="tools clear">
+                    <ul>
+                        <li class="plus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('shortbar',250);">
+                            <b></b><span>
+                                <%=Tag("展开")%></span></a></li>
+                        <li class="minus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('shortbar',-250)">
+                            <b></b><span>
+                                <%=Tag("收缩")%></span></a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th style="vertical-align:top">
+                长窗口头部：
+            </th>
+            <td>
+                <textarea id="longbar" name="longbar" shop="true" class="textarea" style="height: 50px;
+                    width: 100%" rows="4" class="input"><%=Server.HtmlEncode(model.longbar)%></textarea>
+                <div class="tools clear">
+                    <ul>
+                        <li class="plus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('longbar',250);">
+                            <b></b><span>
+                                <%=Tag("展开")%></span></a></li>
+                        <li class="minus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('longbar',-250)">
+                            <b></b><span>
+                                <%=Tag("收缩")%></span></a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+    CKEDITOR.replace('head', {
+    allowedContent:true,
+        height: '200',
+        width: '98%',
+        language: '<%=Tag("CKEditor语言")%>'
+    });
+    function SaveObj() {
+        var head = CKEDITOR.instances.head;
+        $("#head").val(head.getData());
+        var postData = GetFormJsonData("shop");
+        if (!CheckForm("shop", "span"))
+            return false;
+        
+        var url = "<%=site.AdminPath %>/ajax/ajax_config.aspx?__Action=Skin_Edit";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+    }
+    </script>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+    </div>
+</lbbottom>

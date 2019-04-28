@@ -942,12 +942,12 @@ namespace Shop.Admin.Ajax
             model.SubName = Tag("新站点");
             B_Lebi_Site.Add(model);
             model.id = B_Lebi_Site.GetMaxId();
-            if (CurrentAdmin.Site_ids == "")
-                CurrentAdmin.Site_ids = model.id.ToString();
-            else
-                CurrentAdmin.Site_ids = CurrentAdmin.Site_ids + "," + model.id;
-            B_Lebi_Administrator.Update(CurrentAdmin);
-            EX_Admin.SetSession(CurrentAdmin);
+            //if (CurrentAdmin.Site_ids == "")
+            //    CurrentAdmin.Site_ids = model.id.ToString();
+            //else
+            //    CurrentAdmin.Site_ids = CurrentAdmin.Site_ids + "," + model.id;
+            //B_Lebi_Administrator.Update(CurrentAdmin);
+            //EX_Admin.SetSession(CurrentAdmin);
             Log.Add("添加站点", "Site", model.id.ToString(), CurrentAdmin, "");
             Response.Write("{\"msg\":\"OK\",\"id\":\"" + model.id + "\"}");
         }
@@ -2973,13 +2973,6 @@ namespace Shop.Admin.Ajax
             string app_waittimes = Language.RequestString("app_waittimes");
             string app_version = Language.RequestString("app_version");
             string app_downloadurl = Language.RequestString("app_downloadurl");
-            string app_share = Language.RequestString("app_share");
-            string app_share_wechat_key = Language.RequestString("app_share_wechat_key");
-            string app_share_wechat_secret = Language.RequestString("app_share_wechat_secret");
-            string app_share_qq_key = Language.RequestString("app_share_qq_key");
-            string app_share_qq_secret = Language.RequestString("app_share_qq_secret");
-            string app_share_dingtalk_key = Language.RequestString("app_share_dingtalk_key");
-            string app_share_dingtalk_secret = Language.RequestString("app_share_dingtalk_secret");
             B_BaseConfig.Set("app_name", app_name);
             B_BaseConfig.Set("app_lefticon", app_lefticon);
             B_BaseConfig.Set("app_lefturl", app_lefturl);
@@ -3000,13 +2993,6 @@ namespace Shop.Admin.Ajax
             B_BaseConfig.Set("app_updatetime", System.DateTime.Now.ToString());
             B_BaseConfig.Set("app_version", app_version);
             B_BaseConfig.Set("app_downloadurl", app_downloadurl);
-            B_BaseConfig.Set("app_share", app_share);
-            B_BaseConfig.Set("app_share_wechat_key", app_share_wechat_key);
-            B_BaseConfig.Set("app_share_wechat_secret", app_share_wechat_secret);
-            B_BaseConfig.Set("app_share_qq_key", app_share_qq_key);
-            B_BaseConfig.Set("app_share_qq_secret", app_share_qq_secret);
-            B_BaseConfig.Set("app_share_dingtalk_key", app_share_dingtalk_key);
-            B_BaseConfig.Set("app_share_dingtalk_secret", app_share_dingtalk_secret);
             Log.Add("接口设置", "APP", "", CurrentAdmin, "");
             Response.Write("{\"msg\":\"OK\"}");
         }

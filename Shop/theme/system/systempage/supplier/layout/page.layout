@@ -1,0 +1,27 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="Shop.Bussiness.AdminPageBase"  %>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+<meta name="author" content="LebiShop" />
+{HOLDER:lbhead}
+<script src="<%=site.AdminJsPath %>/jquery-3.1.0.min.js"></script>
+<script src="<%=site.AdminJsPath %>/jquery-migrate-1.2.1.js"></script>
+<script src="<%=site.AdminJsPath %>/Cookies.js"></script>
+<script src="<%=site.AdminJsPath %>/main.js"></script>
+<script src="<%=site.AdminJsPath %>/messagebox.js"></script>
+<script src="<%=site.AdminJsPath %>/jquery-ui/jquery-ui.min.js"></script>
+<%if (CurrentLanguage.Code=="CN"){%><script src="<%=site.AdminJsPath %>/jquery-ui/datepicker-zh-CN.js"></script><%}%>
+<link rel="stylesheet" type="text/css" href="<%=site.AdminCssPath %>/css.css" />
+<link rel="stylesheet" type="text/css" href="<%=site.AdminJsPath %>/jquery-ui/jquery-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="<%=site.AdminJsPath %>/jquery-ui/jquery-ui.theme.min.css" />
+<script>
+  var AdminPath = "<%=site.AdminPath %>";var WebPath ="<%=site.WebPath %>";var AdminImagePath = "<%=site.AdminImagePath %>";var requestPage = "<%=Shop.Tools.RequestTool.GetRequestUrl().ToLower() %>";var refPage = "<%=Shop.Tools.RequestTool.GetUrlReferrer().ToLower() %>";
+</script>
+{HOLDER:lbfile}
+</head>
+<body>
+{HOLDER:lbbody}
+</body>
+</html>

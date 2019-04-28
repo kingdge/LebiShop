@@ -449,15 +449,6 @@ function SelectAreaList(topid, objid) {
         }
     });
 }
-//修改密码
-function AdminPWD(id) {
-    var title_ = "修改密码";
-    var url_ = AdminPath + "/admin/admin_pwd_edit_window.aspx?id=" + id;
-    var width_ = 400;
-    var height_ = 'auto';
-    var modal_ = true;
-    EditWindow(title_, url_, width_, height_, modal_);
-}
 //通用数据提交方法
 function RequestAjax(url, jsondata, callback) {
     if (url.indexOf("?") > -1) {

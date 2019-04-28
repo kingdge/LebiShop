@@ -70,6 +70,7 @@
         }(window, document, jQuery);
         function SaveObj() {
             $("#EditModal").modal("hide");
+            var postData = GetFormJsonData("shop");
             var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Property_Edit&id=<%=model.id %>";
             RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
         }

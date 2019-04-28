@@ -19,6 +19,9 @@
                         <div class="col-md-12 m-b-10">
                             <%if (PageReturnMsg == ""){%>
                             <button type="submit" class="btn btn-success"><i class="ti-check"></i> <%=Tag("保存")%></button>
+                            <%if (IsOwner){%>
+                            <button type="button" class="btn btn-info" onclick="Publish();"><i class="ti-cloud-up"></i> <%=Tag("发布")%></button>
+                            <%}%>
                             <%}%>
                         </div>
                     </div>

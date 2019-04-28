@@ -1,0 +1,74 @@
+﻿{layout:default} {class:Shop.Supplier.user.group_indexmenu}
+<lbhead>
+    <title><%=Tag("管理权限")%>-<%=Tag("商家分组")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <%if (PageReturnMsg == ""){%>
+            <li class="submit"><a href="javascript:void(0);" onclick="SaveMenu();"><b></b><span><%=Tag("保存")%></span></a></li>
+            <%}%>
+            <li class="rotate"><a href="javascript:void(0);" onclick="javascript:history.back();"><b></b><span><%=Tag("返回")%></span></a></li>
+            <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="Group.aspx"><%=Tag("商家分组")%></a> > <%=Lang(group.Name) %> > <%=Tag("桌面菜单")%>
+            </span></li>
+        </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <%foreach (Shop.Model.Lebi_Supplier_Menu p in models)
+      { %>
+    <div class="proBox clear">
+        <ul class="btns clear">
+            <li class="menu"><a href="javascript:void(0);" onclick="Edit(0,<%=p.id %>);"><%if (p.Image != ""){%><img height="16" src="<%=site.WebPath + p.Image%>" /> <%} %><%=Tag(p.Name)%></a></li>
+        </ul>
+        <div class="iTabHead">
+            <table class="datalist">
+                <%foreach (Shop.Model.Lebi_Supplier_Menu p2 in GetMenu(p.id))
+                  {
+                %>
+                <tr class="list">
+                    <td style="width:150px;">
+                        <a href="javascript:Edit(<%=p.id %>,<%=p2.id %>)">
+                            <%=Tag(p2.Name)%></a>
+
+                        <a class="add" href="javascript:void(0);" onclick="Edit(<%=p2.id %>,0);">
+                            <%=Tag("添加")%></a>
+                    </td>
+                    <td align="left">
+                        <% 
+                            foreach (Shop.Model.Lebi_Supplier_Menu p3 in GetMenu(p2.id))
+                            {
+                        %>
+                        <div class="limit">
+                            <input type="checkbox" name="id" value="<%=p3.id %>" power="true" <%=Check(p3.id)?"checked":"" %> />
+                            <a href="javascript:Edit(<%=p2.id %>,<%=p3.id %>)">
+                                <%=Tag(p3.Name)%></a>
+                        </div>
+                        <%} %>
+                    </td>
+                </tr>
+                <%}%>
+            </table>
+        </div>
+    </div>
+<%} %>
+<script type="text/javascript">
+    function Edit(pid,id) {
+        var title_ = "<%=Tag("编辑菜单")%>";
+        var url_ = "menu_edit_window.aspx?id=" + id+"&pid="+pid;
+        var width_ = 600;
+        var height_ = 'auto';
+        var modal_ = true;
+        EditWindow(title_, url_, width_, height_, modal_);
+    }
+    function SaveMenu() {
+        var postData = GetFormJsonData("power");
+        var url = AdminPath+"/ajax/ajax_supplier.aspx?__Action=SaveIndexMenu&gid=<%=group.id %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "#")});
+    }
+</script>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+    </div>
+</lbbottom>

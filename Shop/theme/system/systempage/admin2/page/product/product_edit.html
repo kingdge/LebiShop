@@ -93,6 +93,18 @@
                                             </small>
                                             <%} %>
                                         </div>
+                                        <div class="form-group">
+                                            <label for="Specification<%=lang.Code %>"><%=Tag("使用说明")%>：</label>
+                                            <textarea id="Specification<%=lang.Code %>" name="Specification<%=lang.Code %>" class="form-control" style="height:60px;" shop="true"><%=ContentImage(Shop.Bussiness.Language.Content(model.Specification, lang.Code))%></textarea>
+                                            <%if (CountSon(model.id) > 0 && i == 0){ %>
+                                            <small class="form-text text-muted">
+                                                <label class="custom-control custom-checkbox">
+                                                    <input type="checkbox" id="UpdateSpecification" name="UpdateSpecification" value="1" class="custom-control-input" shop="true">
+                                                    <span class="custom-control-label"><%=Tag("同步更新子商品")%></span>
+                                                </label>
+                                            </small>
+                                            <%} %>
+                                        </div>
                                         <%if (wap){ %>
                                         <div class="form-group">
                                             <label for="MobileDescription<%=lang.Code %>"><%=Tag("WAP端描述")%>：</label>
@@ -120,6 +132,14 @@
                                             <label for="SEO_Description<%=lang.Code %>"><%=Tag("网页描述")%>：</label>
                                             <input type="text" id="SEO_Description<%=lang.Code %>" name="SEO_Description<%=lang.Code %>" value="<%=Shop.Bussiness.Language.Content(model.SEO_Description,lang.Code) %>" class="form-control" shop="true">
                                         </div>
+                                        <%if (CountSon(model.id) > 0 && i == 0){ %>
+                                        <small class="form-text text-muted">
+                                            <label class="custom-control custom-checkbox">
+                                                <input type="checkbox" id="UpdateSEO" name="UpdateSEO" value="1" class="custom-control-input" shop="true">
+                                                <span class="custom-control-label"><%=Tag("同步更新子商品")%></span>
+                                            </label>
+                                        </small>
+                                        <%} %>
                                     </div>
                                     <%i++;} %>
                                 </div>
@@ -805,7 +825,7 @@
                                 </div>
                                 <h6 class="card-title m-b-0"><%=Tag("商品属性")%></h6>
                             </div>
-                            <div class="card-body b-t collapse">
+                            <div class="card-body b-t collapse show">
                                 <div class="table-responsive">
                                     <table class="table table-hover no-wrap" id="shuxing"></table>
                                 </div>
@@ -952,6 +972,11 @@
         var Arrlangs = langs.split(",");
         for (var i = 0; i < Arrlangs.length; i++){
             CKEDITOR.replace('Description'+ Arrlangs[i] +'', {
+                height: '150',
+                toolbar: 'Basic',
+                language: '<%=Tag("CKEditor语言")%>'
+            });
+            CKEDITOR.replace('Specification' + Arrlangs[i] + '', {
                 height: '150',
                 toolbar: 'Basic',
                 language: '<%=Tag("CKEditor语言")%>'

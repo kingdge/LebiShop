@@ -1,0 +1,74 @@
+﻿{layout:simple} {class:Shop.Supplier.Config.OnLinePay_Edit_window}
+<lbbody>
+<table class="table">
+    <tr>
+        <th class="title" colspan="2" style="text-align:left">
+            <%=Lang(parentmodel.Name)%>
+        </th>
+    </tr>
+    <tr>
+        <th style="width: 20%;">
+            <%=Tag("是否启用")%>：
+        </th>
+        <td>
+            <label><input type="radio" name="IsUsed" shop="true" value="1" <%=model.IsUsed==1?"checked":"" %> /><%=Tag("是")%></label>
+            <label><input type="radio" name="IsUsed" shop="true" value="0" <%=model.IsUsed==0?"checked":"" %> /><%=Tag("否")%></label>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=username%>：
+        </th>
+        <td style="text-align: left;">
+            <input type="text" class="input" shop="true" min="notnull" name="UserName" id="UserName" value="<%=model.UserName %>"
+                style="width: 350px;" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=key%>：
+        </th>
+        <td style="text-align: left;">
+            <input type="text" class="input" shop="true" min="notnull" name="UserKey" id="UserKey" value="<%=model.UserKey %>"
+                style="width: 350px;" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=email%>：
+        </th>
+        <td style="text-align: left;">
+            <input type="text" class="input" shop="true" name="Email" id="Email" value="<%=model.Email %>"
+                style="width: 350px;" />
+        </td>
+    </tr>
+    
+    <tr>
+        <th>
+            <%=Tag("排序序号")%>：
+        </th>
+        <td style="text-align: left;">
+            <input type="text" class="input" shop="true" name="Sort" id="Sort" value="<%=model.Sort %>" onkeyup="value=value.replace(/[^\d]/g,'');" style="width: 70px;" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+            <div class="tools tools-m">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    function SaveObj() {
+        
+        var postData = GetFormJsonData("shop");
+        if (!CheckForm("shop", "span"))
+            return false;
+        var url = "<%=site.AdminPath %>/ajax/ajax_config.aspx?__Action=OnlinePay_Edit&id=<%=parentmodel.id %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+</script>
+</lbbody>

@@ -1,0 +1,115 @@
+﻿{layout:simple} {class:Shop.supplier.product.Property_Value_Edit_window}
+<lbbody>
+<%=Shop.Bussiness.Language.AdminLanguageTab("") %>
+<table class="table">
+    <%foreach (Shop.Model.Lebi_Language_Code lang in Shop.Bussiness.Language.Languages())
+      {%>
+    <tbody id="lang_<%=lang.Code %>" class="lang_table" style="display: none">
+        <tr>
+            <th style="width: 20%">
+                <%=Tag("属性名称")%>：
+            </th>
+            <td>
+                <input type="text" class="input" name="Name<%=lang.Code %>" shop="true"  id="Name<%=lang.Code %>" value="<%=Shop.Bussiness.Language.Content(model.Name, lang.Code) %>" style="width: 200px" />
+            </td>
+        </tr>
+    </tbody>
+    <%} %>
+</table>
+<ul id="tablistmain">
+    <li class="selected"><a><span>
+        <%=Tag("通用信息")%></span></a></li></ul>
+<table
+    id="common" class="table">
+    <tr>
+        <th style="vertical-align:top">
+            <%=Tag("图标")%>：
+        </th>
+        <td>
+            <div id="image_ImageUrl">
+                <%if (model.ImageUrl != "")
+                    {%>
+                <img src="<%=site.WebPath + model.ImageUrl%>" style="height:30px" />
+                <%} %>
+            </div>
+            <input type="text" shop="true" id="ImageUrl" name="ImageUrl" class="input" style="width: 200px;" value="<%=model.ImageUrl%>" />
+            <input id="file_ImageUrl" name="file_ImageUrl" type="file" class="input" onchange="uploadImage('ImageUrl')" />
+            <!--<input type="button" value="上传" onclick="uploadImage('ImageUrl')" />-->
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("代码")%>：
+        </th>
+        <td>
+            <input type="text" class="input" name="Code" shop="true" id="Code" value="<%=model.Code %>" style="width:70px"/>
+        </td>
+    </tr>
+    <%if (pmodel.Type_id_ProPertyType == 134)
+      { %>
+    <tr>
+        <th><%=Tag("价格")%>(<%=DefaultCurrency.Msige%>)：</th>
+        <td>
+            <input type="text" class="input" id="Price" shop="true" min="notnull" name="Price" style="width: 70px;" value="<%=model.Price %>" onkeyup="value=value.replace(/[^.\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^.\d]/g,''))" />
+        </td>
+    </tr>
+    <%} %>
+    <tr>
+        <th style="width: 20%">
+            <%=Tag("排序序号")%>：
+        </th>
+        <td>
+            <input type="text" class="input" name="Sort" shop="true" id="Sort" value="<%=model.Sort %>"
+                onkeyup="value=value.replace(/[^\d]/g,'')" style="width: 70px" />
+        </td>
+    </tr>
+    <tr>
+        <td class="action" colspan="2">
+            <div class="tools tools-m clear">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span>
+                        <%=Tag("保存")%></span></a></li>
+                </ul>
+            </div>
+            <input type="hidden" name="parentid" id="parentid" shop="true" value="<%=pmodel.id %>" />
+            <input type="hidden" name="parentSort" id="parentSort" shop="true" value="<%=pmodel.Sort %>" />
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    LanguageTab_EditPage('<%=CurrentLanguage.Code %>'); //加载默认语言
+    function SaveObj() {
+        var postData = GetFormJsonData("shop");
+        if (!CheckForm("shop", "span"))
+            return false;
+        var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Property_Edit&id=<%=model.id %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+    function uploadImage(id) {
+        $.ajaxFileUpload
+        (
+	        {
+	            url: WebPath + '/ajax/imageuploadone.aspx?path=productproperty',
+	            secureuri: false,
+	            fileElementId: 'file_' + id,
+	            dataType: 'json',
+	            success: function (data, status) {
+	                if (data.msg != 'OK') {
+	                    MsgBox(2, data.msg, "");
+	                }
+	                else {
+	                    var imageUrl = data.ImageUrl;
+	                    if (imageUrl.length > 0) {
+	                        $("#image_" + id + "").html('<img height="30" src=' + WebPath + imageUrl + '>');
+	                        $("#" + id + "").val(imageUrl);
+	                    }
+	                }
+	            },
+	            error: function (data, status, e) {
+	                MsgBox(2, data.msg, "");
+	            }
+	        }
+        )
+    }
+</script>
+</lbbody>

@@ -1,0 +1,134 @@
+﻿{layout:default} {class:Shop.Supplier.Config.Message}
+<lbhead>
+    <title><%if (type == "0")
+             { %><%=Tag("收件箱")%>-<%}
+             else if (type == "1")
+             { %><%=Tag("发件箱")%>-<%} %><%=Tag("站内信")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="email"><a href="javascript:void(0);" onclick="Write('<%=UserName%>');"><b></b><span><%=Tag("发信息")%></span></a></li>
+    <li class="del"><a href="javascript:void(0);" onclick="DEL();"><b></b><span><%=Tag("删除")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_supplier.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="<%=site.AdminPath %>/config/Message.aspx"><%=Tag("站内信")%></a><%if (type == "0")
+             { %> > <%=Tag("收件箱")%><%}
+             else if (type == "1")
+             { %> > <%=Tag("发件箱")%><%} %><%if (user_id > 0)
+                                           { %> > <%=UserName%><%} %></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+<%string langstr = lang;
+  if (langstr == "")
+      langstr = CurrentLanguage.Code;
+%>
+    <div class="searchbox clear">
+        <select id="lang">
+            <option value="">┌<%=Tag("语言")%></option>
+            <%=Shop.Bussiness.Language.LanguageOption(lang)%>
+        </select>
+        <select id="type">
+            <option value="">┌ <%=Tag("全部")%></option>
+            <option value="0" <%if (type == "0"){Response.Write(" selected");} %>><%=Tag("收件箱")%></option>
+            <option value="1" <%if (type == "1"){Response.Write(" selected");} %>><%=Tag("发件箱")%></option>
+        </select>
+        <select id="type_id">
+            <option value="">┌ <%=Tag("类别") %></option>
+            <%=Shop.Bussiness.Message.Message_TypeOption(351,type_id, langstr)%>
+            <option value="0"><%=Tag("系统消息") %></option>
+        </select>
+        <input type="text" name="dateFrom" id="dateFrom" size="12" class="input-calendar" value="<%=dateFrom %>" /> - <input type="text" name="dateTo" id="dateTo" size="12" class="input-calendar" value="<%=dateTo %>" />
+        <input type="text" id="key" name="key" class="input-query" value="<%=key %>" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" value="" />
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'sid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th style="width: 24px">
+                <%=Tag("状态")%>
+            </th>
+            <th style="width: 120px">
+                <%=Tag("收件人")%>
+            </th>
+            <th style="width: 120px">
+                <%=Tag("发件人")%>
+            </th>
+            <th>
+                <%=Tag("标题")%>
+            </th>
+            <th style="width: 100px">
+                <%=Tag("类别")%>
+            </th>
+            <th style="width: 120px">
+                <%=Tag("时间")%>
+            </th>
+            <th style="width: 60px">
+                <%=Tag("语言")%>
+            </th>
+            <th style="width: 60px">
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (Shop.Model.Lebi_Message model in models)
+          {%>
+        <tr class="list" ondblclick="Edit(<%=model.id %>)">
+            <td style="text-align:center"><input type="checkbox" value="<%=model.id %>" name="sid" /><input type="hidden" name="Uid" shop="true" value="<%=model.id %>" /></td>
+            <td style="text-align:center"><%if (model.IsRead == 0){%><img src="<%=PageImage("icon/Email.png")%>" title="<%=Tag("未读") %>" /><%}else{ %><img src="<%=PageImage("icon/email_open.png")%>" title="<%=Tag("已读") %>" /><%} %></td>
+            <td><%=model.User_Name_To %></td>
+            <td><%=model.User_Name_From %></td>
+            <td><a href="javascript:void(0)" onclick="Edit(<%=model.id %>,<%=model.User_id_From %>)"><%=model.Title%></a></td>
+            <td><%=Lang(Shop.Bussiness.Message.Message_Type(model.Message_Type_id).Name)%>&nbsp;</td>
+            <td><%=FormatTime(model.Time_Add)%></td>
+            <td><%=model.Language%></td>
+            <td><a href="javascript:void(0)" onclick="Edit(<%=model.id %>,<%=model.User_id_From %>)"><%if (type == "1" || model.User_id_To == 0)
+                                                                                                       { %><%=Tag("阅读")%><%}else{ %><%=Tag("回复")%><%} %></a></td>
+        </tr>
+        <%} %>
+    </table> 
+    <script type="text/javascript">
+        function search_() {
+            var lang = $("#lang").val();
+            var key = $("#key").val();
+            var dateFrom = $("#dateFrom").val();
+            var dateTo = $("#dateTo").val();
+            var type = $("#type").val();
+            var type_id = $("#type_id").val();
+            window.location = "?user_id=<%=user_id %>&type="+ type +"&key=" + escape(key) + "&lang=" + lang + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&type_id=" + type_id;
+        }
+        function Write(User_Name) {
+            var title_ = "<%=Tag("发信息")%>";
+            var url_ = "message_write_window.aspx?User_Name="+User_Name;
+            var width_ = 600;
+            var height_ = 'auto';
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function Edit(id,id_From) {
+            var title_ = "<%=Tag("回复信息")%>";
+            if (id_From =="0")
+                var title_ = "<%=Tag("阅读信息")%>";
+            var url_ = "message_reply_window.aspx?id=" + id;
+            var width_ = 600;
+            var height_ = 'auto';
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function DEL() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var ids = GetChkCheckedValues("sid");
+            var postData = { "ids": ids };
+            var url = "<%=site.AdminPath %>/ajax/ajax_config.aspx?__Action=Message_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

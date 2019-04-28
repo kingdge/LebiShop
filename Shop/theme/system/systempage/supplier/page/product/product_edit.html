@@ -1,0 +1,790 @@
+﻿{layout:default} {class:Shop.supplier.product.product_Edit}
+<lbhead>
+    <title><%if (model.id > 0) { Response.Write(Shop.Bussiness.Language.Content(model.Name, CurrentLanguage.Code) + "-"); } %><%=Tag("商品管理")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+    <script type="text/javascript" src="<%=site.WebPath %>/Editor/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript" src="<%=site.WebPath %>/Editor/ckfinder/ckfinder.js"></script>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/dialog.js"></script>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/jquery-ui/timepicker-addon.js"></script>
+    <%if (CurrentLanguage.Code=="CN"){%><script type="text/javascript" src="<%=site.AdminJsPath %>/jquery-ui/timepicker-zh-CN.js"></script><%}%>
+    <link rel="stylesheet" type="text/css" href="<%=site.AdminJsPath %>/jquery-ui/timepicker-addon.css" />
+    <script type="text/javascript">
+        $(function () {
+            $(".input-calendar").datetimepicker({dateFormat:"yy-mm-dd",showSecond:true,timeFormat:"HH:mm:ss",stepHour:1,stepMinute:1,tepSecond:1});
+        });
+    </script>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/multiselect/js/jquery.multiselect2side.js"></script>
+    <link rel="stylesheet" href="<%=site.AdminJsPath %>/multiselect/css/jquery.multiselect2side.css" type="text/css" media="screen" />
+    <style>
+        .steppricetable{border: 1px solid #cccccc;}
+        .steppricetable tr th{text-align:center;}
+        .steppricetable tr td{text-align:center;}
+        .bottom{height: 0;overflow: hidden;display: none;}
+    </style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj(1);"><b></b><span><%=Tag("保存并返回")%></span></a></li>
+    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj(2);"><b></b><span><%=Tag("保存并继续编辑")%></span></a></li>
+    <%}%>
+    <li class="rotate"><a href="javascript:void(0);" onclick="javascript:history.back();"><b></b><span><%=Tag("返回")%></span></a></li>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="<%=site.AdminPath %>/product/default.aspx"><%=Tag("商品管理")%></a> > <%=Shop.Tools.Utils.CutString(Shop.Bussiness.Language.Content(model.Name, CurrentLanguage.Code),30,true) %></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbtop>
+<div class="mainbody_top">
+    <ul class="tablist">
+        <li onclick="Edit(1)" id="p1" class="selected"><a><span><%=Tag("基本信息")%></span></a></li>
+        <li onclick="Edit(2)" id="p2"><a><span><%=Tag("通用信息")%></span></a></li>
+        <li onclick="Edit(3);" id="p3"><a><span><%=Tag("商品属性")%></span></a></li>
+        <li onclick="Edit(5);" id="p5"><a><span><%=Tag("商品价格")%></span></a></li>
+        <%if (model.id>0 && model.Product_id == 0){ %>
+        <li onclick="Edit(4);" id="p4"><a><span><%=Tag("商品规格")%></span></a></li><%} %>
+    </ul>
+</div>
+</lbtop>
+<lbbody>
+    <div id="table1">
+    <%=Shop.Bussiness.Language.AdminLanguageTab("") %>
+    <table class="table">
+        <%int i = 0;foreach (Shop.Model.Lebi_Language_Code lang in Shop.Bussiness.Language.Languages())
+          {%>
+        <tbody id="lang_<%=lang.Code %>" class="lang_table" style="display: none">
+            <tr>
+                <th>
+                    <%=Tag("商品名称")%>：
+                </th>
+                <td>
+                    <input type="text" id="Name<%=lang.Code %>" shop="true" style="width: 500px;" name="Name<%=lang.Code %>" value="<%=Shop.Bussiness.Language.Content(model.Name, lang.Code) %>" class="input" />
+                    <%if (CountSon(model.id) > 0 && i == 0){ %><label title="<%=Tag("同步更新子商品")%>"><input type="checkbox" name="UpdateName" shop="true" id="UpdateName" value="1" /><em><%=Tag("同步")%></em></label><%} %>
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("商品简介")%>：
+                </th>
+                <td>
+                    <textarea id="Introduction<%=lang.Code %>" shop="true" name="Introduction<%=lang.Code %>" class="textarea" style="height: 55px; width: 500px;"><%=Shop.Bussiness.Language.Content(model.Introduction, lang.Code)%></textarea>
+                    <%if (CountSon(model.id) > 0 && i == 0){ %><label title="<%=Tag("同步更新子商品")%>"><input type="checkbox" name="UpdateIntroduction" shop="true" id="UpdateIntroduction" value="1" /><em><%=Tag("同步")%></em></label><%} %>
+                    <div class="tools clear">
+                        <ul>
+                            <li class="plus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Introduction<%=lang.Code %>',100);"><b></b><span><%=Tag("展开")%></span></a></li>
+                            <li class="minus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Introduction<%=lang.Code %>',-100)"><b></b><span><%=Tag("收缩")%></span></a></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("详细介绍")%>：
+                </th>
+                <td>
+                    <textarea name="Description<%=lang.Code %>" shop="true" id="Description<%=lang.Code %>" class="text"><%=Shop.Bussiness.Language.Content(model.Description, lang.Code)%></textarea><%if (CountSon(model.id) > 0){ %><label title="<%=Tag("同步更新子商品")%>"><input type="checkbox" name="UpdateDescription" shop="true" id="UpdateDescription" value="1" /><em><%=Tag("同步")%></em></label><%} %>
+                    <script type="text/javascript">
+                        CKEDITOR.replace('Description<%=lang.Code %>', {
+                            height: '200',
+                            width: '98%',
+                            language: '<%=Tag("CKEditor语言")%>'
+                        });
+                    </script>
+                </td>
+            </tr>
+            <%-- 
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("规格参数")%>：
+                </th>
+                <td>
+                    <textarea style="height: 60px; width: 500px;" shop="true" name="Specification<%=lang.Code %>" id="Specification<%=lang.Code %>" class="input"><%=Shop.Bussiness.Language.Content(model.Specification, lang.Code)%></textarea>
+                    <script type="text/javascript">
+                        CKEDITOR.replace('Specification<%=lang.Code %>', {
+                            height: '150',
+                            width: '98%',
+                            language: '<%=Tag("CKEditor语言")%>'
+                        });
+                    </script>
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("包装清单")%>：
+                </th>
+                <td>
+                    <textarea style="height: 60px; width: 500px;" shop="true" name="Packing<%=lang.Code %>" id="Packing<%=lang.Code %>" class="input"><%=Shop.Bussiness.Language.Content(model.Packing, lang.Code)%></textarea>
+                    <script type="text/javascript">
+                        CKEDITOR.replace('Packing<%=lang.Code %>', {
+                            height: '150',
+                            width: '98%',
+                            language: '<%=Tag("CKEditor语言")%>'
+                        });
+                    </script>
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("售后服务")%>：
+                </th>
+                <td>
+                    <textarea style="height: 60px; width: 500px;" shop="true" name="Service<%=lang.Code %>" id="Service<%=lang.Code %>" class="input"><%=Shop.Bussiness.Language.Content(model.Service, lang.Code)%></textarea>
+                    <script type="text/javascript">
+                        CKEDITOR.replace('Service<%=lang.Code %>', {
+                            height: '150',
+                            width: '98%',
+                            language: '<%=Tag("CKEditor语言")%>'
+                        });
+                    </script>
+                </td>
+            </tr>
+            --%>
+            <%if (wap)
+              { %>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("WAP端描述")%>：
+                </th>
+                <td>
+                    <textarea style="height: 60px; width: 500px;" shop="true" name="MobileDescription<%=lang.Code %>" id="MobileDescription<%=lang.Code %>" class="input"><%=Shop.Bussiness.Language.Content(model.MobileDescription, lang.Code)%></textarea><%if (CountSon(model.id) > 0){ %><label title="<%=Tag("同步更新子商品")%>"><input type="checkbox" name="UpdateMobileDescription" shop="true" id="UpdateMobileDescription" value="1" /><em><%=Tag("同步")%></em></label><%} %>
+                    <script type="text/javascript">
+                        CKEDITOR.replace('MobileDescription<%=lang.Code %>', {
+                            height: '150',
+                            width: '98%',
+                            language: '<%=Tag("CKEditor语言")%>'
+                        });
+                    </script>
+                </td>
+            </tr>
+            <%} %>
+            <tr>
+                <th class="head" colspan="2" onclick="ShowChild('0<%=lang.Code%>,1<%=lang.Code%>,2<%=lang.Code%>','seo')">
+                    <img src="<%=PageImage("plus.gif")%>" name="imgseo" id="imgseo" style="cursor: pointer; text-align: center" /> <%=Tag("SEO优化")%>
+                    <%if (CountSon(model.id) > 0){ %><label title="<%=Tag("同步更新子商品")%>"><input type="checkbox" name="UpdateSEO" shop="true" id="UpdateSEO" value="1" /><em><%=Tag("同步")%></em></label><%} %>
+                </th>
+            </tr>
+            <tr style="display:none;" name="trseo" id="tr0<%=lang.Code%>">
+                <th>
+                    <%=Tag("网页标题")%>：
+                </th>
+                <td>
+                    <input type="text" style="width: 600px;" shop="true" class="input" id="SEO_Title<%=lang.Code %>" name="SEO_Title<%=lang.Code %>" value="<%=Shop.Bussiness.Language.Content(model.SEO_Title, lang.Code)%>" />
+                </td>
+            </tr>
+            <tr style="display:none;" name="trseo" id="tr1<%=lang.Code%>">
+                <th>
+                    <%=Tag("关键词")%>：
+                </th>
+                <td>
+                    <input type="text" style="width: 600px;" shop="true" id="SEO_Keywords<%=lang.Code %>" name="SEO_Keywords<%=lang.Code %>" value="<%=Shop.Bussiness.Language.Content(model.SEO_Keywords, lang.Code)%>" class="input" />
+                </td>
+            </tr>
+            <tr style="display:none;" name="trseo" id="tr2<%=lang.Code%>">
+                <th>
+                    <%=Tag("网页描述")%>：
+                </th>
+                <td>
+                    <input type="text" style="width: 600px;" shop="true" id="SEO_Description<%=lang.Code %>" name="SEO_Description<%=lang.Code %>" value="<%=Shop.Bussiness.Language.Content(model.SEO_Description, lang.Code)%> " class="input" />
+                </td>
+            </tr>
+        </tbody>
+        <%i++;} %>
+    </table>
+    </div>
+    <div id="table2" style="display: none">
+    <table class="table">
+        <tr>
+            <th>
+                <%=Tag("商品类别")%>：
+            </th>
+            <td>
+                <div id="ProductType_div"></div>
+            </td>
+        </tr>
+        <tr>
+            <th style="vertical-align:top">
+                <%=Tag("自定义类别")%>：
+            </th>
+            <td>
+                <select name="Supplier_ProductType_ids" id="Supplier_ProductType_ids" shop="true" multiple="multiple" size="8">
+                    <%=Shop.Bussiness.EX_Product.SupplierTypeOption(CurrentSupplier.id, 0, model.Supplier_ProductType_ids, 0, CurrentLanguage.Code)%>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("商品货号")%>：
+            </th>
+            <td>
+                <input type="text" id="Code" shop="true" name="Code" class="input" value="<%=model.Code %>" />
+            </td>
+        </tr>
+       <%if (CurrentSupplierGroup.IsSubmit == 1)
+         { %>
+        <tr>
+            <th>
+                <%=Tag("商品编号")%>：
+            </th>
+            <td>
+                <input type="text" id="Number" shop="true" name="Number" class="input" value="<%=model.Number %>" />
+            </td>
+        </tr>
+        <%} %>
+        <tr>
+            <th>
+                <%=Tag("商品单位")%>：
+            </th>
+            <td>
+                <select id="Units_id" shop="true" name="Units_id">
+                    <option value="0"><%=Tag("请选择")%></option>
+                    <%=Shop.Bussiness.EX_Product.UnitOption(model.Units_id)%>
+                </select>
+                <%if (CountSon(model.id) > 0){ %><label title="<%=Tag("同步更新子商品")%>"><input type="checkbox" name="UpdateUnits_id" shop="true" id="UpdateUnits_id" value="1" /><em><%=Tag("同步")%></em></label><%} %>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("商品品牌")%>：
+            </th>
+            <td>
+                <div style="float: left;" id="divBrnad">
+                    <select id="Brand_id" shop="true" name="Brand_id">
+                        <option value="0"><%=Tag("请选择")%></option>
+                        <%=Shop.Bussiness.EX_Product.BrandOption(model.Brand_id,"",CurrentSupplier.id)%>
+                    </select>
+                    <%if (CountSon(model.id) > 0){ %><label title="<%=Tag("同步更新子商品")%>"><input type="checkbox" name="UpdateBrand_id" shop="true" id="UpdateBrand_id" value="1" /><em><%=Tag("同步")%></em></label><%} %>
+                </div>
+            </td>
+        </tr>
+        <%if (!Shop.Bussiness.EX_Product.IsHaveSon(model.id))
+          { %>
+        <tr>
+            <th>
+                <%=Tag("库存数量")%>：
+            </th>
+            <td>
+                <input type="text" id="Count_Stock" shop="true" min="notnull" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" name="Count_Stock" class="input" style="width: 70px;" value="<%=model.Count_Stock %>" />
+            </td>
+        </tr>
+        <%} %>
+        <tr>
+            <th>
+                <%=Tag("警戒库存")%>：
+            </th>
+            <td>
+                <input type="text" shop="true" min="notnull" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" id="Count_StockCaution" name="Count_StockCaution" class="input" style="width: 70px;" value="<%=model.Count_StockCaution %>" />
+                <%if (CountSon(model.id) > 0){ %><label title="<%=Tag("同步更新子商品")%>"><input type="checkbox" name="UpdateCount_StockCaution" shop="true" id="UpdateCount_StockCaution" value="1" /><em><%=Tag("同步")%></em></label><%} %>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("包装率")%>：
+            </th>
+            <td>
+                <input type="text" shop="true" name="PackageRate" value="<%=model.PackageRate %>" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" id="PackageRate" class="input" style="width: 70px;" />
+                <%if (CountSon(model.id) > 0){ %><label title="<%=Tag("同步更新子商品")%>"><input type="checkbox" name="UpdatePackageRate" shop="true" id="UpdatePackageRate" value="1" /><em><%=Tag("同步")%></em></label><%} %>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("商品毛重")%>：
+            </th>
+            <td>
+                <input type="text" shop="true" min="notnull" value="<%=model.Weight %>" class="input" onkeyup="value=value.replace(/[^\d\.]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d\.]/g,''))" id="Weight" name="Weight" style="width: 70px;" /> <%=Tag("KG")%> <em><%=Tag("用来计算订单配送费用")%></em>
+                <%if (CountSon(model.id) > 0){ %><label title="<%=Tag("同步更新子商品")%>"><input type="checkbox" name="UpdateWeight" shop="true" id="UpdateWeight" value="1" /><em><%=Tag("同步")%></em></label><%} %>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("商品净重")%>：
+            </th>
+            <td>
+                <input type="text" shop="true" min="notnull" value="<%=model.NetWeight %>" class="input" onkeyup="value=value.replace(/[^\d\.]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d\.]/g,''))" id="NetWeight" name="NetWeight" style="width: 70px;" /> <%=Tag("KG")%>
+                <%if (CountSon(model.id) > 0){ %><label title="<%=Tag("同步更新子商品")%>"><input type="checkbox" name="UpdateNetWeight" shop="true" id="UpdateNetWeight" value="1" /><em><%=Tag("同步")%></em></label><%} %>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("包装尺寸")%>：
+            </th>
+            <td>
+                <%=Tag("L")%>：<input type="text" shop="true" name="VolumeL" value="<%=model.VolumeL %>" onkeyup="value=value.replace(/[^.\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^.\d]/g,''))" id="VolumeL" class="input" style="width: 70px;" />
+                <%=Tag("W")%>：<input type="text" shop="true" name="VolumeW" value="<%=model.VolumeW %>" onkeyup="value=value.replace(/[^.\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^.\d]/g,''))" id="VolumeW" class="input" style="width: 70px;" />
+                <%=Tag("H")%>：<input type="text" shop="true" name="VolumeH" value="<%=model.VolumeH %>" onkeyup="value=value.replace(/[^.\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^.\d]/g,''))" id="VolumeH" class="input" style="width: 70px;" /> <em><%=Tag("单位CM")%></em>
+                <%if (CountSon(model.id) > 0){ %><label title="<%=Tag("同步更新子商品")%>"><input type="checkbox" name="UpdateVolume" shop="true" id="UpdateVolume" value="1" /><em><%=Tag("同步")%></em></label><%} %>
+            </td>
+        </tr>
+        <tr>
+            <th style="vertical-align:top">
+                <%=Tag("商品主图")%>：
+            </th>
+            <td>
+                <div id="image_ImageOriginal">
+                    <%if (model.ImageOriginal != "")
+                      {%>
+                    <a href="<%=Image(model.ImageOriginal,"big") %>" data-lightbox="bigimage"><img height="30" src="<%=Image(model.ImageOriginal,"small")%>" /></a>
+                    <%} %>
+                </div>
+                <input type="hidden" shop="true" id="ImageOriginal" name="ImageOriginal" value="<%=model.ImageOriginal%>" />
+                <input id="file_ImageOriginal" name="file_ImageOriginal" class="input" type="file" onchange="uploadImage('ImageOriginal')" />
+                <!--<input type="button" value="<%=Tag("上传")%>" class="button" onclick="uploadImage('ImageSmall')" />-->
+                <em>
+                    <%=Tag("如果含有子商品，将使用自动提取首个子商品图片")%></em>
+            </td>
+        </tr>
+         <%if (!Shop.Bussiness.EX_Product.IsHaveSon(model.id))
+           { %>
+        <tr>
+            <th style="vertical-align:top">
+                <%=Tag("展示图")%>：
+            </th>
+            <td>
+                <textarea id="Images" name="Images" shop="true" class="textarea" style="height: 60px; width: 450px;display:none"><%=model.Images%></textarea>
+                <div id="imagesdiv"></div>
+            </td>
+        </tr>
+        <%} %>
+        <tr>
+            <th>
+                <%=Tag("商品类型")%>：
+            </th>
+            <td style="text-align: left;">
+                <%=Shop.Bussiness.EX_Type.TypeRadio("ProductType", "Type_id_ProductType", model.Type_id_ProductType, "shop=\"true\" onclick=\"ChangeProductType();\"",CurrentLanguage.Code,"and id not in(323,324)")%>
+            </td>
+        </tr>
+        <tbody id="qianggoubody">
+        <tr>
+            <th><%=Tag("抢购价")%>(<%=DefaultCurrency.Msige%>)：</th>
+            <td>
+                <input type="text" class="input" id="Price_Sale" shop="true" min="notnull" name="Price_Sale" style="width: 70px;" value="<%=FormatMoney(model.Price_Sale,"Number") %>" onkeyup="value=value.replace(/[^.\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^.\d]/g,''))" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("限购数量")%>：
+            </th>
+            <td>
+                <input type="text" shop="true" name="Count_Limit" value="<%=model.Count_Limit %>" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" id="Count_Limit" class="input" style="width: 70px;" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("截止日期")%>：
+            </th>
+            <td>
+                <input type="text" shop="true" name="Time_Expired" value="<%=model.Time_Expired %>" id="Time_Expired" class="input-calendar" style="width:200px" /> <em></em>
+            </td>
+        </tr>
+        </tbody>
+        <tr>
+            <th>
+                <%=Tag("上架日期")%>：
+            </th>
+            <td>
+                <input type="text" shop="true" name="Time_OnSale" value="<%=FormatTime(model.Time_OnSale) %>" id="Time_OnSale" class="input-calendar" style="width: 200px" />
+            </td>
+        </tr>
+        <%if (model.id == 0 || (model.id > 0 && model.Product_id == 0)){%>
+        <tr>
+            <th>
+                <%=Tag("商品标签")%>：
+            </th>
+            <td>
+                <% foreach (Shop.Model.Lebi_Pro_Tag t in Shop.Bussiness.B_Lebi_Pro_Tag.GetList("", ""))
+                   { %>
+                <label><input shop="true" type="checkbox" id="Pro_Tag_id" value="<%=t.id %>" name="Pro_Tag_id"
+                    <%=(","+model.Pro_Tag_id+",").Contains(","+t.id+",")?"checked":"" %> /><%=Shop.Bussiness.Language.Content(t.Name,CurrentLanguage.Code) %></label>
+                <%} %>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    </div>
+    <div id="table3" style="display: none">
+    <table class="table">
+        <tbody id="shuxing">
+        </tbody>
+        <%if (CountSon(model.id) > 0){ %><tr><th>&nbsp;</th><td><label title="<%=Tag("同步更新子商品")%>"><input type="checkbox" name="UpdateProPerty133" shop="true" id="UpdateProPerty133" value="1" /><em><%=Tag("同步")%></em></label><%} %></td></tr>
+    </table>
+    </div>
+    <div id="table5" style="display: none">
+        <table class="table">
+            <tr>
+                <th>
+                    <%=Tag("成本价")%>(<%=DefaultCurrency.Msige%>)：
+                </th>
+                <td>
+                    <%if (addflag || model.Type_id_ProductStatus != 102 || CurrentSupplierGroup.IsSubmit == 1)
+                    { %>
+                    <input type="text" class="input" shop="true" min="notnull" id="Price_Cost" name="Price_Cost" style="width: 70px;" value="<%=FormatMoney(model.Price_Cost," Number") %>" />
+                    <%if (CountSon(model.id) > 0){ %><label title="<%=Tag(" 同步更新子商品")%>"><input type="checkbox" name="UpdatePrice_Cost" shop="true" id="UpdatePrice_Cost" value="1" /><em><%=Tag("同步")%></em></label><%} %>
+                    <%}
+                    else
+                    { %>
+                    <%=model.Price_Cost%>
+                    <%} %>
+                </td>
+            </tr>
+            <%if (CurrentSupplier.IsSupplierTransport == 1)
+            { %>
+            <tr>
+                <th>
+                    <%=Tag("市场价")%>(<%=DefaultCurrency.Msige%>)：
+                </th>
+                <td>
+                    <input type="text" id="Price_Market" shop="true" min="notnull" name="Price_Market" class="input" style="width: 70px;" value="<%=FormatMoney(model.Price_Market," Number") %>" onkeyup="value=value.replace(/[^.\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^.\d]/g,''))" />
+                    <%if (CountSon(model.id) > 0){ %><label title="<%=Tag(" 同步更新子商品")%>"><input type="checkbox" name="UpdatePrice_Market" shop="true" id="UpdatePrice_Market" value="1" /><em><%=Tag("同步")%></em></label><%} %>
+                </td>
+            </tr>
+            <tr>
+                <th><%=Tag("销售价")%>(<%=DefaultCurrency.Msige%>)：</th>
+                <td>
+                    <input type="text" class="input" id="Price" shop="true" min="notnull" name="Price" style="width: 70px;" value="<%=FormatMoney(model.Price," Number") %>" onkeyup="value=value.replace(/[^.\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^.\d]/g,''))" />
+                    <%if (CountSon(model.id) > 0){ %><label title="<%=Tag(" 同步更新子商品")%>"><input type="checkbox" name="UpdatePrice" shop="true" id="UpdatePrice" value="1" /><em><%=Tag("同步")%></em></label><%} %>
+                </td>
+            </tr>
+            <%if (Shop.LebiAPI.Service.Instanse.Check("plugin_product_price")){ %>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("阶梯价格")%>：
+                </th>
+                <td align="left">
+                    <table cellpadding="0" cellspacing="0" style="display:block;width:350px" class="steppricetable" align="left" id="steppricetable">
+                        <tr>
+                            <th style="width:150px;text-align:center;">
+                                <%=Tag("购买数量")%> >
+                            </th>
+                            <th style="width:150px;text-align:center;">
+                                <%=Tag("价格")%>
+                            </th>
+                            <th style="width:100px;text-align:center;">
+                                <%=Tag("操作")%> [<a href="javascript:addsteppricerow();"><%=Tag("增加")%></a>]
+                            </th>
+                        </tr>
+                        <%foreach(Shop.Model.ProductStepPrice stepprice in StepPrices){ %>
+                        <tr>
+                            <td>
+                                <input type="text" class="input" shop="true" name="step_count" style="width: 70px;" value="<%=stepprice.Count %>" onkeyup="value=value.replace(/[^\d]/g,'')" />
+                            </td>
+                            <td>
+                                <input type="text" class="input" shop="true" name="step_price" style="width: 70px;" value="<%=FormatMoney(stepprice.Price," Number") %>" onkeyup="value=value.replace(/[^.\d]/g,'')" />
+                            </td>
+                            <td>
+                                <a href="javascript:void(0);" onclick="$(this).parent().parent().remove();"><%=Tag("删除")%></a>
+                            </td>
+                        </tr>
+                        <%} %>
+                    </table>
+                    <%if (CountSon(model.id) > 0)
+                    { %><label title="<%=Tag(" 同步更新子商品")%>
+                        "><input type="checkbox"
+                                 name="UpdateStepPrice" shop="true" id="UpdateStepPrice" value="1" /><em><%=Tag("同步")%></em>
+                    </label><%} %>
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("分组价格")%>：
+                </th>
+                <td align="left">
+                    <table cellpadding="0" cellspacing="0" style="display:block;width:350px" class="steppricetable" align="left" id="Table6">
+                        <tr>
+                            <th style="width:150px;text-align:center;">
+                                <%=Tag("会员分组")%>
+                            </th>
+                            <th style="width:150px;text-align:center;">
+                                <%=Tag("价格")%>
+                            </th>
+                            <th style="width:100px;text-align:center;"></th>
+                        </tr>
+                        <%foreach(Shop.Model.Lebi_UserLevel modellevel in userlevels){ %>
+                        <tr>
+                            <td>
+                                <%=Lang(modellevel.Name) %>
+                            </td>
+                            <td>
+                                <input type="text" class="input" shop="true" name="userlevelprice<%=modellevel.id %>" style="width: 70px;" value="<%=FormatMoney(GetUserLevelPrice(modellevel.id)," Number") %>" onkeyup="value=value.replace(/[^.\d]/g,'')" />
+                            </td>
+                            <td></td>
+                        </tr>
+                        <%} %>
+                    </table>
+                    <%if (CountSon(model.id) > 0)
+                    { %><label title="<%=Tag(" 同步更新子商品")%>
+                        "><input type="checkbox"
+                                 name="UpdateUserLevelPrice" shop="true" id="UpdateUserLevelPrice" value="1" /><em><%=Tag("同步")%></em>
+                    </label><%} %>
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("起订量")%>：
+                </th>
+                <td align="left">
+                    <table cellpadding="0" cellspacing="0" style="display:block;width:350px" class="steppricetable" align="left" id="Table7">
+                        <tr>
+                            <th style="width:150px;text-align:center;">
+                                <%=Tag("会员分组")%>
+                            </th>
+                            <th style="width:150px;text-align:center;">
+                                <%=Tag("数量")%>
+                            </th>
+                            <th style="width:100px;text-align:center;"></th>
+                        </tr>
+                        <%foreach(Shop.Model.Lebi_UserLevel modellevel in userlevels){ %>
+                        <tr>
+                            <td>
+                                <%=Lang(modellevel.Name) %>
+                            </td>
+                            <td>
+                                <input type="text" class="input" shop="true" name="userlevelcount<%=modellevel.id %>" style="width: 70px;" value="<%=GetUserLevelCount(modellevel.id) %>" onkeyup="value=value.replace(/[^\d]/g,'')" />
+                            </td>
+                            <td></td>
+                        </tr>
+                        <%} %>
+                    </table>
+                    <%if (CountSon(model.id) > 0)
+                    { %><label title="<%=Tag(" 同步更新子商品")%>
+                        "><input type="checkbox"
+                                 name="UpdateUserLevelCount" shop="true" id="UpdateUserLevelCount" value="1" /><em><%=Tag("同步")%></em>
+                    </label><%} %>
+                </td>
+            </tr>
+            <%}%>
+            <%} %>
+        </table>
+    </div>
+    <div id="table4">
+    </div>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+    </div>
+    <input type="hidden" value="<%=action %>" id="action" />
+    <script type="text/javascript">
+        LanguageTab_EditPage('<%=CurrentLanguage.Code %>'); //加载默认语言
+        function SaveObj(type) {
+            <%foreach (Shop.Model.Lebi_Language_Code lang in Shop.Bussiness.Language.Languages()){%>
+            var editor<%=lang.Code %> = CKEDITOR.instances.Description<%=lang.Code %>;
+            $("#Description<%=lang.Code %>").val(editor<%=lang.Code %>.getData());
+            <%-- 
+            var editor1<%=lang.Code %> = CKEDITOR.instances.Specification<%=lang.Code %>;
+            $("#Specification<%=lang.Code %>").val(editor1<%=lang.Code %>.getData());
+            var editor2<%=lang.Code %> = CKEDITOR.instances.Packing<%=lang.Code %>;
+            $("#Packing<%=lang.Code %>").val(editor2<%=lang.Code %>.getData());
+            var editor3<%=lang.Code %> = CKEDITOR.instances.Service<%=lang.Code %>;
+            $("#Service<%=lang.Code %>").val(editor3<%=lang.Code %>.getData());
+            --%>
+            <%if (wap){ %>
+            var editor4<%=lang.Code %> = CKEDITOR.instances.MobileDescription<%=lang.Code %>;
+            $("#MobileDescription<%=lang.Code %>").val(editor4<%=lang.Code %>.getData());
+            <%} %>
+            <%} %>
+            if (!CheckForm("shop", "span"))
+                return false;
+            var postData = GetFormJsonData("shop");
+            var action = $("#action").val();
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Product_Edit&id=<%=model.id %>";
+            
+            RequestAjax(url,postData,function(res){
+                if (type == 0){
+                    var backurl = "#";
+                }else if (type == 1){
+                    var backurl = "default.aspx";
+                }else if (type == 2){
+                    var backurl = '?id='+res.id;
+                }
+                MsgBox(1, "<%=Tag("操作成功")%>", backurl)
+            });
+        }
+        function uploadImage(id) {
+            $.ajaxFileUpload
+        (
+            {
+                url: WebPath + '/ajax/imageupload.aspx',
+                secureuri: false,
+                fileElementId: 'file_' + id,
+                dataType: 'json',
+                success: function (data, status) {
+                    if (data.msg != 'OK') {
+                        MsgBox(2, data.msg, "");
+                    }
+                    else {
+                        var imageUrl = data.img;
+                        if (imageUrl.length > 0) {
+                            $("#image_" + id + "").html('<img style="height:30px" src="<%=webconfig.ImageURL%>'+ imageUrl + '">');
+                            $("#" + id + "").val(imageUrl);
+                        }
+                    }
+                }
+            }
+        )
+        }
+        function ChangeProductType(){
+            $("#qianggoubody").hide();
+            $("#yudingbody").hide();
+            var Type_id_ProductType=$("input[name='Type_id_ProductType']:checked").val();
+            if(Type_id_ProductType==321){
+                $("#qianggoubody").show();
+                $("#pricename").html("<%=Tag("抢购价") %>(<%=DefaultCurrency.Msige%>)");
+            }else if(Type_id_ProductType==322){
+                $("#qianggoubody").show();
+                $("#pricename").html("<%=Tag("团购价") %>(<%=DefaultCurrency.Msige%>)");
+            }else if(Type_id_ProductType==323){
+                $("#qianggoubody").show();
+                $("#pricename").html("<%=Tag("换购积分") %>");
+            }else if(Type_id_ProductType==324){
+                $("#yudingbody").show();
+            }
+        }
+        function ChangeProductStatus(){
+            var Type_id_ProductStatus=$("input[name='Type_id_ProductStatus']:checked").val();
+            if(Type_id_ProductStatus==103){
+                $("#FreezeRemarkbody").show();
+            }else{
+                $("#FreezeRemarkbody").hide();
+            }
+        }
+        function ChangePro_Type() {
+            var id = $("#Pro_Type_id").val();
+            $.ajax({
+                type: "POST",
+                url: "product_edit_part.aspx?tid=" + id + "&pid=<%=model.id %>",
+                data: '',
+                success: function (res) {
+                    $("#shuxing").html(res);
+                }
+            });
+        }
+        function Edit(id1) {
+            ChangePro_Type();getImages();ChangeProductType();ChangeProductStatus();GetProductType(<%=model.Pro_Type_id %>);getproducts();
+            $("#p"+id1+"").addClass("selected");
+            $("#table" + id1).show();
+            $("#action").val(id1);
+            var id2 = 2;
+            var id3 = 3;
+            var id4 = 4;
+            var id5 = 5;
+            switch (id1) {
+                case 1:
+                    id2 = 2;id3 = 3;id4 = 4;id5 = 5;break;
+                case 2:
+                    id2 = 1;id3 = 3;id4 = 4;id5 = 5;break;
+                case 3:
+                    id2 = 2;id3 = 1;id4 = 4;id5 = 5;break;
+                case 4:
+                    id2 = 2;id3 = 3;id4 = 1;id5 = 5;break;
+                case 5:
+                    id2 = 2;id3 = 3;id4 = 1;id5 = 4;break;
+            }
+            $("#p" + id2).removeClass("selected");
+            $("#p" + id3).removeClass("selected");
+            $("#p" + id4).removeClass("selected");
+            $("#p" + id5).removeClass("selected");
+            $("#table" + id2).hide();
+            $("#table" + id3).hide();
+            $("#table" + id4).hide();
+            $("#table" + id5).hide();
+        }
+        function CreateProduct(){
+            if (!confirm("<%=Tag("确认要生成同款的商品数据吗？")%>"))
+                return false;
+            var ggs=GetChkCheckedValues("Property131");
+            var pid=<%=model.id %>;
+            var tid=$("#Pro_Type_id").val();
+            var postData={ "ggs": ggs,"pid":pid,"tid":tid};
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=CreateProductGuiGe";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "");getsubproducts();});
+        }
+        function Product_Del() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = GetFormJsonData("ShopKeyID");
+            var action = $("#action").val();
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Product_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "");getsubproducts();});
+        }
+        function Product_Edit_muti() {
+            var postData = GetFormJsonData("sonproduct");
+            var action = $("#action").val();
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Product_Edit_muti_price_store&pid=<%=id %>";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "")});
+        }
+        function Product_Status_Edit_muti(status) {
+            var postData = GetFormJsonData("ShopKeyID");
+            var action = $("#action").val();
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Product_Status_Edit_muti&status="+status;
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "");getsubproducts();});
+        }
+        function Product_Name_Edit(id) {
+            var title_ = "<%=Tag("编辑商品名称")%>";
+            var url_ = "product_name_edit_window.aspx?pid=<%=id %>&id=" + id;
+            var width_ = 560;
+            var height_ = 'auto';
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function Product_Remark_Edit(id) {
+            var title_ = "<%=Tag("内部备注")%>";
+            var url_ = "product_remark_edit_window.aspx?pid=<%=id %>&id=" + id;
+            var width_ = 560;
+            var height_ = 'auto';
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function Product_Image_Edit() {
+            var ids = GetChkCheckedValues("sonproductid");
+            if (ids == "") {
+                MsgBox(2, "<%=Tag("请选择要修改的商品")%>", "");
+                return;
+            }
+            var title_ = "<%=Tag("批量编辑商品图片")%>";
+            var url_ = "product_image_edit_window.aspx?id=<%=id %>&ids=" + ids;
+            var width_ = 600;
+            var height_ = 'auto';
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function getproducts() {
+//            if(<%=model.id %>==0)
+//               return false;
+            var id = $("#Pro_Type_id").val();
+            var Property131=GetChkCheckedValues("Property131");
+            var ProPertyMain=$("#ProPertyMain").val();
+            $.ajax({
+                type: "POST",
+                url: "product_edit_list.aspx?tid="+ id +"&pid=<%=model.id %>&Property131="+ Property131 +"&ProPertyMain="+ProPertyMain,
+                data: '',
+                success: function (res) {
+                    $("#div_error").dialog('close'); 
+                    $("#table4").html(res);
+                }
+            });
+        }
+        function getImages() {
+            var images = $("#Images").val();
+            $.ajax({
+                type: "POST",
+                url: "<%=site.AdminPath %>/product/imagesupload.aspx?input=Images&pid=<%=model.id %>",
+                data: { "images": images },
+                success: function (res) {
+                    $("#imagesdiv").html(res);
+                }
+            });
+        }
+        $(function () {
+            Edit(<%=action %>);
+            $("#Supplier_ProductType_ids").multiselect2side({
+                selectedPosition: "right",
+                moveOptions: false,
+                //search: "<img src='img/search.gif' align=\"absmiddle\" /> ",
+                labelsx: "",
+                labeldx: "",
+                autoSort: false,
+                autoSortAvailable: false
+            });
+        });
+    </script>
+</lbbottom>

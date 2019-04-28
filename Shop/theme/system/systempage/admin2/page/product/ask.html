@@ -162,8 +162,13 @@
             var status = $("#status").val();
             var lang = $("#lang").val();
             var key = $("#key").val();
-            var dateFrom = $("#dateFrom").val();
-            var dateTo = $("#dateTo").val();
+            var dateFrom = "";
+            var dateTo = "";
+            var daterange = $("#daterange").val();
+            if (daterange.indexOf(" - ") > -1) {
+                dateFrom = daterange.split(" - ")[0];
+                dateTo = daterange.split(" - ")[1];
+            }
             window.location = "?key=" + escape(key) + "&lang=" + lang + "&status=" + status + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo;
         }
         function Edit(id) {

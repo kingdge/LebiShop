@@ -290,14 +290,14 @@ namespace Shop.Bussiness
                 }
             }
             builder.Append("<script type=\"text/javascript\">");
-            builder.Append("function PageSizeGo(pageSize){");
-            builder.Append("SetCookie('pageSize', pageSize, 1);window.location='" + string.Format(pageUrlFormat, "1") + "';");
+            builder.Append("function PageSizeGo(){");
+            builder.Append("SetCookie('pageSize', $('#pagesize').val(), 1);window.location='" + string.Format(pageUrlFormat, "1") + "';");
             builder.Append("}");
             builder.Append("</script>\r\n");
             if (!string.IsNullOrEmpty(RequestTool.GetConfigKey("SystemAdmin").Trim()))
             {
                 builder.Append("<ul class=\"pagination pagination-sm justify-content-center\">");
-                builder.Append("<li class=\"page-item m-r-10\" id=\"pagination-size\"><select class=\"form-control form-control-sm\"><option>" + pageSize + "</option><option value=\"20\" onchange=\"PageSizeGo(20);\">20</option><option value=\"40\" onchange=\"PageSizeGo(40);\">40</option><option value=\"60\" onchange=\"PageSizeGo(60);\">60</option><option value=\"80\" onchange=\"PageSizeGo(80);\">80</option><option value=\"100\" onchange=\"PageSizeGo(100);\">100</option></select></li>");
+                builder.Append("<li class=\"page-item m-r-10\" id=\"pagination-size\"><select id=\"pagesize\" class=\"form-control form-control-sm\" onChange=\"PageSizeGo();\"><option>" + pageSize + "</option><option value=\"20\">20</option><option value=\"40\">40</option><option value=\"60\">60</option><option value=\"80\">80</option><option value=\"100\">100</option></select></li>");
                 builder.Append("<li class=\"page-item m-r-10 disabled\" id=\"pagination-total\"><a class=\"page-link\">" + Language.Tag("共", lang) + " " + pageTotalItemSize + "" + Language.Tag("条", lang) + "</a></li>");
                 if (page <= 1)
                 {

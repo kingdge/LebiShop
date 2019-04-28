@@ -1,0 +1,75 @@
+﻿{layout:simple} {class:Shop.Supplier.Config.ServicePanel_Edit_window}
+<lbbody>
+<table class="table">
+    <tr>
+        <th style="width: 20%;">
+            <%=Tag("软件帐号")%>：
+        </th>
+        <td style="width: 80%;">
+            <input type="text" shop="true" min="notnull" id="Account" name="Account" class="input" value="<%=model.Account %>" /> <span style="color: #ff0000">*</span>
+        </td>
+    </tr>
+    <tr>
+        <th style="width: 20%;">
+            <%=Tag("客服名称")%>：
+        </th>
+        <td style="width: 80%;">
+            <input type="text" shop="true" id="Name" name="Name" class="input" value="<%=model.Name %>" />
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("软件名称")%>：
+        </th>
+        <td>
+            <select name="ServicePanel_Type_id" id="ServicePanel_Type_id" shop="true">
+                <%=GetOptionServicePanel_Type(model.ServicePanel_Type_id)%>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("部门名称")%>：
+        </th>
+        <td>
+            <select name="ServicePanel_Group_id" id="ServicePanel_Group_id" shop="true">
+                <%=GetOptionServicePanel_Group(model.ServicePanel_Group_id)%>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <th style="vertical-align:top">
+            <%=Tag("语言")%>：
+        </th>
+        <td>
+            <%= Shop.Bussiness.Language.SiteLanguageCheckbox("Language_ids", model.Language_ids,CurrentLanguage.Code,null)%>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("排序序号")%>：
+        </th>
+        <td style="text-align: left;">
+            <input type="text" class="input" shop="true" name="Sort" id="Sort" value="<%=model.Sort %>" style="width: 70px;" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+            <div class="tools tools-m">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span><%=Tag("保存")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    function SaveObj() {
+        var postData = GetFormJsonData("shop");
+        if (!CheckForm("shop", "span"))
+            return false;
+        var url = "<%=site.AdminPath %>/ajax/ajax_config.aspx?__Action=ServicePanel_Edit&id=<%=model.id %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+</script>
+</lbbody>

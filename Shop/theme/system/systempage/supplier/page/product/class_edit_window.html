@@ -1,0 +1,120 @@
+﻿{layout:simple} {class:Shop.supplier.product.Class_Edit_window}
+<lbbody>
+<%=Shop.Bussiness.Language.AdminLanguageTab("") %>
+<table
+    class="table">
+    <%foreach (Shop.Model.Lebi_Language_Code lang in Shop.Bussiness.Language.Languages())
+      {%>
+    <tbody id="lang_<%=lang.Code %>" class="lang_table" style="display: none">
+        <tr>
+            <th style="width: 20%">
+                <%=Tag("分类名称")%>：
+            </th>
+            <td>
+                <input type="text" id="Name<%=lang.Code %>" name="Name<%=lang.Code %>" class="input"
+                    shop="true"  style="width: 200px;"
+                    value="<%=Shop.Bussiness.Language.Content(model.Name,lang.Code) %>" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("自定义链接")%>：
+            </th>
+            <td>
+                <input type="text" id="Url" name="Url<%=lang.Code %>" class="input"
+                    shop="true"  style="width: 200px;"
+                    value="<%=Shop.Bussiness.Language.Content(model.Url,lang.Code) %>" />
+            </td>
+        </tr>
+    </tbody>
+    <%} %>
+</table>
+<ul id="tablistmain">
+    <li class="selected"><a><span>
+        <%=Tag("通用信息")%></span></a></li></ul>
+<table
+    id="common" class="table">
+    <tr>
+        <th style="width: 20%">
+            <%=Tag("上级分类")%>：
+        </th>
+        <td>
+            <select name="parentid" shop="true" id="parentid">
+                <option value="0">┌<%=Tag("顶级分类")%></option>
+                <%=Shop.Bussiness.EX_Product.SupplierTypeOption(CurrentSupplier.id,0, pmodel.id, 0, CurrentLanguage.Code)%>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <%=Tag("图标")%>：
+        </th>
+        <td>
+            <div id="image_ImageUrl">
+                <%if (model.ImageUrl != "")
+                  {%>
+                <img height="16" src="<%=site.WebPath + model.ImageUrl%>" />
+                <%} %>
+            </div>
+            <input type="text" shop="true" id="ImageUrl" name="ImageUrl" class="input"
+                style="width: 200px;" value="<%=model.ImageUrl%>" />
+            <input id="file_ImageUrl" name="file_ImageUrl" class="input" type="file"
+                onchange="uploadImage('ImageUrl')" />
+        </td>
+    </tr>
+    
+    <tr>
+        <th>
+            <%=Tag("排序序号")%>：
+        </th>
+        <td>
+            <input type="text" id="Sort" name="Sort" style="width: 70px" shop="true" class="input"
+                value="<%=model.Sort %>" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))"
+                maxlength="4" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="action">
+            <div class="tools tools-m clear">
+                <ul>
+                    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj();"><b></b><span>
+                        <%=Tag("保存")%></span></a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    LanguageTab_EditPage('<%=CurrentLanguage.Code %>'); //加载默认语言
+    function SaveObj() {
+        var postData = GetFormJsonData("shop");
+        if (!CheckForm("shop", "span"))
+            return false;
+        var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Class_Edit&id=<%=model.id %>";
+        RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+    }
+    function uploadImage(id) {
+        $.ajaxFileUpload
+        (
+	        {
+	            url: WebPath + '/ajax/imageuploadone.aspx?path=supplierproducttype',
+	            secureuri: false,
+	            fileElementId: 'file_' + id,
+	            dataType: 'json',
+	            success: function (data, status) {
+	                if (data.msg != 'OK') {
+	                    MsgBox(2, data.msg, "");
+	                }
+	                else {
+	                    var imageUrl = data.ImageUrl;
+	                    if (imageUrl.length > 0) {
+	                        $("#image_" + id + "").html('<img height="16" src=' + WebPath + imageUrl + '>');
+	                        $("#" + id + "").val(imageUrl);
+	                    }
+	                }
+	            }
+	        }
+        )
+    }
+</script>
+</lbbody>

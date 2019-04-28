@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head profile="http://gmpg.org/xfn/11">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>Senamion.com - multiselect2side (multiple select double side) plugin: documentation and demo page</title>
+	<link rel="stylesheet" href="css/jquery.multiselect2side.css" type="text/css" media="screen" />
+	<script type="text/javascript" src="js/jquery.js" ></script>
+	<script type="text/javascript" src="js/jquery.multiselect2side.js" ></script>
+
+	<script type="text/javascript">
+		$().ready(function() {
+
+			$('#second').multiselect2side({
+				selectedPosition: 'right',
+				moveOptions: false,
+				search: "<img src='img/search.gif' align=\"absmiddle\" /> ",
+				labelsx: '',
+				labeldx: '&nbsp;',
+				autoSort: true,
+				autoSortAvailable: true
+				});
+			
+		});
+
+
+		function ttt(){
+			var a=$("#second").val();
+			alert(a);
+		}
+	</script>
+
+
+
+
+</head>
+<body>
+
+				
+
+				<h3>Demo 2 - select multiple double side - moveOptions: false, autoSort: true</h3>
+				<p>Move buttons are disabled but is enable autoSort. Header label not present.</p>
+
+				<select name="secondSelect[]" id='second' multiple='multiple' size='8' >
+					<option value="1" noselect="true">Option a 1</option>
+					<option value="2">Option b 2(sel)</option>
+					<option value="3">Option c 3</option>
+					<option value="4">Option d 4 (sel)</option>
+					<option value="5">Option e 5</option>
+					<option value="6">Option f 6</option>
+					<option value="7">Option g 7</option>
+					<option value="8">Option h 8</option>
+					<option value="9">Option i 9</option>
+					<option value="10">Option l 10 (sel)</option>
+				</select>
+
+				
+<input type="button" onclick="ttt();" value="测试" />
+				
+
+</body>
+</html>

@@ -1,0 +1,204 @@
+﻿{layout:default} {class:Shop.supplier.order.Default}
+<lbhead>
+    <title>
+        <%=Tag("订单管理")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+        <ul>
+            <%if (PageReturnMsg == ""){%>
+            <li class="print"><a href="javascript:void(0);" onclick="Express_Log_Add();"><b></b><span><%=Tag("添加至快递单")%></span></a></li>
+            <%}%>
+            <li class="name"><span id="navIgation">
+                <%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a>
+                >
+                <%=Tag("订单管理")%>
+                > <a href="<%=site.AdminPath %>/order/default.aspx?t=<%=t %>">
+                    <%=Shop.Bussiness.EX_Type.TypeName(t) %></a></span> </li>
+        </ul>
+    </div>
+</lbpath>
+<lbtop>
+    <div class="mainbody_top">
+        <ul class="tablist">
+            <li <%if (type==""){Response.Write("class=\"selected\"");} %>><a href="?t=<%=t%>&dateFrom=<%=dateFrom %>&dateTo=<%=dateTo %>&key=<%=HttpUtility.UrlEncode(key) %>&type=">
+                <span>
+                    <%=Tag("全部订单")%></span></a></li>
+           
+            <%if (t == 213)
+              {%>
+            <li <%if (type=="3"){Response.Write("class=\"selected\"");} %>><a href="?t=<%=t%>&dateFrom=<%=dateFrom %>&dateTo=<%=dateTo %>&key=<%=HttpUtility.UrlEncode(key) %>&type=3">
+                <span>
+                    <%=Tag("未支付")%></span></a></li>
+            <li <%if (type=="4"){Response.Write("class=\"selected\"");} %>><a href="?t=<%=t%>&dateFrom=<%=dateFrom %>&dateTo=<%=dateTo %>&key=<%=HttpUtility.UrlEncode(key) %>&type=4">
+                <span>
+                    <%=Tag("已支付")%></span></a></li>
+            <li <%if (type=="5"){Response.Write("class=\"selected\"");} %>><a href="?t=<%=t%>&dateFrom=<%=dateFrom %>&dateTo=<%=dateTo %>&key=<%=HttpUtility.UrlEncode(key) %>&type=5">
+                <span>
+                    <%=Tag("未发货")%></span></a></li>
+            <li <%if (type=="6"){Response.Write("class=\"selected\"");} %>><a href="?t=<%=t%>&dateFrom=<%=dateFrom %>&dateTo=<%=dateTo %>&key=<%=HttpUtility.UrlEncode(key) %>&type=6">
+                <span>
+                    <%=Tag("已发货")%></span></a></li>
+            <li <%if (type=="8"){Response.Write("class=\"selected\"");} %>><a href="?t=<%=t%>&dateFrom=<%=dateFrom %>&dateTo=<%=dateTo %>&key=<%=HttpUtility.UrlEncode(key) %>&type=8">
+                <span>
+                    <%=Tag("未收货")%></span></a></li>
+            <li <%if (type=="9"){Response.Write("class=\"selected\"");} %>><a href="?t=<%=t%>&dateFrom=<%=dateFrom %>&dateTo=<%=dateTo %>&key=<%=HttpUtility.UrlEncode(key) %>&type=9">
+                <span>
+                    <%=Tag("已收货")%></span></a></li>
+            <%} %>
+            <li <%if (type=="10"){Response.Write("class=\"selected\"");} %>><a href="?t=<%=t%>&dateFrom=<%=dateFrom %>&dateTo=<%=dateTo %>&key=<%=HttpUtility.UrlEncode(key) %>&type=10">
+                <span>
+                    <%=Tag("已完成")%></span></a></li>
+        </ul>
+    </div>
+</lbtop>
+<lbbody>
+    <div class="searchbox">
+        <input type="text" name="dateFrom" id="dateFrom" size="12" class="input-calendar" value="<%=dateFrom %>" />
+        -
+        <input type="text" name="dateTo" id="dateTo" size="12" class="input-calendar" value="<%=dateTo %>" />
+        <input type="text" id="key" name="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" />
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'id\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));">
+                    <%=Tag("全选")%></a>
+            </th>
+            <th width="60px">
+                <%=Tag("操作")%>
+            </th>
+            <th width="110px">
+                <%=Tag("订单编号")%>
+            </th>
+            <th width="100px">
+                <%=Tag("会员")%>
+            </th>
+            <th width="100px">
+                <%=Tag("购买人")%>
+            </th>
+            <th width="80px">
+                <%=Tag("金额")%>
+            </th>
+            <th width="80px">
+                <%=Tag("运费")%>
+            </th>
+            <th>
+                <%=Tag("订单状态")%>
+            </th>
+            <th width="120px">
+                <%=Tag("支付方式")%>
+            </th>
+            <th width="120px">
+                <%=Tag("配送方式")%>
+            </th>
+            <th width="130px">
+                <%=Tag("订购日期")%>
+            </th>
+        </tr>
+        <%int Mark = 0;foreach (Shop.Model.Lebi_Order model in models){
+        if (model.Mark !=0){
+        Mark=model.Mark;
+        }else{
+        Mark=0;
+        }
+        %>
+        <tr class="list" ondblclick="Edit(<%=model.id %>);">
+            <td style="text-align:center">
+                <input type="checkbox" name="id" value="<%=model.id %>" del="true" />
+            </td>
+            <td>
+                <div class="menu">
+                <a target="_blank" href="<%=model.Type_id_OrderType==212?"t":"" %>order_view.aspx?id=<%=model.id %>"><img src="<%=PageImage("icon/newWindow.png")%>" /></a> <a href="javascript:void(0);" onmouseover="GetAdminSkin('<%=model.id %>');" class="showmenu"><img src=<%=AdminImage("icon/Print.png")%> /></a><%if (model.Remark_Admin !=""){ %> <a onmouseover="GetOrderMemo('<%=model.id %>');" class="showmenu"><img src=<%=AdminImage("mark/"+Mark+".png")%> /></a><%}%>
+	            <div id="submenu<%=model.id %>" class="submenu"></div>
+                </div>
+            </td>
+            <td>
+                <a target="_blank" href="<%=model.Type_id_OrderType==212?"torder_view":"order_view" %>.aspx?id=<%=model.id %>">
+                    <%=model.Code %></a>
+            </td>
+            <td>
+                <%=model.User_UserName %>
+            </td>
+            <td>
+                <%=model.T_Name %>
+            </td>
+            <td>
+                <%=FormatMoney(model.Money_Order) %>
+            </td>
+            <td>
+                <%=FormatMoney(model.Money_Transport) %>
+            </td>
+            <td>
+                <%=Shop.Bussiness.Order.OrderStatus(model, CurrentLanguage.Code, 1) %>
+            </td>
+            <td>
+                <%=Shop.Bussiness.Language.Content(model.Pay, CurrentLanguage.Code)%>&nbsp;
+            </td>
+            <td>
+                <%=model.Transport_Name%>&nbsp;
+            </td>
+            <td>
+                <%=FormatTime(model.Time_Add) %>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var li = $(".datalist .menu");
+            $(li).each(function (i) {
+                var _this = this;
+                $(_this).find(".showmenu").mouseover(function () {
+                    $(".datalist .menu .submenu").hide();
+                    var divindex = $(".datalist .menu").find(".submenu")[i];
+                    $(divindex).show();
+                    $(divindex).mouseleave(function () {
+                        $(divindex).hide();
+                    });
+                });
+            });
+        });
+        function search_() {
+            var mark = GetRadioCheckedValues("mark");
+            var key = $("#key").val();
+            var dateFrom = $("#dateFrom").val();
+            var dateTo = $("#dateTo").val();
+            window.location = "?t=<%=t%>&type=<%=type%>&mark="+ mark +"&key=" + escape(key) + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo;
+        }
+        function Edit(id) {
+            window.open("order_view.aspx?id=" + id);
+        }
+        function Del(id) {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = { "id": id };
+            var url = "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=Order_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+        function Express_Log_Add() {
+            var ids = GetChkCheckedValues("id");
+            var postData = { "ids": ids };
+            var url = "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=Express_Log_Add";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "Express_Log.aspx")});
+        }
+        function GetOrderMemoTips(id) {
+            $.ajax({
+                type: "POST",
+                url: "<%=site.AdminPath %>/ajax/ajax_order.aspx?__Action=Order_Memo",
+                data: { "id": id },
+                beforeSend: function () {
+                    AddTips('', 'Tips_200', 'mouse', '200', null);
+                },
+                success: function (res) {
+                    AddTips('<div class=\"dvTips_outer\"><div class=\"dvTips_inner\"><div class=\"dvTips_bg\"></div><div class=\"dvTips_content\">'+res+'</div></div></div></div>', 'Tips_200', 'mouse', '200', null);
+                }
+            });
+        }
+    </script>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+        <%=PageString%>
+    </div>
+</lbbottom>

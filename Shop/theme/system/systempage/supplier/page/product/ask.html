@@ -1,0 +1,116 @@
+﻿{layout:default} {class:Shop.supplier.product.Ask}
+<lbhead>
+    <title><%=Tag("商品咨询")%>-<%=site.title%></title>
+</lbhead>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <li class="del"><a href="javascript:void(0);" onclick="Del();"><b></b><span><%=Tag("删除")%></span></a></li>
+    <%}%>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <%=Tag("商品咨询")%></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbbody>
+    <div class="searchbox">
+        <select id="lang">
+            <option value="">┌<%=Tag("语言")%></option>
+            <%=Shop.Bussiness.Language.LanguageOption(lang)%>
+        </select>
+        <select name="status" id="status">
+            <option value="0">┌<%=Tag("状态")%></option>
+            <%=Shop.Bussiness.EX_Type.TypeOption("AskStatus", status, CurrentLanguage)%>
+        </select>
+        <input type="text" name="dateFrom" id="dateFrom" size="12" class="input-calendar" value="<%=dateFrom %>"" /> - <input type="text" name="dateTo" id="dateTo" size="12" class="input-calendar" value="<%=dateTo %>" />
+        <input type="text" id="key" name="key" class="input-query" value="<%=key %>" onkeydown="if(event.keyCode==13){search_();}" /><input type="button" id="btnSou" class="btn-query" onclick="search_();" />
+    </div>
+    <table class="datalist">
+        <tr class="title">
+            <th style="width: 40px" class="selectAll">
+                <a href="javascript:void(0);" onclick="$('input[name=\'Delid\']').attr('checked',!$(this).attr('checked'));$(this).attr('checked',!$(this).attr('checked'));"><%=Tag("全选")%></a>
+            </th>
+            <th style="width: 40px">
+                <%=Tag("图片")%>
+            </th>
+            <th style="width: 300px">
+                <%=Tag("商品名称")%>
+            </th>
+            <th width="*">
+                <%=Tag("内容")%>
+            </th>
+            <th style="width: 120px">
+                <%=Tag("会员账号")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("状态")%>
+            </th>
+            <th style="width: 80px">
+                <%=Tag("操作")%>
+            </th>
+        </tr>
+        <%foreach (Shop.Model.Lebi_Comment model in models)
+          {%>
+        <tr class="list" ondblclick="Edit(<%=model.id %>);" >
+            <td style="text-align:center">
+                <input type="checkbox" name="Delid" del="true" value="<%=model.id %>" />
+                <input type="hidden" name="IDS" shop="true" value="<%=model.id %>" />
+            </td>
+            <td>
+                <% if (GetProduct(model.Keyid).ImageSmall == "")
+                   { %>
+                &nbsp;
+                <%}else
+                   { %>
+                <a href="<%=Image(GetProduct(model.Keyid).ImageOriginal,"big")  %>" data-lightbox="image<%=model.id %>"><img style="height: 30px;width: 30px;vertical-align:middle" src="<%=Image(GetProduct(model.Keyid).ImageOriginal,50,50)%>" /></a>
+                <%} %>
+            </td>
+            <td style="width:300px;word-break:break-all;word-wrap:break-word;">
+                <%=Lang(GetProduct(model.Keyid).Name)%>&nbsp;<a target="_blank" href="<%=Shop.Bussiness.ThemeUrl.GetURL("P_Product",model.Keyid.ToString(),"",CurrentLanguage.Code)%>"><img src="<%=AdminImage("icon/newWindow.png")%>" /></a>
+            </td>
+            <td>
+                <%=model.Content.Replace("\r\n", "<br/>")%><em>(<%=FormatTime(model.Time_Add)%>)</em>
+            </td>
+            <td>
+                <%=model.User_UserName %>
+            </td>
+            <td>
+                <%=Shop.Bussiness.EX_Type.TypeName(model.Status, CurrentLanguage)%>
+            </td>
+            <td>
+                <a href="javascript:void(0)" onclick="Edit(<%=model.id %>);"><%=Tag("回复")%></a>
+            </td>
+        </tr>
+        <%} %>
+    </table>
+    <script type="text/javascript">
+        function search_() {
+            var status = $("#status").val();
+            var lang = $("#lang").val();
+            var key = $("#key").val();
+            var dateFrom = $("#dateFrom").val();
+            var dateTo = $("#dateTo").val();
+            window.location = "?key=" + escape(key) + "&lang=" + lang + "&status=" + status + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo;
+        }
+        function Edit(id) {
+            var title_ = "<%=Tag("回复商品咨询")%>";
+            var url_ = "ask_edit_window.aspx?id=" + id;
+            var width_ = 600;
+            var height_ = "auto";
+            var modal_ = true;
+            EditWindow(title_, url_, width_, height_, modal_);
+        }
+        function Del() {
+            if (!confirm("<%=Tag("确认要删除吗？")%>"))
+                return false;
+            var postData = GetFormJsonData("del");
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=Ask_Del";
+            RequestAjax(url,postData,function(){MsgBox(1, "<%=Tag("操作成功")%>", "?")});
+        }
+    </script>
+</lbbody>
+<lbbottom>
+<div class="bottom" id="body_bottom">
+    <%=PageString%>
+</div>
+</lbbottom>

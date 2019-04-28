@@ -29,6 +29,10 @@ namespace Shop.Admin.product
         protected Lebi_UserLevel userlevel;
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!EX_Admin.Power("product_user_limit", "商品会员权限"))
+            {
+                WindowNoPower();
+            }
             userlevelid = RequestTool.RequestInt("userlevelid");
             userid = RequestTool.RequestInt("userid");
             typeid = RequestTool.RequestInt("typeid");

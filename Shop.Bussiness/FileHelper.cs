@@ -59,6 +59,11 @@ namespace Shop.Bussiness
                 try
                 {
                     FileUpload.SaveAs(webFilePath);
+                    if (!IsAllowedExtension(webFilePath))
+                    {
+                        File.Delete(webFilePath);
+                        return 296;
+                    }
                     //bool flag = CheckPictureSafe(webFilePath);
                     //if (flag)
                     return 290;
@@ -125,6 +130,11 @@ namespace Shop.Bussiness
             bool strReturn = true;
             if (File.Exists(strPictureFilePath))
             {
+                if (!IsAllowedExtension(strPictureFilePath))
+                {
+                    File.Delete(strPictureFilePath);
+                    return false;
+                }
                 StringBuilder str_Temp = new StringBuilder();
                 try
                 {
@@ -161,6 +171,87 @@ namespace Shop.Bussiness
                 }
             }
             return true;
+        }
+        /// <summary>
+        /// 判断文件格式
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static bool IsAllowedExtension(string filePath)
+        {
+ 
+            FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            BinaryReader reader = new BinaryReader(stream);
+            string fileclass = "";
+           // byte buffer;
+            try
+            {
+                
+                //buffer = reader.ReadByte();
+                //fileclass = buffer.ToString();
+                //buffer = reader.ReadByte();
+                //fileclass += buffer.ToString();
+ 
+                for (int i = 0; i < 2; i++)
+                {
+                    fileclass += reader.ReadByte().ToString();
+                }
+ 
+            }
+            catch (Exception)
+            {
+ 
+                throw;
+            }
+            if (fileclass == "7173" || fileclass == "255216" || fileclass == "13780" || fileclass == "6677" || fileclass == "208207" || fileclass == "8297" || fileclass == "76101")
+            {
+                FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                StreamReader sr = new StreamReader(fs);
+                string str = sr.ReadToEnd();
+                sr.Close();
+                fs.Close();
+                Shop.Bussiness.SystemLog.Add(str);
+                if (str.Contains("<%"))
+                {
+                    Shop.Bussiness.SystemLog.Add("无效上传文件内容：<%");
+                    return false;
+                }
+                return true;
+            }
+            else
+            {
+                Shop.Bussiness.SystemLog.Add("无效上传文件格式："+ filePath +"|"+ fileclass);
+                return false;
+            }
+            /*文件扩展名说明
+             * 255216 jpg
+             * 208207 doc xls ppt wps
+             * 8075 docx pptx xlsx zip
+             * 5150 txt 76101
+             * 8297 rar
+             * 7790 exe
+             * 3780 pdf      
+             * 
+             * 4946/104116 txt
+             * 7173        gif 
+             * 255216      jpg
+             * 13780       png
+             * 6677        bmp
+             * 239187      txt,aspx,asp,sql
+             * 208207      xls.doc.ppt
+             * 6063        xml
+             * 6033        htm,html
+             * 4742        js
+             * 8075        xlsx,zip,pptx,mmap,zip
+             * 8297        rar   
+             * 01          accdb,mdb
+             * 7790        exe,dll
+             * 5666        psd 
+             * 255254      rdp 
+             * 10056       bt种子 
+             * 64101       bat 
+             * 4059        sgf    
+             */
         }
     }
 

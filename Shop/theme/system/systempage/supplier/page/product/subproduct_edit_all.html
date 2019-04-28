@@ -1,0 +1,571 @@
+﻿{layout:default} {class:Shop.supplier.product.subproduct_edit_all}
+<lbhead>
+    <title><%if (model.id > 0) { Response.Write(Shop.Bussiness.Language.Content(model.Name, CurrentLanguage.Code) + "-"); } %><%=Tag("商品管理")%>-<%=site.title%></title>
+</lbhead>
+<lbfile>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/ajaxfileupload.js"></script>
+    <script type="text/javascript" src="<%=site.WebPath %>/Editor/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript" src="<%=site.WebPath %>/Editor/ckfinder/ckfinder.js"></script>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/dialog.js"></script>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/jquery-ui/timepicker-addon.js"></script>
+    <%if (CurrentLanguage.Code=="CN"){%><script type="text/javascript" src="<%=site.AdminJsPath %>/jquery-ui/timepicker-zh-CN.js"></script><%}%>
+    <link rel="stylesheet" type="text/css" href="<%=site.AdminJsPath %>/jquery-ui/timepicker-addon.css" />
+    <script type="text/javascript">
+        $(function () {
+            $(".input-calendar").datetimepicker({dateFormat:"yy-mm-dd",showSecond:true,timeFormat:"HH:mm:ss",stepHour:1,stepMinute:1,tepSecond:1});
+        });
+    </script>
+    <script type="text/javascript" src="<%=site.AdminJsPath %>/multiselect/js/jquery.multiselect2side.js"></script>
+    <link rel="stylesheet" href="<%=site.AdminJsPath %>/multiselect/css/jquery.multiselect2side.css" type="text/css" media="screen" />
+    <style>
+        .steppricetable{border: 1px solid #cccccc;}
+        .steppricetable tr th{text-align:center;}
+        .steppricetable tr td{text-align:center;}
+        .bottom{height: 0;overflow: hidden;display: none;}
+    </style>
+</lbfile>
+<lbpath>
+    <div class="tools">
+    <ul>
+    <%if (PageReturnMsg == ""){%>
+    <%if (id > 0 && randnum > 0){ %><li class="tip"><a href="javascript:void(0);"><b></b><span><%=Tag("复制")%></span></a></li><%} %>
+    <%if (model.id > 0 && randnum == 0) {%>
+    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj(0);"><b></b><span><%=Tag("保存")%></span></a></li>
+    <%}else{ %>
+    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj(1);"><b></b><span><%=Tag("保存并返回")%></span></a></li>
+    <li class="submit"><a href="javascript:void(0);" onclick="SaveObj(2);"><b></b><span><%=Tag("保存并添加")%></span></a></li>
+    <%} %>
+    <%}%>
+    <li class="rotate"><a href="javascript:void(0);" onclick="javascript:history.back();"><b></b><span><%=Tag("返回")%></span></a></li>
+    <li class="name"><span id="navIgation"><%=Tag("当前位置")%>：<a href="<%=site.AdminPath %>/Ajax/ajax_admin.aspx?__Action=MenuJump&pid=0"><%=Tag("管理首页")%></a> > <a href="<%=site.AdminPath %>/product/default.aspx"><%=Tag("商品管理")%></a> > <%=Shop.Bussiness.Language.Content(model.Name, CurrentLanguage.Code)%><%if (id > 0 && randnum > 0){ %>（<%=Tag("复制")%>）<%} %></span></li>
+    </ul>
+    </div>
+</lbpath>
+<lbtop>
+<div class="mainbody_top">
+    <ul class="tablist">
+        <li onclick="Edit(1)" id="p1" class="selected"><a><span><%=Tag("基本信息")%></span></a></li>
+        <li onclick="Edit(2)" id="p2"><a><span><%=Tag("通用信息")%></span></a></li>
+        <li onclick="Edit(5);" id="p5"><a><span><%=Tag("商品价格")%></span></a></li>
+        <li onclick="Edit(3);getproducts();" id="p3"><a><span><%=Tag("属性规格")%></span></a></li>
+    </ul>
+</div>
+</lbtop>
+<lbbody>
+    <div id="table1">
+    <table class="table">
+        <tr>
+            <td colspan="2">
+                <%=Shop.Bussiness.Language.AdminLanguageTab("") %>
+            </td>
+        </tr>
+        <%foreach (Shop.Model.Lebi_Language_Code lang in Shop.Bussiness.Language.Languages())
+          {%>
+        <tbody id="lang_<%=lang.Code %>" class="lang_table" style="display: none">
+            <tr>
+                <th>
+                    <%=Tag("商品名称")%>：
+                </th>
+                <td>
+                    <input type="text" id="Name<%=lang.Code %>" shop="true" style="width: 500px;" name="Name<%=lang.Code %>" value="<%=Shop.Bussiness.Language.Content(model.Name, lang.Code) %>" class="input" />
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("详细介绍")%>：
+                </th>
+                <td>
+                    <textarea name="Description<%=lang.Code %>" shop="true" id="Description<%=lang.Code %>" class="text"><%=Shop.Bussiness.Language.Content(model.Description, lang.Code)%></textarea>
+                    <script type="text/javascript">
+                        CKEDITOR.replace('Description<%=lang.Code %>', {
+                            height: '200',
+                            width: '98%',
+                            language: '<%=Tag("CKEditor语言")%>'
+                        });
+                    </script>
+                </td>
+            </tr>
+            <%if (wap)
+              { %>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("WAP端描述")%>：
+                </th>
+                <td>
+                    <textarea style="height: 60px; width: 500px;" shop="true" name="MobileDescription<%=lang.Code %>" id="MobileDescription<%=lang.Code %>" class="input"><%=Shop.Bussiness.Language.Content(model.MobileDescription, lang.Code)%></textarea>
+                    <script type="text/javascript">
+                        CKEDITOR.replace('MobileDescription<%=lang.Code %>', {
+                            height: '150',
+                            width: '98%',
+                            language: '<%=Tag("CKEditor语言")%>'
+                        });
+                    </script>
+                </td>
+            </tr>
+            <%} %>
+        </tbody>
+        <%} %>
+    </table>
+    </div>
+    <div id="table2" style="display: none">
+    <table class="table">
+    <input type="hidden" name="Pro_Type_id" shop="true" id="Pro_Type_id" value="<%=model.Pro_Type_id %>" />
+        <tr>
+            <th>
+                <%=Tag("商品编号")%>：
+            </th>
+            <td>
+                <input type="text" id="Number" shop="true" min="notnull" name="Number" class="input" value="<%=model.Number %>" />
+            </td>
+        </tr>
+        
+        <tr>
+            <th>
+                <%=Tag("商品货号")%>：
+            </th>
+            <td>
+                <input type="text" id="Code" shop="true" name="Code" class="input" value="<%=model.Code %>" />
+            </td>
+        </tr>
+        
+        <tr>
+            <th>
+                <%=Tag("商品单位")%>：
+            </th>
+            <td>
+                <select id="Units_id" shop="true" name="Units_id">
+                    <%=Shop.Bussiness.EX_Product.UnitOption(model.Units_id)%>
+                </select>
+            </td>
+        </tr>
+        
+        <%if (!Shop.Bussiness.EX_Product.IsHaveSon(model.id))
+          { %>
+        <tr>
+            <th>
+                <%=Tag("库存数量")%>：
+            </th>
+            <td>
+                <input type="text" id="Count_Stock" shop="true" min="notnull" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" name="Count_Stock" class="input" style="width: 70px;" value="<%=model.Count_Stock %>" />
+            </td>
+        </tr>
+        <%} %>
+        <tr>
+            <th>
+                <%=Tag("警戒库存")%>：
+            </th>
+            <td>
+                <input type="text" shop="true" min="notnull" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" id="Count_StockCaution" name="Count_StockCaution" class="input" style="width: 70px;" value="<%=model.Count_StockCaution %>" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("包装率")%>：
+            </th>
+            <td>
+                <input type="text" shop="true" name="PackageRate" value="<%=model.PackageRate %>" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" id="PackageRate" class="input" style="width: 70px;" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("商品毛重")%>：
+            </th>
+            <td>
+                <input type="text" shop="true" min="notnull" value="<%=model.Weight %>" class="input" onkeyup="value=value.replace(/[^\d]/g,'')" onkeyup="value=value.replace(/[^\d\.]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d\.]/g,''))" id="Weight" name="Weight" style="width: 70px;" /> <em><%=Tag("单位g，用来计算订单配送费用")%></em>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("商品净重")%>：
+            </th>
+            <td>
+                <input type="text" shop="true" min="notnull" value="<%=model.NetWeight %>" class="input" onkeyup="value=value.replace(/[^\d\.]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d\.]/g,''))" id="NetWeight" name="NetWeight" style="width: 70px;" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("包装尺寸")%>：
+            </th>
+            <td>
+                <%=Tag("L")%>：<input type="text" shop="true" name="VolumeL" value="<%=model.VolumeL %>" onkeyup="value=value.replace(/[^.\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^.\d]/g,''))" id="VolumeL" class="input" style="width: 70px;" />
+                <%=Tag("W")%>：<input type="text" shop="true" name="VolumeW" value="<%=model.VolumeW %>" onkeyup="value=value.replace(/[^.\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^.\d]/g,''))" id="VolumeW" class="input" style="width: 70px;" />
+                <%=Tag("H")%>：<input type="text" shop="true" name="VolumeH" value="<%=model.VolumeH %>" onkeyup="value=value.replace(/[^.\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^.\d]/g,''))" id="VolumeH" class="input" style="width: 70px;" /> <em><%=Tag("单位CM")%></em>
+            </td>
+        </tr>
+        <tr>
+            <th style="vertical-align:top">
+                <%=Tag("商品主图")%>：
+            </th>
+            <td>
+                <div id="image_ImageOriginal">
+                    <%if (model.ImageOriginal != "")
+                      {%>
+                    <a href="<%=Image(model.ImageOriginal,"big") %>" data-lightbox="bigimage"><img height="30" src="<%=Image(model.ImageOriginal,"small")%>" /></a>
+                    <%} %>
+                </div>
+                <input type="hidden" shop="true" id="ImageOriginal" name="ImageOriginal" value="<%=model.ImageOriginal%>" />
+                <input id="file_ImageOriginal" name="file_ImageOriginal" class="input" type="file" onchange="uploadImage('ImageOriginal')" />
+                <!--<input type="button" value="<%=Tag("上传")%>" class="button" onclick="uploadImage('ImageSmall')" />-->
+                <em>
+                    <%=Tag("如果含有子商品，将使用自动提取首个子商品图片")%></em>
+            </td>
+        </tr>
+         <%if (!Shop.Bussiness.EX_Product.IsHaveSon(model.id))
+           { %>
+        <tr>
+            <th style="vertical-align:top">
+                <%=Tag("展示图")%>：
+            </th>
+            <td>
+                <textarea id="Images" name="Images" shop="true" class="textarea" style="height: 60px; width: 450px;display:none"><%=model.Images%></textarea>
+                <div id="imagesdiv"></div>
+            </td>
+        </tr>
+        <%} %>
+        
+        <tr>
+            <th>
+                <%=Tag("商品类型")%>：
+            </th>
+            <td style="text-align: left;">
+                <%=Shop.Bussiness.EX_Type.TypeRadio("ProductType", "Type_id_ProductType", model.Type_id_ProductType, "shop=\"true\" onclick=\"ChangeProductType();\"",CurrentLanguage.Code,"and id not in(323,324)")%>
+            </td>
+        </tr>
+        <tbody id="qianggoubody">
+        <tr>
+            <th><%=Tag("抢购价")%>(<%=DefaultCurrency.Msige%>)：</th>
+            <td>
+                <input type="text" class="input" id="Price_Sale" shop="true" min="notnull" name="Price_Sale" style="width: 70px;" value="<%=FormatMoney(model.Price_Sale,"Number") %>" onkeyup="value=value.replace(/[^.\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^.\d]/g,''))" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("限购数量")%>：
+            </th>
+            <td>
+                <input type="text" shop="true" name="Count_Limit" value="<%=model.Count_Limit %>" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" id="Count_Limit" class="input" style="width: 70px;" />
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("截止日期")%>：
+            </th>
+            <td>
+                <input type="text" shop="true" name="Time_Expired" value="<%=model.Time_Expired %>" id="Time_Expired" class="input-calendar" style="width:200px" /> <em></em>
+            </td>
+        </tr>
+        </tbody>
+        <tr>
+            <th>
+                <%=Tag("商品状态")%>：
+            </th>
+            <td style="text-align: left;">
+                <%=Shop.Bussiness.EX_Type.TypeRadio("ProductStatus", "Type_id_ProductStatus", model.Type_id_ProductStatus, "shop=\"true\"")%>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <%=Tag("上架日期")%>：
+            </th>
+            <td>
+                <input type="text" shop="true" name="Time_OnSale" value="<%=model.Time_OnSale %>" id="Time_OnSale" class="input-calendar" style="width:200px" />
+            </td>
+        </tr>
+        <tr>
+            <th style="vertical-align:top">
+                <%=Tag("内部备注")%>：
+            </th>
+            <td>
+                <textarea id="Remarks" shop="true" name="Remarks" class="textarea" style="height: 60px; width: 500px;"><%=model.Remarks %></textarea>
+                <div class="tools clear">
+                    <ul>
+                        <li class="plus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Remarks',100);"><b></b><span><%=Tag("展开")%></span></a></li>
+                        <li class="minus"><a href="javascript:void(0);" onclick="javascript:resizeEditor('Remarks',-100)"><b></b><span><%=Tag("收缩")%></span></a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </table>
+    </div>
+    <div id="table3" style="display: none">
+    <table class="table">
+        <tbody id="shuxing">
+        </tbody>
+    </table>
+    </div>
+    <div id="table4" style="display:none">
+    </div>
+    <div id="table5" style="display: none">
+        <table class="table">
+            <tr>
+                <th>
+                    <%=Tag("成本价")%>(<%=DefaultCurrency.Msige%>)：
+                </th>
+                <td>
+                    <input type="text" class="input" shop="true" min="notnull" id="Price_Cost" name="Price_Cost" style="width: 70px;" value="<%=FormatMoney(model.Price_Cost," Number") %>" onkeyup="value=value.replace(/[^.\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^.\d]/g,''))" />
+                </td>
+            </tr>
+            <%if (CurrentSupplier.IsSupplierTransport == 1)
+            { %>
+            <tr>
+                <th>
+                    <%=Tag("市场价")%>(<%=DefaultCurrency.Msige%>)：
+                </th>
+                <td>
+                    <input type="text" id="Price_Market" shop="true" min="notnull" name="Price_Market" class="input" style="width: 70px;" value="<%=FormatMoney(model.Price_Market," Number") %>" onkeyup="value=value.replace(/[^.\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^.\d]/g,''))" />
+                </td>
+            </tr>
+            <tr>
+                <th><%=Tag("销售价")%>(<%=DefaultCurrency.Msige%>)：</th>
+                <td>
+                    <input type="text" class="input" id="Price" shop="true" min="notnull" name="Price" style="width: 70px;" value="<%=FormatMoney(model.Price," Number") %>" onkeyup="value=value.replace(/[^.\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^.\d]/g,''))" />
+                </td>
+            </tr>
+            <%if (Shop.LebiAPI.Service.Instanse.Check("plugin_product_price")){ %>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("阶梯价格")%>：
+                </th>
+                <td align="left">
+                    <table cellpadding="0" cellspacing="0" style="width:350px" class="steppricetable" align="left" id="steppricetable">
+                        <tr>
+                            <th style="width:150px;text-align:center;">
+                                <%=Tag("购买数量")%> >
+                            </th>
+                            <th style="width:150px;text-align:center;">
+                                <%=Tag("价格")%>
+                            </th>
+                            <th style="width:100px;text-align:center;">
+                                <%=Tag("操作")%> [<a href="javascript:addsteppricerow();"><%=Tag("增加")%></a>]
+                            </th>
+                        </tr>
+                        <%foreach(Shop.Model.ProductStepPrice stepprice in StepPrices){ %>
+                        <tr>
+                            <td>
+                                <input type="text" class="input" shop="true" name="step_count" style="width: 70px;" value="<%=stepprice.Count %>" onkeyup="value=value.replace(/[^\d]/g,'')" />
+                            </td>
+                            <td>
+                                <input type="text" class="input" shop="true" name="step_price" style="width: 70px;" value="<%=FormatMoney(stepprice.Price," Number") %>" onkeyup="value=value.replace(/[^.\d]/g,'')" />
+                            </td>
+                            <td>
+                                <a href="javascript:void(0);" onclick="$(this).parent().parent().remove();"><%=Tag("删除")%></a>
+                            </td>
+                        </tr>
+                        <%} %>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("分组价格")%>：
+                </th>
+                <td align="left">
+                    <table cellpadding="0" cellspacing="0" style="width:350px" class="steppricetable" align="left" id="Table6">
+                        <tr>
+                            <th style="width:150px;text-align:center;">
+                                <%=Tag("会员分组")%>
+                            </th>
+                            <th style="width:150px;text-align:center;">
+                                <%=Tag("价格")%>
+                            </th>
+                            <th style="width:100px;text-align:center;"></th>
+                        </tr>
+                        <%foreach(Shop.Model.Lebi_UserLevel modellevel in userlevels){ %>
+                        <tr>
+                            <td>
+                                <%=Lang(modellevel.Name) %>
+                            </td>
+                            <td>
+                                <input type="text" class="input" shop="true" name="userlevelprice<%=modellevel.id %>" style="width: 70px;" value="<%=FormatMoney(GetUserLevelPrice(modellevel.id)," Number") %>" onkeyup="value=value.replace(/[^.\d]/g,'')" />
+                            </td>
+                            <td></td>
+                        </tr>
+                        <%} %>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <th style="vertical-align:top">
+                    <%=Tag("起订量")%>：
+                </th>
+                <td align="left">
+                    <table cellpadding="0" cellspacing="0" style="width:350px" class="steppricetable" align="left" id="Table7">
+                        <tr>
+                            <th style="width:150px;text-align:center;">
+                                <%=Tag("会员分组")%>
+                            </th>
+                            <th style="width:150px;text-align:center;">
+                                <%=Tag("数量")%>
+                            </th>
+                            <th style="width:100px;text-align:center;"></th>
+                        </tr>
+                        <%foreach(Shop.Model.Lebi_UserLevel modellevel in userlevels){ %>
+                        <tr>
+                            <td>
+                                <%=Lang(modellevel.Name) %>
+                            </td>
+                            <td>
+                                <input type="text" class="input" shop="true" name="userlevelcount<%=modellevel.id %>" style="width: 70px;" value="<%=GetUserLevelCount(modellevel.id) %>" onkeyup="value=value.replace(/[^\d]/g,'')" />
+                            </td>
+                            <td></td>
+                        </tr>
+                        <%} %>
+                    </table>
+                </td>
+            </tr>
+            <%}%>
+            <%} %>
+        </table>
+    </div>
+</lbbody>
+<lbbottom>
+    <div class="bottom" id="body_bottom">
+    </div>
+    <input type="hidden" value="<%=action %>" id="action" />
+    <script type="text/javascript">
+        LanguageTab_EditPage('<%=CurrentLanguage.Code %>'); //加载默认语言
+        function SaveObj(type) {
+            <%foreach (Shop.Model.Lebi_Language_Code lang in Shop.Bussiness.Language.Languages()){%>
+            var editor<%=lang.Code %> = CKEDITOR.instances.Description<%=lang.Code %>;
+            $("#Description<%=lang.Code %>").val(editor<%=lang.Code %>.getData());
+            <%if (wap){ %>
+            var editor4<%=lang.Code %> = CKEDITOR.instances.MobileDescription<%=lang.Code %>;
+            $("#MobileDescription<%=lang.Code %>").val(editor4<%=lang.Code %>.getData());
+            <%} %>
+            <%} %>
+            if (!CheckForm("shop", "span"))
+                return false;
+            var postData = GetFormJsonData("shop");
+            var action = $("#action").val();
+            var url = "<%=site.AdminPath %>/ajax/ajax_product.aspx?__Action=SubProduct_Edit&id=<%=model.id %>";
+            if (type == 0){
+                var backurl = "#";
+            }else if (type == 1){
+                var backurl = "default.aspx";
+            }else if (type == 2){
+                var backurl = '';
+            }
+            RequestAjax(url,postData,function(res){MsgBox(1, "<%=Tag("操作成功")%>", backurl)});
+        }
+            function uploadImage(id) {
+                $.ajaxFileUpload
+            (
+                {
+                    url: WebPath + '/ajax/imageupload.aspx',
+                    secureuri: false,
+                    fileElementId: 'file_' + id,
+                    dataType: 'json',
+                    success: function (data, status) {
+                        if (data.msg != 'OK') {
+                            MsgBox(2, data.msg, "");
+                        }
+                        else {
+                            var imageUrl = data.img;
+                            if (imageUrl.length > 0) {
+                                $("#image_" + id + "").html('<img style="height:30px" src="<%=webconfig.ImageURL%>'+ imageUrl + '">');
+                                $("#" + id + "").val(imageUrl);
+                            }
+                        }
+                    }
+                }
+            )
+            }
+        function ChangePro_Type() {
+            var id = $("#Pro_Type_id").val();
+            $.ajax({
+                type: "POST",
+                url: "product_edit_part.aspx?tid=" + id + "&pid=<%=model.id %>",
+                data: '',
+                success: function (res) {
+                    $("#shuxing").html(res);
+                }
+            });
+        }
+        function Edit(id1) {
+            $("#p"+id1+"").addClass("selected");
+            $("#table" + id1).show();
+            $("#action").val(id1);
+            var id2 = 2;
+            var id3 = 3;
+            var id5 = 5;
+            switch (id1) {
+                case 1:
+                    id2 = 2;
+                    id3 = 3;
+                    id5 = 5;
+                    break;
+                case 2:
+                    id2 = 1;
+                    id3 = 3;
+                    id5 = 5;
+                    break;
+                case 3:
+                    id2 = 2;
+                    id3 = 1;
+                    id5 = 5;
+                    break;
+                case 5:
+                    id2 = 2;
+                    id3 = 1;
+                    id5 = 3;
+                    break;
+            }
+            $("#p" + id2).removeClass("selected");
+            $("#p" + id3).removeClass("selected");
+            $("#p" + id5).removeClass("selected");
+            $("#table" + id2).hide();
+            $("#table" + id3).hide();
+            $("#table" + id5).hide();
+            if(id1==3)
+                $("#table4").show();
+            else
+                $("#table4").hide();
+        }
+        function getproducts() {
+            <%if (model.id > 0 && model.Product_id != 0) {%>
+               return false;
+            <%} %>
+            var id = $("#Pro_Type_id").val();
+            var Property131=GetChkCheckedValues("Property131");
+            var ProPertyMain=$("#ProPertyMain").val();
+            $.ajax({
+                type: "POST",
+                url: "product_edit_list.aspx?tid="+ id +"&randnum=<%=randnum %>&pid=<%=model.id %>&Property131="+ Property131 +"&ProPertyMain="+ProPertyMain,
+                data: '',
+                success: function (res) {
+                    $("#div_error").dialog('close'); 
+                    $("#table4").html(res);
+                }
+            });
+        }
+        function getImages() {
+            var images = $("#Images").val();
+            $.ajax({
+                type: "POST",
+                url: "<%=site.AdminPath %>/product/imagesupload.aspx?input=Images&pid=<%=model.id %>&randnum=<%=randnum %>",
+                data: { "images": images },
+                success: function (res) {
+                    $("#imagesdiv").html(res);
+                }
+            });
+        }
+        function ChangeProductType(){
+            var Type_id_ProductType=$("input[name='Type_id_ProductType']:checked").val();
+            if(Type_id_ProductType==321)
+                $("#qianggoubody").show();
+            else
+                $("#qianggoubody").hide();
+        }
+        function ChangeProductStatus(){
+            var Type_id_ProductStatus=$("input[name='Type_id_ProductStatus']:checked").val();
+            if(Type_id_ProductStatus==103){
+                $("#FreezeRemarkbody").show();
+            }else{
+                $("#FreezeRemarkbody").hide();
+            }
+        }
+        $(function () {
+            ChangePro_Type();getImages();getproducts();ChangeProductType();ChangeProductStatus();
+        });
+    </script>
+</lbbottom>
