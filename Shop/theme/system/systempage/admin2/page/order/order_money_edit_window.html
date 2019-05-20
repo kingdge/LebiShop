@@ -21,10 +21,6 @@
                 <input type="text" id="Money_Product" name="Money_Product" value="<%=FormatMoney(model.Money_Product," Number") %>" class="form-control" shop="true" onkeyup="value=value.replace(/[^\d\.]/g,'')" required>
             </div>
             <div class="form-group">
-                <label for="Money_Transport"><%=Tag("运费")%>：</label>
-                <input type="text" id="Money_Transport" name="Money_Transport" value="<%=FormatMoney(model.Money_Transport," Number") %>" class="form-control" shop="true" onkeyup="value=value.replace(/[^\d\.]/g,'')" required>
-            </div>
-            <div class="form-group">
                 <label for="Money_Bill"><%=Tag("发票税金")%>：</label>
                 <input type="text" id="Money_Bill" name="Money_Bill" value="<%=FormatMoney(model.Money_Bill," Number") %>" class="form-control" shop="true" onkeyup="value=value.replace(/[^\d\.]/g,'')" required>
             </div>

@@ -19,3 +19,12 @@ F:\LebiShop商城系统\开源版本（免费）\6.0.01\LebiShop源码\LB.Tools\
 F:\LebiShop商城系统\开源版本（免费）\6.0.01\LebiShop源码\LB.Tools\obj\Debug\LB.Tools.csproj.CopyComplete
 F:\LebiShop商城系统\开源版本（免费）\6.0.01\LebiShop源码\LB.Tools\obj\Debug\LB.Tools.dll
 F:\LebiShop商城系统\开源版本（免费）\6.0.01\LebiShop源码\LB.Tools\obj\Debug\LB.Tools.pdb
+D:\Lebi\ASP.NET单用户商城\Github\LB.Tools\bin\Debug\LB.Tools.dll
+D:\Lebi\ASP.NET单用户商城\Github\LB.Tools\bin\Debug\LB.Tools.pdb
+D:\Lebi\ASP.NET单用户商城\Github\LB.Tools\bin\Debug\ICSharpCode.SharpZipLib.dll
+D:\Lebi\ASP.NET单用户商城\Github\LB.Tools\bin\Debug\ThoughtWorks.QRCode.dll
+D:\Lebi\ASP.NET单用户商城\Github\LB.Tools\obj\Debug\LB.Tools.csprojAssemblyReference.cache
+D:\Lebi\ASP.NET单用户商城\Github\LB.Tools\obj\Debug\LB.Tools.csproj.CoreCompileInputs.cache
+D:\Lebi\ASP.NET单用户商城\Github\LB.Tools\obj\Debug\LB.Tools.csproj.CopyComplete
+D:\Lebi\ASP.NET单用户商城\Github\LB.Tools\obj\Debug\LB.Tools.dll
+D:\Lebi\ASP.NET单用户商城\Github\LB.Tools\obj\Debug\LB.Tools.pdb

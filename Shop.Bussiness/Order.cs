@@ -170,6 +170,10 @@ namespace Shop.Bussiness
                         order.Money_OnlinepayFee = 0;
                     }
                     order.Money_Order = shop.Money_Product + order.Money_Transport - shop.Money_Cut + order.Money_Bill + order.Money_Property + order.Money_OnlinepayFee + order.Money_Tax;
+                    if (SYS.IntOrderMoney == "1")
+                    {
+                        order.Money_Order = (int)order.Money_Order;
+                    }
                     order.Money_Pay = order.Money_Order;
                     order.Weight = shop.Weight;
                     order.Volume = shop.Volume;
@@ -637,6 +641,7 @@ namespace Shop.Bussiness
         /// <param name="order"></param>
         public static void ResetOrder(Lebi_Order order)
         {
+            BaseConfig SYS = ShopCache.GetBaseConfig();
             order.Money_Product = 0;
             order.Weight = 0;
             order.Point = order.Point_Free;
@@ -686,9 +691,25 @@ namespace Shop.Bussiness
 
                 }
                 order.Money_Order = order.Money_Product + order.Money_Transport + order.Money_Bill + order.Money_Property + order.Money_Tax - order.Money_Transport_Cut - order.Money_Cut;
+                if (SYS.IntOrderMoney == "1")
+                {
+                    order.Money_Order = (int)order.Money_Order;
+                }
                 order.Money_Pay = order.Money_Order - order.Money_fromorder - order.Money_UseCard311 - order.Money_UseCard312 - order.Money_Paid;
+                //更新发票记录
+                if (order.Money_Order > 0)
+                {
+                    Lebi_Bill bill = B_Lebi_Bill.GetModel("Order_id=" + order.id + "");
+                    if (bill != null)
+                    {
+                        if (bill.Money != order.Money_Order)
+                        {
+                            bill.Money = order.Money_Order;
+                            B_Lebi_Bill.Update(bill);
+                        }
+                    }
+                }
             }
-
             B_Lebi_Order.Update(order);
         }
         /// <summary>
@@ -826,13 +847,15 @@ namespace Shop.Bussiness
                     }
                     //}->
                     //<-{检查资金明细中是否有消费记录 by lebi.kingdge 2018.8.21
-                    decimal money_pay = 0;
-                    string _money_pay = B_Lebi_User_Money.GetValue("sum(money)", "Order_id = " + order.id + " and Order_PayNo = '" + order.PayNo + "' and (Type_id_MoneyType = 192 or Type_id_MoneyType = 195)");
-                    money_pay = Convert.ToDecimal(_money_pay);
-                    if ((0 - money_pay) < (order.Money_Order-order.Money_Paid))
-                    {
-                        Log.Add("未支付[资金明细校验错误]", "Order", order.id.ToString(), user, "");
-                        return false;
+                    if (order.Money_Order > 0) { 
+                        decimal money_pay = 0;
+                        string _money_pay = B_Lebi_User_Money.GetValue("sum(money)", "Order_id = " + order.id + " and Order_PayNo = '" + order.PayNo + "' and (Type_id_MoneyType = 192 or Type_id_MoneyType = 195)");
+                        money_pay = Convert.ToDecimal(_money_pay);
+                        if ((0 - money_pay) < (order.Money_Order-order.Money_Paid))
+                        {
+                            Log.Add("未支付[资金明细校验错误]", "Order", order.id.ToString(), user, "");
+                            return false;
+                        }
                     }
                     //}->
                     Lebi_User_BuyMoney model = new Lebi_User_BuyMoney();

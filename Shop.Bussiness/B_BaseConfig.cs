@@ -151,20 +151,25 @@ namespace Shop.Bussiness
             model.platform_qq_id = ht["platform_qq_id"] == null ? "" : (string)ht["platform_qq_id"];
             model.platform_qq_key = ht["platform_qq_key"] == null ? "" : (string)ht["platform_qq_key"];
             model.platform_qq_image = ht["platform_qq_image"] == null ? "" : (string)ht["platform_qq_image"];
+            model.platform_qq_adduser = ht["platform_qq_adduser"] == null ? "1" : (string)ht["platform_qq_adduser"];
             model.platform_weibo_id = ht["platform_weibo_id"] == null ? "" : (string)ht["platform_weibo_id"];
             model.platform_weibo_key = ht["platform_weibo_key"] == null ? "" : (string)ht["platform_weibo_key"];
             model.platform_weibo_image = ht["platform_weibo_image"] == null ? "" : (string)ht["platform_weibo_image"];
+            model.platform_weibo_adduser = ht["platform_weibo_adduser"] == null ? "1" : (string)ht["platform_weibo_adduser"];
             model.platform_taobao_image = ht["platform_taobao_image"] == null ? "" : (string)ht["platform_taobao_image"];
             model.platform_taobao_key = ht["platform_taobao_key"] == null ? "" : (string)ht["platform_taobao_key"];
             model.platform_taobao_secret = ht["platform_taobao_secret"] == null ? "" : (string)ht["platform_taobao_secret"];
+            model.platform_taobao_sessionkey = ht["platform_taobao_sessionkey"] == null ? "" : (string)ht["platform_taobao_sessionkey"];
+            model.platform_taobao_shopnick = ht["platform_taobao_shopnick"] == null ? "" : (string)ht["platform_taobao_shopnick"];
+            model.platform_taobao_adduser = ht["platform_taobao_adduser"] == null ? "1" : (string)ht["platform_taobao_adduser"];
             model.platform_facebook_secret = ht["platform_facebook_secret"] == null ? "" : (string)ht["platform_facebook_secret"];
             model.platform_facebook_id = ht["platform_facebook_id"] == null ? "" : (string)ht["platform_facebook_id"];
             model.platform_facebook_image = ht["platform_facebook_image"] == null ? "" : (string)ht["platform_facebook_image"];
+            model.platform_facebook_adduser = ht["platform_facebook_adduser"] == null ? "1" : (string)ht["platform_facebook_adduser"];
             model.platform_twitter_image = ht["platform_twitter_image"] == null ? "" : (string)ht["platform_twitter_image"];
             model.platform_twitter_key = ht["platform_twitter_key"] == null ? "" : (string)ht["platform_twitter_key"];
             model.platform_twitter_secret = ht["platform_twitter_secret"] == null ? "" : (string)ht["platform_twitter_secret"];
-            model.platform_taobao_sessionkey = ht["platform_taobao_sessionkey"] == null ? "" : (string)ht["platform_taobao_sessionkey"];
-            model.platform_taobao_shopnick = ht["platform_taobao_shopnick"] == null ? "" : (string)ht["platform_taobao_shopnick"];
+            model.platform_twitter_adduser = ht["platform_twitter_adduser"] == null ? "1" : (string)ht["platform_twitter_adduser"];
             model.platform_weixin_number = ht["platform_weixin_number"] == null ? "" : (string)ht["platform_weixin_number"];
             model.platform_weixin_id = ht["platform_weixin_id"] == null ? "" : (string)ht["platform_weixin_id"];
             model.platform_weixin_image = ht["platform_weixin_image"] == null ? "" : (string)ht["platform_weixin_image"];
@@ -172,6 +177,7 @@ namespace Shop.Bussiness
             model.platform_weixin_secret = ht["platform_weixin_secret"] == null ? "" : (string)ht["platform_weixin_secret"];
             model.platform_weixin_custemtoken = ht["platform_weixin_custemtoken"] == null ? "" : (string)ht["platform_weixin_custemtoken"];
             model.platform_weixin_subscribe_automsg = ht["platform_weixin_subscribe_automsg"] == null ? "" : (string)ht["platform_weixin_subscribe_automsg"];
+            model.platform_weixin_adduser = ht["platform_weixin_adduser"] == null ? "1" : (string)ht["platform_weixin_adduser"];
             model.TakeMoneyLimit = ht["TakeMoneyLimit"] == null ? "100" : (string)ht["TakeMoneyLimit"];
             model.WithdrawalFeeRate = ht["WithdrawalFeeRate"] == null ? "0" : (string)ht["WithdrawalFeeRate"];
             model.AdminLanguages = ht["AdminLanguages"] == null ? "" : (string)ht["AdminLanguages"];
@@ -201,6 +207,7 @@ namespace Shop.Bussiness
             model.IsAllowOutSideAjax = ht["IsAllowOutSideAjax"] == null ? "0" : (string)ht["IsAllowOutSideAjax"];
             model.SafeIPs = ht["SafeIPs"] == null ? "" : (string)ht["SafeIPs"];
             model.ProductLimitType = ht["ProductLimitType"] == null ? "0" : (string)ht["ProductLimitType"];
+            model.IntOrderMoney = ht["IntOrderMoney"] == null ? "0" : (string)ht["IntOrderMoney"];
             //´úÀí
             model.Angent_Commission = ht["Angent_Commission"] == null ? "" : (string)ht["Angent_Commission"];
             model.Angent_Commission_require = ht["Angent_Commission_require"] == null ? "" : (string)ht["Angent_Commission_require"];

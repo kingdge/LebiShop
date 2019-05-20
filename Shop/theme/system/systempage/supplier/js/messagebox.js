@@ -20,52 +20,43 @@ function MsgBox(errFlag, err, href,mode,time) {
         time=1000;
     err=msgstr(errFlag,err,href,mode);
     title_=''; 
-    modal_=true;   
+    modal_=false;   
     switch(errFlag){
         case 1:
             title_ = '系统信息：';
             $("#div_window").dialog('close');
-            //modal_=false;
             break;
         case 2:
             title_ = '出错啦！';
             if (err == "") err = "数据保存失败";
-            //modal_=false;
             break;  
         case 3:
             title_='系统信息：';
-            modal_=true;
             break;
         case 4:
             title_='请等待...';
-            modal_=true;
             break;
     }
     if ($("#div_error")[0] == undefined) {
-    		$("body").after("<div id=\"div_error\"></div>");
-    	}
+        $("body").after("<div id=\"div_error\"></div>");
+    }
     $('#div_error').dialog({
+        width: 'auto',
+        height: 'auto',
         autoOpen: false,
-            //width : aut,
-    		modal : modal_,
-    		hide: {
-    		    effect: "drop",
-    		    duration: 1000
-    		}
+        //width : aut,
+        modal: modal_,
+        hide: {
+            effect: "drop",
+            duration: 1000
+        }
     });
     $('#div_error').dialog('open');
     $('.ui-dialog-titlebar').attr("class", "ui-dialog-title-div_error ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix");
-    $('.ui-dialog-title-div_error').hide()
-    $('#div_error').css("min-height", "35px");
-//    $('#div_error').css("overflow", "hidden");
-    $('#div_error').css("height", "35px");
-    $('#div_error').css("line-height", "35px");
-    $('#div_error').css("padding", "5px 10px");
-    $('#div_error').css("text-align", "left");
-    $('#div_error').css("display", "block");
-    $('#div_error').css("background", "#F1F9FF");
-    $('#div_error img').css("margin", "17px 0");
-    $('#div_error img').css("vertical-align", "middle");
+    $('.ui-dialog-title-div_error').hide();
+    $('#ui-dialog-title-div_window').show();
+    $("#div_error").attr("style", "display:block;min-height:25px;line-height:160%;padding:5px 20px;text-align:left;");
+    $("#div_error img").attr("style", "margin:17px 0;vertical-align:middle");
     $("#div_error").html("<span onclick=\"$('#div_error').dialog('close');\">" + err + "</span>");
     if(mode=='')
         closemsgbox(href,time);
@@ -94,7 +85,7 @@ function closemsgbox(href, t) {
     }
 }
 function msgstr(flag,err,href,mode){
-    var table = '<img width="25" height="25" src="' + WebPath + '/theme/system/js/jqueryuicss/redmond/images/';
+    var table = '<img width="25" height="25" src="' + WebPath + '/theme/system/images/';
     switch(flag){
         case 1:
             table += 'flag_ok.gif';
@@ -126,7 +117,7 @@ function MsgBoxClose(href){
 }
 function MsgHtml(flag, err, href) {
     $(".tools .mes").show();
-    var mes = '<img width="16" height="16" align="absmiddle" src="'+AdminPath+'images/';
+    var mes = '<img width="16" height="16" align="absmiddle" src="' + WebPath + '/theme/system/images/';
     switch(flag){
         case 1:
             mes += 'succes.gif';

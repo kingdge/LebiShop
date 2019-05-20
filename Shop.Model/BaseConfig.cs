@@ -281,6 +281,9 @@ namespace Shop.Model
         /// 消费税率
         /// </summary>
         public string TaxRate { get; set; }
+        /// 订单金额取整
+        /// </summary>
+        public string IntOrderMoney { get; set; }
         #endregion
         #region 邮件模板
         /// <summary>
@@ -472,18 +475,23 @@ namespace Shop.Model
         public string platform_qq_id { get; set; }
         public string platform_qq_key { get; set; }
         public string platform_qq_image { get; set; }
+        public string platform_qq_adduser { get; set; }
         public string platform_weibo_id { get; set; }
         public string platform_weibo_key { get; set; }
         public string platform_weibo_image { get; set; }
+        public string platform_weibo_adduser { get; set; }
         public string platform_taobao_key { get; set; }
         public string platform_taobao_secret { get; set; }
         public string platform_taobao_image { get; set; }
+        public string platform_taobao_adduser { get; set; }
         public string platform_facebook_id { get; set; }
         public string platform_facebook_secret { get; set; }
         public string platform_facebook_image { get; set; }
+        public string platform_facebook_adduser { get; set; }
         public string platform_twitter_key { get; set; }
         public string platform_twitter_secret { get; set; }
         public string platform_twitter_image { get; set; }
+        public string platform_twitter_adduser { get; set; }
         public string platform_weixin_number { get; set; }
         public string platform_weixin_id { get; set; }
         public string platform_weixin_secret { get; set; }
@@ -491,6 +499,7 @@ namespace Shop.Model
         public string platform_weixin_image_qrcode { get; set; }
         public string platform_weixin_custemtoken { get; set; }
         public string platform_weixin_subscribe_automsg { get; set; }
+        public string platform_weixin_adduser { get; set; }
         /// <summary>
         /// 淘宝应该授权信息
         /// </summary>

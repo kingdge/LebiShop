@@ -25,13 +25,17 @@ namespace LB.DataAccess
                 connectionString = "";
 
             }
-            if (connectionString.ToLower().Contains("oledb"))
+            string dbtype_ = RequestTool.GetConfigKey("DBType").Trim();
+            dbtype = dbtype_;
+            if (string.IsNullOrEmpty(dbtype)) { 
+                dbtype = "sqlserver";
+            }
+            if (dbtype == "access")
             {
-                dbtype = "access";
                 string p = System.Web.HttpContext.Current.Server.MapPath("~/");
                 connectionString = connectionString.Replace("~/", p);
             }
-            else if (connectionString.ToLower().Contains("server"))
+            else if (dbtype == "mysql")
                 dbtype = "mysql";
             else
                 dbtype = "sqlserver";

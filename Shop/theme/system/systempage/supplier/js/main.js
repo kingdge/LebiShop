@@ -1,148 +1,14 @@
-﻿$.fn.selectedElement = function (t) { if (!$.isPlainObject(t)) t = { css: !t ? '' : t }; var obj = $(this); obj.bind('selectstart', function () { return false }); this.unbind('click').bind('click', function (e) { if ('INPUT' == e.target.tagName) return; var o = $(this); if (e.shiftKey) { var s, s1 = obj.filter('[selectedElement]:first'), s2 = obj.index(this); s1 = s1.length == 0 ? 0 : obj.index(s1); if (s1 > s2) { s = s1 + 1; s1 = s2 } else { s = s2 + 1 } o = obj.slice(s1, s) } else if (e.ctrlKey) { o = obj.filter('[selectedElement]'); if (o.is(this)) { o = o.not(this) } else { o = o.add(this) } } obj.removeAttr('selectedElement'); o.attr('selectedElement', 1); if (!!t.css) { obj.removeClass(t.css); o.addClass(t.css) } if ($.isFunction(t.fn)) t.fn(obj, o) }); return obj };
-function AddTips(s) {
-    try {
-        clearTimeout(RemoveTipsTimer);
-    } catch (e) { }
-    //if( s == '') return;
-    var args = arguments;
-    var id, position, width, height, mX, mY;
-    var top = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop;
-    var browser = navigator.userAgent;
-    if (browser.indexOf("Firefox") > 0) {
-        top = document.body.scrollTop;
-    }
-    if (args[1]) id = args[1];
-    if (args[2]) position = args[2]; //显示位置,有 top bottom left right mouse(鼠标跟随) 等多种属性
-    width = args[3];
-    if (args[4]) height = args[4];
-    if (!id) id = "dvTips";
-    var dvTips = document.getElementById(id);
-    if (!dvTips) {
-        dvTips = document.createElement("DIV");
-        dvTips.id = id;
-        dvTips.className = "dvTips";
-        dvTips.style.position = 'absolute';
-        dvTips.style.padding = '0px';
-        if (width) dvTips.style.width = width + "px";
-        if (height) dvTips.style.height = height + "px";
-        document.body.appendChild(dvTips);
-    }
-    dvTips.onmouseover = function () { clearTimeout(RemoveTipsTimer); }
-    dvTips.onmouseout = function () { RemoveTips(id, true); }
-    if (s != '') dvTips.innerHTML = s;
-    try {
-        mX = event.x ? event.x : event.pageX;
-        mY = event.y ? event.y : event.pageY;
-        if (position == 'top') {
-            dvTips.style.top = getOffsetTop(event.srcElement) - (dvTips.clientHeight + 5) + "px";
-            dvTips.style.left = getOffsetLeft(event.srcElement) + "px";
-        } else if (position == 'bottom') {
-            dvTips.style.top = getOffsetTop(event.srcElement) + (event.srcElement.clientHeight + 5) + "px";
-            dvTips.style.left = getOffsetLeft(event.srcElement) + "px";
-        } else if (position == 'left') {
-            dvTips.style.top = getOffsetTop(event.srcElement) + "px";
-            dvTips.style.left = getOffsetLeft(event.srcElement) - (dvTips.clientWidth + 5) + "px";
-        } else if (position == 'right') {
-            dvTips.style.top = getOffsetTop(event.srcElement) + "px";
-            dvTips.style.left = getOffsetLeft(event.srcElement) + (event.srcElement.clientWidth + 5) + "px";
-        } else {
-            var left = mX + 5 + document.body.scrollLeft;
-            if (left + parseInt(width) > document.body.scrollWidth) left = mX - 5 - width;
-            dvTips.style.left = left + "px";
-            dvTips.style.top = mY + 5 + top + "px";
-        }
-        dvTips.style.display = '';
-    } catch (e) { }
-}
-var RemoveTipsTimer;
-function RemoveTips() {
-    var args = arguments;
-    var id, delay;
-    if (args[0]) id = args[0];
-    if (typeof (args[1]) != 'undefined') delay = args[1];
-    if (!id) id = 'dvTips';
-    var dvTips = document.getElementById(id);
-    if (dvTips) {
-        if (typeof (delay) == 'undefined' || delay == true) RemoveTipsTimer = setTimeout(function () { dvTips.style.display = 'none' }, 200);
-        else dvTips.style.display = 'none';
-    }
-}
-var wpEvents = new function () {
-    var self = this;
-    this.arrEvents = [];
-    this.addListener = function (obj, eventName, oCallback) {
-        var ret;
-        if (wpConsts._isIE) {
-            ret = obj.attachEvent("on" + eventName, oCallback);
-        }
-        else {
-            ret = obj.addEventListener(eventName, oCallback, false);
-        }
-        if (ret) this.arrEvents.push({ "obj": obj, "eventName": eventName, "oCallback": oCallback });
-        return ret;
-    };
-
-    this.clearListener = function (obj, eventName) {
-        for (var i = 0; i < this.arrEvents.length; i++) {
-            if (this.arrEvents[i].obj == obj && this.arrEvents[i].eventName == eventName) {
-                this.removeListener(obj, eventName, this.arrEvents[i].oCallback);
-            }
-        }
-    };
-
-    this.removeListener = function (obj, eventName, oCallback) {
-        if (wpConsts._isIE) {
-            obj.detachEvent("on" + eventName, oCallback);
-        }
-        else {
-            obj.removeEventListener(eventName, oCallback, true);
-        }
-    };
-
-    this.initWinEvents = function (oWin) {
-        if (!oWin) return;
-        __firefox(oWin);
-    };
-
-    /*使得firefox兼容IE的event*/
-    function __firefox(oWin) {
-        if (!oWin) oWin = window;
-        HTMLElement.prototype.__defineGetter__("runtimeStyle", self.__element_style);
-        oWin.constructor.prototype.__defineGetter__("event", function () { return self.__window_event(oWin); });
-        Event.prototype.__defineGetter__("srcElement", self.__event_srcElement);
-    }
-    this.__element_style = function () {
-        return this.style;
-    }
-    this.__window_event = function (oWin) {
-        return __window_event_constructor();
-    }
-    this.__event_srcElement = function () {
-        return this.target;
-    }
-    function __window_event_constructor(oWin) {
-        if (!oWin) oWin = window;
-        if (document.all) {
-            return oWin.event;
-        }
-        var _caller = __window_event_constructor.caller;
-        while (_caller != null) {
-            var _argument = _caller.arguments[0];
-            if (_argument) {
-                var _temp = _argument.constructor;
-                if (_temp.toString().indexOf("Event") != -1) {
-                    return _argument;
-                }
-            }
-            _caller = _caller.caller;
-        }
-        return null;
-    }
-    if (window.addEventListener) {
-        __firefox();
-    }
-    /*end firefox*/
-};
+﻿/*
+====================================================================================
+add by zhangshijia 20121013
+====================================================================================
+*********************************************
+收集表单数据
+约定：
+页面的INPUT表签添加FormObj=true属性
+*********************************************
+*/
+$.fn.selectedElement = function (t) { if (!$.isPlainObject(t)) t = { css: !t ? '' : t }; var obj = $(this); obj.bind('selectstart', function () { return false }); this.unbind('click').bind('click', function (e) { if ('INPUT' == e.target.tagName) return; var o = $(this); if (e.shiftKey) { var s, s1 = obj.filter('[selectedElement]:first'), s2 = obj.index(this); s1 = s1.length == 0 ? 0 : obj.index(s1); if (s1 > s2) { s = s1 + 1; s1 = s2 } else { s = s2 + 1 } o = obj.slice(s1, s) } else if (e.ctrlKey) { o = obj.filter('[selectedElement]'); if (o.is(this)) { o = o.not(this) } else { o = o.add(this) } } obj.removeAttr('selectedElement'); o.attr('selectedElement', 1); if (!!t.css) { obj.removeClass(t.css); o.addClass(t.css) } if ($.isFunction(t.fn)) t.fn(obj, o) }); return obj };
 function GetFormJsonData(id) {
     if (id == undefined)
         id = "FormObj";
@@ -235,7 +101,7 @@ function CheckText(key, len, min, max, box) {
         }
     }
     else if (min == 'email') {
-        CheckEmail(key, box);
+        status = CheckEmail(key, box);
     } else {
         if (min > 0 && max > 0) {
             if (len < min || len > max) {
@@ -357,6 +223,7 @@ function EditWindow(title_, url_, width_, height_, modal_, div_) {
     if ($("#" + div_)[0] == undefined) {
         $("body").after("<div id=\"" + div_ + "\"></div>");
     }
+    modal_ = false;
     $('#' + div_ + '').dialog({
         autoOpen: false,
         height: height_,
@@ -375,19 +242,24 @@ function EditWindow(title_, url_, width_, height_, modal_, div_) {
     $('#ui-dialog-title-areadiv').show()
     $('.ui-dialog-titlebar').show()
     $("#ui-dialog-title-div_error").hide()
+    if (url_.indexOf("?") > -1) {
+        url_ = url_ + "&random=" + Math.random();
+    } else {
+        url_ = url_ + "?random=" + Math.random();
+    }
     $.ajax({
-        type: 'POST',
+        type: "POST",
         url: url_,
-        data: '',
-        dataType: 'html',
+        data: "{}",
+        dataType: "html",
         beforeSend: function () {
-            $('#' + div_ + '').html('<img src=' + WebPath + '/theme/system/systempage/admin/js/jqueryuicss/redmond/images/flag_loading.gif>');
+            $('#' + div_ + '').html('<img src=' + WebPath + '/theme/system/images/flag_loading.gif>');
         },
         success: function (data) {
             $('#' + div_ + '').html(data);
         },
-        error: function () {
-            $('#' + div_ + '').html('System Error!');
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $('#' + div_ + '').html(textStatus);
         }
     });
 }
@@ -424,6 +296,11 @@ function ShowWindow(title_, ediv_, width_, height_, modal_, div_) {
 function DelObj(url, json) {
     if (!confirm("确认要删除？"))
         return false;
+    if (url.indexOf("?") > -1) {
+        url = url + "&random=" + Math.random();
+    } else {
+        url = url + "?random=" + Math.random();
+    }
     $.ajax({
         type: "POST",
         url: url,
@@ -463,6 +340,47 @@ function UpdateOption(objid, data, selectedvalue) {
             stlect = "selected";
         }
         $("#" + objid + "").append("<option value='" + o.value + "' " + stlect + ">" + o.name + "</option>");
+    });
+}
+//选择商品分类下拉框
+function GetProductType(id) {
+    $.ajax({
+        type: 'POST',
+        url: AdminPath + "/ajax/ajax_product.aspx?__Action=GetProductTypeList",
+        dataType: 'html',
+        data: { "id": id },
+        success: function (data) {
+            $("#ProductType_div").html(data);
+            ChangePro_Type();
+        }
+    });
+}
+/**
+***********************************************
+获取远程HTML加载到指定ID的控件中
+***********************************************
+*/
+function GetHtml(url, obj) {
+    $.ajax({
+        type: 'POST',
+        url: url,
+        dataType: 'html',
+        success: function (data) {
+            $("#" + obj + "").html(data);
+        }
+    });
+}
+//选择商品分类下拉框-选择动作
+function SelectProductType(objid) {
+    $.ajax({
+        type: 'POST',
+        url: AdminPath + "/ajax/ajax_product.aspx?__Action=GetProductTypeList",
+        dataType: 'html',
+        data: { "id": $("#" + objid).val() },
+        success: function (data) {
+            $("#ProductType_div").html(data);
+            ChangePro_Type();
+        }
     });
 }
 //编辑页面语言切换
@@ -532,32 +450,6 @@ function SelectAreaList(topid, objid) {
         }
     });
 }
-//选择商品分类下拉框
-function GetProductType(id) {
-    $.ajax({
-        type: 'POST',
-        url: WebPath + "/ajax/ajax.aspx?__Action=GetProductTypeList",
-        dataType: 'html',
-        data: { "id": id },
-        success: function (data) {
-            $("#ProductType_div").html(data);
-            ChangePro_Type();
-        }
-    });
-}
-//选择商品分类下拉框-选择动作
-function SelectProductType(objid) {
-    $.ajax({
-        type: 'POST',
-        url: WebPath + "/ajax/ajax.aspx?__Action=GetProductTypeList",
-        dataType: 'html',
-        data: { "id": $("#" + objid).val() },
-        success: function (data) {
-            $("#ProductType_div").html(data);
-            ChangePro_Type();
-        }
-    });
-}
 //修改密码
 function AdminPWD(id) {
     var title_ = "修改密码";
@@ -569,6 +461,11 @@ function AdminPWD(id) {
 }
 //通用数据提交方法
 function RequestAjax(url, jsondata, callback) {
+    if (url.indexOf("?") > -1) {
+        url = url + "&random=" + Math.random();
+    } else {
+        url = url + "?random=" + Math.random();
+    }
     $.ajax({
         type: "POST",
         url: url,
@@ -600,16 +497,18 @@ function resizeEditor(objname, num) {
     h = h + num < 60 ? 60 : h + num;
     obj.height(h);
 }
+var showTypeids = GetCookie("showTypeids");
 function ShowChild(ids, id) {
+    //ids兼容旧版本
     var src = $("#img" + id + "").attr("src");
     if (src.indexOf("plus.gif") == -1) {
         $("#img" + id + "").attr("src", AdminImagePath + "/plus.gif");
-        var arr = ids.split(',');
-        for (var i in arr) {
-            DoHide(arr[i]);
-        }
+        $("tr[name='tr" + id + "']").each(function () {
+            $(this).hide();
+        })
     }
     else {
+
         $("#img" + id + "").attr("src", AdminImagePath + "/minus.gif");
         $("tr[name='tr" + id + "']").each(function () {
             $(this).show();
@@ -618,68 +517,118 @@ function ShowChild(ids, id) {
 }
 function DoHide(id) {
     $("#img" + id + "").attr("src", AdminImagePath + "/plus.gif");
-    $("#tr" + id + "").hide();
-
+    $("#tr" + id + "").remove();
 }
 //返回上一步
 function GoBack() {
     window.location = refPage; //母板定义
 }
 var status = 1;
+var _body_main_form_w = 0;
 function switchSysBar() {
     if (1 == window.status) {
         window.status = 0;
+        _body_main_form_w = $(window).width() - 40;
         $("#switchPoint").html('<img src="' + AdminImagePath + '/vertical/right.png">');
         $("#sidebar").hide();
         $("#sideplus a").attr("class", "cur");
         $("#sidecontent").attr("style", "margin-left:13px");
         $("#body_main").width($(window).width() - 20);
+        $("#body_bottom").width($(window).width() - 20);
+        $("#body_main_form").attr("style", "min-width:" + _body_main_form_w + "px;width:" + _body_main_form_w + "px");
+        SetCookie("sidebar", "hide", 1);
     }
     else {
         window.status = 1;
+        _body_main_form_w = $(window).width() - $("#sidebar").width() - 35;
         $("#switchPoint").html('<img src="' + AdminImagePath + '/vertical/left.png">');
         $("#sidebar").show();
         $("#sideplus a").attr("class", "");
         $("#sidecontent").attr("style", "");
         $("#body_main").width($(window).width() - $("#sidebar").width() - 17);
+        $("#body_bottom").width($(window).width() - $("#sidebar").width() - 17);
+        $("#body_main_form").attr("style", "min-width:" + _body_main_form_w + "px;width:" + _body_main_form_w + "px");
+        SetCookie("sidebar", "", 1);
     }
 }
 //通用上传文件
 function uploadFile(id) {
     $("#status_" + id).html('waitting...');
     $.ajaxFileUpload
-            (
-	            {
-	                url: WebPath + '/ajax/fileupload.aspx',
-	                secureuri: false,
-	                fileElementId: 'file_' + id,
-	                dataType: 'json',
-	                success: function (data, status) {
-	                    if (data.msg != 'OK') {
-	                        MsgBox(2, data.msg, "");
-	                        $("#status_" + id).html(data.msg);
-	                    }
-	                    else {
-	                        var url = data.url;
-	                        if (url.length > 0) {
-	                            $("#" + id + "").val(url);
-	                            $("#status_" + id).html('');
-	                        }
-	                    }
-	                },
-	                error: function (data, status, e) {
-	                    MsgBox(2, data.error, "");
-	                    $("#status_" + id).html(data.msg);
+    (
+	    {
+	        url: WebPath + '/ajax/fileupload.aspx',
+	        secureuri: false,
+	        fileElementId: 'file_' + id,
+	        dataType: 'json',
+	        success: function (data, status) {
+	            if (data.msg != 'OK') {
+	                MsgBox(2, data.msg, "");
+	                $("#status_" + id).html(data.msg);
+	            }
+	            else {
+	                var url = data.url;
+	                if (url.length > 0) {
+	                    $("#" + id + "").val(url);
+	                    $("#status_" + id).html('');
 	                }
 	            }
-            )
+	        },
+	        error: function (data, status, e) {
+	            MsgBox(2, data.error, "");
+	            $("#status_" + id).html(data.msg);
+	        }
+	    }
+    )
 }
-//付款窗口
-function PayWindow(tablename,keyid, name, price) {
-    var title_ = name;
-    var url_ = WebPath + "/inc/pay_window.aspx?tablename=" + tablename + "&keyid=" + keyid + "&money=" + price;
+function GetOrderMemo(id) {
+    $.ajax({
+        type: "POST",
+        url: AdminPath + "/ajax/ajax_order.aspx?__Action=Order_Memo&random=" + Math.random(),
+        data: { "id": id },
+        success: function (res) {
+            $("#submenu" + id).html(res);
+        }
+    });
+}
+function GetAdminSkin(id) {
+    $.ajax({
+        type: "POST",
+        url: AdminPath + "/ajax/ajax_order.aspx?__Action=GetAdminSkin&random=" + Math.random(),
+        data: { "id": id },
+        success: function (res) {
+            $("#submenu" + id).html(res);
+        }
+    });
+}
+function PayWindow(t,i,title,money) {
+    //PayWindow('supplierservice',0,'<%=Tag("服务费续费")%>',<%=model.Money_Service%>);
+    var title_ = title;
+    var url_ = WebPath + "/inc/pay_window.aspx?money=" + money + '&keyid=' + i + '&tablename=' + t;
     var width_ = 400;
-    var height_ = 250;
+    var height_ = 230;
     var modal_ = true;
     EditWindow(title_, url_, width_, height_, modal_);
+}
+function GetNewEvent() {
+    $.ajax({
+        type: 'POST',
+        url: AdminPath + "/ajax/ajax_order.aspx?__Action=GetOrder&random=" + Math.random(),
+        data: '',
+        dataType: 'json',
+        success: function (res) {
+            if (res.IsVerified / 1 > 0 || res.IsPaid / 1 > 0 || res.IsShipped / 1 > 0) {
+                PlayAudio();
+                var str = "";
+                if (res.IsVerified / 1 > 0)
+                    $("#NewEvent_Order_IsVerified").html(res.IsVerified);
+                if (res.IsPaid / 1 > 0)
+                    $("#NewEvent_Order_IsPaid").html(res.IsPaid);
+                if (res.IsShipped / 1 > 0)
+                    $("#NewEvent_Order_IsShipped").html(res.IsShipped);
+            } else {
+                $("#sound").html("");
+            }
+        }
+    });
 }

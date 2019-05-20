@@ -152,7 +152,7 @@
                                 </td>
                                 <td>
                                     <%if (model.IsCombo==1){%><span class="tag green"><span><%=Tag("组合商品")%></span></span><%} %>
-                                    <%=Lang(model.Name)%>&nbsp;
+                                    <a href="product_edit.aspx?id=<%=model.id%>" target="_blank"><%=Lang(model.Name)%></a>&nbsp;
                                     <%if (model.Supplier_id > 0){ %><a href="?Supplier_id=<%=model.Supplier_id %>" title="<%=Tag(" 商家")%>：<%=Shop.Bussiness.EX_Supplier.GetSupplier(model.Supplier_id).Company%>"><i class="ti-user"></i></a>&nbsp;<%} %>
                                     <a target="_blank" href="<%=Shop.Bussiness.ThemeUrl.GetURL(" P_Product",model.id.ToString(),"",CurrentLanguage.Code)%>"><i class="ti-new-window"></i></a>
                                 </td>

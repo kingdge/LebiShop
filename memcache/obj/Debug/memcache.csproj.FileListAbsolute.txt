@@ -22,3 +22,14 @@ F:\LebiShop商城系统\开源版本（免费）\6.0.01\LebiShop源码\memcache\
 F:\LebiShop商城系统\开源版本（免费）\6.0.01\LebiShop源码\memcache\obj\Debug\memcache.csproj.CopyComplete
 F:\LebiShop商城系统\开源版本（免费）\6.0.01\LebiShop源码\memcache\obj\Debug\memcache.dll
 F:\LebiShop商城系统\开源版本（免费）\6.0.01\LebiShop源码\memcache\obj\Debug\memcache.pdb
+D:\Lebi\ASP.NET单用户商城\Github\memcache\bin\Debug\memcache.dll
+D:\Lebi\ASP.NET单用户商城\Github\memcache\bin\Debug\memcache.pdb
+D:\Lebi\ASP.NET单用户商城\Github\memcache\bin\Debug\LB.Tools.dll
+D:\Lebi\ASP.NET单用户商城\Github\memcache\bin\Debug\ThoughtWorks.QRCode.dll
+D:\Lebi\ASP.NET单用户商城\Github\memcache\bin\Debug\ICSharpCode.SharpZipLib.dll
+D:\Lebi\ASP.NET单用户商城\Github\memcache\bin\Debug\LB.Tools.pdb
+D:\Lebi\ASP.NET单用户商城\Github\memcache\obj\Debug\memcache.csprojAssemblyReference.cache
+D:\Lebi\ASP.NET单用户商城\Github\memcache\obj\Debug\memcache.csproj.CoreCompileInputs.cache
+D:\Lebi\ASP.NET单用户商城\Github\memcache\obj\Debug\memcache.csproj.CopyComplete
+D:\Lebi\ASP.NET单用户商城\Github\memcache\obj\Debug\memcache.dll
+D:\Lebi\ASP.NET单用户商城\Github\memcache\obj\Debug\memcache.pdb

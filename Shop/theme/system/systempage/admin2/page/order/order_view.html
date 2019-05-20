@@ -358,7 +358,7 @@
                                                     </td>
                                                 </tr>
                                                 <%} %>
-                                                <%if (model.Money_Transport > 0){ %>
+                                                <%if (model.Type_id_OrderType!=212){%>
                                                 <tr>
                                                     <td>
                                                         <%=Tag("配送费用")%>：
@@ -366,6 +366,9 @@
                                                     <td>
                                                         <%=FormatMoney(model.Money_Transport)%>
                                                         <%=FormatMoney(model.Money_Transport, model.Currency_Code)%>
+                                                        <%if (model.IsPaid == 0){ %>
+                                                        <a href="javascript:EditOrderMoney_Transport('<%=model.id %>');"><%=Tag("编辑")%></a>
+                                                        <%} %>
                                                     </td>
                                                 </tr>
                                                 <%} %>
@@ -1145,6 +1148,17 @@
             $("#EditModal").modal("show");
             $.ajax({
                 url: "order_money_edit_window.aspx",
+                type: "GET",
+                cache: false,
+                data: { id: id },
+            }).done(function (result) {
+                $("#EditModal .modal-content").html(result);
+            });
+        }
+        function EditOrderMoney_Transport(id) {
+            $("#EditModal").modal("show");
+            $.ajax({
+                url: "order_money_transport_edit_window.aspx",
                 type: "GET",
                 cache: false,
                 data: { id: id },

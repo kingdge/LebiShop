@@ -122,11 +122,11 @@ namespace Shop.Bussiness
             if (su.Time_login1 != "")
                 sql += " and Time_This>='" + su.lbsql_Time_login1 + "'";
             if (su.Time_login2 != "")
-                sql += " and Time_This<='" + su.lbsql_Time_login2 + "'";
+                sql += " and Time_This<='" + su.lbsql_Time_login2 + " 23:59:59'";
             if (su.Time_reg1 != "")
                 sql += " and Time_Reg>='" + su.lbsql_Time_reg1 + "'";
             if (su.Time_reg2 != "")
-                sql += " and Time_Reg<='" + su.lbsql_Time_reg2 + "'";
+                sql += " and Time_Reg<='" + su.lbsql_Time_reg2 + " 23:59:59'";
             if (su.UserLevel_id != "")
                 sql += " and UserLevel_id in (lbsql{" + su.UserLevel_id + "})";
             if (su.UserName != "")
@@ -384,11 +384,11 @@ namespace Shop.Bussiness
             if (su.Time_begin1 != "")
                 sql += " and Time_Begin>='" + su.lbsql_Time_begin1 + "'";
             if (su.Time_begin2 != "")
-                sql += " and Time_Begin<='" + su.lbsql_Time_begin2 + "'";
+                sql += " and Time_Begin<='" + su.lbsql_Time_begin2 + " 23:59:59'";
             if (su.Time_end1 != "")
                 sql += " and Time_Begin>='" + su.lbsql_Time_end1 + "'";
             if (su.Time_end2 != "")
-                sql += " and Time_End<='" + su.lbsql_Time_end2 + "'";
+                sql += " and Time_End<='" + su.lbsql_Time_end2 + " 23:59:59'";
             if (su.Type_id_CardStatus != "")
                 sql += " and Type_id_CardStatus in (lbsql{" + su.Type_id_CardStatus + "})";
             if (su.Type_id_CardType != "")
@@ -743,13 +743,13 @@ namespace Shop.Bussiness
             if (sm.Supplier_ProductType_ids == "0")
                 sql += " and Supplier_ProductType_ids =''";
             if (sm.Time_Add1 != "")
-                sql += " and Time_Add >=" + sm.Time_Add1 + "";
+                sql += " and Time_Add >='" + sm.Time_Add1 + "'";
             if (sm.Time_Add2 != "")
-                sql += " and Time_Add <=" + sm.Time_Add2 + "";
+                sql += " and Time_Add <='" + sm.Time_Add2 + " 23:59:59'";
             if (sm.Time_OnSale1 != "")
-                sql += " and Time_OnSale >=" + sm.Time_OnSale1 + "";
+                sql += " and Time_OnSale >='" + sm.Time_OnSale1 + "'";
             if (sm.Time_OnSale2 != "")
-                sql += " and Time_OnSale <=" + sm.Time_OnSale2 + "";
+                sql += " and Time_OnSale <='" + sm.Time_OnSale2 + " 23:59:59'";
             if (sm.Type_id_ProductStatus != "")
                 sql += " and Type_id_ProductStatus in (lbsql{" + sm.Type_id_ProductStatus + "})";
             if (sm.Type_id_ProductType != "")
@@ -1076,7 +1076,7 @@ namespace Shop.Bussiness
             if (su.Time_Add1 != "")
                 sql += " and Time_Add>='" + su.Time_Add1 + "'";
             if (su.Time_Add2 != "")
-                sql += " and Time_Add<='" + su.Time_Add2 + "'";
+                sql += " and Time_Add<='" + su.Time_Add2 + " 23:59:59'";
             if (su.Type_id_OrderType > 0)
                 sql += " and Type_id_OrderType=" + su.Type_id_OrderType + "";
             if (su.Money_Order1 != 0)

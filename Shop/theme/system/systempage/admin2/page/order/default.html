@@ -130,6 +130,9 @@
                                     <%=Tag("金额")%>
                                 </th>
                                 <th>
+                                    <%=Tag("运费")%>
+                                </th>
+                                <th>
                                     <%=Tag("订单状态")%>
                                 </th>
                                 <th>
@@ -178,7 +181,7 @@
                                     <a target="_blank" href="order_view.aspx?id=<%=model.id %>"><%=model.Code %></a>
                                     <%if (model.Supplier_id > 0){ %>
                                     <a href="?t=<%=t %>&Supplier_id=<%=model.Supplier_id %>">
-                                        <i class="ti-user" title="<%=Tag("商家")%>：<%=Shop.Bussiness.EX_Supplier.GetSupplier(model.Supplier_id).Company%>"></i>
+                                        <i class="ti-user" title="<%=Tag(" 商家")%>：<%=Shop.Bussiness.EX_Supplier.GetSupplier(model.Supplier_id).Company%>"></i>
                                     </a>
                                     <%} %>
                                 </td>
@@ -190,6 +193,9 @@
                                 </td>
                                 <td>
                                     <%=FormatMoney(model.Money_Order) %>
+                                </td>
+                                <td>
+                                    <%=FormatMoney(model.Money_Transport) %>
                                 </td>
                                 <td>
                                     <%=Shop.Bussiness.Order.OrderStatus(model, CurrentLanguage.Code, 1) %>
@@ -209,7 +215,7 @@
                             </tr>
                             <%if (model.DT_id>0){%>
                             <tr>
-                                <td colspan="13">
+                                <td colspan="14">
                                     <%=Tag("分销商")%>：
                                     <%
                                     DB.LebiShop.Lebi_DT dt = DB.LebiShop.B_Lebi_DT.GetModel(model.DT_id);

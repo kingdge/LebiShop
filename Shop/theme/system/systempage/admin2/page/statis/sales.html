@@ -26,8 +26,11 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="daterange"><%=Tag("订购日期")%>：</label>
+                        <label for="daterange"><%=Tag("选择日期")%>：</label>
                         <div class="input-group">
+                            <div class="input-group-prepend">
+                                <select name="dateType" class="form-control"><option value="0"><%=Tag("订购日期")%></option><option value="1"><%=Tag("付款日期")%></option><option value="2"><%=Tag("发货日期")%></option></select>
+                            </div>
                             <input type="text" name="daterange" id="daterange" class="form-control">
                             <div class="input-group-append">
                                 <span class="input-group-text">
@@ -87,7 +90,7 @@
         function getmonthparts() {
             $.ajax({
                 type: "POST",
-                url: "sales_part.aspx?dateFrom=<%=dateFrom %>&dateTo=<%=dateTo %>&Pay_id=<%=Pay_id %>&Transport_id=<%=Transport_id%>",
+                url: "sales_part.aspx?dateType=<%=dateType %>&dateFrom=<%=dateFrom %>&dateTo=<%=dateTo %>&Pay_id=<%=Pay_id %>&Transport_id=<%=Transport_id%>",
                 data: '',
                 success: function (res) {
                     $("#monthparts").html(res);
@@ -101,6 +104,7 @@
     <%} %>
     <script>
         function SaveObj() {
+            var dateType = $("#dateType").val();
             var dateFrom = "";
             var dateTo = "";
             var daterange = $("#daterange").val();
@@ -113,17 +117,18 @@
             if (dateFrom == "" || dateTo == "") {
                 MsgBox(1, "<%=Tag("请选择订购日期")%>", "")
             }
-            window.location = "?display=1&dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&Pay_id=" + Pay_id + "&Transport_id=" + Transport_id;
+            window.location = "?display=1&dateType=" + dateType + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&Pay_id=" + Pay_id + "&Transport_id=" + Transport_id;
         }
-        function Export(){
+        function Export() {
+            var dateType = $("#dateType").val();
             var dateFrom = $("#dateFrom").val();
             var dateTo = $("#dateTo").val();
-            var Pay_id = $("#Pay_id").val();
+            var Pay_id = $("#Pay_id").val(); 
             var Transport_id = $("#Transport_id").val();
             if (dateFrom == "" || dateTo == "") {
                 MsgBox(1, "<%=Tag("请选择订购日期")%>", "")
             }
-            MsgBox(1, "<%=Tag("正在处理，请等待")%>", "<%=site.AdminPath %>/ajax/export.aspx?__Action=Statis_Sales&dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&Pay_id=" + Pay_id + "&Transport_id=" + Transport_id)
+            MsgBox(1, "<%=Tag("正在处理，请等待")%>", "<%=site.AdminPath %>/ajax/export.aspx?__Action=Statis_Sales&dateType=" + dateType + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&Pay_id=" + Pay_id + "&Transport_id=" + Transport_id)
         }
     </script>
 </lbscripts>

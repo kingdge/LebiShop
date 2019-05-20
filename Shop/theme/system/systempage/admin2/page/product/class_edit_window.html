@@ -8,12 +8,14 @@
         <div class="modal-body" style="max-height:500px;overflow-y:auto;">
             <ul class="nav nav-tabs customtab" role="tablist">
                 <%
-                List<DB.LebiShop.Lebi_Language_Code> langs = Shop.Bussiness.Language.Languages();foreach (DB.LebiShop.Lebi_Language_Code lang in langs){
-                %>
-                <li class="nav-item"> <a class="nav-link <%if (langs.FirstOrDefault().Code == lang.Code){%>active show<%}%>" data-toggle="tab" href="#lang_<%=lang.Code %>" role="tab" aria-selected="true"><%=lang.Name %></a> </li>
-                <%
-                }
-                %>
+                List
+                <DB.LebiShop.Lebi_Language_Code>
+                    langs = Shop.Bussiness.Language.Languages();foreach (DB.LebiShop.Lebi_Language_Code lang in langs){
+                    %>
+                    <li class="nav-item"> <a class="nav-link <%if (langs.FirstOrDefault().Code == lang.Code){%>active show<%}%>" data-toggle="tab" href="#lang_<%=lang.Code %>" role="tab" aria-selected="true"><%=lang.Name %></a> </li>
+                    <%
+                    }
+                    %>
             </ul>
             <div class="tab-content m-t-20">
                 <%
@@ -122,6 +124,30 @@
                         <input type="radio" id="IsIndexShow_0" name="IsIndexShow" value="0" class="custom-control-input" shop="true" <%=model.IsIndexShow==0?"checked":"" %>>
                         <span class="custom-control-label"><%=Tag("否")%></span>
                     </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="IsIndexShow_1"><%=Tag("商品属性")%>：</label>
+                <div class="input-group">
+                    <%=Property(model.ProPerty132,132)%>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="IsIndexShow_1"><%=Tag("商品规格")%>：</label>
+                <div class="input-group">
+                    <%=Property(model.ProPerty131,131)%>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="IsIndexShow_1"><%=Tag("文字属性")%>：</label>
+                <div class="input-group">
+                    <%=Property(model.ProPerty133,133)%>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="IsIndexShow_1"><%=Tag("订购表单")%>：</label>
+                <div class="input-group">
+                    <%=Property(model.ProPerty134,134)%>
                 </div>
             </div>
             <div class="form-group">

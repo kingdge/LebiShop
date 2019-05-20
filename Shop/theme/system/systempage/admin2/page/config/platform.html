@@ -20,47 +20,57 @@
                 <h5 class="card-title m-b-0"><%=Tag("QQ登录")%> <a target="_blank" href="http://connect.qq.com/"><i class="ti-new-window"></i></a></h5>
             </div>
             <div class="card-body b-t collapse show">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="platform_qq_id">Appid：</label>
-                        <input type="text" id="platform_qq_id" name="platform_qq_id" value="<%=model.platform_qq_id %>" class="form-control" shop="true">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="platform_qq_id">Appid：</label>
+                            <input type="text" id="platform_qq_id" name="platform_qq_id" value="<%=model.platform_qq_id %>" class="form-control" shop="true">
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="platform_qq_id">Appkey：</label>
-                        <input type="text" id="platform_qq_key" name="platform_qq_key" value="<%=model.platform_qq_key %>" class="form-control" shop="true">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="platform_qq_id">Appkey：</label>
+                            <input type="text" id="platform_qq_key" name="platform_qq_key" value="<%=model.platform_qq_key %>" class="form-control" shop="true">
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="platform_qq_image"><%=Tag("图标")%>：</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="image_platform_qq_image"><%if (model.platform_qq_image != ""){%><img src="<%=site.WebPath + model.platform_qq_image%>" height="20" /><%}else{ %><i class="ti-image"></i><%}%></span>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="platform_qq_image"><%=Tag("图标")%>：</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="image_platform_qq_image"><%if (model.platform_qq_image != ""){%><img src="<%=site.WebPath + model.platform_qq_image%>" height="20" /><%}else{ %><i class="ti-image"></i><%}%></span>
+                                </div>
+                                <input type="text" id="platform_qq_image" name="platform_qq_image" value="<%=model.platform_qq_image %>" class="form-control" shop="true">
+                                <div class="input-group-append fileupload">
+                                    <span class="input-group-text"><i class="ti-upload"></i></span>
+                                    <input type="file" id="file_platform_qq_image" name="file_platform_qq_image" class="upload" onchange="uploadImage('platform_qq_image')">
+                                </div>
                             </div>
-                            <input type="text" id="platform_qq_image" name="platform_qq_image" value="<%=model.platform_qq_image %>" class="form-control" shop="true">
-                            <div class="input-group-append fileupload">
-                                <span class="input-group-text"><i class="ti-upload"></i></span>
-                                <input type="file" id="file_platform_qq_image" name="file_platform_qq_image" class="upload" onchange="uploadImage('platform_qq_image')">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="platform_qq_adduser"><%=Tag("新用户注册")%>：</label>
+                            <div class="input-group">
+                                <label class="custom-control custom-checkbox">
+                                    <input type="checkbox" id="platform_qq_adduser" name="platform_qq_adduser" value="1" class="custom-control-input" shop="true" <%=model.platform_qq_adduser=="1"?"checked":"" %>>
+                                    <span class="custom-control-label"><%=Tag("启用")%></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="platform_login_qq"><%=Tag("状态")%>：</label>
+                            <div class="input-group">
+                                <label class="custom-control custom-checkbox">
+                                    <input type="checkbox" id="platform_login_qq" name="platform_login" value="qq" class="custom-control-input" shop="true" <%=isselect("qq") %>>
+                                    <span class="custom-control-label"><%=Tag("启用")%></span>
+                                </label>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6"></div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="platform_login_qq"><%=Tag("状态")%>：</label>
-                        <div class="input-group">
-                            <label class="custom-control custom-checkbox">
-                                <input type="checkbox" id="platform_login_qq" name="platform_login" value="qq" class="custom-control-input" shop="true" <%=isselect("qq") %>>
-                                <span class="custom-control-label"><%=Tag("启用")%></span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="row">
                 <div class="col-12">
                     <%if (PageReturnMsg == ""){%>
@@ -108,7 +118,17 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6"></div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_weibo_adduser"><%=Tag("新用户注册")%>：</label>
+                        <div class="input-group">
+                            <label class="custom-control custom-checkbox">
+                                <input type="checkbox" id="platform_weibo_adduser" name="platform_weibo_adduser" value="1" class="custom-control-input" shop="true" <%=model.platform_weibo_adduser=="1"?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("启用")%></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="platform_login_weibo"><%=Tag("状态")%>：</label>
@@ -168,7 +188,17 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6"></div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_taobao_adduser"><%=Tag("新用户注册")%>：</label>
+                        <div class="input-group">
+                            <label class="custom-control custom-checkbox">
+                                <input type="checkbox" id="platform_taobao_adduser" name="platform_taobao_adduser" value="1" class="custom-control-input" shop="true" <%=model.platform_taobao_adduser=="1"?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("启用")%></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="platform_login_taobao"><%=Tag("状态")%>：</label>
@@ -228,7 +258,17 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6"></div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_facebook_adduser"><%=Tag("新用户注册")%>：</label>
+                        <div class="input-group">
+                            <label class="custom-control custom-checkbox">
+                                <input type="checkbox" id="platform_facebook_adduser" name="platform_facebook_adduser" value="1" class="custom-control-input" shop="true" <%=model.platform_facebook_adduser=="1"?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("启用")%></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="platform_login_facebook"><%=Tag("状态")%>：</label>
@@ -325,7 +365,17 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6"></div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="platform_weixin_adduser"><%=Tag("新用户注册")%>：</label>
+                        <div class="input-group">
+                            <label class="custom-control custom-checkbox">
+                                <input type="checkbox" id="platform_weixin_adduser" name="platform_weixin_adduser" value="1" class="custom-control-input" shop="true" <%=model.platform_weixin_adduser=="1"?"checked":"" %>>
+                                <span class="custom-control-label"><%=Tag("启用")%></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="platform_login_weixin"><%=Tag("状态")%>：</label>

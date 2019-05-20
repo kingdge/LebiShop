@@ -4,6 +4,7 @@
     $('#daterange').daterangepicker({
         startDate: '<%if (dateFrom !=""){%><%=dateFrom%><%}else{%><%=FormatDate(System.DateTime.Now)%><%}%>',
         endDate: '<%if (dateTo !=""){%><%=dateTo%><%}else{%><%=FormatDate(System.DateTime.Now)%><%}%>',
+        autoUpdateInput: true,
         ranges: {
             '<%=Tag("今日")%>': [moment(), moment()],
             '<%=Tag("昨日")%>': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
