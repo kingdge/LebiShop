@@ -14,6 +14,7 @@ namespace Shop.Admin.statis
     public partial class sales_list : AdminAjaxBase
     {
         protected string id;
+        protected int dateType;
         protected string dateFrom;
         protected string dateTo;
         protected int Pay_id;
@@ -25,6 +26,7 @@ namespace Shop.Admin.statis
             {
                 NewPageNoPower();
             }
+            dateType = RequestTool.RequestInt("dateType", 0);
             Pay_id = RequestTool.RequestInt("Pay_id", 0);
             Transport_id = RequestTool.RequestInt("Transport_id", 0);
             dateFrom = RequestTool.RequestString("dateFrom");
@@ -34,7 +36,16 @@ namespace Shop.Admin.statis
             //if (dateTo == "")
             //    dateTo = System.DateTime.Now.AddDays(0).ToString("yyyy-MM-dd");
             string where = "Type_id_OrderType=211 and IsPaid = 1";
-            where += " and Time_Add>='" + dateFrom + "' and Time_Add<='" + dateTo + "'";
+            if (dateType == 0) { 
+                where += " and Time_Add>='" + dateFrom + "'and Time_Add<='" + dateTo + " 23:59:59'";
+            }
+            else if (dateType == 1) { 
+                where += " and Time_Paid>='" + dateFrom + "'and Time_Paid<='" + dateTo + " 23:59:59'";
+            }
+            else
+            {
+                where += " and Time_Shipped>='" + dateFrom + "'and Time_Shipped<='" + dateTo + " 23:59:59'";
+            }
             if (Pay_id > 0)
                 where += " and Pay_id = " + Pay_id;
             if (Transport_id > 0)

@@ -351,18 +351,20 @@ namespace Shop.Admin.Ajax
                 Response.Write("{\"msg\":\"" + Tag("参数错误") + "\"}");
             }
             //<-{检查资金明细中是否有消费记录 by lebi.kingdge 2018.8.21
-            decimal money_pay = 0;
-            string _money_pay = B_Lebi_User_Money.GetValue("sum(money)", "Order_id = " + order.id + " and Order_PayNo = '" + order.PayNo + "' and (Type_id_MoneyType = 192 or Type_id_MoneyType = 195)");
-            money_pay = Convert.ToDecimal(_money_pay);
-            if ((0 - money_pay) < (order.Money_Order-order.Money_Paid))
-            {
-                Lebi_User user = B_Lebi_User.GetModel(order.User_id);
-                if (user == null)
+            if (order.Money_Order > 0) { 
+                decimal money_pay = 0;
+                string _money_pay = B_Lebi_User_Money.GetValue("sum(money)", "Order_id = " + order.id + " and Order_PayNo = '" + order.PayNo + "' and (Type_id_MoneyType = 192 or Type_id_MoneyType = 195)");
+                money_pay = Convert.ToDecimal(_money_pay);
+                if ((0 - money_pay) < (order.Money_Order-order.Money_Paid))
                 {
-                    user = new Lebi_User();
+                    Lebi_User user = B_Lebi_User.GetModel(order.User_id);
+                    if (user == null)
+                    {
+                        user = new Lebi_User();
+                    }
+                    Log.Add("未支付[资金明细校验错误]", "Order", order.id.ToString(), user, "");
+                    status = 0;
                 }
-                Log.Add("未支付[资金明细校验错误]", "Order", order.id.ToString(), user, "");
-                status = 0;
             }
             //}->
             Response.Write("{\"msg\":\"OK\",\"status\":\""+ status +"\",\"mes\":\"" + Tag("已支付") + "\"}");
@@ -538,12 +540,12 @@ namespace Shop.Admin.Ajax
                     description = model.Money_Product.ToString() + " -> " + Money_Product;
                     Log.Add(action, "Order", model.id.ToString(), CurrentAdmin, description);
                 }
-                if (model.Money_Transport != Money_Transport)
-                {
-                    action = "编辑运费";
-                    description = model.Money_Transport.ToString() + " -> " + Money_Transport;
-                    Log.Add(action, "Order", model.id.ToString(), CurrentAdmin, description);
-                }
+                //if (model.Money_Transport != Money_Transport)
+                //{
+                //    action = "编辑运费";
+                //    description = model.Money_Transport.ToString() + " -> " + Money_Transport;
+                //    Log.Add(action, "Order", model.id.ToString(), CurrentAdmin, description);
+                //}
                 if (model.Money_Bill != Money_Bill)
                 {
                     action = "编辑发票税金";
@@ -575,12 +577,16 @@ namespace Shop.Admin.Ajax
                     Log.Add(action, "Order", model.id.ToString(), CurrentAdmin, description);
                 }
                 model.Money_Product = Money_Product;
-                model.Money_Transport = Money_Transport;
+                //model.Money_Transport = Money_Transport;
                 model.Money_Bill = Money_Bill;
                 model.Money_Tax = Money_Tax;
                 model.Money_Give = Money_Give;
                 model.Money_Property = Money_Property;
                 model.Money_Order = model.Money_Product + model.Money_Transport + model.Money_Bill + model.Money_Property + model.Money_Tax - model.Money_Transport_Cut - model.Money_Cut;
+                if (SYS.IntOrderMoney == "1")
+                {
+                    model.Money_Order = (int)model.Money_Order;
+                }
                 if (model.Type_id_OrderType == 212)//退货单
                     model.Money_Pay = 0;
                 else
@@ -600,7 +606,60 @@ namespace Shop.Admin.Ajax
                         }
                     }
                 }
-
+            }
+            Response.Write("{\"msg\":\"OK\"}");
+        }
+        /// <summary>
+        /// 编辑订单金额 
+        /// </summary>
+        public void Order_Money_Transport_Edit()
+        {
+            if (!EX_Admin.Power("order_price_transport_edit", "编辑订单运费金额"))
+            {
+                AjaxNoPower();
+                return;
+            }
+            int id = RequestTool.RequestInt("id", 0);
+            Lebi_Order model = B_Lebi_Order.GetModel(id);
+            if (model == null)
+            {
+                Response.Write("{\"msg\":\"" + Tag("参数错误") + "\"}");
+            }
+            else
+            {
+                decimal Money_Transport = RequestTool.RequestDecimal("Money_Transport", 0);
+                string action = "";
+                string description = "";
+                if (model.Money_Transport != Money_Transport)
+                {
+                    action = "编辑运费";
+                    description = model.Money_Transport.ToString() + " -> " + Money_Transport;
+                    Log.Add(action, "Order", model.id.ToString(), CurrentAdmin, description);
+                }
+                model.Money_Transport = Money_Transport;
+                model.Money_Order = model.Money_Product + model.Money_Transport + model.Money_Bill + model.Money_Property + model.Money_Tax - model.Money_Transport_Cut - model.Money_Cut;
+                if (SYS.IntOrderMoney == "1")
+                {
+                    model.Money_Order = (int)model.Money_Order;
+                }
+                if (model.Type_id_OrderType == 212)//退货单
+                    model.Money_Pay = 0;
+                else
+                    model.Money_Pay = model.Money_Order - model.Money_UserCut - model.Money_fromorder - model.Money_UseCard311 - model.Money_UseCard312 - model.Money_Paid;
+                B_Lebi_Order.Update(model);
+                //更新发票记录
+                if (model.Money_Order > 0)
+                {
+                    Lebi_Bill bill = B_Lebi_Bill.GetModel("Order_id=" + model.id + "");
+                    if (bill != null)
+                    {
+                        if (bill.Money != model.Money_Order)
+                        {
+                            bill.Money = model.Money_Order;
+                            B_Lebi_Bill.Update(bill);
+                        }
+                    }
+                }
             }
             Response.Write("{\"msg\":\"OK\"}");
         }

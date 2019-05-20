@@ -13,6 +13,7 @@ namespace Shop.Admin.statis
     public partial class sales : AdminPageBase
     {
         protected string key;
+        protected int dateType;
         protected string dateFrom;
         protected string dateTo;
         protected int Pay_id;
@@ -32,7 +33,7 @@ namespace Shop.Admin.statis
             {
                 PageReturnMsg = PageNoPowerMsg();
             }
-            
+            dateType = RequestTool.RequestInt("dateType", 0);
             display = RequestTool.RequestInt("display", 0);
             Pay_id = RequestTool.RequestInt("Pay_id",0);
             Transport_id = RequestTool.RequestInt("Transport_id", 0);

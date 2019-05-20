@@ -66,7 +66,14 @@ namespace Shop.Admin.product
                 {
                     sel = "checked";
                 }
-                str += "<label><input " + sel + " type=\"checkbox\" value=\"" + pro.id + "\" shop=\"true\" name=\"ProPerty" + t + "\"/>" + Language.Content(pro.Name, CurrentLanguage.Code) + "</label>&nbsp;";
+                if (!string.IsNullOrEmpty(RequestTool.GetConfigKey("SystemAdmin").Trim()))
+                {
+                    str += "<label class=\"custom-control custom-checkbox m-r-20\"><input type=\"checkbox\" id=\"ProPerty" + t + "" + pro.id + "\" name=\"ProPerty" + t + "\" value=\"" + pro.id + "\" class=\"custom-control-input\" shop=\"true\" " + sel + "><span class=\"custom-control-label\">" + Language.Content(pro.Name, CurrentLanguage.Code) + "</span></label>";
+                }
+                else
+                {
+                    str += "<label><input " + sel + " type=\"checkbox\" value=\"" + pro.id + "\" shop=\"true\" name=\"ProPerty" + t + "\"/>" + Language.Content(pro.Name, CurrentLanguage.Code) + "</label>&nbsp;";
+                }
             }
             return str;
         }

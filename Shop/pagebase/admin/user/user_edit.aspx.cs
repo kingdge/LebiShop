@@ -53,8 +53,7 @@ namespace Shop.Admin.user
                 {
                     if (!("," + CurrentAdmin.Site_ids + ",").Contains("," + model.Site_id + ","))
                     {
-                        PageError();
-                        return;
+                        PageReturnMsg = PageNoPowerMsg();
                     }
                 }
             }

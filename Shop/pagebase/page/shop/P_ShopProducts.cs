@@ -67,7 +67,7 @@ namespace Shop
             if (key != "")
                 path += " > " + key; 
             
-            where = ProductWhere +" and Supplier_id = " + id + "";
+            where = "Type_id_ProductStatus = 101 and Product_id=0 and Supplier_id = " + id + "";
             if (cid > 0)
             {
                 if (DataBase.DBType == "sqlserver")

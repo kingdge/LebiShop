@@ -66,28 +66,28 @@ namespace Shop.Admin.order
                     where += " and IsVerified = 1 and IsInvalid = 0";
                     break;
                 case "3":
-                    where += " and IsVerified = 1 and IsPaid = 0 and IsInvalid = 0";
+                    where += " and IsPaid = 0 and IsInvalid = 0";
                     break;
                 case "4":
                     where += " and IsPaid = 1 and IsShipped = 0 and IsInvalid = 0";
                     break;
                 case "5":
-                    where += " and IsVerified = 1 and IsShipped = 0 and IsInvalid = 0";
+                    where += " and IsShipped = 0 and IsInvalid = 0";
                     break;
                 case "6":
-                    where += " and IsVerified = 1 and IsShipped_All= 1 and IsInvalid = 0";
+                    where += " and IsShipped_All= 1 and IsInvalid = 0";
                     break;
                 case "7":
-                    where += " and IsVerified = 1 and IsShipped = 1 and IsShipped_All= 0 and IsInvalid = 0";
+                    where += " and IsShipped = 1 and IsShipped_All= 0 and IsInvalid = 0";
                     break;
                 case "8":
-                    where += " and IsVerified = 1 and IsReceived = 0 and IsInvalid = 0";
+                    where += " and IsReceived = 0 and IsInvalid = 0";
                     break;
                 case "9":
-                    where += " and IsVerified = 1 and IsReceived = 1 and IsInvalid = 0";
+                    where += " and IsReceived = 1 and IsInvalid = 0";
                     break;
                 case "10":
-                    where += " and IsVerified = 1 and IsCompleted = 1 and IsInvalid = 0";
+                    where += " and IsCompleted = 1 and IsInvalid = 0";
                     break;
                 case "11":
                     where += " and IsInvalid = 1";

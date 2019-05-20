@@ -38,6 +38,7 @@ CKEDITOR.editorConfig = function (config) {
     config.filebrowserImageUploadUrl = '/editor/ckfinder/core/connector/aspx/connector.aspx?command=QuickUpload&type=Images';
     config.filebrowserFlashUploadUrl = '/editor/ckfinder/core/connector/aspx/connector.aspx?command=QuickUpload&type=Flash';
     config.toolbar = 'Full';
+    config.allowedContent = true;
     config.toolbar_Full =
     [
     ['Source', '-', 'Preview', 'Templates'],

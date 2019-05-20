@@ -12,6 +12,7 @@ namespace Shop.Admin.statis
 {
     public partial class sales_part : AdminAjaxBase
     {
+        protected int dateType;
         protected string key;
         protected DateTime dateFrom;
         protected DateTime dateTo;
@@ -31,6 +32,7 @@ namespace Shop.Admin.statis
             {
                 PageNoPower();
             }
+            dateType = RequestTool.RequestInt("dateType",0);
             Pay_id = RequestTool.RequestInt("Pay_id",0);
             Transport_id = RequestTool.RequestInt("Transport_id", 0);
             dateFrom = Convert.ToDateTime(RequestTool.RequestString("dateFrom"));
@@ -64,7 +66,16 @@ namespace Shop.Admin.statis
                 D_dateTo = get_lastday.AddDays(-1).Day;
             }
             string where_year = "Type_id_OrderType=211 and IsPaid = 1";
-            where_year += " and Time_Add>='" + year + "-" + M_From + "-" + D_dateFrom + "'and Time_Add<='" + year + "-" + M_To + "-" + D_dateTo + " 23:59:59'";
+            if (dateType == 0) { 
+                where_year += " and Time_Add>='" + year + "-" + M_From + "-" + D_dateFrom + "'and Time_Add<='" + year + "-" + M_To + "-" + D_dateTo + " 23:59:59'";
+            }
+            else if (dateType == 1) { 
+                where_year += " and Time_Paid>='" + year + "-" + M_From + "-" + D_dateFrom + "'and Time_Paid<='" + year + "-" + M_To + "-" + D_dateTo + " 23:59:59'";
+            }
+            else
+            {
+                where_year += " and Time_Shipped>='" + year + "-" + M_From + "-" + D_dateFrom + "'and Time_Shipped<='" + year + "-" + M_To + "-" + D_dateTo + " 23:59:59'";
+            }
             if (Pay_id > 0)
                 where_year += " and Pay_id = " + Pay_id;
             if (Transport_id > 0)
@@ -116,7 +127,16 @@ namespace Shop.Admin.statis
                 m_i_DateFrom = FormatDate(Convert.ToDateTime(year + "-" + m_i + "-" + D_From));
                 m_i_DateTo = FormatDate(Convert.ToDateTime(year + "-" + m_i + "-" + D_To));
                 string where = "Type_id_OrderType=211 and IsPaid = 1";
-                where += " and Time_Add>='" + m_i_DateFrom + "' and Time_Add<='" + m_i_DateTo + " 23:59:59'";
+                if (dateType == 0) { 
+                    where += " and Time_Add>='" + m_i_DateFrom + "' and Time_Add<='" + m_i_DateTo + " 23:59:59'";
+                }
+                else if (dateType == 1) { 
+                    where += " and Time_Paid>='" + m_i_DateFrom + "' and Time_Paid<='" + m_i_DateTo + " 23:59:59'";
+                }
+                else
+                {
+                    where += " and Time_Shipped>='" + m_i_DateFrom + "' and Time_Shipped<='" + m_i_DateTo + " 23:59:59'";
+                }
                 if (Pay_id > 0)
                     where += " and Pay_id = " + Pay_id;
                 if (Transport_id > 0)
@@ -141,7 +161,16 @@ namespace Shop.Admin.statis
                     string d_datefrom = FormatDate(Convert.ToDateTime(year + "-" + m_i + "-" + d_i));
                     string d_dateto = FormatDate(Convert.ToDateTime(year + "-" + m_i + "-" + d_i));
                     string where_day = "Type_id_OrderType=211 and IsPaid = 1";
-                    where_day += " and Time_Add>='" + d_datefrom + "' and Time_Add<='" + d_dateto + " 23:59:59'";
+                    if (dateType == 0) { 
+                        where_day += " and Time_Add>='" + d_datefrom + "' and Time_Add<='" + d_dateto + " 23:59:59'";
+                    }
+                    else if (dateType == 1) { 
+                        where_day += " and Time_Paid>='" + d_datefrom + "' and Time_Paid<='" + d_dateto + " 23:59:59'";
+                    }
+                    else
+                    {
+                        where_day += " and Time_Shipped>='" + d_datefrom + "' and Time_Shipped<='" + d_dateto + " 23:59:59'";
+                    }
                     if (Pay_id > 0)
                         where_day += " and Pay_id = " + Pay_id;
                     if (Transport_id > 0)
@@ -152,7 +181,7 @@ namespace Shop.Admin.statis
                     Money_Bill = Shop.Bussiness.Statis.Money_BillCount(where_day);
                     Money_Cost = Shop.Bussiness.Statis.Money_CostCount(where_day);
                     Response.Write("<tr class=\"list\" name=\"tr" + year + "_" + m_i + "\" id=\"tr" + year + "_" + m_i + "_" + d_i + "\" style=\"display:none;\">");
-                    Response.Write("<td>&nbsp;&nbsp;&nbsp;&nbsp;" + d_i + " " + Tag("日") + "&nbsp;<a target=\"_blank\" href=\"sales_list.aspx?dateFrom=" + d_datefrom + "&dateTo=" + d_dateto + "&Pay_id=" + Pay_id + "&Transport_id=" + Transport_id + "\"><img src=\"" + PageImage("icon/newWindow.png") + "\" /></a></td>");
+                    Response.Write("<td>&nbsp;&nbsp;&nbsp;&nbsp;" + d_i + " " + Tag("日") + "&nbsp;<a target=\"_blank\" href=\"sales_list.aspx?dateType=" + dateType + "&dateFrom=" + d_datefrom + "&dateTo=" + d_dateto + "&Pay_id=" + Pay_id + "&Transport_id=" + Transport_id + "\"><img src=\"" + PageImage("icon/newWindow.png") + "\" /></a></td>");
                     Response.Write("<td>" + Shop.Bussiness.Statis.ProductCount(where_day) + "</td>");
                     Response.Write("<td><strong>" + FormatMoney(Order_Money) + "</strong></td>");
                     Response.Write("<td><strong>" + FormatMoney(Money_Product) + "</strong></td>");
