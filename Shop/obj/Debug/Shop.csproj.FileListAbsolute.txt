@@ -38,3 +38,4 @@ D:\Lebi\ASP.NET单用户商城\Github\Shop\obj\Debug\Shop.csproj.CoreCompileInpu
 D:\Lebi\ASP.NET单用户商城\Github\Shop\obj\Debug\Shop.csproj.CopyComplete
 D:\Lebi\ASP.NET单用户商城\Github\Shop\obj\Debug\Shop.dll
 D:\Lebi\ASP.NET单用户商城\Github\Shop\obj\Debug\Shop.pdb
+D:\Lebi\ASP.NET单用户商城\Github\Shop\bin\memcache.pdb
